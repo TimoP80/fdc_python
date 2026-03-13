@@ -20,6 +20,27 @@ from models.dialogue import (
 
 logger = logging.getLogger(__name__)
 
+# Common encodings to try when loading FMF files
+COMMON_ENCODINGS = [
+    'utf-8-sig',  # UTF-8 with BOM
+    'utf-16',     # UTF-16 (will auto-detect LE/BE)
+    'utf-16-le',  # UTF-16 Little Endian
+    'utf-16-be',  # UTF-16 Big Endian
+    'cp1252',     # Windows-1252 (Western European)
+    'iso-8859-1', # Latin-1
+    'latin1',     # Latin-1 (alternative name)
+    'cp437',      # DOS code page 437
+    'cp850',      # DOS code page 850
+    'mac_roman',  # Mac Roman
+]
+
+# Pre-computed BOM signatures
+BOM_UTF8 = b'\xef\xbb\xbf'
+BOM_UTF16_LE = b'\xff\xfe'
+BOM_UTF16_BE = b'\xfe\xff'
+BOM_UTF32_LE = b'\xff\xfe\x00\x00'
+BOM_UTF32_BE = b'\x00\x00\xfe\xff'
+
 class FMFParser(QObject):
     """Parser for FMF dialogue files (text format)"""
 
@@ -29,20 +50,156 @@ class FMFParser(QObject):
     def __init__(self):
         super().__init__()
         self.current_dialogue: Optional[Dialogue] = None
+        self._last_detected_encoding: Optional[str] = None
 
-    def load_from_file(self, file_path: Path) -> Dialogue:
-        """Load dialogue from FMF file"""
+    def _detect_encoding(self, file_path: Path) -> str:
+        """
+        Detect the encoding of an FMF file by checking BOM and trying to decode.
+        
+        Args:
+            file_path: Path to the FMF file
+            
+        Returns:
+            Detected encoding name (can be used with open())
+        """
+        try:
+            # Read the first few bytes to check for BOM
+            with open(file_path, 'rb') as f:
+                raw_data = f.read(4096)  # Read first 4KB for BOM detection
+            
+            # Check for UTF-8 BOM
+            if raw_data.startswith(BOM_UTF8):
+                logger.debug(f"Detected UTF-8 BOM in {file_path}")
+                self._last_detected_encoding = 'utf-8-sig'
+                return 'utf-8-sig'
+            
+            # Check for UTF-16 LE BOM
+            if raw_data.startswith(BOM_UTF16_LE):
+                logger.debug(f"Detected UTF-16 LE BOM in {file_path}")
+                self._last_detected_encoding = 'utf-16-le'
+                return 'utf-16-le'
+            
+            # Check for UTF-16 BE BOM
+            if raw_data.startswith(BOM_UTF16_BE):
+                logger.debug(f"Detected UTF-16 BE BOM in {file_path}")
+                self._last_detected_encoding = 'utf-16-be'
+                return 'utf-16-be'
+            
+            # Check for UTF-32 BOMs
+            if raw_data.startswith(BOM_UTF32_LE) or raw_data.startswith(BOM_UTF32_BE):
+                logger.warning(f"UTF-32 encoding detected in {file_path}, attempting to handle")
+                self._last_detected_encoding = 'utf-32'
+                return 'utf-32'
+            
+            # No BOM found, try to detect encoding by attempting decode
+            # Start with UTF-8, then try common legacy encodings
+            return self._detect_encoding_by_decoding(file_path)
+            
+        except Exception as e:
+            logger.warning(f"Error detecting encoding for {file_path}: {e}, defaulting to utf-8")
+            return 'utf-8'
+
+    def _detect_encoding_by_decoding(self, file_path: Path) -> str:
+        """
+        Try to detect encoding by attempting to decode the file content.
+        
+        Args:
+            file_path: Path to the FMF file
+            
+        Returns:
+            Detected encoding name
+        """
+        # Try UTF-16 first (before UTF-8) because it has distinct byte patterns
+        # that can confuse other decoders
+        for encoding in ['utf-16', 'utf-16-le', 'utf-16-be']:
+            try:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    content = f.read()
+                    # Verify we got valid content
+                    if content and len(content.strip()) > 0:
+                        logger.debug(f"Detected {encoding} encoding in {file_path}")
+                        self._last_detected_encoding = encoding
+                        return encoding
+            except (UnicodeDecodeError, LookupError):
+                continue
+        
+        # Try UTF-8
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                return self.parse_fmf(f)
+                f.read()
+            logger.debug(f"Detected UTF-8 encoding (no BOM) in {file_path}")
+            self._last_detected_encoding = 'utf-8'
+            return 'utf-8'
+        except UnicodeDecodeError:
+            pass
+        
+        # Try each common encoding in order
+        for encoding in COMMON_ENCODINGS:
+            # Skip UTF-16 variants as we already tried them
+            if encoding.startswith('utf-16'):
+                continue
+            try:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    content = f.read()
+                    # Verify we got valid content
+                    if content and len(content.strip()) > 0:
+                        logger.debug(f"Detected {encoding} encoding in {file_path}")
+                        self._last_detected_encoding = encoding
+                        return encoding
+            except (UnicodeDecodeError, LookupError):
+                continue
+        
+        # Last resort: use errors='replace' with UTF-8
+        logger.warning(f"Could not detect encoding for {file_path}, using UTF-8 with error replacement")
+        self._last_detected_encoding = 'utf-8'
+        return 'utf-8'
+
+    def _read_file_with_encoding(self, file_path: Path, encoding: str) -> str:
+        """
+        Read file content with specified encoding, handling errors gracefully.
+        
+        Args:
+            file_path: Path to the FMF file
+            encoding: The encoding to use
+            
+        Returns:
+            File content as string
+        """
+        try:
+            # Try strict reading first
+            with open(file_path, 'r', encoding=encoding) as f:
+                return f.read()
+        except UnicodeDecodeError as e:
+            logger.warning(f"Strict decode failed with {encoding}: {e}, trying with error replacement")
+            # Fall back to error replacement mode
+            with open(file_path, 'r', encoding=encoding, errors='replace') as f:
+                return f.read()
+        except Exception as e:
+            logger.error(f"Failed to read file with {encoding}: {e}")
+            raise
+
+    def load_from_file(self, file_path: Path) -> Dialogue:
+        """Load dialogue from FMF file with automatic encoding detection"""
+        try:
+            # Detect encoding first
+            detected_encoding = self._detect_encoding(file_path)
+            logger.info(f"Loading FMF file {file_path} with detected encoding: {detected_encoding}")
+            
+            # Read with detected encoding
+            content = self._read_file_with_encoding(file_path, detected_encoding)
+            
+            # Create a StringIO-like stream for parse_fmf
+            from io import StringIO
+            stream = StringIO(content)
+            return self.parse_fmf(stream)
         except Exception as e:
             logger.error(f"Failed to load FMF file {file_path}: {e}")
             raise
 
-    def save_to_file(self, dialogue: Dialogue, file_path: Path) -> None:
-        """Save dialogue to FMF file"""
+    def save_to_file(self, dialogue: Dialogue, file_path: Path, encoding: str = 'utf-8') -> None:
+        """Save dialogue to FMF file with specified encoding"""
         try:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, 'w', encoding=encoding, errors='replace') as f:
                 self.write_fmf(dialogue, f)
         except Exception as e:
             logger.error(f"Failed to save FMF file {file_path}: {e}")
@@ -435,8 +592,12 @@ class FMFParser(QObject):
             logger.error(f"Error parsing option at line {current_line}: {e}")
             raise ValueError(f"Failed to parse option at line {current_line}: {e}") from e
 
+    def get_last_detected_encoding(self) -> Optional[str]:
+        """Return the last detected encoding from load_from_file"""
+        return self._last_detected_encoding
+
     def write_fmf(self, dialogue: Dialogue, stream: TextIO) -> None:
-        """Write dialogue to FMF format"""
+        """Write dialogue to FMF format with Unicode support"""
         # Write header
         stream.write('/*\n\n    Fan Made Fallout Dialogue Tool\n         dialogue script file\n\n -- hand editing this file is not recommended\n\n Created with version 2.0.0-dev\n\n*/\n\n')
 

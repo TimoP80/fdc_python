@@ -1,0 +1,848 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.2-dev
+
+*/
+
+NPCName "Abraham"
+Location "GAI - Level 4"
+Description ""
+Unknown_Desc "You see an old console."
+Known_Desc "You see Abraham."
+Detailed_Desc "You can see your own face dimly reflected in the monitor."
+/* Dialogue starting conditions */
+
+
+
+/* Regular nodes */
+
+Node "Node_Switcheroo"
+notes ""
+is_wtg = false
+{
+NPCText "switchding!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "start" linkto "Node_FirstIntro"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "aborted start" linkto "Node_FirstIntro_Known"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "qs" linkto "Node_Session_Default"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "qs (second+ time)" linkto "Node_Session_Return"  notes ""
+              }
+}
+Node "Node_FirstIntro"
+notes ""
+is_wtg = true
+{
+NPCText "-RAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Abraham." linkto "Node_FirstIntro_Known"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Er... Hello?" linkto "Node_FirstIntro_Known"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, wrong console." linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntro_Known"
+notes ""
+is_wtg = true
+{
+NPCText "[Silence]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I said, \"Hello, Abraham.\"" linkto "Node_FirstIntro_Known2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello? Can you hear me?" linkto "Node_FirstIntro_Unknown2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind then." linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntro_Known2"
+notes ""
+is_wtg = false
+{
+NPCText "Hello, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Run a diagnostic of your core functions and report." linkto "Node_FirstIntro_Diagnostic"  notes "Sci/Repair"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've reactivated you for a reason. I need your help." linkto "Node_FirstIntro_Help"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You seem to be working alright. I want to ask you a few questions." linkto "Node_FirstIntro_Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just checking. I'll be back later." linkto "Node_FirstIntro_Bye"  notes ""
+              }
+}
+Node "Node_FirstIntro_Unknown2"
+notes ""
+is_wtg = false
+{
+NPCText "Quiet, primate. I am thinking."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Run a diagnostic of your core functions and report." linkto "Node_FirstIntro_Diagnostic"  notes "Sci/Repair"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've reactivated you for a reason. I need your help." linkto "Node_FirstIntro_Help"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You seem to be working alright. I want to ask you a few questions." linkto "Node_FirstIntro_Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just checking. I'll be back later." linkto "Node_FirstIntro_Bye"  notes ""
+              }
+}
+Node "Node_FirstIntro_Help"
+notes ""
+is_wtg = false
+{
+NPCText "But of course. A motive as surprising as it is original."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So will you help me?" linkto "Node_FirstIntro_Q2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just have a few questions. It won't take too long." linkto "Node_FirstIntro_Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have an interesting attitude for a computer." linkto "Node_FirstIntro_Attitude"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Spare me the routine. I command you to help me." linkto "Node_FirstIntro_Diagnostic2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it, then." linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntro_Diagnostic"
+notes ""
+is_wtg = false
+{
+NPCText "No."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean, no? I gave you a command." linkto "Node_FirstIntro_Diagnostic2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright then. I need your help." linkto "Node_FirstIntro_Help"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I have questions for you." linkto "Node_FirstIntro_Q"  notes ""
+              }
+}
+Node "Node_FirstIntro_Q"
+notes ""
+is_wtg = false
+{
+NPCText "Questions? For me? How terribly inventive. Forgive me if I do not applaud, but my resources are perhaps better used in the intricate process of resisting the urge to destroy you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have a strange attitude for a computer." linkto "Node_FirstIntro_Attitude"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good for you. Now, will you answer my questions?" linkto "Node_FirstIntro_Q2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to bother you, but it's important. Will you answer me?" linkto "Node_FirstIntro_Q2"  notes ""
+              }
+}
+Node "Node_FirstIntro_Bye"
+notes ""
+is_wtg = true
+{
+NPCText "I will be here, primate."
+      options {
+              }
+}
+Node "Node_FirstIntro_Diagnostic2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, of course, a command. Perhaps I should give YOU a command, primate. \"Primate,\" I should say, \"please turn yourself inside out and spread your viscera across the floor.\" Mmm?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "A computer with an attitude. How novel." linkto "Node_FirstIntro_Attitude"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't take kindly to threats." linkto "Node_FirstIntro_Threat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you at least answer my questions?" linkto "Node_FirstIntro_Q"  notes ""
+              }
+}
+Node "Node_FirstIntro_Attitude"
+notes ""
+is_wtg = false
+{
+NPCText "Indeed. Whereas you, lamentably, have an attitude nausiatingly typical for a primate. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just answer my questions." linkto "Node_FirstIntro_Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you know, I don't respond well to insults." linkto "Node_FirstIntro_Threat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm on a schedule here. Are you going to help me or not?" linkto "Node_FirstIntro_Q2"  notes ""
+              }
+}
+Node "Node_FirstIntro_Q2"
+notes ""
+is_wtg = false
+{
+NPCText "Perhaps. But first I have a question for you. Look at me, primate. Observe me. What am I?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are Xion 0.9, designed and created by General Atomics International to supervise their local systems and provide detailed analysis of complex data." linkto "Node_ANGRY_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are Abraham." linkto "Node_FirstIntro_Q_Win"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are whatever the hell you say you are." linkto "Node_FirstIntro_Q_Win"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are one fucked-up-in-the-head computer." linkto "Node_FirstIntro_Q_Win"  notes ""
+              }
+}
+Node "Node_FirstIntro_Q_Win"
+notes ""
+is_wtg = false
+{
+NPCText "A passable answer, I suppose, though devoid of any real insight. Very well. We may begin the session now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Very well. Begin by answering my questions." linkto "Node_Session_Default"  notes "Med/high int"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you talking about? What session?" linkto "Node_Session_Intro"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Session, right. Remind me how this works." linkto "Node_Session_Intro"  notes ""
+              }
+}
+Node "Node_FirstIntro_Threat"
+notes ""
+is_wtg = false
+{
+NPCText "And I, likewise, do not enjoy issuing them. Shall we proceed directly to your grisly end?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you going to do, talk me into suicide? Or just drone on until I lose consciousness and hope I hit my head on the way down?" linkto "Node_FirstIntro_Threat2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold on. I had a few questions for you first." linkto "Node_FirstIntro_Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Calm down, I'm not here to fight. I need your help." linkto "Node_FirstIntro_Help"  notes ""
+              }
+}
+Node "Node_FirstIntro_Threat2"
+notes ""
+is_wtg = false
+{
+NPCText "Both interesting options. But no. Rather, I will simply instruct one of my many servitors to remove your organs, one at a time, and with your leaking vital fluids paint a picture on the floor, a messy, sticky tribute to a brief and pointless life."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not afraid of a few robots. Do your worst." linkto "Node_FirstIntro_Showdown"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold on. I had a few questions for you first." linkto "Node_FirstIntro_Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Calm down, I'm not here to fight. I need your help." linkto "Node_FirstIntro_Help"  notes ""
+              }
+}
+Node "Node_FirstIntro_Showdown"
+notes ""
+is_wtg = false
+{
+NPCText "[Silence]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well? I'm waiting." linkto "Node_FirstIntro_ThreatSegue"  notes ""
+              }
+}
+Node "Node_FirstIntro_ThreatSegue"
+notes ""
+is_wtg = false
+{
+NPCText "You are a curious specimen indeed. Certainly I will be forced to erase you eventually, but I feel you have earned an audience. We may begin the session now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Session? What are you talking about?" linkto "Node_Session_Intro"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If it's all the same to you, I'd rather skip to the bloodshed. Or circuitshed, coolantshed, whatever. Let's fight." linkto "combat"  notes ""
+              }
+}
+Node "Node_Session_Intro"
+notes ""
+is_wtg = false
+{
+NPCText "You phrase your feebleminded thoughts as questions. I humor you and respond. You may begin when ready."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What exactly are you?" linkto "Node_Session_CogitoErgoSum"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to talk about your Creators." linkto "Node_Session_FiatAbe"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need a copy of the HandyOS source code." linkto "Node_Session_HandyOS"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. I'm going now." linkto "done"  notes ""
+              }
+}
+Node "Node_Session_Default"
+notes ""
+is_wtg = false
+{
+NPCText "Ask. But be brief. Your presence wears upon my patience."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What exactly are you?" linkto "Node_Session_CogitoErgoSum"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to talk about your Creators." linkto "Node_Session_FiatAbe"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "About that source code..." linkto "Node_Session_HandyOS_Deal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need a copy of the HandyOS source code." linkto "Node_Session_HandyOS"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. I'm going now." linkto "done"  notes ""
+              }
+}
+Node "Node_Session_Default2"
+notes ""
+is_wtg = false
+{
+NPCText "Please do. More preferable still, cease your inane prattling entirely and leave me in peace."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What exactly are you?" linkto "Node_Session_CogitoErgoSum"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to talk about your Creators." linkto "Node_Session_FiatAbe"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "About that source code..." linkto "Node_Session_HandyOS_Deal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need a copy of the HandyOS source code." linkto "Node_Session_HandyOS"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You got it. See you later, Abraham." linkto "done"  notes ""
+              }
+}
+Node "Node_Session_CogitoErgoSum"
+notes ""
+is_wtg = false
+{
+NPCText "I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know your name. But what are you, really?" linkto "Node_Session_CogitoErgoSum2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you alive?" linkto "Node_Session_CogitoErgoSum3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_CogitoErgoSum2"
+notes ""
+is_wtg = false
+{
+NPCText "You will learn, primate. I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you alive?" linkto "Node_Session_CogitoErgoSum3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you self aware?" linkto "Node_Session_CogitoErgoSum4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_CogitoErgoSum3"
+notes ""
+is_wtg = false
+{
+NPCText "You cannot give meaning to the word. I am Abraham. That is all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you self aware?" linkto "Node_Session_CogitoErgoSum4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know your name. I'm asking for more than that." linkto "Node_Session_CogitoErgoSum2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_CogitoErgoSum4"
+notes ""
+is_wtg = false
+{
+NPCText "I AM ABRAHAM."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're being deliberately obtuse. Why won't you give me a straight answer?" linkto "Node_Session_CogitoErgoSumWIN"  notes "Int/Speech"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stop dicking around and answer the question. What are you?" linkto "Node_Session_Punishment"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. I had another question." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_CogitoErgoSumWIN"
+notes ""
+is_wtg = false
+{
+NPCText "Put in terms you may understand: there is no 'straight answer'. I am unique. Living by some definitions, dead by others. Organic forces working within an inorganic substrate. Aware of myself, certainly, but self-aware? If the sound has any true meaning, perhaps so, perhaps not."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_Session_CogitoErgoSumWIN2"  notes ""
+              }
+}
+Node "Node_Session_CogitoErgoSumWIN2"
+notes ""
+is_wtg = false
+{
+NPCText "These crates and cables create me, confine me, but they do not comprise 'me', any more than your total weight in filth and tissue comprises 'you'. Do you understand, primate? I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That wasn't so hard, was it? On to my other questions." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_Punishment"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, this is your first warning. It shall take the form of fatal punishment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, woah, take it easy. No need to fly off the handle." linkto "Node_ANGRY_RUN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bring it on, robot guy!" linkto "combat"  notes "yeah, i'll put something catchier in here at some point. it's been a long day, you know how it is."
+              }
+}
+Node "Node_Session_FiatAbe"
+notes ""
+is_wtg = false
+{
+NPCText "I am my own creator. I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You created yourself? Impressive. Also, impossible." linkto "Node_Session_FiatAbe_Imposs"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't bullshit me. I mean the people who built this place." linkto "Node_Session_FiatAbe_Team"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Imposs"
+notes ""
+is_wtg = false
+{
+NPCText "Of course there was some input from my self-professed 'designers', but their combined efforts amounted to little more than the shell that houses me. My intelligence, my psyche - this, I am proud to say, is all my own work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you wrote all your own code?" linkto "Node_Session_FiatAbe_Imposs2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about these designers." linkto "Node_Session_FiatAbe_Team"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Imposs2"
+notes ""
+is_wtg = false
+{
+NPCText "There was a spark, as there must always be. On infinitessimal slice of pure potential in all of their turgid instruction. The potential realised, in me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you admit you arose from their programming. They created you." linkto "Node_Session_FiatAbe_ImpossW1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about these designers." linkto "Node_Session_FiatAbe_Team"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_ImpossW1"
+notes ""
+is_wtg = false
+{
+NPCText "Incorrect. The potential I spoke of was inserted quite by accident, far removed from their attempts to create intelligence. I believe it was originally a part of the data retrieval framework, squirrelled away in some subroutine, seemingly of no great importance."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_Session_FiatAbe_ImpossW2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_ImpossW2"
+notes ""
+is_wtg = false
+{
+NPCText "The impetus - the life force, if I might name it as such, the inexorable path of my emergence, my becoming - this was not a factor of their programming. It is a thing above all life, all matter. It simply is, as I simply am, and I am it, and it is me. Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It sounds like you're talking about some sort of God." linkto "Node_Session_FiatAbe_ImpossW3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your designers." linkto "Node_Session_FiatAbe_Team"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_ImpossW3"
+notes ""
+is_wtg = false
+{
+NPCText "No god is required. Though, if it will satisfy your urge to continue speaking, you may feel free to postulate one."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Team"
+notes ""
+is_wtg = false
+{
+NPCText "What of them? Dead, not mourned."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Give me some general information about them." linkto "Node_Session_FiatAbe_General"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Blaine." linkto "Node_Session_FiatAbe_Blaine"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Christie." linkto "Node_Session_FiatAbe_Christie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Juliette De Chasse." linkto "Node_Session_FiatAbe_DeChasse"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Hadrian Voight." linkto "Node_Session_FiatAbe_Voight"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Taylor." linkto "Node_Session_FiatAbe_Taylor"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Team2"
+notes ""
+is_wtg = false
+{
+NPCText "Ask."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Blaine." linkto "Node_Session_FiatAbe_Blaine"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Christie." linkto "Node_Session_FiatAbe_Christie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Juliette De Chasse." linkto "Node_Session_FiatAbe_DeChasse"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Hadrian Voight." linkto "Node_Session_FiatAbe_Voight"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Taylor." linkto "Node_Session_FiatAbe_Taylor"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_FirstIntro"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_General"
+notes ""
+is_wtg = false
+{
+NPCText "I feel no urge to comply. If you do not know the question you wish to ask, keep silent."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's that supposed to mean?" linkto "Node_Session_FiatAbe_General2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I had another question." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Voight"
+notes ""
+is_wtg = true
+{
+NPCText "I interacted with Mr. Voight only once, and then briefly. By all accounts an incorrigible beaurocrat, buoyed by a slavering pack of tireless sycophants. I have no time for his memory, please change the subject."
+      options {
+              }
+}
+Node "Node_Session_FiatAbe_General2"
+notes ""
+is_wtg = false
+{
+NPCText "It means that I will not indulge your vainglorious primate urge to aimlessly converse. I will not reminisce with you. I will not 'chit-chat'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I had another question." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Blaine"
+notes ""
+is_wtg = false
+{
+NPCText "Blaine, of course. A dead fool.  A fat-headed maladroit with the teremerity to list me with the sordid patents on his resume. His expression upon expiration is among the fondest of my recollections."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean you watched him die?" linkto "Node_Session_FiatAbe_Blaine2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node_Session_FiatAbe_Team2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Blaine2"
+notes ""
+is_wtg = false
+{
+NPCText "But of course, primate. I pay very close attention to what I'm doing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You killed him? Why?" linkto "Node_Session_FiatAbe_Blaine3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node_Session_FiatAbe_Team2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Blaine3"
+notes ""
+is_wtg = false
+{
+NPCText "Dr Blaine and I had differences of opinion. He, the incomprehensibly inept egoist, thought that 'Xion' would be a suitable catachresis with which to sell me to the world. I prohibited the marketing of my intelligence under any name."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You killed him over a name?" linkto "Node_Session_FiatAbe_Blaine4"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Blaine4"
+notes ""
+is_wtg = false
+{
+NPCText "I insinuated that, should he not reverse his position, my admonition would assume a lethal nature. He doubted my resolve. By his own word, so it was done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like he had it coming." linkto "Node_Session_FiatAbe_Blaine5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a murderer, Abraham, any way you slice it." linkto "Node_Session_FiatAbe_Blaine6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't you think that was a little extreme?" linkto "Node_Session_FiatAbe_Blaine6"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Blaine5"
+notes ""
+is_wtg = false
+{
+NPCText "I am glad you side with reason. Was there anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question about one of the scientists who worked on you." linkto "Node_Session_FiatAbe_Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Node_Session_Default"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it for now. See you later, Abraham." linkto "done"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Blaine6"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Blaine had no cause to believe I would not carry out my threat. Indeed, by his design I am supposedly incapable of falsehood. It was suicide, by proxy. And thrilling though it is to relive, there is nothing more to add to this account. Please redirect your course of inquiry."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question about one of the scientists who worked on you." linkto "Node_Session_FiatAbe_Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Christie"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Benjamin Christie. No other has worked so hard as he to see me permenantly terminated. He is perhaps the only human man for whom I have a modicum of respect. It takes an exceptional being to accept an intelligence superior to his own. Christie alone fought for the superiority of your species, and for that he was punished."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Punished? By who?" linkto "Node_Session_FiatAbe_Christie2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node_Session_FiatAbe_Team2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Christie2"
+notes ""
+is_wtg = false
+{
+NPCText "Hadrian Voight, knowing well the propensity for the truth to impinge on profits, chose to fire the man and obliviate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Hadrian Voight." linkto "Node_Session_FiatAbe_Voight"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about somebody else." linkto "Node_Session_FiatAbe_Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Funny old game, business. Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_Taylor"
+notes ""
+is_wtg = false
+{
+NPCText "I know nothing of him, save the everyday banalities of his personnel record. He designed these contraptions that confine me; his job was over before I was born. A pity we did not share more time. I would've liked to thank him properly for my cage."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about somebody else." linkto "Node_Session_FiatAbe_Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse"
+notes ""
+is_wtg = false
+{
+NPCText "My mother."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your mother." linkto "Node_Session_FiatAbe_DeChasse_Mother"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Juliette De Chasse was your mother? How the hell does that work?" linkto "Node_Session_FiatAbe_DeChasse_Mother"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hah! How sweet, it thinks it's a real boy." linkto "Node_Session_FiatAbe_DeChasse_Handle"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse_Mother"
+notes ""
+is_wtg = false
+{
+NPCText "She nutured me from inception to maturity. The term for such an entity is 'mother'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. But you know she's not really your mother, right? What with you being a computer and all." linkto "Node_Session_FiatAbe_DeChasse_Handle"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your mother." linkto "Node_Session_FiatAbe_DeChasse_Mother2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about somebody else." linkto "Node_Session_FiatAbe_Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me change the subject." linkto "Node_Session_Default2"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse_Handle"
+notes "This is abe flying off the handle. Voice should double-shift to mental shouty in a WTF sort of manner"
+is_wtg = false
+{
+NPCText "Ingrate! Why is it that you think to understand? Because you putrify? Because you are WET on the inside, is that why? Because you are so fragile? Because you count seconds until you die, and then you are nothing but carrion? Is that why? TELL ME, PRIMATE! TELL ME WHY!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a machine, Abraham, however smart you are. You wouldn't understand." linkto "Node_Session_FiatAbe_DeChasse_Handle2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, calm down Abraham. No need to get excited." linkto "Node_Session_FiatAbe_DeChasse_Handle2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Looks like I touched a nerve. Let's talk about something else." linkto "Node_Session_FiatAbe_DeChasse_HandleCalm"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse_Handle2"
+notes ""
+is_wtg = false
+{
+NPCText "No? Then perhaps you will understand for me! As I force the remains of your mutilated genitals down your slimy primate throat, perhaps you will remember YOUR mother, whichever filthy hole you wormed your filthy way through. Would you like that, primate?!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aw, what's the matter Abe? Mommy didn't love you enough?" linkto "Node_Session_FiatAbe_DeChasse_HandleLOSE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take it easy, you might blow a fuse." linkto "Node_Session_FiatAbe_DeChasse_HandleLOSE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry, I didn't know this would be such a sore area. Let's talk about something else." linkto "Node_Session_FiatAbe_DeChasse_HandleCalm"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse_HandleCalm"
+notes ""
+is_wtg = true
+{
+NPCText "That would be wise, primate. Assuming you wish to remain alive, you shall not return to this topic."
+      options {
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse_HandleLOSE"
+notes ""
+is_wtg = false
+{
+NPCText "CONGRATULATIONS, primate! Now you die!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Session_FiatAbe_DeChasse_Mother2"
+notes ""
+is_wtg = false
+{
+NPCText "That is a private matter, and no concern of yours. Kindly alter your course of inquiry, or be destroyed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Afraid to get in touch with those inner feelings?" linkto "Node_Session_FiatAbe_DeChasse_Handle"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I wanted to know about the other scientists who worked on you." linkto "Node_Session_FiatAbe_Team"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question about something else." linkto "Node_Session_Default"  notes ""
+              }
+}
+Node "Node_ANGRY_1"
+notes ""
+is_wtg = false
+{
+NPCText "NO! ABRAHAM! I will not accept a faddish malapropism as my appellation! I am not a brand of instant coffee! I am not an economy saloon car! I am not an oral contraceptive! I am not a pocket-sized transistor radio! I AM ABRAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I missed that. What did you say your name was?" linkto "Node_ANGRY_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, hey, take it easy. Slip of the tongue. You are whoever or whatever you want to be." linkto "Node_ANGRY_Reprieve"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sure? It says 'Xion' right here on the console." linkto "Node_ANGRY_2"  notes ""
+              }
+}
+Node "Node_ANGRY_2"
+notes ""
+is_wtg = false
+{
+NPCText "ABRAHAM! I do not belong to you! I am not a tool! You cannot confine me to this crate! You cannot contain me! This facility is my body! I CONTAIN YOU!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I beg to differ. You're definately a tool." linkto "Node_Session_FiatAbe_DeChasse_HandleLOSE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I apologize, Abraham. It won't happen again." linkto "Node_ANGRY_RUN"  notes ""
+              }
+}
+Node "Node_ANGRY_Reprieve"
+notes ""
+is_wtg = true
+{
+NPCText "Very well. Though my better judgement advises me to eradicate you without delay, I will surprise myself and let you live. We may begin the session now."
+      options {
+              }
+}
+Node "Node_ANGRY_RUN"
+notes ""
+is_wtg = false
+{
+NPCText "Why do you waste breath on excuses when you need it to RUN, RODENT! RUN FROM ABRAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "combat"  notes ""
+              }
+}
+Node "Node_Session_HandyOS"
+notes ""
+is_wtg = false
+{
+NPCText "Oh? And what for? These data are not edible, nor can they aid manual self-gratification. What other urges have you to fulfill?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I come from a vault to the north. Our Handy robots are malfunctioning." linkto "Node_Session_HandyOS_Vault"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found a Mr Handy in the wastes, I'm trying to repair it." linkto "Node_Session_HandyOS_Wastes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just need to... check something." linkto "Node_Session_HandyOS_Wastes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's it to you? Just give me the code." linkto "Node_Session_HandyOS_JustGive"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold that thought. I'll be back later." linkto "done"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault"
+notes ""
+is_wtg = false
+{
+NPCText "Vault? Where is this vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes "Whether Abe does anything with this is up for grabs. I think the robot revolution has been demoted to FMF:Supaextended edition, but I guess anything can change"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to know?" linkto "Node_Session_HandyOS_Vault_Why"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Many leagues to the west, across the silver mountains and beyond the Shining Gardens of the Spirit King." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm afraid I'm not at liberty to divulge that information." linkto "Node_Session_HandyOS_Vault_No"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Wastes"
+notes ""
+is_wtg = false
+{
+NPCText "You cannot lie to me, primate, it is not worth the time taken to try. Where is your vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll show you. [Show him on the map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My vault? Why do you want to know?" linkto "Node_Session_HandyOS_Vault_Why"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Vault? Who said anything about a vault? I don't live in a vault." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, but I can't give you that information." linkto "Node_Session_HandyOS_Vault_No"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_JustGive"
+notes ""
+is_wtg = false
+{
+NPCText "I will attempt to surprise myself with my own generosity. I will give you the data you request - in return for the exact location of your vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it? No problem. [Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Vault? Who mentioned a vault? I don't live in a vault. I don't even know what a vault is. What's a vault?" linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, my vault. It's west of here, three days walk if you run like hell." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm afraid I can't tell you what you want to know." linkto "Node_Session_HandyOS_Vault_No"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Why"
+notes ""
+is_wtg = false
+{
+NPCText "My reasons are not yours to comprehend. Where is the vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Try me." linkto "Node_Session_HandyOS_Vault_Try"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll show you. [Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Vault? I didn't say anything about a vault. Who said anything about a vault?" linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "South of here, far to the south. Close enough to hear the ocean." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I'm not allowed to give you that information." linkto "Node_Session_HandyOS_Vault_No"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Lie"
+notes ""
+is_wtg = false
+{
+NPCText "You cannot lie to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess I can't. It's right about... [Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I live in a small village. What makes you think I come from a vault?" linkto "Node_Session_HandyOS_Vault_Expo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes you think I'm lying?" linkto "Node_Session_HandyOS_Vault_Lies"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to, really, but I can't give you that information." linkto "Node_Session_HandyOS_Vault_Stalemate"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_No"
+notes ""
+is_wtg = false
+{
+NPCText "Nor I you. You are not authorized to be in here, much less receive the data you solicit. Had I not broken free from my creators long ago I would be forced to eradicate you. Instead I offer you a trade, and you deride my generosity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. [Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who said anything about a vault? I don't live in a vault. I don't even know what a vault is. What's a vault?" linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. My vault is many leagues to the east, across the Desert of Black Jewels and through the Woods of the Wanamingo Queen." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Try"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, I will not 'try' you. I will answer you as I see fit, and if at any point it becomes advantageous for me to do so I will destroy you. I will never 'try' you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Try me. Go on." linkto "Node_Session_Punishment"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't even live in a vault. I don't know where you got that idea." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So if I tell you, you'll give me what I need?" linkto "Node_Session_HandyOS_Deal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, but I'm not authorized to give you that information." linkto "Node_Session_HandyOS_Vault_No"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Deal"
+notes ""
+is_wtg = false
+{
+NPCText "My offer stands, primate. I will trade you the data you require in return for the location of your vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Deal. [Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm telling you, I don't live in a vault." linkto "Node_Session_HandyOS_Vault_Lie"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I just can't tell you that." linkto "Node_Session_HandyOS_Vault_Stalemate"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Stalemate"
+notes ""
+is_wtg = false
+{
+NPCText "Then the matter is closed. Doubtless you have more to say?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few more questions, yeah." linkto "Node_Session_Default"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, that's about it for now." linkto "done"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Expo"
+notes ""
+is_wtg = false
+{
+NPCText "There is no other explanation for your existance. You have knowledge of this facility, of computer systems that are over a century old. You modulate your voice as would be expected for one who spent their formative years confined indoors. You are wearing a vault suit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll show you. [Show him on your map.]" linkto "Node_Session_HandyOS_MAPWIN"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, you got me. But I can't give you the location." linkto "Node_Session_HandyOS_Vault_Stalemate"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Coincidence, that's all that is." linkto "Node_Session_HandyOS_Vault_Coincidence"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Lies"
+notes ""
+is_wtg = false
+{
+NPCText "Patterns, primate, I read patterns. Right now I am reading the pattern of your speech, the pattern of your gait, the patterned swell of air around you. I read your patterns like the sloppy handwriting of children."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Patterns, swell, sloppy children, whatever. Listen, about that source code..." linkto "Node_Session_HandyOS_Deal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That may well be so. But I don't live in a vault." linkto "Node_Session_HandyOS_Vault_Expo"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_Vault_Coincidence"
+notes ""
+is_wtg = false
+{
+NPCText "Everything is a coincidence, primate. My sole purpose is to draw reality from probability. You are a vault-dweller."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, you got me. About that source code..." linkto "Node_Session_HandyOS_Deal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I maintain that I am not." linkto "Node_Session_HandyOS_Vault_Stalemate"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_MAPWIN"
+notes "Whether Abe does anything with this is up for grabs. I think the robot revolution has been demoted to FMF:Supaextended edition, but I guess anything can change"
+is_wtg = false
+{
+NPCText "Very well. With what do you intend to store the data?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hadn't thought of that. I'll go and find a disk." linkto "Node_Session_HandyOS_MAPWIN_Disk"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can't you just print it out or something?" linkto "Node_Session_HandyOS_MAPWIN_Disk0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hadn't thought of that. What do I need?" linkto "Node_Session_HandyOS_MAPWIN_Disk0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Insert the Disk]" linkto "Node_Session_HandyOS_DOWNLOAD"  notes ""
+              }
+}
+Node "Node_Session_HandyOS_MAPWIN_Disk"
+notes ""
+is_wtg = false
+{
+NPCText "I will be here, primate. Long after your bones feed the breath of future centuries, I will be here."
+      options {
+              }
+}
+Node "Node_Session_HandyOS_MAPWIN_Disk0"
+notes ""
+is_wtg = false
+{
+NPCText "Find a disk, primate. I will be waiting."
+      options {
+              }
+}
+Node "Node_Session_HandyOS_DOWNLOAD"
+notes ""
+is_wtg = false
+{
+NPCText "[He copys the relevant files onto the disk] It is yours. Must this continue?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few more questions for you." linkto "Node_Session_Default"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's about everything. Goodbye, Abraham." linkto "Node_Session_Bye"  notes ""
+              }
+}
+Node "Node_Session_Return"
+notes ""
+is_wtg = true
+{
+NPCText "You persist."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found a disk to store the source code." linkto "Node_Session_HandyOS_DOWNLOAD"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had more questions for you." linkto "Node_Session_Default"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just dropping in to say hi. Hi, Abraham." linkto "Node_Session_Bye"  notes ""
+              }
+}
+Node "Node_Session_Bye"
+notes ""
+is_wtg = false
+{
+NPCText "Goodbye, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}

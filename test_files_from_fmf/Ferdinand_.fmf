@@ -1,0 +1,451 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.1-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Float message nodes */
+
+Floatnode "Ferd_Hurt"
+notes "Ferdinand floats these strings if he is mildly hurt."
+{
+"I think I feel that last one a little.",
+"This hurt a little, but I've had worse.",
+"Nothing like a bit of pain to make a real man out of you.",
+"You got the stimpacks, amigo? I could used one, here."
+}
+Floatnode "Ferd_Bad_Hurt"
+notes "Ferdinand floats these strings if he is seriously hurt."
+{
+"Ay... I don' think I can go on much more.",
+"¡Puta! This hurt real bad, you know.",
+"Estoy pedo... we rest soon, okay?",
+"I don' feel this bad since the Explorers go to Sandover."
+}
+Floatnode "Ferd_Wait"
+notes "Ferdinand floats these strings if he has been part of the PC's group, but has been asked to wait behind."
+{
+"I wonder when my frien' show up again.",
+"Ay! I hope we get moving again, soon.",
+"This is no place for a man to be left standing.",
+"I got better things to do than stan' here all day."
+}
+Floatnode "Ferd_Place_Hate"
+notes "Ferdinand floats these strings if he doesn't like the area the party is in."
+{
+"I got a bad feeling about this place...",
+"I think we should go soon, okay?",
+"I hope you're not thinking about staying too long.",
+"The sooner we're gone, the better.",
+"¿Qué pasa? Can we go soon?",
+"I don' mind telling you I am a little afraid."
+}
+Floatnode "Ferd_Poisoned"
+notes "Ferdinand floats these strings if he has been poisoned."
+{
+}
+Floatnode "Ferd_Radiated"
+notes "Ferdinand floats these strings if he has been radiated."
+{
+}
+Floatnode "Ferd_PC_Drugs"
+notes "Ferdinand floats these strings when the PC uses drugs on him."
+{
+}
+Floatnode "Ferd_PC_Need_Heal"
+notes "Ferdinand floats these strings if the PC uses healing measures on him, and Ferdinand was injured."
+{
+}
+Floatnode "Ferd_PC_Not_Need_Heal"
+notes "Ferdinand floats these strings if the PC uses healing measures on him, and Ferdinand was not injured."
+{
+}
+Floatnode "Ferd_Move"
+notes "Ferdinand floats these strings if the PC tells him to get out of the way."
+{
+"Take it easy, amigo.",
+"¿Qué te pasa?",
+"I did not mean to get in your way, amigo.",
+"I didn't see you there, <PC>.",
+"Lo siento. I'll move.",
+"¿Cómo?"
+}
+Floatnode "Ferd_Crossroads"
+notes "Ferdinand floats these strings if the party is in Crossroads."
+{
+"I hope the Explorers do okay without me.",
+"Maybe we check out Sara's Place?"
+}
+Floatnode "Ferd_Sandover"
+notes "Ferdinand floats these strings if the party is in Sandover."
+{
+}
+Floatnode "Ferd_Rusty"
+notes "Ferdinand floats these strings if the party is in Rusty Springs."
+{
+}
+Floatnode "Ferd_CotC"
+notes "Ferdinand floats these strings if the party is in the City on the Coast."
+{
+}
+
+/* Regular nodes */
+
+Node "Ferd_0"
+notes ""
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has never met Ferdinand before -" linkto "Ferd_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has met Ferdinand before -" linkto ""  notes ""
+          int=1 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "- The PC is female and has slept with Ferdinand before -" linkto ""  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- Ferdinand is a member of the PC's group -" linkto ""  notes ""
+              }
+}
+Node "Ferd_1a_1"
+notes ""
+{
+NPCText "Buenos días, Señor. My name is Ferdinand. What bring you to the Wastelan' Explorers' tent?"
+ NPCFemaleText "Buenos días, Señorita. My name is Ferdinand. What bring you to the Wastelan' Explorers' tent?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was wondering who you are." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are you talking like that?" linkto "Ferd_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just leaving, actually." linkto "done"  notes ""
+              }
+}
+Node "Ferd_1a_2a"
+notes ""
+{
+NPCText "Like the others in here, I am a Wastelan' Explorer."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the Wasteland Explorers?" linkto "Ferd_3_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What job do you have with the Wasteland Explorers?" linkto "Ferd_3_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are you talking like that?" linkto "Ferd_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just leaving, actually." linkto "done"  notes ""
+              }
+}
+Node "Ferd_1a_2b_1"
+notes ""
+{
+NPCText "¿Qué? Why am I talking like what?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound foreign." linkto "Ferd_1a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound like an idiot." linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Who are you, anyway?" linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I must leave." linkto "done"  notes ""
+              }
+}
+Node "Ferd_1a_2b_2"
+notes ""
+{
+NPCText "*He smiles.* I soun' foreign to people from these places, si. I am from Mexico, amigo."
+ NPCFemaleText "*He smiles.* I soun' foreign to people from these places, si. I am from Mexico, Señorita."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "You're very far from Mexico. Why are you in Crossroads?" linkto "Ferd_2_2a_1" conditions { CHECK_STAT intelligence >= 6 } notes "Note mild intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know Mexico. Is it near here?" linkto "Ferd_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound like an idiot." linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you are doing here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I must leave." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_1"
+notes "The Ferd_2_* path is where the PC can find out about Ferdinand's roots in Mexico."
+{
+NPCText "I am from Mexico, amigo."
+ NPCFemaleText "I am from Mexico, Señorita."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "You're very far from Mexico. Why are you in Crossroads?" linkto "Ferd_2_2a_1" conditions { CHECK_STAT intelligence >= 6 } notes "Note mild intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know Mexico. Is it near here?" linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound like an idiot." linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you are doing here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I must leave." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_1"
+notes ""
+{
+NPCText "My people, they think the world north of Mexico to be a better place to live. I came here looking for a better life."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it a better life, here?" linkto "Ferd_2_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_2"
+notes ""
+{
+NPCText "No. During the war, the bombs make a much worse mess here in America than they do in Mexico."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which part of Mexico do you come from?" linkto "Ferd_2_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly was Mexico damaged during the war?" linkto "Ferd_2_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you return to Mexico?" linkto "Ferd_2_2a_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3a_1"
+notes ""
+{
+NPCText "I come from Mexico City. She was hit by many bombs during the war. There is little left above the surface."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "\"Above the surface\"? What is below it?" linkto "Ferd_2_2a_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly was Mexico damaged during the war?" linkto "Ferd_2_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you return to Mexico?" linkto "Ferd_2_2a_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3a_2"
+notes ""
+{
+NPCText "A whole undergroun' world exists under Mexico City that no-one use or know about. Basements; old tunnels; old subway routes. My ancestors, they live in these areas long before the world above go loco and everyone blow each other up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you think Mexico was attacked during the war?" linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean your ancestors were vagrants?" linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly was Mexico damaged during the war?" linkto "Ferd_2_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you return to Mexico?" linkto "Ferd_2_2a_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3b_1"
+notes ""
+{
+NPCText "Although not as bad as America, Mexico was hit pretty bad, you know? All the cities are in ruins. Perhaps the radiation is not so bad as it is around here, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you think Mexico was attacked during the war?" linkto "Ferd_2_2a_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which part of Mexico do you come from?" linkto "Ferd_2_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you return to Mexico?" linkto "Ferd_2_2a_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3b_2"
+notes ""
+{
+NPCText "*Ferdinand grins.* That come to be something of a joke in Mexico. Amongst the survivors, at least."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Ferd_2_2a_3b_3"  notes ""
+              }
+}
+Node "Ferd_2_2a_3b_3"
+notes ""
+{
+NPCText "Some, they say the Reds see Mexico as a big friend and ally of America, so they blow us up. Others, they say America was not so keen on Mexico surviving the war so close to them and perhaps taking over, so the gringos take us with them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which of the two do you think is true?" linkto "Ferd_2_2a_3b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which part of Mexico do you come from?" linkto "Ferd_2_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you return to Mexico?" linkto "Ferd_2_2a_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3b_4"
+notes ""
+{
+NPCText "*He shrugs.* I don' really give it much thought. I don' see what difference it make."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which part of Mexico do you come from?" linkto "Ferd_2_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you return to Mexico?" linkto "Ferd_2_2a_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3c_1"
+notes ""
+{
+NPCText "Maybe when I was a younger man I would have returned if had made enough money. I am too old now, though. Mexico, she has probably changed too much since I left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long has it been since you left Mexico?" linkto "Ferd_2_2a_3c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which part of Mexico do you come from?" linkto "Ferd_2_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly was Mexico damaged during the war?" linkto "Ferd_2_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2a_3c_2"
+notes ""
+{
+NPCText "Ay, you're asking me a tough question, there. I don' know, say maybe twenty-five or thirty years ago? It seem like a lifetime ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which part of Mexico do you come from?" linkto "Ferd_2_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly was Mexico damaged during the war?" linkto "Ferd_2_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you do, here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2b_1"
+notes ""
+{
+NPCText "*He laughs.* Tha's pretty funny! No, amigo, before the war, Mexico used to be a country, like America."
+ NPCFemaleText "*He laughs.* Tha's pretty funny! No, Señorita, before the war, Mexico used to be a country, like America."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How could I find it?" linkto "Ferd_2_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you are doing here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't laugh at me. You're the one who talks like an idiot." linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I must leave." linkto "done"  notes ""
+              }
+}
+Node "Ferd_2_2b_2"
+notes ""
+{
+NPCText "Mexico is south of here, but she is many hundreds of miles away. I doubt you would ever reach her, amigo."
+ NPCFemaleText "Mexico is south of here, but she is many hundreds of miles away. I doubt you would ever reach her, Señorita."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If it's so far away, why are you in Crossroads?" linkto "Ferd_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Please tell me what you are doing here." linkto "Ferd_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I must leave." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_1a"
+notes "The Ferd_3_* path is where the PC can find out about Ferdinand's role in the Explorers."
+{
+NPCText "Our group, we look for technology left behind after the Great War. What we find, we sell."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do the Explorers make much money that way?" linkto "Ferd_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What job do you have with the Wasteland Explorers?" linkto "Ferd_3_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are you talking like that?" linkto "Ferd_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_1b_1"
+notes "The Ferd_3_* path is where the PC can find out about Ferdinand's role in the Explorers."
+{
+NPCText "I usually work with Bruce. We go scouting for areas where tech can be found."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Bruce?" linkto "Ferd_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is in charge of the Explorers?" linkto "Ferd_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with the tech you find?" linkto "Ferd_3_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_1b_2"
+notes ""
+{
+NPCText "Pre-war tech sells for big money, amigo. Finding buyers for tech is no big deal; finding something to sell in the first place is the problem!"
+ NPCFemaleText "Pre-war tech sells for big money, Señorita. Finding buyers for tech is no big deal; finding something to sell in the first place is the problem!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is in charge of the Explorers?" linkto "Ferd_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is there good money to be made in exploring?" linkto "Ferd_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2a_1"
+notes ""
+{
+NPCText "The group is split into two halves. One half, it goes out into the wastes and looks for sites where tech from before the war can be found. The other, it goes to the sites where we have found tech and digs it up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Ferd_3_2a_2"  notes ""
+              }
+}
+Node "Ferd_3_2a_2"
+notes ""
+{
+NPCText "Bruce is in charge of the group that explores the wastes for new opportunities. His wife, Miranda, she runs the other half of the group which goes out an' digs up the tech once it is found."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Bruce?" linkto "Ferd_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Miranda?" linkto "Ferd_3_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with the tech you find?" linkto "Ferd_3_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2a_3a_1"
+notes ""
+{
+NPCText "He is a great guy to work with, you know? Hey, you should speak to him yourself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Where can I find Bruce?" linkto "Ferd_3_2a_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Miranda?" linkto "Ferd_3_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with the tech you find?" linkto "Ferd_3_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2a_3a_2"
+notes ""
+{
+NPCText "You can't miss him. The big hombre in the leather jacket at the back of the tent."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Miranda?" linkto "Ferd_3_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with the tech you find?" linkto "Ferd_3_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and speak to him now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2a_3b_1"
+notes ""
+{
+NPCText "Miranda is a good lady. A real mother for the group. Remember that she is married to Bruce, though, amigo. He can be a pretty mean guy when he wants to be."
+ NPCFemaleText "Miranda is a good lady. A real mother for the group. You would like her; maybe you should introduce yourself to her, no?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I'd like to meet her. Where is she?" linkto "Ferd_3_2a_3b_2F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Bruce?" linkto "Ferd_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with the tech you find?" linkto "Ferd_3_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2a_3b_2F"
+notes ""
+{
+NPCText "* TELL THE FEMALE PC WHAT MIRANDA LOOKS LIKE AND WHERE SHE IS *"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Bruce?" linkto "Ferd_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with the tech you find?" linkto "Ferd_3_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and speak to her now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2b_1"
+notes ""
+{
+NPCText "*He frowns and snorts with frustration.* Maybe a few years ago, before we found all there was to find around Crossroads, yes, there were big amounts of caps to be made."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Ferd_3_2b_2"  notes ""
+              }
+}
+Node "Ferd_3_2b_2"
+notes ""
+{
+NPCText "These days? When it is really quiet, some of us even work as guards for the caravans. I don' know if there is much left to be explored aroun' here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If it came to it, could you become a caravan guard permanently?" linkto "Ferd_3_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What job do you have with the Wasteland Explorers?" linkto "Ferd_3_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_3_2b_3"
+notes ""
+{
+NPCText "Si, I could do that. But I don' wan' to. This life... it is good, you know? I would rather be exploring the world rather than just travelling back an' forward between the same towns."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I do a lot of travelling. Would you like to come with me?" linkto "Ferd_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Ferd_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Excuse me, I have to go." linkto "done"  notes ""
+              }
+}
+Node "Ferd_9"
+notes ""
+{
+NPCText "Si, ask me anything you wan'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What job do you have with the Wasteland Explorers?" linkto "Ferd_3_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the Wasteland Explorers?" linkto "Ferd_3_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you come from?" linkto "Ferd_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't have anything I need to ask you. Goodbye." linkto "done"  notes ""
+              }
+}

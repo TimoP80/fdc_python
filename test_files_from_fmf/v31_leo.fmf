@@ -1,0 +1,94 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Leo"
+Location "Vault 31"
+Description "The guy who comes up to the player, trying to wake them up."
+Unknown_Desc "You see Leo."
+Known_Desc "That's leo, dude."
+Detailed_Desc "He seems to be in a hurry."
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "<PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wh... wha?" linkto "Node_002"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "Wake up! Come on, <PC> you need to get ready. The board wants to see you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, I'm getting up." linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bite me. I'm going back to sleep." linkto "Node_003"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "But what about the board?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The board can bite me too." linkto "Node_005"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "That's the spirit. Today could be your lucky day!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lucky how?" linkto "Node_007"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "Typical. This could be a big day for you, <PC>, but you'd rather just sleep through it. <PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Big day? What do you mean?" linkto "Node_007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Zzzz..." linkto "done"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "Oh, forgive me. I'll wait for you outside."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "It's not every day a technician gets called before the board. You could be up for a promotion!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That seems unlikely. Most of the time I'm only pretending I'm working." linkto "Node_009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have been working pretty hard lately. You could be right." linkto "Node_008"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "Just don't forget us little guys when you've made your fortune. I'll see you later."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "Well that's all they ever do, right? Whatever they want, you shouldn't keep them waiting. I'll see you later."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}

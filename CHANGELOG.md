@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-03-13
+
+### Added
+- **Plugin system security documentation**: Added security warning to `core/plugin_system.py` explaining that plugins have full Python execution privileges
+
+### Fixed
+- **Empty script compiler path validation**: Fixed `Settings.validate_script_compiler_path()` to return True for empty paths (meaning "use default")
+- **Import functions cleaned up**: Removed unnecessary file dialogs from `on_import_ddf()` and `on_import_msg()` since they were not used
+- **Improved TODO messages**: Updated placeholder implementations to be more explicit about what's not implemented
+- **dialog_manager.py documentation**: Added better docstring explaining `get_current_node()` requires UI integration
+
+### Changed
+- **Export plugin docstring**: Fixed typo (`w"""` → `"""`)
+
 ## [2.1.0] - 2026-03-13
 
 ### Added

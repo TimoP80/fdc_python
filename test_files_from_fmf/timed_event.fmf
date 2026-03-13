@@ -1,0 +1,44 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.28.0-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Timed events */
+
+// Intervals are entered in seconds (converted to game ticks by the script)
+// default_event points to an index from the timed event list
+// starting from zero
+Default_Event = 0
+TimeEvent fixed_param_name="TestEvent", enum=0
+IsRandomInterval = True
+IntervalMin=2
+IntervalMax=8
+   code = {
+    "call Floaters;",
+    "flush_add_timer_event_sec(self_obj, random(2, 8),TestEvent);"
+  }
+
+/* Float message nodes */
+
+Floatnode "Floaters"
+notes "These are floaters spoken by the NPC at random intervals"
+{
+"I am a test character!",
+"This is a test!",
+"Hello! I rock tha whole block."
+}
+
+/* Regular nodes */
+

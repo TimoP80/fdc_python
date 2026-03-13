@@ -1,0 +1,28 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.1-stable
+
+*/
+
+NPCName "Testa"
+Location "Den"
+Description "Testa"
+Unknown_Desc "You see : Unknown Description"
+Known_Desc "You see : Known Description"
+Detailed_Desc "This script should be working, but for some strange reason it does not."
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "Hello."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye" linkto "done"  notes ""
+              }
+}

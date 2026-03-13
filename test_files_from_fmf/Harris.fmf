@@ -1,0 +1,385 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.24.4-beta
+
+*/
+
+NPCName "Harris"
+Location "Crossroads"
+Description "Harris is a patron of Sara's Place. He serves no purpose in the game other than to provide the PC with the Lucky Horseshoe item, which is part of the quest of the same name."
+Unknown_Desc "You see a man happily nursing a bottle of beer."
+Known_Desc "You see Harris. He is enjoying another beer."
+Detailed_Desc "Many more empty bottles, similar to the half-full one he is holding, are grouped on the table in front of him."
+/* Regular nodes */
+
+Node "Har_0"
+notes "Harris will only speak to the PC once, if he/she is dumb."
+{
+NPCText "*** STARTING CONDITIONS ***"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has never met Harris before -" linkto "Har_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Harris before -" linkto "Har_1b_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has bought a round of drinks in the bar where Harris is drinking -" linkto "Har_1c_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has taken the Lucky Horseshoe from Harris -" linkto "Har_1b_1"  notes ""
+              }
+}
+Node "Har_1a_1"
+notes ""
+{
+NPCText "Hi, there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, my name's <PC>. How about you?" linkto "Har_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's your story?" linkto "Har_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck off, bar-fly." linkto "Har_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye, there." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello. You smell like beer." linkto "Har_1a_D1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_2a_1"
+notes ""
+{
+NPCText "Good to meet you, <PC>. My name's Harris. Lend me ten caps and I'll buy you a drink."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What the hell - here's ten. Beer me." linkto "Har_1a_2a_2" conditions { CHECK_MONEY dude_caps >= 10 } notes "The screen fades to black and back. Decrement the number of caps owned by the PC by 10. Put a beer in the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure. Here's ten. Get me something non-alcoholic." linkto "Har_1a_2a_2" conditions { CHECK_MONEY dude_caps >= 10 } notes "The screen fades to black and back. Decrement the number of caps owned by the PC by 10. Put a Nuka-Cola in the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Err... no. What's your story?" linkto "Har_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck off, bar-fly." linkto "Har_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. 'Bye." linkto "done"  notes ""
+              }
+}
+Node "Har_1a_2a_2"
+notes ""
+{
+NPCText "There you go, buddy. *He hands you your drink.*"
+ NPCFemaleText "There you go, lady. *He hands you your drink.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what's your story?" linkto "Har_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. See you later." linkto "done"  notes ""
+              }
+}
+Node "Har_1a_2b_1"
+notes ""
+{
+NPCText "I've just finished work over at the cattle pens and I'm soaking up a few beers, that's my story."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Has anything interesting happened to you recently?" linkto "Har_1a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Har_1a_2b_2"
+notes ""
+{
+NPCText "Err... nope. Wait, a brahmin stood on Carl's foot the other day. Cracked me up the way he danced - funniest thing I have ever seen, I swear!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The things you guys must get up to. Well, I must be going." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll take that as a no, then. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D1"
+notes ""
+{
+NPCText "What?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I smell beer once but Mommy said I not allowed drink it." linkto "Har_1a_D2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D2"
+notes ""
+{
+NPCText "A damn retard, that's all I need."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not a retard. I special. Mommy and Overseer say so." linkto "Har_1a_D3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D3"
+notes ""
+{
+NPCText "Overseer? The hell you talking about, boy? What Overseer?"
+ NPCFemaleText "Overseer? The hell you talking about, girl? What Overseer?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Overseer run my home. Place where I come from." linkto "Har_1a_D4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D4"
+notes ""
+{
+NPCText "You mean an Overseer from a vault? *The man snorts a laugh, not sure whether to believe you.* You better not be messing with me, boy."
+ NPCFemaleText "You mean an Overseer from a vault? *The man snorts a laugh, not sure whether to believe you.* You better not be messing with me, girl."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not lie. I tell you truth." linkto "Har_1a_D5_a1"  notes "Moderate speech check. IF failed, go to Har_1a_D5_b instead."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D5_a1"
+notes ""
+{
+NPCText "Okay. Where is this vault of yours?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Point North.*" linkto "Har_1a_D5_a2"  notes "If the player chooses this option, it counts towards the number of times the PC reveals the location of Vault 31, which is needed to determine whether or not the Wasteland Explorers will be at the vault when the PC returns."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Point East.*" linkto "Har_1a_D5_a2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Point South.*" linkto "Har_1a_D5_a2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Point West.*" linkto "Har_1a_D5_a2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D5_a2"
+notes ""
+{
+NPCText "Fancy that. *He turns away from you and takes a thoughtful swig from his beer bottle.* Fancy that."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1a_D5_b"
+notes ""
+{
+NPCText "*The man laughs again and this time a few nearby bar patrons join in.* Get lost, kid. This is no place for children to be playing in."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1b_1"
+notes ""
+{
+NPCText "Hello again. Fancy joining me for a drink? Your treat, I'm afraid - I'm stone broke."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's ten caps. Get me something non-alcoholic and whatever you're having." linkto "Har_1b_2" conditions { CHECK_MONEY dude_caps >= 10 } notes "The screen fades to black and back. Decrement the number of caps owned by the PC by 10. Put a Nuka-Cola in the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's ten caps. Get me a beer and whatever you're having." linkto "Har_1b_2" conditions { CHECK_MONEY dude_caps >= 10 } notes "The screen fades to black and back. Decrement the number of caps owned by the PC by 10. Put a beer in the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck off, bar-fly." linkto "Har_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_2"
+notes ""
+{
+NPCText "Thanks. Here's yours. *He hands you your drink.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anything interesting happened since we last spoke?" linkto "Har_1b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_3"
+notes ""
+{
+NPCText "Yeah, I've been watching that spider build that web. *He points with the neck of his beer-bottle at an intricate web strung between one of the bar-tent's poles and the canvas around it.* Fascinating creatures to watch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Watch the spider -" linkto "Har_1b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_4"
+notes ""
+{
+NPCText "*After a few minutes, the spider is seemingly satisfied with its work. It scuttles into the center of the web and begins waiting patiently for its first victim. Your drinking companion almosts startles you when he speaks again.* Amazing creatures."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah." linkto "Har_1b_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_5"
+notes ""
+{
+NPCText "*He continues looking at the web with a glass-eyed half-smile on his face.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Continue watching the web -" linkto "Har_1b_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_6"
+notes ""
+{
+NPCText "*The spider sits completely motionless in the center of its web.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Har_1b_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_7a"
+notes ""
+{
+NPCText "*The spider continues to sit completely motionless in the center of its web. You begin to wonder if it is still alive.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Har_1b_7b_1"  notes "Difficult roll against the PC's Luck score. IF failed, go to Har_1b_7a again (Loop to this same node)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_7b_1"
+notes ""
+{
+NPCText "*A fly, having fed upon the alcoholic liquid carelessly slopped on nearby tables, buzzes drunkenly near the web.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Har_1b_7b_2b_1"  notes "Difficult roll against the PC's Luck. IF failed, go to Har_1b_7b_2a instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_7b_2a"
+notes ""
+{
+NPCText "*It flies away and out of the bar-tent.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Har_1b_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_7b_2b_1"
+notes ""
+{
+NPCText "*It flies straight into the web. The spider leaps into action, scuttling across the web's strands to its victim in the blink of an eye. It closes its lethal mandibles over the hapless fly, whose buzzing struggles soon come to an end.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Har_1b_7b_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1b_7b_2b_2"
+notes ""
+{
+NPCText "*The spider leaves its kill to feast upon later and returns to its place in the center of the web.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Har_1b_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've just remembered I need to be somewhere else." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_1"
+notes ""
+{
+NPCText "Hey, thanks for the drink, buddy. Meant I could get a mug of the good stuff, instead of that bottled crap. I didn't know Sara was giving away free gifts with them, though."
+ NPCFemaleText "Hey, thanks for the drink, lady.  Meant I could get a mug of the good stuff, instead of that bottled rubbish. I didn't know Sara was giving away free gifts with them, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Free gift? What do you mean?" linkto "Har_1c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Neither did I. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_2"
+notes ""
+{
+NPCText "Well, look. I found this plastic horseshoe thing in mine. *He holds up the horseshoe, which is small, florescent yellow, plastic and cheap-looking.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've been looking for that. May I have it?" linkto "Har_1c_3a_1"  notes "This node only appears if the PC has accepted the Lucky Horseshoe quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you going to do with it?" linkto "Har_1c_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fancy that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3a_1"
+notes ""
+{
+NPCText "Sure. Give me two caps and it's yours."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's your two caps." linkto "Har_1c_3a_2a" conditions { CHECK_MONEY dude_caps >= 2 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not worth two caps. I'll give you one for it." linkto "Har_1c_3a_2b_a1"  notes "Mild barter check. IF failed, go to Har_1c_3a_2c instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just give me the horseshoe before I pound your face into the dust." linkto "Har_1c_3B_a1"  notes "IF the PC's strength is less than 8, go to Har_1c_3B_b intead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No deal. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3a_2a"
+notes "Deduct two caps from the PC's inventory. Put the Lucky Horseshoe item in the PC's inventory."
+{
+NPCText "Here, take the damn thing. *He hands you the plastic horseshoe as he takes your money.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3a_2b_a1"
+notes ""
+{
+NPCText "Heh. You gotta admit it was worth a try. Okay, gimmie a cap and you can have the damn thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here. *Offer him a cap.*" linkto "Har_1c_3a_2b_a2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No deal. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3a_2b_a2"
+notes "Deduct one cap from the PC's inventory. Put the Lucky Horseshoe item in the PC's inventory."
+{
+NPCText "*He hands you the horseshoe. He balances the cap he takes from you in return on the end of his thumb, flicks it into the air, and catches it again, before putting it into his pocket.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nice. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3a_2c"
+notes ""
+{
+NPCText "No, I reckon you'll give me two for it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, here's your two caps." linkto "Har_1c_3a_2a" conditions { CHECK_MONEY dude_caps >= 2 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not worth two caps. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3b"
+notes "Spawn the Lucky Horseshoe on the ground, a hex or two behind Harris."
+{
+NPCText "I sure as hell don't want it in my drink, I know that much. *He throws it over his shoulder.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3B_a1"
+notes ""
+{
+NPCText "Hey, don't be so hasty! Take the damn thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Take the horseshoe.* There, that wasn't so bad, was it?" linkto "Har_1c_3B_a2"  notes ""
+              }
+}
+Node "Har_1c_3B_a2"
+notes "Put the Lucky Horseshoe item in the PC's inventory.\nHarris will no longer speak to the PC. He will still float the text relating to the Lucky Horseshoe quest if the PC buys a round of drinks, though."
+{
+NPCText "*He turns back to his drink, muttering.* I thought those things were supposed to bring you GOOD luck..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Har_1c_3B_b1"
+notes ""
+{
+NPCText "*He gives you an exaggerated frown and his voice rises through an octave of disbelief.* What the HELL did you just say? *The other patrons in the bar-tent look round eagerly, hoping for a fight.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mess with me, pal. Just hand over the horseshoe." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, forget I mentioned it." linkto "Har_1c_3B_b2"  notes ""
+              }
+}
+Node "Har_1c_3B_b2"
+notes "Harris will no longer speak to the PC. He will still float the text relating to the Lucky Horseshoe quest if the PC buys a round of drinks, though."
+{
+NPCText "*you receive a chorus of chicken noises from the patrons as you back down.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That does it. *Draw weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Cringe and leave*" linkto "done"  notes ""
+              }
+}
+Node "Har_B1"
+notes ""
+{
+NPCText "What did you just say, pal?"
+ NPCFemaleText "What did you just say, lady?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I told you to fuck off and I called you a bar-fly. So fuck off, bar-fly." linkto "Har_B2_a"  notes "IF the PC's strength is below 8, go to Har_B2_b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I said, \"my, doesn't time fly?\" I've got to be going, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Har_B2_a"
+notes "Harris will no longer speak to the PC. He will still float the text relating to the Lucky Horseshoe quest if the PC buys a round of drinks, though."
+{
+NPCText "Geez, can't a guy enjoy his beer in peace? Okay, I won't bother you again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Make sure you don't." linkto "done"  notes ""
+              }
+}
+Node "Har_B2_b"
+notes ""
+{
+NPCText "You're mixing it up with the wrong 'bar-fly', pal. *He puts his glass down with a thump on the table. The other patrons in the bar-tent look round eagerly, hoping for a fight.*"
+ NPCFemaleText "You're mixing it up with the wrong 'bar-fly', lady. I ain't above teaching a smart-mouthed bitch like you some manners. *He puts his glass down with a thump on the table. The other patrons in the bar look round eagerly, hoping for a fight.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, you're not going to hit me, are you?" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's see what you've got, asshole." linkto "combat"  notes ""
+              }
+}

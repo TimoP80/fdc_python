@@ -1,0 +1,84 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "unknown1"
+notes ""
+{
+NPCText "Howdy, pardner. Got a few extra caps to spare for a friend that fell hard on ‘is luck?"
+ NPCFemaleText "Howdy, ma’am. Got a few extra caps to spare for a friend that fell hard on ‘is luck?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I’ve got exactly the amount I need. Sorry. " linkto "nocash1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I can help you. Care to share your story? " linkto "nomemo1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell you what, buddy. Take these 100 caps, go home and get your life straight. " linkto "caps100" conditions { CHECK_MONEY dude_caps >= 100 link_next  } notes "PC must lose 20 caps and gain 5 Karma (or whatever)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here’s 20 caps. " linkto "capslil" conditions { CHECK_MONEY dude_caps >= 20 link_next  } notes "PC must lose 20 caps"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here’s 5 caps. " linkto "capslil" conditions { CHECK_MONEY dude_caps >= 5 link_next  } notes "PC must lose 5 caps"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m not your friend, you stinking bag of Brahmin shit. Really, could your drunken ass be any more pathetic? " linkto "rude1"  notes ""
+              }
+}
+Node "nocash1"
+notes ""
+{
+NPCText "*sigh* Fair enough I guess. Sorry to bother you then. . [He turns to leave.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I need you to answer some questions for me- [Grab his shoulder.]" linkto "done"  notes "This ends dialogue and Moses delivers unarmed critical hit to PC. After this node \"surprise1\" is auto-initiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, “pardner”. Don’t let me stop you." linkto "done"  notes ""
+              }
+}
+Node "nomemo1"
+notes ""
+{
+NPCText "Nah, not really, pardner. Forget the past is what I’m trynna do, drownin’ the memories atta bottom o’ the bottle – wanna help me with that, friend?"
+ NPCFemaleText "Nah, not really, ma’am. Forget the past is what I’m trynna do, drownin’ the memories atta bottom o’ the bottle – wanna help me with that, friend?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I’ve got exactly the amount of caps I need. Sorry. " linkto "nocash1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell you what, buddy. Take these 100 caps, go home and get your life straight." linkto "caps100" conditions { CHECK_MONEY dude_caps >= 100 link_next  } notes "PC must lose 20 caps and gain 5 Karma"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here’s 20 caps." linkto "capslil" conditions { CHECK_MONEY dude_caps >= 20 link_next  } notes "PC must lose 20 caps"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here’s 5 caps." linkto "capslil" conditions { CHECK_MONEY dude_caps >= 5 link_next  } notes "PC must lose 5 caps"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m not your friend, you stinking bag of Brahmin shit. Really, could your drunken ass be any more pathetic? " linkto "rude1"  notes ""
+              }
+}
+Node "caps100"
+notes ""
+{
+NPCText "[Stares at you unbelievingly.] Huh? You for real, pardner? Haven’t seen that amount o’ caps since my younger days… An’ now I know better than  to take’em. Here, take back this – [hands you 80 caps] – I’ll be just fine with the rest for a day or two. An’ I’ll drop a kind word for you here an’ there – that counts a lot when you’re new to a place. Now, if you’ll excuse me, gotta go an’ take my med’cine. [He turns to leave.]"
+ NPCFemaleText "[Stares at you unbelievingly.] Huh? You for real, ma’am? Haven’t seen that amount o’ caps since my younger days… An’ now I know better than  to take’em. Here, take back this – [hands you 80 caps] – I’ll be just fine with the rest for a day or two. An’ I’ll drop a kind word for you here an’ there – that counts a lot when you’re new to a place. Now, if you’ll excuse me, gotta go an’ take my med’cine. [He turns to leave.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I need you to answer some questions for me- [Grab his shoulder.]" linkto "done"  notes "This ends dialogue and Moses delivers unarmed critical hit to PC. After this node \"surprise1\" is auto-initiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, “pardner”. Don’t spend it all in one place. " linkto "done"  notes ""
+              }
+}
+Node "capslil"
+notes ""
+{
+NPCText "Thank you, pardner, that should last me for awhile. Yours is a kind soul indeed. Now, if you’ll excuse me, gotta go an’ take my med’cine. [He turns to leave.]"
+ NPCFemaleText "Thank you, ma’am, that should last me for awhile. Yours is a kind soul indeed. Now, if you’ll excuse me, gotta go an’ take my med’cine. [He turns to leave.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I need you to answer some questions for me- [Grab his shoulder.]" linkto "done"  notes "This ends dialogue and Moses delivers unarmed critical hit to PC. After this node \"surprise1\" is auto-initiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, “pardner”. Don’t spend it all in one place. " linkto "done"  notes ""
+              }
+}
+Node "rude1"
+notes ""
+{
+NPCText "Well, I guess I deserved that – what with me staring down the barrels of empty bottles insteada doing the job properly with a gun… Thanks for your honesty anyways. I won’t crowd your space any longer.  [He turns to leave.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I’m not done with you yet, scum! [Grab his shoulder.]" linkto "done"  notes "This ends dialogue and Moses delivers unarmed critical hit to PC. After this node \"surprise1\" is auto-initiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, take a hike! And next time you decide to drown in booze why not try the ocean for a change." linkto "done"  notes ""
+              }
+}

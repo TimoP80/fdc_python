@@ -1,0 +1,1915 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.2-stable
+
+*/
+
+vars {
+local var Mich_Rude notes "This monitors how rude the PC has been to Michael. If Mich_Rude goes over 2, the PC gets a different greeting and will not receive rad-away treatment from Michael. If it goes over 9, Michael will not speak to the PC at all and will float hostile speech.";
+local var Mich_Rad_Away notes "This monitors whether Michael has used his spare sachet of Rad Away on the PC. Michael will only do so once.";
+local var Mich_Danger_Site notes "This monitors whether or not Michael has told the PC where the site of the Explorers' disastrous expedition is.";
+local var Mich_Bones_Know notes "";
+local var Mich_Bones_Screwed notes "";
+local var Mich_Site_Bones_Return notes "This monitors whether or not the PC has shown Michael all three sets of the bones of the Explorers who died and were left at the expedition site.";
+local var Mich_G_Counter_Return notes "This monitors whether or not the PC has returned the geiger counter Michael lost at the Sandover expedition site.";
+local var Mich_Shovel notes "This monitors whether the PC needs to find a shovel in order to complete the bones quest by digging up the remains of the two Explorers buried in Sandover's cemetary.";
+local var Mich_Alex_Force notes "This monitors if the PC has convinced Alexander, the Scab leader, to overrule Michael and force the priest to let the PC dig up the bones of the two Explorers buried in Sandover's cemetary.";
+local var Mich_Cemetary_Bones notes "This monitors whether or not the PC has dug up the bones of the two Explorers buried in the Sandover cemetary.";
+local var Mich_Guilt_Trip notes "This monitors whether or not the PC has tried to guilt-trip Michael over the Explorers' disastrous expedition to Sandover. If Mich_Guilt_Trip=1, the PC has had his one chance to convince Michael to kill himself. If Mich_Guilt_Trip=2, Michael will not speak to the PC at all in the future and will float hostile speech.";
+local var Mich_Spoken_Intro notes "";
+}
+NPCName "Michael"
+Location "Sandover Caves"
+Description "This is Michael, the Scab 'Priest'. He used to be known as Mikey, the Wasteland Explorer. However, the disastrous expedition to the high-rad area near Sandover caused him to turn his back on his life as an explorer and become a priest-like figure for the Scabs of Sandover."
+Unknown_Desc "You see a figure in loose-fitting, dun-colored robes."
+Known_Desc "You see Michael shuffling around with his usual pious gait."
+Detailed_Desc "Despite his loose-fitting robes, you can tell that he is stick-thin and far from healthy."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "Mich_1a_1"
+{
+    SSL "local_var(LVAR_Mich_Spoken_Intro) == 0" var_param "Mich_Spoken_Intro" eval 1 value_to_check "0" ini_index 3 link 0
+},
+cond target_node "Mich_1b_1"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link 1,
+    SSL "local_var(LVAR_Mich_Spoken_Intro) == 1" var_param "Mich_Spoken_Intro" eval 1 value_to_check "1" ini_index 3 link 1,
+    SSL "local_var(LVAR_Mich_Rude) <= 2" var_param "Mich_Rude" eval 6 value_to_check "2" ini_index 3 link 0
+},
+cond target_node "Mich_1_Ba_1"
+{
+    SSL "local_var(LVAR_Mich_Spoken_Intro) == 1" var_param "Mich_Spoken_Intro" eval 1 value_to_check "1" ini_index 3 link 1,
+    SSL "local_var(LVAR_Mich_Rude) >= 3" var_param "Mich_Rude" eval 5 value_to_check "3" ini_index 3 link 0
+},
+cond target_node "FloatHostile"
+{
+    SSL "local_var(LVAR_Mich_Rude) >= 10" var_param "Mich_Rude" eval 5 value_to_check "10" ini_index 3 link 2,
+    SSL "local_var(LVAR_Mich_Guilt_Trip) > 1" var_param "Mich_Guilt_Trip" eval 3 value_to_check "1" ini_index 3 link 0
+},
+cond target_node "Debugger"
+{
+    SSL "default" var_param "" eval -1 value_to_check "" ini_index 5 link 0
+}
+};
+
+/* Float message nodes */
+
+Floatnode "FloatHostile"
+notes "Hostile text to float for Michael."
+{
+"Go away, you heathen!",
+"Get away from me, you incarnation of evil!",
+"I am not speaking to you.",
+"Off with you.",
+"Burn in hell, bastard!"
+}
+Floatnode "Debugger"
+notes "just some shit"
+{
+"Help! I can't determine my starting node. I'm fucked up!"
+}
+
+/* Regular nodes */
+
+Node "Mich_0"
+notes ""
+is_wtg = false
+{
+NPCText "Set the opening conditions for the dialogue with Michael, the Scab 'Priest'"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has never met Michael before -" linkto "Mich_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has met Michael before -" linkto "Mich_1b_1"  notes "Michael needs to have spoken node Mich_1a_2a, OR, for dumb players, node Mich_1a_D2, where he introduces himself by name AND the variable Mich_Rude must be 2 or less."
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has met Michael before; the PC has been rude to the Priest -" linkto "Mich_1_Ba_1"  notes "Michael needs to have spoken node Mich_1a_2a, where he introduces himself by name AND the variable Mich_Rude must be 3 or greater. If Mich_Rude>=10 OR Mich_Guilt_Trip>1, then Michael will not speak to the PC at all, but will float hostile text."
+              }
+}
+Node "Mich_1_Ba_1"
+notes "Because the PC has been rude to Michael previously, the Priest will not use his rad-away freely on him. (See Mich_2_2). Michael's justification for this is that the PC is a 'bad sort', and the drugs should be used on someone more deserving. \nDecrement the variable Mich_Rude by 1. This means Michael's wariness of the PC will wane with time."
+is_wtg = false
+{
+NPCText "Hello again, my son. I trust you will remember your manners, this time."
+ NPCFemaleText "Hello again, my child. I trust you will remember your manners, this time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Michael. I'd like to ask you a question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've managed to find a shovel." linkto "Mich_1b_2a"  notes "This option only appears IF the PC has a shovel AND Mich_Shovel>0 AND Mich_Cemetary_Bones=0. Also, the variable Mich_Alex_Force must be greater than 0, OR Mich_G_Counter_Return must be greater than 0 AND Mich_Site_Bones_Return must be greater than 2."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander said you have to give me the two sets of bones you know the whereabouts of." linkto "Mich_7_1"  notes "This node is only visible if the variable Mich_Alex_Force>0 AND Mich_Shovel<1."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You can stop calling me 'your son' for a start." linkto "Mich_1_Ba_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You can stop calling me 'your child' for a start." linkto "Mich_1_Ba_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I need to be somewhere else. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_1_Ba_2"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "Still the attitude, hmm? Please leave and only come back when you have calmed down."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I think I'll kill you instead, you self-righteous bastard. *Draw weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Good day to you, my son. How may I help you?"
+ NPCFemaleText "Good day to you, my child. How may I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, I'm trying to get to know the people around here. What can you tell me about yourself?" linkto "Mich_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I'm not 'your son'." linkto "Mich_1a_1B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I'm not 'your child'." linkto "Mich_1a_1B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I need to be somewhere else. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You look scary." linkto "Mich_1a_D1_a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Poo, you smell funny!" linkto "Mich_1a_D1_b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello. Who you?" linkto "Mich_1a_D2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_1B"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "Well... no, of course not. Not in the biological sense. I mean no harm; what can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm trying to get to know the people around here. What can you tell me about yourself?" linkto "Mich_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can stand there whilst I kill you." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_2a"
+notes ""
+is_wtg = false
+    insert_custom_code {
+    "set_local_var(LVAR_Mich_Spoken_Intro,1);"
+    }
+{
+NPCText "My name is Michael. Would you like to know what I do here in Sandover?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, please." linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes! Come on, don't keep me waiting." linkto "Mich_1a_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_2B_1"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "You should learn greater patience, my son! It is a rare virtue in the Wastes, but none should consider themselves above it."
+ NPCFemaleText "You should learn greater patience, my child! It is a rare virtue in the Wastes, but none should consider themselves above it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I apologize, you're right. Please tell me a bit about what you do around here." linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You may have time to be patient, but I am very busy." linkto "Mich_1a_2B_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Don't call me 'my damn son'!" linkto "Mich_1a_2B_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Don't call me 'my damn child!'" linkto "Mich_1a_2B_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_2B_2a"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "More haste, less speed, my son. You will achieve little if your mind is not settled."
+ NPCFemaleText "More haste, less speed, my son. You will achieve little if your mind is not settled."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I apologize, you're right. Please tell me a bit about what you do around here." linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Enough of the sermons, wise man. Tell me what you do around here." linkto "Mich_2_1"  notes "Increment Mich_Rude by 1."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Don't call me 'my damn son'!" linkto "Mich_1a_2B_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Don't call me 'my damn child!'" linkto "Mich_1a_2B_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_2B_2b"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "So much anger. Why is that? I am here only to help others."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I apologize. Please tell me a bit about what you do around here." linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can shove your 'help'. Goodbye." linkto "done"  notes "Increment Mich_Rude by 2."
+              }
+}
+Node "Mich_1a_D1_a"
+notes ""
+is_wtg = false
+{
+NPCText "Oh. *He laughs.* I don't mean to be. I'm here to help you if you need it."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who you?" linkto "Mich_1a_D2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Poo, you smell funny!" linkto "Mich_1a_D1_b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_D1_b"
+notes ""
+is_wtg = false
+{
+NPCText "Hmm. Can I help you in any way, my son? I am rather busy at the moment."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who you?" linkto "Mich_1a_D2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You look scary." linkto "Mich_1a_D1_a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_D2"
+notes ""
+is_wtg = false
+    insert_custom_code {
+    "set_local_var(LVAR_Mich_Spoken_Intro,1);"
+    }
+{
+NPCText "My name is Michael. The people in this town call me their priest."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What do priest do?" linkto "Mich_1a_D3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What a priest?" linkto "Mich_1a_D3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_1a_D3"
+notes ""
+is_wtg = false
+{
+NPCText "A priest does good things for people who need aid. Do you need help with anything, my son?"
+ NPCFemaleText "A priest does good things for people who need aid. Do you need help with anything, my child?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "A got a hurt. *Point to injury.*" linkto "Mich_2_3b"  notes "This node only appears if the PC has less than maximum hit points."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I keep doing sick and not feeling good." linkto "Mich_2_3c_1a"  notes "This only appears if the PC is radiated."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not need help. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_1b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hello again, my son. How may I help you?"
+ NPCFemaleText "Hello again, my child. How may I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Michael. I'd like to ask you a question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've managed to find a shovel." linkto "Mich_1b_2a" conditions { LOCAL_VARIABLE Mich_Shovel > 0 link_next AND, LOCAL_VARIABLE Mich_Cemetary_Bones == 0 link_next AND, LOCAL_VARIABLE Mich_Alex_Force > 0 link_next NONE } notes "This option only appears IF the PC has a shovel AND Mich_Shovel>0 AND Mich_Cemetary_Bones=0. Also, the variable Mich_Alex_Force must be greater than 0, OR Mich_G_Counter_Return must be greater than 0 AND Mich_Site_Bones_Return must be greater than 2."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander said you have to give me the two sets of bones you know the whereabouts of." linkto "Mich_7_1" conditions { LOCAL_VARIABLE Mich_Alex_Force > 0 link_next AND, LOCAL_VARIABLE Mich_Shovel < 1 link_next NONE } notes "This node is only visible if the variable Mich_Alex_Force>0 AND Mich_Shovel<1."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You can stop calling me 'your son' for a start." linkto "Mich_1b_2B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You can stop calling me 'your child' for a start." linkto "Mich_1b_2B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I need to be somewhere else. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_1b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "You've come back for the bones of the last two Explorers, presumably?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's right. Let's go out and get them." linkto "Mich_6_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Before we go out to the cemetary, I'd like to ask you a question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I need to be somewhere else. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_1b_2B"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "Oh. I mean no harm by it, you know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anyway, I'd like to ask you a question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_1"
+notes "The Mich_2_* path is where the PC finds out about Michael's roles in Sandover. See NPC Text for this node."
+is_wtg = false
+{
+NPCText "The people of Sandover think of me as their priest. I am not, strictly speaking, a priest, but the duties I perform around the town are like those usually associated with holy men."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What duties are those?" linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you lived in Sandover all your life?" linkto "Mich_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Mich_2_3a_2b_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please let me ask you a question about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_2"
+notes ""
+is_wtg = false
+{
+NPCText "I guide and give advice to those who seek it; I provide what meagre comfort I can for the town's sick and infirm; I administer medical aid where I can; and, for those Sandover people who cannot be helped and die, I oversee their burials."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use your advice." linkto "Mich_2_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm hurt. Can you help with these injuries?" linkto "Mich_2_3b"  notes "This node only appears if the PC has less than his maximum hit points."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I feel a little sick. I think I've been exposed to too many rads. Can you help?" linkto "Mich_2_3c_1a"  notes "IF Mich_Rad_Away>0 OR IF Mich_Rude>=3, go to Mich_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you bury the town's dead?" linkto "Mich_2_3d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "*The Priest visibly straightens up, delighted to have his advice called upon.* It would be my pleasure. What can I help you with?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a facility that was owned by General Atomics International before the Great War. Do you know where it is?" linkto "Mich_2_3a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am fairly new to this area of the wastes. What can you tell me about them?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I MUST know where you bought those robes. They're just fabulous, darling." linkto "Mich_2_3a_2d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I ought not to talk too much about my concerns - no offence. Tell me what your duties were, again." linkto "Mich_2_2"  notes ""
+              }
+}
+Node "Mich_2_3a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael is still for a moment. You can imagine him frowning in thought under his cowl.* No... the name does not ring a bell. Forgive me, my son; I cannot be of any use to you with that. Maybe Alexander can help you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Alexander?" linkto "Mich_2_3a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am fairly new to this area of the Wastes. What can you tell me about them?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I MUST know where you bought those robes. They're just fabulous, darling." linkto "Mich_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I ought not to talk too much about my concerns - no offence. Tell me what your duties were, again." linkto "Mich_2_2"  notes ""
+              }
+}
+Node "Mich_2_3a_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Alexander is the leader of the people of Sandover. He lives in these caves; you can find him in these caves by *put in direction to Alexander's area.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Perhaps you can give me advice about something else, too." linkto "Mich_2_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What were the things you did around Sandover again?" linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question about something else that I'd like to ask you." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better go and speak to him. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "The Wastes are a dangerous place, my son. I have not travelled much, but I can tell you what I know about the places I have been and lived in. These are Rusty Springs, where I was born; Crossroads, where I used to live and work; and Sandover, where we are now."
+ NPCFemaleText "The Wastes are a dangerous place, my child. I have not travelled much, but I can tell you what I know about the places I have been and lived in. These are Rusty Springs, where I was born; Crossroads, where I used to live and work; and Sandover, where we are now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Rusty Springs." linkto "Mich_2_3a_2b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Crossroads." linkto "Mich_2_3a_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Sandover." linkto "Mich_2_3a_2b_2c_1"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "As I have already said, I was born and raised in Rusty Springs. It is a good place - the town is built upon a source of natural spring water, and it is to this that the town owes its prosperity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Rusty Springs?" linkto "Mich_2_3a_2b_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get to Rusty Springs?" linkto "Mich_2_3a_2b_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely different question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Alas, it is so long since I visited the town of my birth. The town may have changed so much since I was last there that what I might tell you about it would be entirely misleading. I advise you ask someone who has been there more recently, or visit Rusty Springs yourself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why have you not revisited Rusty Springs in such a long time?" linkto "Mich_2_3a_2b_2a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get to Rusty Springs?" linkto "Mich_2_3a_2b_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely different question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2a_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "My life is rooted in Sandover, now. I am too busy here to go as far afield as Rusty Springs. Besides, I have changed a lot since I lived there; I doubt I would even want to return."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get to Rusty Springs?" linkto "Mich_2_3a_2b_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely different question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I do not know the route from Sandover to Rusty Springs directly. I only know the route between Rusty Springs and Crossroads, and the route between Crossroads and Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please tell me how to find Crossroads." linkto "Mich_2_3a_2b_2a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely different question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2a_2b_2"
+notes "Add Crossroads to the player's map."
+is_wtg = false
+{
+NPCText "Certainly. It has been many years since I was last at Crossroads... *He trails off mysteriously, but then continues.* Anyway, what was I saying? Oh yes, how to find Crossroads. *He tells you the town's direction from Sandover and how many days' foot-travel it takes to reach.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Crossroads?" linkto "Mich_2_3a_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely different question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I need to be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Crossroads is a small but thriving settlement built around an old, pre-war farm, where several caravan runs cross one another, hence the name. In another lifetime, I was very much part of it's... ribald and colorful community."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "'In another lifetime?' Do you believe in reincarnation or something?" linkto "Mich_2_3a_2b_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mentioned before that you worked there. What did you do?" linkto "Mich_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to find Crossroads?" linkto "Mich_2_3a_2b_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "No... no. That was a figure of speech, my son. You must understand that I have turned my back on that life; that was over ten years ago. I used to be a very different man."
+ NPCFemaleText "No... no. That was a figure of speech, my child. You must understand that I have turned my back on a life I had over ten years ago. I used to be a very different man."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mentioned before that you worked in Crossroads. What did you do?" linkto "Mich_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to find Crossroads?" linkto "Mich_2_3a_2b_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2c_1"
+notes ""
+is_wtg = false
+{
+NPCText "This is a sickly place, my son. I hope for your sake that you are carrying enough of the right medicines to cope with the background radiation which blights our lives."
+ NPCFemaleText "This is a sickly place, my child. I hope for your sake that you are carrying enough of the right medicines to cope with the background radiation which blights our lives."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Sandover is so heavily contaminated, why do people stay here?" linkto "Mich_2_3a_2b_2c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Sandover is so contaminated, why are you here?" linkto "Mich_2_3a_2b_2c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2c_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "The people of Sandover have nowhere else to go. Most of the Wasteland is less radioactive than the land around Sandover, but none of it is so rich with valuable pre-war technology. Scavenging for this technology is what provides Sandover with a source of income."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whether or not there is money to be made here, why do people stay when the risk to their lives is so great?" linkto "Mich_2_3a_2b_2c_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Sandover is so contaminated, why are you here?" linkto "Mich_2_3a_2b_2c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2c_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Most of the people here are outcasts, my son. Some are criminals; some were exiled because they refused to fit in with the societies into which they were born; some are deformed and were driven out by the intolerance shown to them. It is not for nothing that other wastelanders unkindly call the people of Sandover 'Scabs'."
+ NPCFemaleText "Most of the people here are outcasts, my child. Some are criminals; some were exiled because they refused to fit in with the societies into which they were born; some are deformed and were driven out by the intolerance shown to them. It is not for nothing that other wastelanders unkindly call the people of Sandover 'Scabs'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So why are you here?" linkto "Mich_2_3a_2b_2c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2c_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I am here because the people of Sandover need me. I consider myself blessed that I am able to give them some comfort where all others may disregard them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why help the people here, where it is so dangerous, and not somewhere else?" linkto "Mich_2_3a_2b_2c_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Sandover is so heavily contaminated, why do people stay here?" linkto "Mich_2_3a_2b_2c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about what you do around Sandover." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2c_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael is silent for a moment.* I do not deserve better than the fate I share here with the people of Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "\"You don't deserve better?\" Why not?" linkto "Mich_2_3a_2b_2c_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Sandover is so heavily contaminated, why do people stay here?" linkto "Mich_2_3a_2b_2c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2b_2c_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "For me, exposure to the radiation is a penance of exquisite poetic justice for a crime of negligence I committed over ten years ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What could be so bad that you deserve to suffer a death by radiation poisoning?" linkto "Mich_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Sandover is so heavily contaminated, why do people stay here?" linkto "Mich_2_3a_2b_2c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which parts of the wastes are you familiar with?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2c"
+notes ""
+is_wtg = false
+{
+NPCText "Think nothing of it. Perhaps you are wise not to trust strangers so easily. However, know that you may speak to me about any matter if you wish, my son."
+ NPCFemaleText "Think nothing of it. Perhaps you are wise not to trust strangers so easily. However, know that you may speak to me about any matter if you wish, my child."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll bear that in mind. What else do you do in Sandover?" linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3a_2d_1"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "What... are you mocking me, stranger? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just my little joke. I didn't mean to mock the smock." linkto "Mich_2_3a_2d_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. You seem to take things so seriously. Don't you get tired of being so pious?" linkto "Mich_2_3a_2d_2b"  notes ""
+              }
+}
+Node "Mich_2_3a_2d_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Very humorous. If you must know, I made these robes myself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Seriously, though, I could use your advice on something important." linkto "Mich_2_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me what you do in Sandover again." linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have the feeling I should be somewhere else doing something important. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3a_2d_2b"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "No, I don't 'get tired' of what I do and what I am. You're not going to last long in the wastes with a flippant attitude such as yours, young man."
+ NPCFemaleText "No, I don't 'get tired' of what I do and what I am. You're not going to last long in the wastes with a flippant attitude such as yours, young lady."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. I would like to hear your advice about something genuinely important." linkto "Mich_2_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I take it back. Remind me what those things you do in Sandover are." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry. I still have a question I need to ask you about something, if you don't mind." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I'll be going, then." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3b"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael examines your wounds.* Hmm... these look nasty. I'm afraid I cannot help with this type of injury, my son. You should seek out Dr. Oswald, who is more well versed in the medical arts than I am."
+ NPCFemaleText "*Michael examines your wounds.* Hmm... these look nasty. I'm afraid I cannot help with this type of injury, my child. You should seek out Dr. Oswald, who is more well versed in the medical arts than I am."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Some 'doctor' you turned out to be." linkto "Mich_2_3b_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll bear that in mind. I'd still like to hear your advice on something." linkto "Mich_2_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I feel a little sick. I think I've been exposed to too many rads. Can you help?" linkto "Mich_2_3c_1a"  notes "This node only appears"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I need to ask you about something." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better go and find him now, then." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I also do sick a lot and not feel good." linkto "Mich_2_3c_1a"  notes "This node only appears if the PC is radiated."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I try to find him now." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3b_B"
+notes "Increment Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "There was no need for that, stranger. Dr. Oswald is simply more qualified in these matters."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll bear that in mind. I'd still like to hear your advice on something." linkto "Mich_2_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I feel a little sick. I think I've been exposed to too many rads. Can you help?" linkto "Mich_2_3c_1a"  notes "This node only appears"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I need to ask you about something." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better go and find Dr. Oswald now, then." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_1a"
+notes ""
+is_wtg = false
+{
+NPCText "You have sustained rad-poisoning? Why did you not say sooner? *He feverishly produces a sachet of Rad-Away.* Here, let me put this on you. Quickly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes "Dumb option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. I don't trust that stuff. Tell me about your duties around Sandover again." linkto "Mich_2_3c_2b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No. Take that stuff away." linkto "Mich_2_3c_2b_1"  notes ""
+              }
+}
+Node "Mich_2_3c_1b_1"
+notes ""
+is_wtg = false
+{
+NPCText "*Although you cannot see his face, Michael manages to look truly mortified.* Forgive me, my son, but I used the last sachet of Rad-Away I can afford to give to outsiders on you. Try to find some more elsewhere, and quickly."
+ NPCFemaleText "*Although you cannot see his face, Michael manages to look truly mortified.* Forgive me, my child, but I used the last sachet of Rad-Away I can afford to give to outsiders on you. Try to find some more elsewhere, and quickly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nevermind. Tell me about your duties around Sandover again." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got money. How much would you sell your spare Rad-Away for?" linkto "Mich_2_3c_1b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So a few of Sandover's scum die if I take their drugs. No loss. Give them to me, preacher, or die." linkto "Mich_2_3c_1b_2B_1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and do that now." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_1b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "I am sorry, but these drugs are not for sale. The lives of many of those in Sandover depend on them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Tell me about your duties around Sandover again." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come on, Michael. I can make it seriously worth your while. Just name your price." linkto "Mich_2_3c_1b_2B_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So a few of Sandover's scum die if I take their drugs. No loss. Give them to me, preacher, or die." linkto "Mich_2_3c_1b_2B_1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had better go now and find a source elsewhere." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_1b_2B_1a"
+notes ""
+is_wtg = false
+{
+NPCText "Would you take medicine from the very mouths who need it the most? There are more things in life than your bottle caps, stranger. The well-being of my flock is not for sale."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Tell me about your duties around Sandover again." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So a few of Sandover's scum die if I take their drugs. No loss. Give them to me, preacher, or die." linkto "Mich_2_3c_1b_2B_1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had better go now and find a source elsewhere." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_1b_2B_1b"
+notes "Increment Mich_Rude by 5."
+is_wtg = false
+{
+NPCText "A killer and a thief. I should have known. Get out of here; the very sight of you sickens me. These drugs will go to those who need and deserve them the most."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then die." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Calm down. It was just a joke." linkto "Mich_2_3c_1b_2B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take it easy. I'd better leave, I think." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_1b_2B_2"
+notes ""
+is_wtg = false
+{
+NPCText "You think it amusing to taunt me so? Get out of here and go and do some growing up!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, when I said I was joking, what I meant was, 'it's time for you to die.'" linkto "Mich_2_3c_1b_2B_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_1b_2B_3"
+notes ""
+is_wtg = false
+{
+NPCText "Wh... what?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, sorry about that. I keep saying one thing when I mean something else altogether. Anyway, on with the slaughter!" linkto "combat"  notes ""
+              }
+}
+Node "Mich_2_3c_2a_1"
+notes "Increment Mich_Rad_Away by 1. Deduct an amount from the player's radiation level equal to a normal dose of Rad-Away."
+is_wtg = false
+{
+NPCText "*Michael's hands are shaking but he applies the Rad-Away properly.* There, all better now. Much better."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Err... thanks. So what were you saying about your duties around Sandover?" linkto "Mich_2_3c_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whilst that's taking effect, do you have time for another question?" linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'd better be going. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I still got these hurts. *Point to injuries.*" linkto "Mich_2_3b"  notes "This node only appears if the PC has less than maximum health points."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go now." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael is breathing heavily.* Sorry, could you just give me a moment to compose myself? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Mich_2_3c_2a_2a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you alright? You look worse than I do, and I'm the one who's just been dosed." linkto "Mich_2_3c_2a_2a_2b_1" conditions { CHECK_STAT perception > 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back later." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_2a_2a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Thank you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mention it." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you all right? You look worse than I do, and I'm the one who's just been dosed." linkto "Mich_0" conditions { CHECK_STAT perception > 6 link_next NONE } notes ""
+              }
+}
+Node "Mich_2_3c_2a_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, it's just that... fighting radiation sickness in others is a passion of mine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about the duties you perform around Sandover again." linkto "Mich_2_2"  notes ""
+          int=7 Reaction=REACTION_NEUTRAL playertext "Why radiation sickness in particular? Is that linked to a significant event in your past?" linkto "Mich_2_3c_2a_2a_2b_2"  notes "Note intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back later." linkto "done"  notes ""
+              }
+}
+Node "Mich_2_3c_2a_2a_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "You are quite the psychologist, stranger. You are right."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about it. You might find that it helps." linkto "Mich_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought so. Let's talk about the duties you perform around Sandover again." linkto "Mich_2_2"  notes ""
+              }
+}
+Node "Mich_2_3c_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Don't be a fool! Quickly, stop this nonsense and let me apply the drug."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes "Dumb option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not kidding, Michael. Keep that stuff away from me or else." linkto "Mich_2_3c_2b_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No! No! I not like that stuff!" linkto "Mich_2_3c_2b_2"  notes ""
+              }
+}
+Node "Mich_2_3c_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Stubborn boy! You have no idea of the danger you are in. Let me apply the damn medicine before it's too late."
+ NPCFemaleText "Stubborn child! You have no idea of the danger you are in. Let me apply the damn medicine before it's too late."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes "Dumb option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Back off, preacher man. Last warning." linkto "Mich_2_3c_2b_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not want to hurt you, but you crazy!" linkto "Mich_2_3c_2b_3"  notes ""
+              }
+}
+Node "Mich_2_3c_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "You're dying! You're dying, for pity's sakes! I shall not let you leave this room until I have saved you!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- Allow Michael to apply the dose -" linkto "Mich_2_3c_2a_1"  notes "Dumb option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Say your prayers, preacher. It's not like I didn't warn you." linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Mommy said I not hurt any more people, but you make me mad! *Draw weapon.*" linkto "combat"  notes ""
+              }
+}
+Node "Mich_2_3d_1"
+notes ""
+is_wtg = false
+{
+NPCText "We have a small cemetary, which is not far from Sandover proper."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to find the cemetary?" linkto "Mich_2_3d_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am looking for the bodies of Wasteland Explorers who died near Sandover. Are there any in your cemetary?" linkto "Mich_2_3d_2b_1"  notes "This node only appears if the player has accepted the bones quest from Bruce, the Wasteland Explorer AND the variable Mich_Bones_Know=0."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe the duties you have in Sandover again, please." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3d_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Forgive me, my son, but it is sacred ground and not a place for casual sight-seeing. I do not reveal the location of the cemetary to outsiders."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am looking for the bodies of Wasteland Explorers who died near Sandover. Are there any in your cemetary?" linkto "Mich_2_3d_2b_1"  notes "This node only appears if the player has accepted the bones quest from Bruce, the Wasteland Explorer AND the variable Mich_Bones_Know=0."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe the duties you have in Sandover again, please." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3d_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael is taken aback with surprise.* What... How could you... I suppose you must have met the Explorers in Crossroads?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's right. Do you know them?" linkto "Mich_2_3d_2b_2"  notes "This node only appears if the player has accepted the bones quest from Bruce, the Wasteland Explorer."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to find Sandover's cemetary?" linkto "Mich_2_3d_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe the duties you have in Sandover again, please." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_2_3d_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Know them? I used to be an Explorer myself. *He pauses and he becomes more sombre.* Of course, that all ended on the day of our expedition to Sandover, which I presume the Explorers told you about. Tell me, is a man named Bruce still with the group?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. It's Bruce who wants the bodies of the Explorers brought back to Crossroads." linkto "Mich_5_3"  notes "This node only appears if the player has accepted the bones quest from Bruce, the Wasteland Explorer."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe the duties you have in Sandover again, please." linkto "Mich_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_3_1"
+notes "The Mich_3_* path is where the PC finds out for the first time about Michael's past with the Wasteland Explorers and the disasterous Sandover expedition. This is for players who meet Michael before Bruce, the Wasteland Explorer, in Crossroads."
+is_wtg = false
+{
+NPCText "*He sighs.* I used to be part of a group that explores the Wastes for valuable items left unclaimed after the Great War."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That doesn't sound like such a bad thing. Why the sigh?" linkto "Mich_3_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait... are you talking about the Wasteland Explorers?" linkto "Mich_5_1"  notes "This node only appears IF the PC has met Bruce, the Explorer Representitive, OR Miranda, his wife."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_3_2"
+notes ""
+is_wtg = false
+{
+NPCText "We were driven by our greed for riches. One day, our greed took us into a place of extreme danger and we were punished for it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of danger?" linkto "Mich_3_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Punished? How so?" linkto "Mich_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait... are you talking about the Wasteland Explorers?" linkto "Mich_5_1"  notes "This node only appears IF the PC has met Bruce, the Explorer Representitive, OR Miranda, his wife."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_3_3a"
+notes ""
+is_wtg = false
+{
+NPCText "The site was very highly radioactive. It is not far from here, actually."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened to your group there?" linkto "Mich_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me where this site is?" linkto "Mich_3_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait... are you talking about the Wasteland Explorers?" linkto "Mich_5_1"  notes "This node only appears IF the PC has met Bruce, the Explorer Representitive, OR Miranda, his wife."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_3_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "The radiation at the site was strong enough to kill five of our number. I barely survived myself - perhaps I should not have done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did you say, \"perhaps you should not have surivived?\"" linkto "Mich_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait... are you talking about the Wasteland Explorers?" linkto "Mich_5_1"  notes "This node only appears IF the PC has met Bruce, the Explorer Representitive, OR Miranda, his wife."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_3_4_1"
+notes ""
+is_wtg = false
+/* Skill checks for node Mich_3_4_1 */
+
+      define_skill_check SkillCheck_0_Mich_3_4_1 {
+      skill_num = 18;
+      difficulty_modifier = 0;
+      onsuccess => Mich_3_4_2a;
+      onfailure => Mich_3_4_2b;
+      }
+      define_skill_check SkillCheck_1_Mich_3_4_1 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_3_4_2c;
+      onfailure => Mich_3_4_2d;
+      }
+
+{
+NPCText "No. It is far too dangerous to go near."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I can handle high-radiation sites. I've got all the equipment I need." linkto "SkillCheck_0_Mich_3_4_1"  notes "If Mich_Danger_Site>0, then this node will not appear.\nOutdoorsman check. IF failed, go to instead to Mich_3_4_2b."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Please tell me. I might accidentally stray close to it if I don't know it's there." linkto "SkillCheck_1_Mich_3_4_1"  notes "If Mich_Danger_Site>0, then this node will not appear.\nDifficult speech check. IF failed, go to instead to Mich_3_4_2d."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_3_4_2a"
+notes "Increment Mich_Danger_Site by 1."
+is_wtg = false
+{
+NPCText "Very well. It is rare to meet someone who could cope in such extreme conditions, but you have the look of one who could. I used to be a good judge of these things. Do bear in mind, though, that this is an area of massively high radiation. It will test your resources to their very limits."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find it?" linkto "Mich_3_4_3"  notes ""
+              }
+}
+Node "Mich_3_4_2b"
+notes "Increment Mich_Danger_Site by 1."
+is_wtg = false
+/* Skill checks for node Mich_3_4_2b */
+
+      define_skill_check SkillCheck_0_Mich_3_4_2b {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_3_4_2c;
+      onfailure => Mich_3_4_2d;
+      }
+
+{
+NPCText "I will not allow you to repeat our mistake, my son. You overestimate your abilities and underestimate the danger of the site of which I speak."
+ NPCFemaleText "I will not allow you to repeat our mistake, my child. You overestimate your abilities and underestimate the danger of the site of which I speak."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Please tell me. I might accidentally stray close to it if I don't know it's there." linkto "SkillCheck_0_Mich_3_4_2b"  notes "Difficult speech check. IF failed, go to instead to Mich_3_4_2d."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, then." linkto "done"  notes ""
+              }
+}
+Node "Mich_3_4_2c"
+notes "Increment Mich_Danger_Site by 1."
+is_wtg = false
+{
+NPCText "I take your point, my son. Very well, I shall tell you, but on condition that you promise to avoid the site, and not betray my trust by going there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I promise." linkto "Mich_3_4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't promise that. Let me ask you about something completely different." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't promise that. Tell me about the other places you've visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+              }
+}
+Node "Mich_3_4_2d"
+notes "Increment Mich_Danger_Site by 1."
+is_wtg = false
+{
+NPCText "There is little chance of that, my son. It is nowhere near the main routes between the local settlements. Stick to those and you should avoid the dangerous site with ease."
+ NPCFemaleText "There is little chance of that, my child. It is nowhere near the main routes between the local settlements. Stick to those and you should avoid the dangerous site with ease."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please remind me of the places you have visited in the Wastes." linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a completely unrelated question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, then." linkto "done"  notes ""
+              }
+}
+Node "Mich_3_4_3"
+notes "Add the location of the extremely high radiation site near Sandover, where three of the five sets of bones can be found. Increment the variable Mich_Danger_Site by 1."
+is_wtg = false
+{
+NPCText "*Michael describes the location of the site, which is less than a day's travel from Sandover.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. What can you tell me about the other places in the Wastes you've visited?" linkto "Mich_2_3a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thankyou. Do you have time for a question about something entirely different?" linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Mich_4_1"
+notes "The Mich_4_* path comes from the main question node, Mich_9. It answers the PC's question, \"Have you lived in Sandover all your life?\""
+is_wtg = false
+{
+NPCText "No. I have only been here for ten years or so. Maybe slightly longer; I suspect I have lost track of the time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where did you come from before you lived in Sandover?" linkto "Mich_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Mich_2_3a_2b_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you another question, please." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "Before I lived here, I was based and worked in Crossroads. I was born in Rusty Springs, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Crossroads?" linkto "Mich_2_3a_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Mich_2_3a_2b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Mich_2_3a_2b_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you another question, please." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_5_1"
+notes "The Mich_5_* path is where the PC learns that Michael is one of the Wasteland Explorers Bruce thinks died during the Sandover expedition. The PC also finds out that three of the bones sets are still at the expedition site and that Michael knows where the other two are. Michael demands that the PC finds the three bones sets and counter before showing him the last two sets (at the cemetary)."
+is_wtg = false
+{
+NPCText "The Wasteland Explorers, yes, that's right. I suppose you've met them?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have. Do you know Bruce?" linkto "Mich_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have. Do you know Miranda?" linkto "Mich_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I need to ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Bruce! Of course I remember that old rogue. He and I were born in Rusty Springs and grew up together, you know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He would like the bodies of the people he lost during the Sandover expedition brought back to Crossroads for burial." linkto "Mich_5_3"  notes "This node only appears if the PC has accepted the bones quest from Bruce, the Explorer Representitive."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Mich_2_3a_2b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. I have a question I need to ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Miranda... no. I assume because you mention her that she's with the Explorers now. She must have joined since I left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's Bruce's wife. Do you know him?" linkto "Mich_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I need to ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_3"
+notes "Make the variable Mich_Bones_Know=1"
+is_wtg = false
+{
+NPCText "*Michael's mood darkens.* Does he, now? So he thinks to rescue his team-mates now that they're so many bleached bones lying in the sun. What good will that do them?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where the bones are?" linkto "Mich_5_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_4"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, I know exactly where some of them are, and I know where to look for the others. That does not mean I should do Bruce a favour by telling you about them, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not sure I follow you." linkto "Mich_5_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_5"
+notes ""
+is_wtg = false
+{
+NPCText "Then let me explain. On the day our companions died, when we realised how radioactive the site was, Bruce was more concerned with carrying away the tech we'd found than getting our sick away from the site. He is not the man who should honor them now that they are dead."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "His greed sickens me. I've decided I'm not going to bring him the bones, after all." linkto "Mich_5_6c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just here to pick the bones up. I don't care about the reasons." linkto "Mich_5_6a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He explained to me that he knew at the time that the Explorers who died were doomed. I think he did the right thing in making sure he had enough of a find to make the trip worthwhile." linkto "Mich_5_6b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6a_1"
+notes ""
+is_wtg = false
+{
+NPCText "I see. No doubt Bruce has offered to pay you in some way. Well, perhaps I can help you, but only if you prove that your motives are not just material gain at Bruce's expense."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "Mich_5_6a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just tell me where the damn bones are so I won't have to hurt you." linkto "Mich_5_7_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Remember that the bones we're talking about once belonged to people who were my friends. I'm not so easily going to turn them over to someone who only wants them so he can make a few caps."
+ NPCFemaleText "Remember that the bones we're talking about once belonged to people who were my friends. I'm not so easily going to turn them over to someone who only wants them so she can make a few caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you want in return for letting me know how to get the bones?" linkto "Mich_5_7_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me where to find the bones are now, or I'll break some of yours." linkto "Mich_5_7_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I ought to leave before I hear this." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Perhaps you are right. I have always known Bruce to be a basically decent person. Greedy, but decent otherwise. As more time has passed since that dreadful day, I have been increasingly doubtful whether his motives were as callous as I once thought they were."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you please tell me how to find the bones?" linkto "Mich_5_6b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Maybe... yes. However, although you strike me as someone who understands how painful the memory of the expedition disaster is for those of us who survived it, I have to consider that your motivation is possibly only material gain at Bruce's expense."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Mich_5_6a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that such a bad thing?" linkto "Mich_5_6b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Ah. My suspicions are confirmed. Very well, bounty hunter, I shall give you the chance to win your 'prize'. However, you shall have to earn the knowledge of the bones' whereabouts, first."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Earn it? How? Why?" linkto "Mich_5_6a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about I repeatedly punch you in the face until you decide to tell me where they are?" linkto "Mich_5_7_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6c_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hmm... although I say this against my better judgement, maybe you are being too hasty. In many ways, it made sense that Bruce chose to take the items he found instead of the dying. It could be that he even knew that they were doomed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. My mind is made up. I can't believe Bruce even talked me into coming here." linkto "Mich_5_6c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, that's exactly what he said to me. Perhaps he did the right thing in making sure he had enough of a find to make the trip worthwhile." linkto "Mich_5_6b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Mich_5_6c_2"
+notes "This ends the bones quest early without resolution. The player option in the node Mich_5_2a which reads, \"He would like the bodies of the people he lost during the Sandover expedition brought back to Crossroads for burial.\" will no longer appear."
+is_wtg = false
+{
+NPCText "As you wish. It is probably for the best that the bones are left in peace where they lie."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you about something else?" linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think so, too. Goodbye, Michael." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_1"
+notes ""
+is_wtg = false
+{
+NPCText "Three of the five sets of bones are still lying where their owners fell, in the very high radiation area we were exploring. Simply going into that area is proof enough that you are serious about finding them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where are the other two?" linkto "Mich_5_7_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I ought to leave before I hear this." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_2"
+notes ""
+is_wtg = false
+{
+NPCText "The other two sets are somewhere safe. I shall tell you how to find them once you show me the three sets from the expedition site. There is one more condition, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, Bruce told me that six Explorers died during the expedition." linkto "Mich_5_7_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's hear it." linkto "Mich_5_7_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I ought to leave before I hear this." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_3a"
+notes ""
+is_wtg = false
+{
+NPCText "I see. He probably thinks I died, too. I am the sixth member of the team that did not return with him to Crossroads. However, Bruce cannot have my bones until I am through using them!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So there are only five sets of bones to find?" linkto "Mich_5_7_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I ought to leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_3b"
+notes ""
+is_wtg = false
+{
+NPCText "I also want you to find a geiger counter, which I lost somewhere whilst we at the site. It will be hard to find; I remember spending most of the short time we were there looking for it. You will be able to find it in the same area where the bones lie, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Anything else?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could trade for a new one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait a minute. YOU lost the geiger counter?" linkto "Mich_B_1" conditions { CHECK_STAT intelligence >= 6 link_next NONE } notes "IF the variable Mich_Guilt_Trip>0 (which means that the PC has already tried the guilt trip and failed), then go to Mich_B_0 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_5_7_4a_1"
+notes ""
+is_wtg = false
+{
+NPCText "No, that's it. If you haven't gathered it already, stranger, this area is extremely radioactive, so if you are brave enough to go there, make sure you have plenty of protection from the rads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You'll need to tell me where to find the expedition site." linkto "Mich_5_7_4a_2a"  notes "IF Mich_Danger_Site >= 1 then go to Mich_5_7_4a_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye. I'll speak to you again soon." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_4a_2a"
+notes "Add the location of the extremely high rad site to the PC's worldmap. Increment the variable Mich_Danger_Site by 1."
+is_wtg = false
+{
+NPCText "Ah, of course. Here, let me show you. *Michael uses some small ornaments to demonstrate landmarks that will help you find the site.* Here, it's just West of Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, whilst I'm here." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back when I've found what you want. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_4a_2b"
+notes "I'll be back when I've found the bones and your geiger counter. Goodbye."
+is_wtg = false
+{
+NPCText "I have already told you where it is, my son."
+ NPCFemaleText "I have already told you where it is, my child."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It sounds too dangerous. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_5_7_4b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I don't doubt it. However, the geiger counter at the expedition site has a certain... symbolic significance. It would mean a great deal to me if you were to find it and bring it here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want anything else, other than the bones and the geiger counter?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean by 'symbolic significance'?" linkto "Mich_5_7_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's to stop me from bringing back any old geiger counter? " linkto "Mich_5_7_4b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was this geiger counter you lost the only one the group had?" linkto "Mich_B_1"  notes "IF the variable Mich_Guilt_Trip>0 (which means that the PC has already tried the guilt trip and failed), then go to Mich_B_0 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_5_7_4b_2"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael pauses and shakes his head in shame.* The geiger counter I lost was the only one the group had. Without another, we had no way of telling how dangerous the site was. To be able to hold it in my hands again would, perhaps, help me face my... failure, and put the events of that day behind me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want anything else, other than the bones and the geiger counter?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's to stop me from bringing back any old geiger counter? " linkto "Mich_5_7_4b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That means YOU are solely responsible for the deaths of your companions!" linkto "Mich_B_2"  notes "IF the variable Mich_Guilt_Trip>0 (which means that the PC has already tried the guilt trip and failed), then go to Mich_B_0 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_5_7_4b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I carved my initials into the counter's casing: M.S."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want anything else, other than the bones and the geiger counter?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the significance of this geiger counter over any other?" linkto "Mich_5_7_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does the 'S' stand for?" linkto "Mich_5_7_4b_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was this geiger counter you lost the only one the group had?" linkto "Mich_B_1"  notes "IF the variable Mich_Guilt_Trip>0 (which means that the PC has already tried the guilt trip and failed), then go to Mich_B_0 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_5_7_4b_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Seymour. It's my last name."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want anything else, other than the bones and the geiger counter?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does this geiger counter have 'symbolic significance'?" linkto "Mich_5_7_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was this geiger counter you lost the only one the group had?" linkto "Mich_B_1"  notes "IF the variable Mich_Guilt_Trip>0 (which means that the PC has already tried the guilt trip and failed), then go to Mich_B_0 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, to give me time to think about this." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_5_7_B_1"
+notes "Make the variable Mich_Rude=1"
+is_wtg = false
+{
+NPCText "Huh! Do your worst, if you think it will help. I shall not betray my friends' resting place; especially to an animal like you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, what do you want in return for letting me know how to get the bones?" linkto "Mich_5_7_B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- FIGHT -" linkto "combat"  notes ""
+              }
+}
+Node "Mich_5_7_B_2"
+notes ""
+is_wtg = false
+{
+NPCText "Forget it, stranger. You've shown me enough of yourself for me to know that you would not honor the memories of my friends."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me where the bones are or I'll kill you." linkto "Mich_5_7_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Would you mind at least answering a question I have for you?" linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then we have nothing more to say to each other. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_6_1"
+notes "The Mich_6_* path is where the PC brings the bones and/or geiger counter from the Sandover expedition site to show to Michael so that the Priest will let the PC dig up the bones at Sandover's cemetary."
+is_wtg = false
+{
+NPCText "Have you managed to find anything yet, my son?"
+ NPCFemaleText "Have you managed to find anything yet, my child?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found this geiger counter. I think it's yours." linkto "Mich_6_2a"  notes "This node only appears if the PC has found the geiger counter marked with the initials M.S. AND Mich_G_Counter_Return=0."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found these bones. Do you think you could tell if they belonged to a companion of yours?" linkto "Mich_6_2b"  notes "This node only appears if the PC has found at least one set of the Explorers' bones at the high-rad expedition site. Perhaps we need a different variable for each set of bones at the expedition site, so the script knows which set of bones has been checked by Michael or not."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not sure where to look for the bones. Please tell me where to find the site." linkto "Mich_5_7_4a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, not yet. Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_6_2a"
+notes "Increment Mich_G_Counter_Return by 1."
+is_wtg = false
+{
+NPCText "Yes! This is it! This is it! Thank you, my son. You have no idea what this means to me."
+ NPCFemaleText "Yes! This is it! This is it! Thank you, my child. You have no idea what this means to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's the three sets of bones and one geiger counter. Does this mean you will tell me where the last two sets of bones are?" linkto "Mich_6_3"  notes "This node only appears IF Mich_G_Counter_Return>=1 AND Mich_Site_Bones_Return=3."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found these bones. Do you think you could tell if they belonged to a companion of yours?" linkto "Mich_6_2b"  notes "This node only appears if the PC has found at least one set of the Explorers' bones at the high-rad expedition site. Perhaps we need a different variable for each set of bones at the expedition site, so the script knows which set of bones has been checked by Michael or not."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, not yet. Let me ask you about something else." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_6_2b"
+notes "Increment Mich_Site_Bones_Return by 1 for each new set of bones the PC shows to Michael."
+is_wtg = false
+{
+NPCText "Let me see... *He looks closely at the bones.* Oh my, yes. It's amazing how you can still recognize someone by looking at their skull. Poor souls."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's the three sets of bones and one geiger counter. Does this mean you will tell me where the last two sets of bones are?" linkto "Mich_6_3"  notes "This node only appears IF Mich_G_Counter_Return>=1 AND Mich_Site_Bones_Return=3."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I also found this geiger counter. I think it's yours." linkto "Mich_6_2a"  notes "This node only appears if the PC has found the geiger counter marked with the initials M.S. AND Mich_G_Counter_Return=0."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Mich_6_3"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, you have earned that much, my son. The bones of the final two Explorers are in our cemetary. You will need a shovel in order to dig them up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "As it happens, I have a shovel. Lead the way." linkto "Mich_6_4a_1"  notes "This node only appears IF the PC has a shovel in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have a shovel. Do you have one I could borrow?" linkto "Mich_6_4b"  notes "This node only appears IF the PC does not have a shovel in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, first." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to go digging. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Mich_6_4a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Follow me. I'll lead you to the cemetary."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Mich_6_4a_2"  notes "The screen fades to black; a few hours pass; screen fades back; PC has all the bones."
+              }
+}
+Node "Mich_6_4a_2"
+notes "Decrement Mich_Rude by 2. Make Mich_Shovel=0. Make Mich_Alex_Force=0. Increment Mich_Cemetary_Bones by 2. Put the bones of the two Explorers buried in the Sandover cemetary in the PC's inventory."
+is_wtg = false
+{
+NPCText "*You return to Michael's room after several hours of heavy, dusty digging. You now have the bones of the two Explorers who were buried in Sandover's cemetary. The priest looks at you in concern.* That looked like hard work. Would you like a drink?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, please. What do you have?" linkto "Mich_6_4a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thanks. I had better leave." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I'd like to ask you instead." linkto "Mich_9"  notes ""
+              }
+}
+Node "Mich_6_4a_3"
+notes ""
+is_wtg = false
+{
+NPCText "Just water, I'm afraid. I don't keep alcohol."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Water sounds just fine." linkto "Mich_6_4a_4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds good. No offense, but with this being Sandover, I presume it's safe to drink?" linkto "Mich_6_4a_4a" conditions { CHECK_SKILL outdoorsman >= 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I have a question I'd like to ask you instead." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thanks. I want a drink, not a wash. I had better leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_6_4a_4a"
+notes ""
+is_wtg = false
+{
+NPCText "Of course. All our drinking water is from Rusty Springs and it all gets drunk before the background radiation has a chance to contaminate it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, water sounds just fine." linkto "Mich_6_4a_4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I'd like to ask you instead." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll leave it, thanks all the same. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_6_4a_4b"
+notes "Maybe some sort of tiny health boost at this point because of the drink?"
+is_wtg = false
+{
+NPCText "Here, take this. *Michael hands you an earthenware mug filled with water, which you drink in one draught. You are surprised by how thirsty you are. When you are finished, you hand the mug back to the priest.* What will you do now, my son?"
+ NPCFemaleText "Here, take this. *Michael hands you an earthenware mug filled with water, which you drink in one draught. You are surprised by how thirsty you are. When you are finished, you hand the mug back to the priest.* What will you do now, my child?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Would you like to come to Crossroads to preside over the burial of the Explorers' bones?" linkto "Mich_8a_1"  notes "This option only appears if the variable Mich_Site_Bones_Return=3 AND Mich_Cemetary_Bones=2. \nIF Mich_G_Counter_Return<=0, go to Mich_8b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I'd like to ask you." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better be going. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Mich_6_4b"
+notes "Increment Mich_Shovel by 1."
+is_wtg = false
+{
+NPCText "No. I am not one for material possessions, my son. You will need to find a shovel from elsewhere. Your Explorer friends will doubtless have one."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else before I go off to find the shovel." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hopefully I'll be able to find one in Sandover. Goodbye for now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have to go back to Crossroads, then. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_7_1"
+notes "The Mich_7_* path is for the condition of the bones quest where the PC has convinced the Scab leader, Alexander, to overrule Michael. This allows the PC to force Michael to take him to the two sets of bones buried in Sandover's cemetary."
+is_wtg = false
+{
+NPCText "Alexander said that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He did. Tell me where the two sets of bones you know about are and how I can get them." linkto "Mich_7_2"  notes ""
+              }
+}
+Node "Mich_7_2"
+notes ""
+is_wtg = false
+{
+NPCText "Give me a moment. I should like to check this with Alexander myself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be waiting here." linkto "Mich_7_3"  notes "Fade the screen to black and back again to simulate the time it takes for Michael to go to Alexander to confirm his overruling and come back again. If possible, make five minutes pass."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't keep me waiting too long." linkto "Mich_7_3"  notes "Fade the screen to black and back again to simulate the time it takes for Michael to go to Alexander to confirm his overruling and come back again. If possible, make five minutes pass."
+              }
+}
+Node "Mich_7_3"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael returns to his room. He looks awkward; you can imagine the heated words that he and Alexander exchanged.* It appears I owe you an apology, stranger. Alexander did indeed give you his blessing. If you want to collect the bones now, they're in our cemetary; you'll need a shovel so you can dig them up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No time like the present. Let's go." linkto "Mich_6_4a_1"  notes "This node only appears if the PC has a shovel in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have a shovel. Do you have one I could borrow?" linkto "Mich_6_4b"  notes ""
+              }
+}
+Node "Mich_8a_1"
+notes "The Mich_8_* path is where the PC can invite Michael back to Crossroads in order to preside over the burial of the five dead Explorers. The PC needs to have found and returned the geiger counter to Michael, as well as gathered the five bones set in order to do this."
+is_wtg = false
+{
+NPCText "*Michael is taken aback by your suggestion.* That is a truly noble gesture on your part, my son. I would be honored to help in any way I can with the ceremony."
+ NPCFemaleText " *Michael is taken aback by your suggestion.* That is a truly noble gesture on your part, my child. I would be honored to help in any way I can with the ceremony."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Mich_8a_2"  notes ""
+              }
+}
+Node "Mich_8a_2"
+notes ""
+is_wtg = false
+{
+NPCText "*The priest becomes more emotional as he speaks.* This... really means a lot to me, you know. To be able to make my peace with Bruce and the others in the group would be... very helpful. *He pauses and breathes heavily.* I'm sorry... it's just..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't worry, I think I understand." linkto "Mich_8a_3"  notes ""
+              }
+}
+Node "Mich_8a_3"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael gathers his thoughts.* So how shall we arrange this?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Leave for Crossroads as soon as you can. Wait for me to talk to Bruce and we'll take it from there." linkto "Mich_8a_4"  notes ""
+              }
+}
+Node "Mich_8a_4"
+notes ""
+is_wtg = false
+{
+NPCText "Very well. I'll pack what few things I'll need for the journey and be on my way. Will you be coming soon?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, I think I'm finished in Sandover. Goodbye for now; I'll see you at Crossroads." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, there are still some things I have to do before I go back to Crossroads. I'll leave you to your packing." linkto "done"  notes ""
+              }
+}
+Node "Mich_8b_1"
+notes ""
+is_wtg = false
+{
+NPCText "*Michael considers your suggestion for a few moments.* No... I don't think that would be appropriate, my son. There are still many ghosts to be laid to rest in my relationship with the Explorers for me to return to Crossroads and face them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How could I help you to put these ghosts to rest?" linkto "Mich_8b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Let me ask you another question in that case." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had better leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_8b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Well, the image that keeps appearing in my mind whenever I think of the Sandover expedition is of the geiger counter I lost. If you were to find that, I could take the first, and perhaps the most difficult step, in coming to terms with my part in the disaster."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've forgotten where you said the geiger counter could be found. Please remind me." linkto "Mich_8b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was the geiger counter you lost the only one your group had?" linkto "Mich_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had better leave." linkto "done"  notes ""
+              }
+}
+Node "Mich_8b_3"
+notes ""
+is_wtg = false
+{
+NPCText "If the geiger counter still hasn't been found, it'll be lying out at the expedition site. I'm afraid you'll need to return to that area again if you are going to find it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Put in a link to the geiger guilt trip.*" linkto "Mich_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I remember, now. Could I ask you a question about something else?" linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and find it now." linkto "done"  notes ""
+              }
+}
+Node "Mich_9"
+notes ""
+is_wtg = false
+{
+NPCText "What do you wish to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Mich_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you lived in Sandover all your life?" linkto "Mich_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Mich_2_3a_2b_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander said you have to give me the two sets of bones you know the whereabouts of. Could you do that now, please?" linkto "Mich_7_1"  notes "This node is only visible if the variable Mich_Alex_Force>0 AND Mich_Shovel<1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've managed to find a shovel. Could you show me where to dig for the bones of the last two Explorers?" linkto "Mich_6_4a_1"  notes "This option only appears IF the PC has a shovel AND Mich_Shovel>0 AND Mich_Cemetary_Bones=0. Also, the variable Mich_Alex_Force must be greater than 0, OR Mich_G_Counter_Return must be greater than 0 AND Mich_Site_Bones_Return must be greater than 2."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Would you like to come to Crossroads to preside over the burial of the Explorers' bones?" linkto "Mich_8a_1"  notes "This option only appears if the variable Mich_Site_Bones_Return=3 AND Mich_Cemetary_Bones=2 AND the ceremony where the Explorers have buried their dead has NOT already happened. \nIF Mich_G_Counter_Return<=0, go to Mich_8b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I think we covered everything I need to know. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_0"
+notes "The Mich_B_* path is where an evil PC can convince Michael to kill himself because of his part in the Sandover expedition disaster!\nIncrement the variable Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "Huh. You have already tried that one, stranger. Either you are going to help find the geiger counter, or we should drop the subject altogether."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want anything else, other than the bones and the geiger counter?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you just want a new geiger counter, I could trade for a one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's drop it. I'll ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_1"
+notes "The Mich_B_* path is where an evil PC can convince Michael to kill himself because of his part in the Sandover expedition disaster!"
+is_wtg = false
+{
+NPCText "*Michael sighs and nods sadly.* I can see where this might be going. It was the only means of radiation detection the group had, yes. Now you can see why I feel so terrible about the expedition."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I should think so. You're solely responsible for the deaths of five people!" linkto "Mich_B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want anything else, other than the bones and the geiger counter?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you just want a new geiger counter, I could trade for a one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_2"
+notes "Increment the variables Mich_Guilt_Trip and Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_2 */
+
+      define_skill_check SkillCheck_0_Mich_B_2 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_3a_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_2 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_3b;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "*The hooded figure partly turns away.* Your words cut me deep, stranger. Show a little mercy, please."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "How can you live with the knowledge of the crimes you are responsible for?" linkto "SkillCheck_0_Mich_B_2"  notes "Wrong response for the suicide condition. The weaker of the two guilt trips. It gives Michael the chance to justify himself. Penalty is another node with a speech check to go through.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "No wonder you hide your face behind those robes. I would too, if I had the blood of five innocents on my hands." linkto "SkillCheck_1_Mich_B_2"  notes "Correct response for the suicide condition. Straight for the jugular.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not for me to judge you or why you want the geiger counter. Is there anything else you want found?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you just want a new geiger counter, I could trade for a one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_3a_1"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_3a_1 */
+
+      define_skill_check SkillCheck_0_Mich_B_3a_1 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_3a_2;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_3a_1 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_3a_2;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "What is done is done, stranger. Each new day is an opportunity to atone for my negligence. I have helped many since I have been in Sandover."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL Gender=MALE playertext "You think parading around, calling everyone 'my son', and dispensing bad advice is atonement?" linkto "SkillCheck_0_Mich_B_3a_1"  notes "Moderate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You think parading around, calling everyone 'my child', and dispensing bad advice is atonement?" linkto "SkillCheck_1_Mich_B_3a_1"  notes "Moderate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not for me to judge you or why you want the geiger counter. Is there anything else you want found?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you just want a new geiger counter, I could trade for a one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_3a_2"
+notes "Increment the variable Mich_Guilt_Trip by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_3a_2 */
+
+      define_skill_check SkillCheck_0_Mich_B_3a_2 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_4a_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_3a_2 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "I simply do what I can to help! Ask the people of Sandover; they will tell you what I have done for the town."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I wonder, do they know about the five deaths you're responsible for?" linkto "SkillCheck_0_Mich_B_3a_2"  notes "Correct response. Hits the heart of the matter. Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you ever tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_1_Mich_B_3a_2"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not for me to judge you or why you want the geiger counter. Is there anything else you want found?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you just want a new geiger counter, I could trade for a one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_3b"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_3b */
+
+      define_skill_check SkillCheck_0_Mich_B_3b {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_4a_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_3b {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "*The priest's shoulders slump. His voice is a barely audible croak, now.* Must you?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I wonder if the good people of Sandover know you're responsible for five deaths." linkto "SkillCheck_0_Mich_B_3b"  notes "Correct response. Hits the heart of the matter. Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you even tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_1_Mich_B_3b"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It can't easy to live with. Is there anything else you want found?" linkto "Mich_5_7_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you just want a new geiger counter, I could trade for a one somewhere a lot less dangerous." linkto "Mich_5_7_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4a_1"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4a_1 */
+
+      define_skill_check SkillCheck_0_Mich_B_4a_1 {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Mich_B_4a_2;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_4a_1 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "I have made no attempt to deceive them, stranger."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Yes, but I doubt you've gone out of your way to tell them about your guilt, either." linkto "SkillCheck_0_Mich_B_4a_1"  notes "Although Mich_4a_* is the longer of the two parallel paths, it is the easier. It hits the heart of the matter; Sandover is Michael's means of atonement.\nEasy speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you ever tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_1_Mich_B_4a_1"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4a_2"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4a_2 */
+
+      define_skill_check SkillCheck_0_Mich_B_4a_2 {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Mich_B_4a_3;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_4a_2 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "*Michael becomes exasperated.* Well, what would you have me do, wear a billboard around my neck?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Better yet, how about I go into the town and tell all the people of Sandover for you?" linkto "SkillCheck_0_Mich_B_4a_2"  notes "Although Mich_4a_* is the longer of the two parallel paths, it is the easier. It hits the heart of the matter; Sandover is Michael's means of atonement.\nEasy speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you ever tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_1_Mich_B_4a_2"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4a_3"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4a_3 */
+
+      define_skill_check SkillCheck_0_Mich_B_4a_3 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_4a_4;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_4a_3 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "You wouldn't dare. Please... don't. Sandover is all I have left."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Either you tell them, or I will." linkto "SkillCheck_0_Mich_B_4a_3"  notes "Although Mich_4a_* is the longer of the two parallel paths, it is the easier to complete. It hits the heart of the matter; Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you ever tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_1_Mich_B_4a_3"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4a_4"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4a_4 */
+
+      define_skill_check SkillCheck_0_Mich_B_4a_4 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_5_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_4a_4 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_4a_5;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_2_Mich_B_4a_4 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "I can't! If they find out, I'll have nothing left to live for. Don't take this from me!"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Then it looks like you have no choice. Your only option is to take your own life and your grubby secret with you." linkto "SkillCheck_0_Mich_B_4a_4"  notes "Increment the variable Mich_Guilt_Trip by 1.\nAlthough Mich_4a_* is the longer of the two parallel paths, it is the easier to complete. It hits the heart of the matter; Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I have to. The people of Sandover must know what you're responsible for." linkto "SkillCheck_1_Mich_B_4a_4"  notes "Increment the variable Mich_Guilt_Trip by 1.\nAlthough Mich_4a_* is the longer of the two parallel paths, it is the easier to complete. It hits the heart of the matter; Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you ever tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_2_Mich_B_4a_4"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4a_5"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4a_5 */
+
+      define_skill_check SkillCheck_0_Mich_B_4a_5 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_5_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_1_Mich_B_4a_5 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_5_2;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_2_Mich_B_4a_5 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "Don't you understand? I'll have nowhere else to go. If even Sandover won't take me in, I'll... I'll kill myself!"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Then it looks like you have no choice. Your only option is to take your own life and your grubby secret with you." linkto "SkillCheck_0_Mich_B_4a_5"  notes "Increment the variable Mich_Guilt_Trip by 1.\nAlthough Mich_4a_* is the longer of the two parallel paths, it is the easier to complete. It hits the heart of the matter; Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Do what you have to do. The truth will out." linkto "SkillCheck_1_Mich_B_4a_5"  notes "Increment the variable Mich_Guilt_Trip by 1.\nAlthough Mich_4a_* is the longer of the two parallel paths, it is the easier to complete. It hits the heart of the matter; Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Have you ever tried to contact the Explorers to apologize for your appalling failure?" linkto "SkillCheck_2_Mich_B_4a_5"  notes "Wrong response. Changes the subject slightly. Sandover is Michael's means of atonement, not the Explorers.\nDifficult speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4b_1"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4b_1 */
+
+      define_skill_check SkillCheck_1_Mich_B_4b_1 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_4a_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_0_Mich_B_4b_1 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_4b_2;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "No, I haven't. Are you enjoying this?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "You hypocritical, pathetic excuse for a man. You preach to others how to lead their lives and yet you don't make the slightest effort to atone for your own sins." linkto "SkillCheck_0_Mich_B_4b_1"  notes "Mich_B_4b_* is a much shorter but much more difficult path to complete. It doesn't really have any attack other than insults.\nVery difficult speech check. If failed, Go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I wonder if the good people of Sandover know you're responsible for five deaths." linkto "SkillCheck_1_Mich_B_4b_1"  notes "Leads onto the easier path Mich_B_4a_*. Hits the heart of the matter. Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_4b_2"
+notes "Increment the variable Mich_Rude by 1."
+is_wtg = false
+/* Skill checks for node Mich_B_4b_2 */
+
+      define_skill_check SkillCheck_1_Mich_B_4b_2 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_4a_1;
+      onfailure => Mich_B_9_1;
+      }
+      define_skill_check SkillCheck_0_Mich_B_4b_2 {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Mich_B_5_1;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "How... how dare you?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "If you cannot so much as apologize for your terrible crimes then you might as well choose the only honorable course of action left open to you and take your own life." linkto "SkillCheck_0_Mich_B_4b_2"  notes "Increment the variable Mich_Guilt_Trip by 1.\nMich_B_4b_* is a much shorter but much more difficult path to complete. It doesn't really have any attack other than insults.\nVery difficult speech check. If failed, Go to Mich_B_9_1 instead."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I wonder if the good people of Sandover know you're responsible for five deaths." linkto "SkillCheck_1_Mich_B_4b_2"  notes "Leads onto the easier path Mich_B_4a_*. Hits the heart of the matter. Sandover is Michael's means of atonement.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'd better change the subject. Let me ask you another question." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_5_1"
+notes ""
+is_wtg = false
+/* Skill checks for node Mich_B_5_1 */
+
+      define_skill_check SkillCheck_0_Mich_B_5_1 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Mich_B_5_2;
+      onfailure => Mich_B_9_1;
+      }
+
+{
+NPCText "*Michael staggers backwards until he is pressed against the wall.* How could you... Why would you suggest such a terrible thing?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I'm only forcing you to see what you're too frightened to admit to yourself." linkto "SkillCheck_0_Mich_B_5_1"  notes "Increment the variable Mich_Guilt_Trip by 1.\nModerate speech check. If failed, go to Mich_B_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just seeing how far I could push you. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_5_2"
+notes ""
+is_wtg = false
+{
+NPCText "*He breathes heavily for a few moments, then pushes forwards, one finger jabbed towards you like a claw.* You are right, stranger. Damn you to hell for it, but you are right."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Mich_B_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_5_3"
+notes "When the dialogue ends, Michael will run to the Sandover expedition site and allow the super-high rads to kill him. If the PC ever visits the area, he will see Michael's robed body lying there."
+is_wtg = false
+{
+NPCText "I should have died over ten years ago, not lived this... farce. *He looks around wildly, like a hunted animal.* Now, get out of here. I want to be on my own before I do what has to be done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think you have the courage to kill yourself, so I'll do it for you." linkto "Mich_B_5_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_5_4"
+notes ""
+is_wtg = false
+{
+NPCText "Good God, are you the devil himself come for me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, just a concerned citizen putting out the trash." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, preacher man. A world of never-ending nightmares awaits, and I have come to take you." linkto "combat"  notes ""
+              }
+}
+Node "Mich_B_9_1"
+notes ""
+is_wtg = false
+{
+NPCText "*You can hear the sneer in the priest's voice.* Nice try, stranger. However, I am stronger than you, and am not as easily broken as you would like to think. Get out of here and spread your darkness elsewhere."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question before I go." linkto "Mich_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then we'll do this the old-fashioned way. *Draw weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Mich_B_9_2"
+notes "Increment the variables Mich_Guilt_Trip and Mich_Rude by 1."
+is_wtg = false
+{
+NPCText "No! Enough of your poison! Begone."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then die, preacher." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}

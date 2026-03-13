@@ -1,0 +1,167 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.2-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "Switcher"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Power is on>" linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Power is off>" linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Already logged in>" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "Recovering from emergency shutdown... Performing hardware diagnostics... errors found.  Checking for local boot routine... found. Checking network connectivity... no connection found. Boot? Y/N"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No" linkto "done"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "The screen is dead. The power is off."
+      options {
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "[The computer hums and grunts] ...Boot successful. Login?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Login as UserX]" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Administrator Override]" linkto "Node_005"  notes "Admin code found in Bobby's email"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Login as Guest]" linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "HACK THE MAINFRAME!" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_004a"
+notes ""
+{
+NPCText "Login?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Login as UserX]" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Login as Administrator]" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Login as Guest]" linkto "Node_011"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "Welcome to GAInet. Command?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Account Details" linkto "Node_006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "E-memo Inbox" linkto "Node_007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Personal Files" linkto "Node_008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logoff]" linkto "done"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "Workstation ID: 00rgt@GAInet:HQ\nAccount Registered to: Taylor, Robert G.\n
+Account Opened: dd, m, yyyy\n"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "GAInet E-memo Management System (GEMSYS)\nWelcome, Robert Taylor. You have no unread messages."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Check saved messages]" linkto "Node_012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "Robert Taylor, you have 2 document(s) saved."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Download 'Security Notice: Robert G. Taylor'" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Download 'Handy ME Recall'" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "1: Security Notice: Robert G. Taylor\n2: To all GAI employees: Handy ME Recall"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Download Document 1" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Download Document 2" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Main Menu]" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "[You download the file to your PIPboy]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to File List]" linkto "Node_009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Main Menu]" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "Guest login refused. This station is for registered use only. Last Login: 00xyz@GAInet:HQ"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_004a"  notes ""
+              }
+}
+Node "Node_012"
+notes ""
+{
+NPCText "You have 3 message(s) saved."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Memo - 'Re: Why??'" linkto "Node_013"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Memo - 'Re: Abraham'" linkto "Node_015"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Memo - 'Re: Lunch thursday'" linkto "Node_014"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Main Menu]" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_013"
+notes ""
+{
+NPCText "Message sent by: 00brc@GAInet:HQ. Copy: Why, Robert? You know I'm right, why won't you speak up for me? Are you that worried about your job? Forget the fucking job, Bobby, this is bigger. People are going to die - why won't you speak up?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_012"  notes ""
+              }
+}
+Node "Node_014"
+notes ""
+{
+NPCText "Message sent by: 69opc@GAInet:HQ. Copy: Hey bobby, are we still on? I had to talk my way out of 'family day' for this, you better not back out on me. I heard about your repremand - way to go! I love the excuse you gave - 'I just wanted to see the sky'. Classic."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_012"  notes ""
+              }
+}
+Node "Node_015"
+notes ""
+{
+NPCText "Message sent by: 00brc@GAInet:HQ. Copy: I'm going to tell them everything. I know we promised Juliette, but she's gone and this is too big. They won't believe me alone; I need you to corroborate. Help me, Bobby. Lives are at stake."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_012"  notes ""
+              }
+}

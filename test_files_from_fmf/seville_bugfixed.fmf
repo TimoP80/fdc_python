@@ -1,0 +1,1239 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.2-stable
+
+*/
+
+vars {
+local var Seville_Had_Drugs notes "This determines how many times the PC has sold hard drugs to Seville." = 0;
+local var Seville_PC_Dealer notes "This determines whether or not Seville thinks of the PC as a drug-dealer." = 0;
+local var Seville_PC_Hate notes "This determines if Seville thinks the PC is either weak or a goody two-shoes." = 0;
+local var Seville_PC_Hitman notes "This determines whether or not the PC has  told Seville that Saman wants the Vultures killed." = 0;
+local var Seville_Rico_Dead notes "This determines if the PC has found out from Seville that Rico died from overdosing on the PC's drugs." = 0;
+local var Seville_Saman_Dealer_Know notes "This determines if the PC has already told Seville that Saman has attacked the PC for selling drugs to the Vultures." = 0;
+local var Seville_Scab_Suppliers notes "This determines whether or not the PC has found out from Seville that the Vultures are kept supplied by various members of the Scab community." = 0;
+}
+NPCName "Seville"
+Location "Sandover scavenging grounds, GAI cluster"
+Description "This is the leader of the Vultures gang. He has a younger brother, Douglas, who can  become involved if the PC accepts the quest from Dakin to deal with (read: kill) the Vultures gang.\n\n[\nnote to Stevie D: Some incorrect variable references (caused by bugs in the tool) fixed by me, should be all good now.\n\n0.25.5-stable will be able to handle variables a bit better.\n\n-djunique\n]"
+Unknown_Desc "This man seems to be the leader of the group around him."
+Known_Desc "It's Seville. For all his swagger and bravado he looks wired and probably hasn't slept in days."
+Detailed_Desc "He is pale-faced and heavily stubbled."
+/* Regular nodes */
+
+Node "Seville_0"
+notes "Starting conditions for the dialogue."
+is_wtg = false
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has not spoken to Seville before." linkto "Seville_1_1a"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to Seville before, but doesn't know that he is Seville." linkto "Seville_1_1b"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to Seville before and knows who he is." linkto "Seville_9_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to Seville before and sold at least one dose of drugs to him." linkto "Seville_1_1c" conditions { LOCAL_VARIABLE Seville_Had_Drugs > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has sold at least ten doses of hard drugs to Seville." linkto "Seville_1_1d_1" conditions { LOCAL_VARIABLE Seville_Had_Drugs >= 10 link_next NONE } notes "The PC needs to have left the map and returned to it since selling Seville 10+ doses of drugs to get this greeting.\nIf Seville has spoken this node once, he will return to the normal greeting node that he uses when he is familiar with the PC as a drug dealer in future."
+              }
+}
+Node "Seville_1_1a"
+notes ""
+is_wtg = false
+{
+NPCText "[The man, who has blood-shot, red-rimmed eyes, performs a comical double-take.] I know you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My name is <PC>." linkto "Seville_1_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm your worst nightmare, pal." linkto "Seville_1_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking in this area for the Vultures gang." linkto "Seville_1_2c_1"  notes "This option only appears if the PC has accepted the Kill the Vultures gang quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Know?" linkto "Seville_1_2D_1"  notes ""
+              }
+}
+Node "Seville_1_1b"
+notes ""
+is_wtg = false
+{
+NPCText "You again. What the hell do you want, anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My name is <PC>." linkto "Seville_1_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm your worst nightmare, pal." linkto "Seville_1_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking in this area for the Vultures gang." linkto "Seville_1_2c_1"  notes "This option only appears if the PC has accepted the Kill the Vultures gang quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want say, \"hello.\"" linkto "Seville_1_1b_D"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1b_D"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, you've done it. Now say, \"goodbye.\""
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Goo'bye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1c"
+notes ""
+is_wtg = false
+{
+NPCText "Hey, if it isn't my favorite supplier. You got anything for me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know that Saman wants you killed?" linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know that Saman wants you killed?" linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "Seville_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are you staying here?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is your relationship with Douglas?" linkto "Seville_5_1"  notes "This option only appears if the PC has spoken to Douglas and knows that he is Seville's younger brother."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did Saman's men find out that I've been dealing to you?" linkto "Seville_8_1a" conditions { LOCAL_VARIABLE Seville_Saman_Dealer_Know == 0 link_next NONE } notes "This node only appears if Saman and/or his guards have attacked the PC after having been tipped off by Douglas. This happens if the PC has dealt 10 or more doses of hard drugs to the Vultures, causing the death of Rico, who OD's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did Saman's men find out that I've been dealing to you?" linkto "Seville_8_1b" conditions { LOCAL_VARIABLE Seville_Saman_Dealer_Know > 0 link_next NONE } notes "This node only appears if Saman and/or his guards have attacked the PC after having been tipped off by Douglas. This happens if the PC has dealt 10 or more doses of hard drugs to the Vultures, causing the death of Rico, who OD's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got some gear to sell you. Do you want it?" linkto "Seville_7_1_1" conditions { LOCAL_VARIABLE Seville_Scab_Suppliers > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1d_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hey, this is some heavy gear you've been selling us, man."
+ NPCFemaleText "Hey, this is some heavy gear you've been selling us, sweetness. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "Seville_1_1d_2"  notes ""
+              }
+}
+Node "Seville_1_1d_2"
+notes ""
+is_wtg = false
+{
+NPCText "Rico ODed, man. Your fucking shit killed him!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Rico?" linkto "Seville_1_1d_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean, 'ODed'?" linkto "Seville_1_1d_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually killed him? He died?" linkto "Seville_1_1d_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want to buy some more from me?" linkto "Seville_1_1d_3d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Let me ask you a question." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1d_3a"
+notes ""
+is_wtg = false
+{
+NPCText "Rico's one of the gang - or he was at least until he ODed on your gear."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean, 'ODed'?" linkto "Seville_1_1d_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He actually died?" linkto "Seville_1_1d_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want to buy some more from me?" linkto "Seville_1_1d_3d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Let me ask you a question." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1d_3b"
+notes ""
+is_wtg = false
+{
+NPCText "What the hell? You know what ODing is. He overdosed. It was too much for him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Rico?" linkto "Seville_1_1d_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He actually died?" linkto "Seville_1_1d_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want to buy some more from me?" linkto "Seville_1_1d_3d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Let me ask you a question." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1d_3c"
+notes ""
+is_wtg = false
+{
+NPCText "I have to spell it out for you? Yes, he's dead, man. As in, we had to bury his ass under six feet of wasteland."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Rico?" linkto "Seville_1_1d_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you mean when you said he, 'ODed'?" linkto "Seville_1_1d_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does this mean you don't want any more gear from me?" linkto "Seville_1_1d_3d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Let me ask you a question." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_1d_3d"
+notes ""
+is_wtg = false
+{
+NPCText "[He laughs.] Are you kidding? I can't get enough of this far out stuff. You got any more?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Seville_7_1_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, who did you say this Rico guy was?" linkto "Seville_1_1d_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Let me ask you a question." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "And I'm unimpressed. What do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm your worst nightmare, pal." linkto "Seville_1_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking in this area for the Vultures gang." linkto "Seville_1_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He grins wolfishly and sizes you up.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Seville_1_2b_2a_1" conditions { CHECK_STAT strength >= 7 link_next NONE } notes "High strength PC option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Seville_1_2b_2b_1" conditions { CHECK_STAT strength < 7 link_next NONE } notes "Low strength PC option."
+              }
+}
+Node "Seville_1_2b_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He laughs and takes a step backwards.] Woah, man! My worst nightmare, you hear that? [The other members of the group with him chuckle at this charade at your expense.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Seville_1_2b_2a_2"  notes ""
+              }
+}
+Node "Seville_1_2b_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, nightmare man, you got Seville's ear. What you want?"
+ NPCFemaleText "Okay, nightmare lady, you got Seville's ear. What you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Saman wants you and your gang dead." linkto "Seville_2_1a"  notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you start by telling me what you do out here?" linkto "Seville_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Draw weapon.]" linkto "combat"  notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[The man spits on the ground between your feet.] You talk too big, kid. Get the fuck outta here before I whoop some manners into you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'll whoop some manners into you." linkto "Seville_1_2b_2b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, I'm leaving." linkto "Seville_1_2b_2b_2b"  notes ""
+              }
+}
+Node "Seville_1_2b_2b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "[He claps his hands once, loudly.] Showtime, fellas! [The other members of his gang produce nasty looking weapons and begin to move in on you.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please don't hurt me. I'm sorry if I offended you." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's see what you've got, freak." linkto "combat"  notes ""
+              }
+}
+Node "Seville_1_2b_2b_2b"
+notes "Increment the variable Seville_PC_Hate by 1."
+is_wtg = false
+{
+NPCText "Don't fucking come back either, pussy."
+ NPCFemaleText "Don't fucking come back either, bitch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[DONE]" linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_1"
+notes ""
+is_wtg = false
+{
+NPCText "[Play-acting, he recoils, as if shot.] Ho-ly shit! Is that right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It is. Do you know where I can find them?" linkto "Seville_1_2c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_2"
+notes ""
+is_wtg = false
+{
+NPCText "What did you say they were called, again?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The Vultures gang." linkto "Seville_1_2c_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_3"
+notes ""
+is_wtg = false
+{
+NPCText "[He turns to the rest of the group with him.] We know the Vultures, fellas? [There are theatrical murmurings from the group and someone laughs. The man turns back to you, wild-eyed.] We don't know any Vultures, mister."
+ NPCFemaleText "[He turns to the rest of the group with him.] We know the Vultures, fellas? [There are theatrical murmurings from the group and someone laughs. The man turns back to you, wild-eyed.] We don't know any Vultures, lady."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you suggest where I should look for them?" linkto "Seville_1_2c_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're Seville, aren't you?" linkto "Seville_1_2c_4b" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT perception >= 6 link_next NONE } notes "Note intelligence and perception checks."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're not Douglas' brother, then?" linkto "Seville_1_2c_4c_1"  notes "This option only appears if the PC has spoken to Douglas and know's that he's Seville's younger brother."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's a shame, because I need to warn them that Saman is hiring people to kill them." linkto "Seville_1_2c_4d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_4a"
+notes ""
+is_wtg = false
+{
+NPCText "[He suppresses a chuckle.] No idea. Hey, I'll say you're looking for them if I ever meet them. [There's yet more laughter from the group.]\n"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I guess. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_4b"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, you got me. I'm Seville. What do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Saman wants you and your gang dead." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Saman wants you and your gang dead." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you start by telling me what you do out here?" linkto "Seville_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_4c_1"
+notes ""
+is_wtg = false
+{
+NPCText "You've met my little brother, then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you are Seville?" linkto "Seville_1_2c_4c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2c_4c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Looks like."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Seville_5_1"  notes ""
+              }
+}
+Node "Seville_1_2c_4d"
+notes "Increment the variable Seville_PC_Hitman by 1."
+is_wtg = false
+{
+NPCText "His face freezes. Is that a fact, now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you suggest where I should look for the Vultures?" linkto "Seville_1_2c_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're Seville, aren't you?" linkto "Seville_1_2c_4b" conditions { CHECK_STAT intelligence >= 5 link_next AND, CHECK_STAT perception >= 5 link_next NONE } notes "Note intelligence and perception checks. They are slightly easier to pass than the ones in node Seville_1_c3."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2D_1"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah. Know, as in, have we met before?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Guh?" linkto "Seville_1_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go." linkto "Seville_1_2D_3"  notes ""
+              }
+}
+Node "Seville_1_2D_2"
+notes ""
+is_wtg = false
+{
+NPCText "God damn it. Can't those fucking Scabs stop their own retards from wandering over here?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Scab?" linkto "Seville_1_2D_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go." linkto "Seville_1_2D_3"  notes ""
+              }
+}
+Node "Seville_1_2D_3"
+notes ""
+is_wtg = false
+{
+NPCText "Wait a second... [He looks you up and down.]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Seville_1_2D_4b" conditions { CHECK_STAT strength < 7 link_next NONE } notes "Low STR PC option."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Seville_1_2D_4a" conditions { CHECK_STAT strength >= 7 link_next NONE } notes "High STR PC option."
+              }
+}
+Node "Seville_1_2D_4a"
+notes ""
+is_wtg = false
+{
+NPCText "They're building retards pretty big these days. Go on! Shoo! You go away now!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go." linkto "done"  notes ""
+              }
+}
+Node "Seville_1_2D_4b"
+notes ""
+is_wtg = false
+{
+NPCText "Looks like our next meal ticket has been delivered to us, fellas. [He and the other members of the group with him close in on you, brandishing evil-looking weapons.]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go." linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Grragh! I like fight!" linkto "combat"  notes ""
+              }
+}
+Node "Seville_2_1a"
+notes "The Seville_2_* path is where the PC can tell Seville that Saman wants him dead and that Saman has hired the PC to do the job."
+is_wtg = false
+{
+NPCText "[His eyes narrow with suspicion.] That's no news to me. Some day even my own shadow wants me dead."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not your shadow that you need to worry about. Why does Saman want you dead?" linkto "Seville_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do out here?" linkto "Seville_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Time for me to earn my reward. [Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_2_1b"
+notes "The Seville_2_* path is where the PC can tell Seville that Saman wants him dead and that Saman has hired the PC to do the job."
+is_wtg = false
+{
+NPCText "That's right. You already told me that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does Saman want you dead?" linkto "Seville_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do out here?" linkto "Seville_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Time for me to earn my reward. [Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_2_2"
+notes ""
+is_wtg = false
+{
+NPCText "[He snorts a laugh.] What's it to you why he wants me dead?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Because he's sent me to kill you." linkto "Seville_2_3a" conditions { CHECK_STAT strength >= 7 link_next NONE } notes "High STR PC path."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Because he's sent me to kill you." linkto "Seville_2_3b" conditions { CHECK_STAT strength < 7 link_next NONE } notes "Low STR PC path."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it, I guess I don't care why I'm here to kill you. [Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_2_3a"
+notes "Increment the variable Seville_PC_Hitman by 1."
+is_wtg = false
+{
+NPCText "[He licks his lips nervously and watches you very carefully.] Hey, take it easy, now, trouble. Don't fly off the handle, here."
+ NPCFemaleText "[He licks his lips nervously and watches you very carefully.] Hey, take it easy, now, sweetness. Don't fly off the handle, here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll try again. Why does Saman want you dead?" linkto "Seville_2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tough. [Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_2_3b"
+notes "Increment the variable Seville_PC_Hitman by 1."
+is_wtg = false
+{
+NPCText "[This makes him laugh loud and harshly. His group joins in.] He sent a pussy like you to do a man's job? That is Saman all over!"
+ NPCFemaleText "[This makes him laugh loud and harshly. His group joins in.] He sent a woman to do a man's job? That is Saman all over!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you think I'm not up to it, you're sorely mistaken." linkto "Seville_1_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_2_4"
+notes ""
+is_wtg = false
+{
+NPCText "Listen, someone's been spreading rumors that we've been attacking Scabs when they come out here to scavenge. Saman's obviously dumb enough to take them seriously."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do I believe there's more to these rumors than you say?" linkto "Seville_2_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think they're more than rumors. [Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_2_5"
+notes ""
+is_wtg = false
+{
+NPCText "So, what, you're going to believe his word over mine?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There's no smoke without fire. Why don't you tell me why he kicked you out of Sandover's caves?" linkto "Seville_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you move away from here if you know Saman wants you dead so much?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So long as I get paid, it doesn't really matter. [Reach for your weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess not. Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_1"
+notes "The Seville_3* path is where the PC can find out that the Vultures rely on suppliers coming from Sandover and that they are interested in drugs."
+is_wtg = false
+{
+NPCText "We scavenge a living from the land around here like we did before that asshole Saman kicked us out of Sandover's caves. We also get a little high now and then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was told you've raided some of the Scabs when they come out here." linkto "Seville_3_2a_1"  notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did Saman kick you out of the caves?" linkto "Seville_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean when you say you get 'a little high'?" linkto "Seville_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He jabs a finger at you.] You better watch your tongue, pal. Neither you or Saman can prove a fucking thing."
+ NPCFemaleText "[He jabs a finger at you.] You better watch your tongue, lady. Neither you or Saman can prove a fucking thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I should have known better than to only listen to one side of the story." linkto "Seville_3_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get your finger out of my face." linkto "Seville_3_2a_2b_1" conditions { CHECK_STAT strength >= 7 link_next NONE } notes "High STR PC option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get your finger out of my face." linkto "Seville_1_2b_2b_1" conditions { CHECK_STAT strength < 7 link_next NONE } notes "Low STR PC option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "You know it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So why did Saman kick you out of the caves?" linkto "Seville_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean when you said you get 'a little high'?" linkto "Seville_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He snatches his finger back.] Hey, yeah, whatever."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did Saman kick you out of the caves?" linkto "Seville_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean when you said you get 'a little high'?" linkto "Seville_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got a question about something else that wants answering." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "You would have thought we'd hog-tied and raped Alexander's daughter the way Saman got a posse together and chased us out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you?" linkto "Seville_3_2b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what did you do?" linkto "Seville_3_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "You're pretty dumb, huh? Of course we didn't."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what did you do?" linkto "Seville_3_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Big chief Alex doesn't like people having fun in Sandover. Apparently, because everyone's so ill in the caves, no-one's allowed to smile. We like to party, so, what the hell? We did."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Saman threw you out for partying?" linkto "Seville_3_2b_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2b_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Damn straight. So what if we had a drink, got a little high? You would have thought the Scabs enjoyed being miserable."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was that it? Or was there anything else you did that the Scabs didn't like?" linkto "Seville_3_2b_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean by 'getting a little high'?" linkto "Seville_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2b_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Everything I did seemed to piss someone off. I didn't take well to Sandover's goddamn fascist rules. [He spits.] Who the hell wants to go out scavenging all day, anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Scavenging is compulsory in Sandover?" linkto "Seville_3_2b_2b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you mean when you said you 'got a little high'?" linkto "Seville_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_3_2b_2b_4"
+notes ""
+is_wtg = false
+{
+NPCText "Not compulsory, but the Scabs get sniffy about people who don't go out scratching around in the dust for pre-war crap all day. They're pretty damn self-righteous for a bunch of walking tumors."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you mean when you said you 'got a little high'?" linkto "Seville_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time for this. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_1"
+notes "The Seville_4_* path is where the PC tries to convince Seville to move out of Sandover altogether."
+is_wtg = false
+{
+NPCText "Now, why would we want to move anywhere else when we've got it so good here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you say it is so good here?" linkto "Seville_4_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't the radiation in Sandover worry you?" linkto "Seville_4_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_1"
+notes "It's an idle threat. I don't think we should bother with trying to make a way for Seville to detect that the PC has taken items from the local area, which would require a lot of unnecessary effort."
+is_wtg = false
+{
+NPCText "Because there's plenty of decent places to scavenge for things to sell around here. Oh - we'll kill you if you try to take any of it, by the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You shouldn't take things from this area. It belongs to the Scabs." linkto "Seville_4_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell the things you scavenge to?" linkto "Seville_4_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't the radiation in Sandover worry you?" linkto "Seville_4_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He laughs at this.] You should hear yourself; you sound pathetic. I don't owe the Scabs anything."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sandover relies on these grounds for its survival, though. You're taking that from them." linkto "Seville_4_2a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell the things you scavenge to?" linkto "Seville_4_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't the radiation in Sandover worry you?" linkto "Seville_4_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_2a_2"
+notes "Increment the variable Seville_PC_Hate by 1."
+is_wtg = false
+{
+NPCText "Oh, my bleeding heart. Listen, guardian angel, you're starting to piss me off. Why don't you run along before I do something you'll regret?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_4_2a_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Screw you." linkto "Seville_1_2b_2b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Very well. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_2a_3"
+notes ""
+is_wtg = false
+{
+NPCText "Question my ass. Get outta here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Screw you." linkto "Seville_1_2b_2b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Very well. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "It turns out that we still have some friends back in Sandover. They come out here and bring us supplies every so often, which we pay for with what we find."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which Scabs trade with you?" linkto "Seville_4_2a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You shouldn't take things from this area. It belongs to the Scabs." linkto "Seville_4_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't the radiation in Sandover worry you?" linkto "Seville_4_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[He regards you with a cool smile.] Wouldn't you like to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. I wouldn't have asked, otherwise." linkto "Seville_4_2a_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't the radiation in Sandover worry you?" linkto "Seville_4_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2a_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Take the hint, bozo. I mean I'm not going to tell you. If Saman finds out that there are Scabs helping us and knows who they are, he'll hunt them down and throw them out of Sandover, just like us."
+ NPCFemaleText "Take the hint, precious. I mean I'm not going to tell you. If Saman finds out that there are Scabs helping us and knows who they are, he'll hunt them down and throw them out of Sandover, just like us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't the radiation in Sandover worry you?" linkto "Seville_4_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_4_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Not really. It didn't bother us when we were living in the caves and it doesn't bother us now. Nowhere else in this part of the world is sucker enough to want us around so we don't have much choice, anyway."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why have you chosen this spot to live on, though?" linkto "Seville_4_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should know that Saman is trying to hire people to kill you." linkto "Seville_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_1"
+notes "The Seville_5_* path is where the PC can find out from Seville that Douglas is one of the Scabs who bring the Vultures supplies."
+is_wtg = false
+{
+NPCText "You've met my little bro, huh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's right. Do you see him often?" linkto "Seville_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_2"
+notes ""
+is_wtg = false
+{
+NPCText "Every once in a while, yeah."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you ever visited by any other Scabs?" linkto "Seville_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 linkflags custom_proc Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_3"
+notes ""
+is_wtg = false
+{
+NPCText "We still have a few friends in the Scab caves. They come out and pay me a little visit from time to time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are there any rival dealers in Sandover I need to worry about?" linkto "Seville_5_4a" conditions { LOCAL_VARIABLE Seville_PC_Dealer > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are these the Scabs you said bring you supplies in exchange for scavenged items you find?" linkto "Seville_5_4b" conditions { LOCAL_VARIABLE Seville_Scab_Suppliers > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_4a"
+notes ""
+is_wtg = false
+{
+NPCText "Relax, you don't have any competition from them. They just bring us some of the basics. Food, drinking water, that kind of shit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Douglas one of the Scabs who bring you these supplies?" linkto "Seville_5_5c" conditions { CHECK_STAT perception < 7 link_next AND, CHECK_SKILL speech < 60 link_next NONE } notes "Path for low PER and low speech PC's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Douglas one of the Scabs who bring you these supplies?" linkto "Seville_5_5b_1" conditions { CHECK_STAT perception >= 7 link_next AND, CHECK_SKILL speech < 60 link_next NONE } notes "Path for high PER but low speech PC's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Douglas one of the Scabs who bring you these supplies?" linkto "Seville_5_5a" conditions { CHECK_SKILL speech >= 60 link_next NONE } notes "Path for high speech skill PC's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_4b"
+notes ""
+is_wtg = false
+{
+NPCText "The very same. I guess it's not just my sparkling conversation they come out for."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Douglas one of the Scabs who bring you these supplies?" linkto "Seville_5_5c" conditions { CHECK_STAT perception < 7 link_next AND, CHECK_SKILL speech < 60 link_next NONE } notes "Path for low PER and low speech PC's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Douglas one of the Scabs who bring you these supplies?" linkto "Seville_5_5b_1" conditions { CHECK_STAT perception >= 7 link_next AND, CHECK_SKILL speech < 60 link_next NONE } notes "Path for high PER but low speech PC's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Douglas one of the Scabs who bring you these supplies?" linkto "Seville_5_5a" conditions { CHECK_SKILL speech >= 60 link_next NONE } notes "Path for high speech skill PC's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are there any rival dealers in Sandover I need to worry about?" linkto "Seville_5_4a"  notes "This option only appears if the variable Seville_PC_Dealer>0."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_5a"
+notes "The PC has found out that Douglas is one of the Scabs which bring the Vultures supplies and can now relay this to Saman."
+is_wtg = false
+{
+NPCText "He does his bit to help his big brother out, sure. No harm in that, is there?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_5b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[You notice that he checks himself before answering.] No, he doesn't. He just pays his bigger brother a visit is all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sure about that? I hope you're not lying to me." linkto "Seville_5_5b_2a" conditions { CHECK_STAT strength < 7 link_next NONE } notes "Low STR PC path."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sure about that? I hope you're not lying to me." linkto "Seville_5_5b_2b" conditions { CHECK_STAT strength >= 7 link_next NONE } notes "High STR PC path."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_5b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, I am. Watch that smart mouth of yours, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess I'll ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_5b_2b"
+notes "The PC has found out that Douglas is one of the Scabs which bring the Vultures supplies and can now relay this to Saman."
+is_wtg = false
+{
+NPCText "Okay, so he brings us supplies as well, now and then. What's the big deal?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_5_5c"
+notes ""
+is_wtg = false
+{
+NPCText "No, he doesn't. He just pays his bigger brother a visit is all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_1"
+notes "The Seville_6_* path is where the PC can find out about the Vultures' interest in drugs and offer to supply them in the future."
+is_wtg = false
+{
+NPCText "Alcohol isn't the only fruit, pal. Variety is the spice of life. You ever do a stimpak just for the high?"
+ NPCFemaleText "Alcohol isn't the only fruit, doll. Variety is the spice of life. You ever do a stimpak just for the high?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What other substances are you into?" linkto "Seville_6_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I need them for when I get hurt. Do you have any I can buy?" linkto "Seville_6_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "You name it - I've probably done it. You got a problem with that?"
+ NPCFemaleText "You name it, baby - I've probably done it. You got a problem with that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, drugs are bad." linkto "Seville_6_2a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Who is your supplier?" linkto "Seville_6_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any stimpaks I can buy?" linkto "Seville_6_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Spare me your concern, Captain Save-The-Planet. How about I just do whatever the hell I like?"
+ NPCFemaleText "Spare me your concern, sweetness. How about I just do whatever the hell I like?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can see why Saman wants you dead, dope-head. [Reach for your weapon.]" linkto "combat"  notes "This option only appears if the PC has accepted the Kill the Vultures gang quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I don't have a supplier. We haven't come across any decent gear since we left Sandover's caves."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could sell you some gear." linkto "Seville_6_2a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2a_2b_2"
+notes "Increment the variable Seville_PC_Dealer by 1.\nMild karma hit for the PC."
+is_wtg = false
+{
+NPCText "That right? I'll pay you better than the going rate if you can get me the real good shit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of stuff are you after?" linkto "Seville_6_2a_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2a_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Like I said, I'll take anything you can get - Mentats; Psycho; Buffout; Jet; whatever. I'll take any booze you can find, too, although I ain't paying any more than the usual price for that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what I can find." linkto "Seville_6_2a_2b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got some I can sell you now." linkto "Seville_7_1_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2a_2b_4"
+notes ""
+is_wtg = false
+{
+NPCText "You do that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, in the mean time." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_6_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Nope."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What other substances are you into?" linkto "Seville_6_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_1_1"
+notes "The Seville_7_* path is where the PC can sell Seville drink and drugs."
+is_wtg = false
+{
+NPCText "Ho ho! You the man. What you got?"
+ NPCFemaleText "I could kiss you, sweetness. What goodies have you got?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Drink." linkto "Seville_7_2a_1"  notes "This option only appears if the PC has at least one of any of the following items in his inventory: Beer; Booze; Gamma Gulp Beer; Roentgen Rum; or Rot Gut."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Drugs." linkto "Seville_7_2b_1"  notes "This option only appears if the PC has at least one of any of the following items in his inventory: Buffout; Jet; Mentats; or Psycho."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't have anything that I can spare." linkto "Seville_7_1_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_1_2"
+notes ""
+is_wtg = false
+{
+NPCText "Then why did you say you did? Dumbass."
+ NPCFemaleText "Then why did you say you did? Dumb bitch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Better than nothing, I suppose. What's on tap, barman?"
+ NPCFemaleText "Better than nothing, I suppose. What's on tap, barmaid?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Beer." linkto "Seville_7_2a_2a"  notes "This option only appears if the PC has at least one Beer in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Booze." linkto "Seville_7_2a_2b"  notes "This option only appears if the PC has at least one bottle of Booze in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Gamma Gulp Beer." linkto "Seville_7_2a_2c"  notes "This option only appears if the PC has at least one Gamma Gulp Beer in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Roentgen Rum." linkto "Seville_7_2a_2d"  notes "This option only appears if the PC has at least one bottle of Roentgen Rum in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Rot Gut." linkto "Seville_7_2a_2e"  notes "This option only appears if the PC has at least one bottle of Rot Gut in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't have anything that I can spare." linkto "Seville_7_2a_2f"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_2a"
+notes "[variable caps] = 5 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of a beer is 5 caps."
+is_wtg = false
+{
+NPCText "I'll give you [variable caps] for a beer."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the beer.]" linkto "Seville_7_3"  notes "Give the PC [variable caps]."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_2b"
+notes "[variable caps] = 10 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of booze is 10 caps."
+is_wtg = false
+{
+NPCText "I'll give you [variable caps] for a bottle of booze."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the booze.]" linkto "Seville_7_3"  notes "Give the PC [variable caps]."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_2c"
+notes "[variable caps] = 5 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Gamma Gulp beer is 5 caps."
+is_wtg = false
+{
+NPCText "I'll give you [variable caps] for a bottle of that Gamma Gulp shit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Gamma Gulp beer.]" linkto "Seville_7_3"  notes "Give the PC [variable caps]."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_2d"
+notes "[variable caps] = 10 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Roentgen Rum is 10 caps."
+is_wtg = false
+{
+NPCText "I'll give you [variable caps] for a bottle of that Roentgen shit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Roentgen Rum.]" linkto "Seville_7_3"  notes "Give the PC [variable caps]."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_2e"
+notes "[variable caps] = 5 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Rot Gut is 5 caps."
+is_wtg = false
+{
+NPCText "Nothing but the best, eh? I'll give you [variable caps] for a bottle of Rot Gut."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Rot Gut.]" linkto "Seville_7_3"  notes "Give the PC [variable caps]."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2a_2f"
+notes ""
+is_wtg = false
+{
+NPCText "Then why did you say you did? Dumbass."
+ NPCFemaleText "Then why did you say you did? Dumb bitch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I do have some drugs I could sell you, though." linkto "Seville_7_2b_1"  notes "This option only appears if the PC has at least one of any of the following items in his inventory: Buffout; Jet; Mentats; or Psycho."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got a question for you." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "My favourite. What drugs you got?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Buffout." linkto "Seville_7_2b_2a"  notes "This option only appears if the PC has at least one Buffout in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jet." linkto "Seville_7_2b_2b"  notes "This option only appears if the PC has at least one Jet in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Mentats." linkto "Seville_7_2b_2c"  notes "This option only appears if the PC has at least one packet of Mentats in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Psycho." linkto "Seville_7_2b_2d"  notes "This option only appears if the PC has at least one syringe of Psycho in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't have anything that I can spare." linkto "Seville_7_2b_2e"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2b_2a"
+notes "[variable caps] = 250 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Buffout is 200 caps, but Seville has already said that he will pay more for drugs."
+is_wtg = false
+{
+NPCText "That's some hoopy-ass gear. I'll give you [variable caps] for one dose of Buffout."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Buffout.]" linkto "Seville_7_3"  notes "Give the PC [variable caps].\nIncrement the variable Seville_Had_Drugs by 1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2b_2b"
+notes "[variable caps] = 30 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Jet is 25 caps, but Seville has already said that he will pay more for drugs."
+is_wtg = false
+{
+NPCText "That's some crazy shit. I'll give you [variable caps] for one dose of Jet."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Jet.]" linkto "Seville_7_3"  notes "Give the PC [variable caps].\nIncrement the variable Seville_Had_Drugs by 1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2b_2c"
+notes "[variable caps] = 350 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Mentats is 280 caps, but Seville has already said that he will pay more for drugs."
+is_wtg = false
+{
+NPCText "That stuff gives you some crazy thoughts. I'll give you [variable caps] for one dose of Mentats."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Mentats.]" linkto "Seville_7_3"  notes "Give the PC [variable caps].\nIncrement the variable Seville_Had_Drugs by 1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2b_2d"
+notes "[variable caps] = 500 * a\na = PC's barter skill expressed as a decimal fraction, so a barter skill of 75% = 0.75\nThe base cost of Psycho is 400 caps, but Seville has already said that he will pay more for drugs."
+is_wtg = false
+{
+NPCText "Psycho, man! Fucking awesome. I'll give you [variable caps] for one dose."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. [Give him the Psycho.]" linkto "Seville_7_3"  notes "Give the PC [variable caps].\nIncrement the variable Seville_Had_Drugs by 1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Let me speak to you about something else in the meantime." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_2b_2e"
+notes ""
+is_wtg = false
+{
+NPCText "Then why did you say you did? Dumbass."
+ NPCFemaleText "Then why did you say you did? Dumb bitch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I do have some drink I could sell you, though." linkto "Seville_7_2a_1"  notes "This option only appears if the PC has at least one of any of the following items in his inventory: Beer; Booze; Gamma Gulp Beer; Roentgen Rum; or Rot Gut."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got a question for you." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_7_3"
+notes ""
+is_wtg = false
+{
+NPCText "This should help kill a few hours. You got anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Seville_7_1_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Let me ask you a question." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but I'll be back when I have. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_1a"
+notes "The Seville_8_* path is where the PC can ask Seville who he thinks betrayed him to Saman's men.\nIncrement the variable Seville_Saman_Dealer_Know by 1."
+is_wtg = false
+{
+NPCText "He found out? What do you mean?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The last time I returned to Sandover, his men attacked me." linkto "Seville_8_2"  notes ""
+              }
+}
+Node "Seville_8_1b"
+notes ""
+is_wtg = false
+{
+NPCText "Like I said, I had nothing to do with it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So who do you think betrayed me to Saman?" linkto "Seville_8_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anyway, let me ask you about something else." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_2"
+notes ""
+is_wtg = false
+{
+NPCText "They attacked you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you stop repeating everything I say?" linkto "Seville_8_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Someone must have told them that I've been dealing to you." linkto "Seville_8_3"  notes ""
+              }
+}
+Node "Seville_8_3"
+notes ""
+is_wtg = false
+{
+NPCText "Listen, this is the first I've heard of it, pal. I didn't have anything to do with that asshole Saman finding out."
+ NPCFemaleText "Listen, this is the first I've heard of it, sweetness. I didn't have anything to do with that asshole Saman finding out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't believe you. This is your revenge for Rico dying." linkto "Seville_8_4a_1" conditions { LOCAL_VARIABLE Seville_Rico_Dead > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then who did?" linkto "Seville_8_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_4a_1"
+notes ""
+is_wtg = false
+{
+NPCText "What? Hey, fuck you!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you saying you didn't?" linkto "Seville_8_4a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You filthy traitor. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_4a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Look, if I wanted revenge, you'd be dead already."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you think betrayed me to Saman, then?" linkto "Seville_8_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You filthy traitor. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_4b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I haven't seen my little bro, Douglas, for a while. Perhaps he had something to do with it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes you think it was him?" linkto "Seville_8_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you betrayed me as revenge for Rico dying." linkto "Seville_8_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_4b_2"
+notes ""
+is_wtg = false
+{
+NPCText "He never liked us getting high. I suppose he told Saman about you because he didn't like the idea of his big bro ending up like Rico."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll kill him when I find him!" linkto "Seville_8_4b_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's fair enough. As long as his heart was in the right place." linkto "Seville_8_4b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you betrayed me as revenge for Rico dying." linkto "Seville_8_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_4b_3a"
+notes ""
+is_wtg = false
+{
+NPCText "Hey, you leave him alone! If I find out you so much as harmed a hair on his head, I'll gut you like an iguana."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's fair enough. As long as his motives were good." linkto "Seville_8_4b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you betrayed me as revenge for Rico dying." linkto "Seville_8_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_8_4b_3b"
+notes ""
+is_wtg = false
+{
+NPCText "Just don't get any crazy ideas about going after him. He's my brother, after all. Anything you do to him I'll do ten times over to you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you betrayed me as revenge for Rico dying." linkto "Seville_8_4a_1" conditions { LOCAL_VARIABLE Seville_PC_Dealer > 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, instead." linkto "Seville_9_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Seville_9_1"
+notes ""
+is_wtg = false
+{
+NPCText "What's biting you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know that Saman wants you killed?" linkto "Seville_2_1a" conditions { LOCAL_VARIABLE Seville_PC_Hitman == 0 link_next NONE } notes "This option only appears if the PC has received the 'Kill the Vultures' quest from Saman."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know that Saman wants you killed?" linkto "Seville_2_1b" conditions { LOCAL_VARIABLE Seville_PC_Hitman > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "Seville_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are you staying here?" linkto "Seville_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is your relationship with Douglas?" linkto "Seville_5_1"  notes "This option only appears if the PC has spoken to Douglas and knows that he is Seville's younger brother."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did Saman's men find out that I've been dealing to you?" linkto "Seville_8_1a" conditions { LOCAL_VARIABLE Seville_Saman_Dealer_Know == 0 link_next NONE } notes "This node only appears if Saman and/or his guards have attacked the PC after having been tipped off by Douglas. This happens if the PC has dealt 10 or more doses of hard drugs to the Vultures, causing the death of Rico, who OD's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did Saman's men find out that I've been dealing to you?" linkto "Seville_8_1b" conditions { LOCAL_VARIABLE Seville_Saman_Dealer_Know > 0 link_next NONE } notes "This node only appears if Saman and/or his guards have attacked the PC after having been tipped off by Douglas. This happens if the PC has dealt 10 or more doses of hard drugs to the Vultures, causing the death of Rico, who OD's."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got some gear to sell you. Do you want it?" linkto "Seville_7_1_1" conditions { LOCAL_VARIABLE Seville_PC_Dealer > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}

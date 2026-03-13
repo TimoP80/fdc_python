@@ -1,0 +1,224 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Anita"
+Location "Sandover"
+Description "starving scab"
+Unknown_Desc "You see a young woman clad in rags."
+Known_Desc "You see Anita."
+Detailed_Desc "You see a young woman. She would be incredibly beautiful if not for the cancerous growths that cover her skin."
+/* Regular nodes */
+
+Node "switcher"
+notes ""
+is_wtg = false
+{
+NPCText "switch"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "First conversation" linkto "initial"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have met before, Anita likes the player." linkto "talkfriend"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have met before, Anita dislikes the player." linkto "talkdislike"  notes ""
+              }
+}
+Node "initial"
+notes "Make sure to check for food items.  Don't display the ones where you feed her if you havent got food. 'Dismiss' options appropriate to perception appear. PER to notice 'asshole' is currently 6."
+is_wtg = false
+{
+NPCText "Hey, stranger. Spare some leftovers? [She holds out her hands pitifully]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I got some food, but can you pay for it?" linkto "pay"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "Sure, here you go. [Give Anita food.]" linkto "thanks"  notes " Karma + 3\nAnita likes the player"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Pat yourself down.] Sorry, hon. I dont have anything on me." linkto "sorry"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Sorry, no. I gotta eat too, you know." linkto "DismissPER" conditions { CHECK_STAT perception >= 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, no. I gotta eat too, you know." linkto "DismissBADPER" conditions { CHECK_STAT perception < 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "Get away from me, you worthless, ugly leech!" linkto "DismissPER" conditions { CHECK_STAT perception >= 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get away from me, you worthless, ugly leech!" linkto "DismissBADPER" conditions { CHECK_STAT perception < 6 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_GOOD playertext "Food? Me see. [Dig through your pack.]" linkto "dumb1"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "No! You no have!" linkto "dumbdis"  notes ""
+              }
+}
+Node "talkfriend"
+notes "Make sure to check for food items.  Don't display the ones where you feed her if you havent got food. 'Dismiss' options appropriate to perception appear. PER to notice \"asshole\" is currently 6."
+is_wtg = false
+{
+NPCText "Hello again, stranger. Can you spare me some more food? I'm starving."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got food, but it'll cost you." linkto "pay"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here you are. [Give Anita food.]" linkto "thanks"  notes "Anita likes the player"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not this time. See you around." linkto "sorry"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stop leeching off me, you bloodsucker! Go find another mark." linkto "DismissPER" conditions { CHECK_STAT perception >= 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stop leeching off me, you bloodsucker! Go find another mark." linkto "DismissBADPER" conditions { CHECK_STAT perception < 6 link_next NONE } notes ""
+              }
+}
+Node "talkdislike"
+notes "Make sure to check for food items.  Don't display the ones where you feed her if you havent got food."
+is_wtg = false
+{
+NPCText "Come on, pal, give me something to eat!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Here you go. [Give Anita food.]" linkto "thanks"  notes "Anita likes the player"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can have food, but I want paying in return." linkto "pay"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I said no the first time, now crawl away before I ventilate your skull!" linkto "done"  notes ""
+              }
+}
+Node "DismissPER"
+notes "when you're a prick, you go here, then conversation ends. Come here if PER check passed.\nBoth options : Anita dislikes player."
+is_wtg = false
+{
+NPCText "Yeah, sure. [She mutters 'Asshole' to herself.]"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "And proud of it, baby." linkto "done"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "I heard that." linkto "done"  notes ""
+              }
+}
+Node "DismissBADPER"
+notes "when you're a prick, you go here, then conversation ends. If have low perception, go here.\nOption 1: Anita dislikes player"
+is_wtg = false
+{
+NPCText "Yeah, sure. [She mutters something to herself.]"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "See you around." linkto "done"  notes ""
+              }
+}
+Node "thanks"
+notes ""
+is_wtg = false
+{
+NPCText "Okay! Thank you so much! Not many people help out a sob story like me any more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sob story? You mean more so than usual?" linkto "story"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Happy to help. You take care now." linkto "done"  notes ""
+              }
+}
+Node "pay"
+notes ""
+is_wtg = false
+{
+NPCText "I guess I have a little bit..."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "How's $2 sound?" linkto "thanks"  notes " karma +1 \nAnita likes the player"
+          int=4 Reaction=REACTION_NEUTRAL playertext "How's $5 sound?" linkto "thanks"  notes "karma neutral\nAnita likes the player"
+          int=4 Reaction=REACTION_BAD playertext "How's $10 sound?" linkto "thanks2"  notes "karma -2\nAnita likes the player"
+          int=4 Reaction=REACTION_BAD playertext "How's $20 sound?" linkto "broke"  notes "Greedy bastard.  Karma - 5"
+          int=4 Reaction=REACTION_GOOD playertext "Nah, forget the money. Here you go. [Give Anita food.]" linkto "thanks"  notes "karma +3\nAnita likes the player"
+          int=4 Reaction=REACTION_BAD Gender=MALE playertext "You wanna eat, you gotta suck me." linkto "perv"  notes "if you're male.  Karma -10 or something"
+          int=4 Reaction=REACTION_BAD Gender=FEMALE playertext "Wanna eat food? Eat me out first." linkto "perv"  notes "if you're female.  Karma -10 or something"
+              }
+}
+Node "thanks2"
+notes ""
+is_wtg = false
+{
+NPCText "...Okay. [She sighs as she hands you the money.] Thanks."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're that hard up?" linkto "story"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thank YOU. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "perv"
+notes "karma and town karma take slight hit."
+is_wtg = false
+{
+NPCText "What!? Fuck you, you pervert! I wouldn't touch you if you gave me a whole fried brahmin. Be too scared I'd catch somethin'."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Yeah, you're the one that has to worry about that." linkto "done"  notes ""
+              }
+}
+Node "broke"
+notes "'Dismiss' options appropriate to perception appear. PER to notice 'asshole' is currently 6."
+is_wtg = false
+{
+NPCText "[Anita bites her lip as she reaches into her pocket. She pulls out some coins and scrabbles through them. After a moment, her bottom lip quivers and her eyes well up a little.] I... I don't have enough..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I... er... never mind. You can have it anyway, for free." linkto "thanks"  notes "Anita likes the player"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh. How about 10, then?" linkto "thanks2"  notes "Anita likes the player"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Shrug.] Them's the breaks. Tough luck." linkto "DismissPER" conditions { CHECK_STAT perception >= 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Shrug.] Them's the breaks. Tough luck." linkto "DismissBADPER" conditions { CHECK_STAT perception < 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well... there ARE alternate forms of payment." linkto "perv"  notes ""
+              }
+}
+Node "happy"
+notes ""
+is_wtg = false
+{
+NPCText "[Anita smiles warmly, leaning slightly into your hand.] You're really sweet to say that, I haven't heard it in years.  Thanks again for the food, hope to see you around again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're welcome, Anita." linkto "done"  notes ""
+              }
+}
+Node "sorry"
+notes "if you do have food and say this, karma -1.  You get a chance to get it back though.  First two options only available if you have food."
+is_wtg = false
+{
+NPCText "[The girl frowns and sighs.] Story of my life."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just kidding. I got some food, but I'd like a little something in return." linkto "pay"  notes "subtracted karma gets restored"
+          int=4 Reaction=REACTION_GOOD playertext "Aw, I was just messin. Here you go. [Give Anita food.]" linkto "thanks"  notes "Gives it to her free.  subtracted karma restored, plus the karma for giving it free"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I really am sorry, maybe next time." linkto "done"  notes ""
+              }
+}
+Node "dumb1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh! [She speaks slowly and loudly.] Don't... worry... about... it. You... need... it... more."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hng. K." linkto "done"  notes ""
+              }
+}
+Node "dumbdis"
+notes ""
+is_wtg = false
+{
+NPCText "Fine then, you retard."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You mean! Mom say me smart." linkto "done"  notes ""
+              }
+}
+Node "story"
+notes ""
+is_wtg = false
+{
+NPCText "You could say that. Name's Anita. My mom dumped me here when I was about 15. Thanks a lot for that, Mom. I'm sure she had her reasons, but hell if I know what they were. Not that it matters. Oh, you should have seen me back then. [She sighs]."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "story2"  notes ""
+              }
+}
+Node "story2"
+notes ""
+is_wtg = false
+{
+NPCText "That was before I got sick. We're all sick here, I'm sure you noticed. I was voted prettiest in town 3 years running. Now I cant get within 5 feet of anybody that's not sicker than I am. The first few years I was here, I was able to get by alright. People here were very generous, and outsiders always wanted to help a pretty face."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "story3"  notes ""
+              }
+}
+Node "story3"
+notes ""
+is_wtg = false
+{
+NPCText "But as the supplies round here tapered off, so did the generosity. And the more of these damn things I sprouted, the fewer visitors wanted anything to do with me. Now its all I can do to scrape by for the next day. I go 3 or 4 days at a time without eating, at least every few weeks. I know it won't get any better, either.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "story4"  notes ""
+              }
+}
+Node "story4"
+notes "'Dismiss' options appropriate to perception appear. PER to notice 'asshole' is currently 6."
+is_wtg = false
+{
+NPCText "I'm too disfigured now to make it in another town, and I could never afford to try anyway. If only I were still beautiful, things would be so much better."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Place a hand on her cheek.] Anita, you are still beautiful. Don't ever let anyone tell you different." linkto "happy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, it really does suck to be you." linkto "DismissPER" conditions { CHECK_STAT perception >= 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, it really does suck to be you." linkto "DismissBADPER" conditions { CHECK_STAT perception < 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure things'll pick up. Goodbye." linkto "done"  notes ""
+              }
+}

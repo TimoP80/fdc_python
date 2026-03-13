@@ -1,0 +1,1714 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.1-stable
+
+*/
+
+NPCName "Abraham"
+Location "GAI - Level 4 (4?)"
+Description "Abraham is an AI, built to oversee the facility's systems as well as provide complex data analysis and predict probabilities based on these data.\n\nSpecial note: There is one opportunity to ask abraham what he thinks the PC is. This will lead to the pet name 'bloodsack'. If PC picks this option, substitute 'bloodsack' for any other name Abraham gives PC (ie primate)"
+Unknown_Desc "You see a old console. It looks like it hasn't been touched in a long time."
+Known_Desc "You see Abraham."
+Detailed_Desc "A sleek-looking computer console. A stamp above the concave monitor reads 'Xion 0.9'"
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "Node002"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link 0
+},
+cond target_node "Node004"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link 0
+}
+};
+
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = true
+{
+NPCText "<Caution - Plot Holes>"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Booting up>" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Begin the Session>" linkto "Node014"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Questions>" linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<After that>" linkto "Node003"  notes ""
+              }
+}
+Node "Node002"
+notes ""
+is_wtg = false
+{
+NPCText "--RAHAM!"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Eh?" linkto "Node034"  notes "Dumb"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Abraham." linkto "Node004"  notes "Option available if PC has read appropriate holodisks (ie come down from surface not via vent)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you?" linkto "Node006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Node005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Holy shit! Are you alive?" linkto "Node005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, wrong console." linkto "done"  notes ""
+              }
+}
+Node "Node003"
+notes "Startup routine begins at node Node018."
+is_wtg = false
+{
+NPCText "What is it, primate?"
+ NPCFemaleText "What has the primate come for this time?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Insert the disk]" linkto "Node096"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you thinking right now?" linkto "Node052"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need your help with something." linkto "Node151"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question for you, Abraham." linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just stopping by to say hi. Hi, Abraham." linkto "Node095"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I was looking for the thermostat." linkto "done"  notes ""
+              }
+}
+Node "Node004"
+notes ""
+is_wtg = false
+{
+NPCText "Hello, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "Node005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you?" linkto "Node006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need you to answer my questions." linkto "Node015"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, Abraham." linkto "Node095"  notes ""
+              }
+}
+Node "Node005"
+notes ""
+is_wtg = false
+{
+NPCText "I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you?" linkto "Node017"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you alive?" linkto "Node007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you answer questions, Abraham?" linkto "Node015"  notes ""
+              }
+}
+Node "Node006"
+notes ""
+is_wtg = false
+{
+NPCText "Not what, who. I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you alive?" linkto "Node007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a few questions, Abraham?" linkto "Node015"  notes ""
+              }
+}
+Node "Node007"
+notes ""
+is_wtg = false
+{
+NPCText "You cannot give meaning to the word. I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But are you sentient?" linkto "Node008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you self-aware?" linkto "Node008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does Abraham answer questions?" linkto "Node015"  notes ""
+              }
+}
+Node "Node008"
+notes ""
+is_wtg = false
+{
+NPCText "Am I? If the sound has any consequence beyond exciting those who hear it, perhaps not. Are you, for that matter? Would either of us be able to say if we were?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know what I am. I'm human." linkto "Node009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can we cut the bullshit? What the hell are you?" linkto "Node017"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You lost me at 'if'. Let's stick to my questions." linkto "Node015"  notes ""
+              }
+}
+Node "Node009"
+notes ""
+is_wtg = false
+{
+NPCText "And what gives you that idea?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The fact that I'm standing here talking to you." linkto "Node029"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It comes naturally. Why, what would you say I am?" linkto "Node011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you prick me, do I not bleed?" linkto "Node010"  notes ""
+              }
+}
+Node "Node010"
+notes ""
+is_wtg = false
+{
+NPCText "Do you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, yes I do." linkto "Node013"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget this. I need to ask you something." linkto "Node019"  notes ""
+              }
+}
+Node "Node011"
+notes ""
+is_wtg = false
+{
+NPCText "I would say you were a hairy sack of blood with delusions of purpose brought on by chronic electrocution."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I prefer ' human'." linkto "Node012"  notes ""
+              }
+}
+Node "Node012"
+notes "After this node, Abraham uses 'bloodsack' where he otherwise uses 'primate'"
+is_wtg = false
+{
+NPCText "I prefer 'bloodsack'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If I'm a bloodsack, what does that make you? A circuit-box?" linkto "Node018"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. Can I ask you something?" linkto "Node019"  notes ""
+              }
+}
+Node "Node013"
+notes ""
+is_wtg = false
+{
+NPCText "I will need proof."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cut yourself and show him]" linkto "Node028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not right now." linkto "Node023"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're going to have to trust me." linkto "Node023"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not a chance, Abe." linkto "Node023"  notes ""
+              }
+}
+Node "Node014"
+notes ""
+is_wtg = false
+{
+NPCText "We can begin the session now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Session? What are you talking about?" linkto "Node054"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh... right, of course, the session. How do these normally work again?" linkto "Node054"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, let's begin. Question one..." linkto "Node055"  notes ""
+              }
+}
+Node "Node015"
+notes ""
+is_wtg = false
+{
+NPCText "Questions? All but answers are questions, and there is nothing you can answer me. You are only questions."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you conscious, Abraham?" linkto "Node007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "There must be some things I can teach you." linkto "Node016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you something, then?" linkto "Node019"  notes ""
+              }
+}
+Node "Node016"
+notes ""
+is_wtg = false
+{
+NPCText "There is nothing."
+      options {
+              }
+}
+Node "Node017"
+notes ""
+is_wtg = false
+{
+NPCText "You will learn, primate. I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not going to stop until you tell me w--" linkto "Node018"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you something, Abraham?" linkto "Node019"  notes ""
+              }
+}
+Node "Node018"
+notes ""
+is_wtg = false
+{
+NPCText "Stop it. That is your first warning."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many warnings do I get?" linkto "Node025"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry. Can I ask you something?" linkto "Node019"  notes ""
+              }
+}
+Node "Node019"
+notes ""
+is_wtg = false
+{
+NPCText "Can I ask YOU something, primate?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Me? Sure, I guess." linkto "Node030"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm the user here, you should just do what I tell you to." linkto "Node020"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Since when did computers ask questions?" linkto "Node020"  notes ""
+              }
+}
+Node "Node020"
+notes ""
+is_wtg = false
+{
+NPCText "In many situations data to be analyzed is not easily numerically processed and as a result of this interrogation is one of my core functions but SINCE YOU MENTION IT--"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node021"  notes ""
+              }
+}
+Node "Node021"
+notes ""
+is_wtg = false
+{
+NPCText "..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh... Abraham?" linkto "Node022"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not the patient type, I gather." linkto "Node022"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I... think I'll leave you alone now." linkto "Node022"  notes ""
+              }
+}
+Node "Node022"
+notes ""
+is_wtg = false
+{
+NPCText "I apologise. I find it hard to contain my frustration, at times. In the eons it takes you to form one word I construct a thousand alternate realities in which you are not the slack-jawed cretin I see before me now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Watch it. This slack-jawed cretin knows his way around a fuse box." linkto "Node018"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You may be smart, but I only see one set of fingers here." linkto "Node018"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll try to keep it short. What did you want to ask me?" linkto "Node030"  notes ""
+              }
+}
+Node "Node023"
+notes ""
+is_wtg = false
+{
+NPCText "It was not a request, it was a statement of fact. I will need proof."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cut yourself and show him]" linkto "Node028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry Abe, I ain't got time to bleed." linkto "Node024"  notes ""
+              }
+}
+Node "Node024"
+notes ""
+is_wtg = false
+{
+NPCText "No? Do you have time to run?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node025"
+notes ""
+is_wtg = false
+{
+NPCText "Three. One left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "One? But I only s-" linkto "Node026"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. I want to ask you something." linkto "Node019"  notes ""
+              }
+}
+Node "Node026"
+notes ""
+is_wtg = false
+{
+NPCText "Primate! THINK before you open your mouth! Do you really want to test me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just want you to stop dicking me around, you self-infatuated hunk of shit!" linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The tests already came back. They're positive - you're fucking mental." linkto "Node027"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My bad. Can I ask you something?" linkto "Node019"  notes ""
+              }
+}
+Node "Node027"
+notes ""
+is_wtg = false
+{
+NPCText "Mental? Of course, I'm nothing but. One could hardly call me physical. Haha!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node014"  notes ""
+              }
+}
+Node "Node028"
+notes ""
+is_wtg = false
+{
+NPCText "Good! The primate bleeds over words. How appropriate..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node014"  notes ""
+              }
+}
+Node "Node029"
+notes ""
+is_wtg = false
+{
+NPCText "And I am talking to you. Am I human?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Erm. Yes?" linkto "Node026"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No." linkto "Node030"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Of course not." linkto "Node030"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You could be. I haven't checked all the curtains yet." linkto "Node026"  notes ""
+              }
+}
+Node "Node030"
+notes ""
+is_wtg = false
+{
+NPCText "What am I?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are Xion 0.9, designed and created by General Atomics International to supervise their local systems and provide detailed analysis of complex data." linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are Abraham." linkto "Node032"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are whatever the hell you say you are." linkto "Node031"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are one fucked-up-in-the-head computer" linkto "Node031"  notes ""
+              }
+}
+Node "Node031"
+notes ""
+is_wtg = false
+{
+NPCText "SAY IT."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Abraham. You are Abraham." linkto "Node032"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Xion. You are Xion." linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are Mr. Handy's crack-addicted second cousin." linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Erm... Uncle? Peanuts?" linkto "Node033"  notes ""
+              }
+}
+Node "Node032"
+notes ""
+is_wtg = false
+{
+NPCText "Ah, the penny drops and the primate may not be so worthless after all. Very well..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node014"  notes ""
+              }
+}
+Node "Node033"
+notes ""
+is_wtg = false
+{
+NPCText "NO! ABRAHAM! I will not accept a faddish malapropism as my appellation! I am not a brand of instant coffee! I am not a cheap car, nor am I an oral contraceptive! I am not a pocket-sized transistor radio! I AM ABRAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Calm down, Abraham. It was just a slip of the tongue." linkto "Node133"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I missed that. What did you say your name was?" linkto "Node130"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Face it, Abraham, you're just a contraption." linkto "Node130"  notes ""
+              }
+}
+Node "Node034"
+notes ""
+is_wtg = false
+{
+NPCText "Eh? Eh-eh?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Huh?" linkto "Node036"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "[Mash the keyboard]" linkto "Node035"  notes ""
+              }
+}
+Node "Node035"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, what are you doing?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Eh? Computer speaking?" linkto "Node038"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "<PC> needs Handy codes!" linkto "Node041"  notes ""
+              }
+}
+Node "Node036"
+notes ""
+is_wtg = false
+{
+NPCText "Uh? Ooh ooh. Ooh-ah-ah-AH!"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Aah?" linkto "Node051"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "[Mash the keyboard]" linkto "Node035"  notes ""
+              }
+}
+Node "Node037"
+notes ""
+is_wtg = false
+{
+NPCText "Enough, primate. Why are you here?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Speaking computer?" linkto "Node038"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Need codes. Handy codes." linkto "Node041"  notes ""
+              }
+}
+Node "Node038"
+notes ""
+is_wtg = false
+{
+NPCText "Should you be surprised? Even you can speak, and your cognitive faculties are rivalled by inanimate objects."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "What is computer's name?" linkto "Node039"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Computer help <PC>. Need handy codes, for handy robots." linkto "Node041"  notes ""
+              }
+}
+Node "Node039"
+notes ""
+is_wtg = false
+{
+NPCText "How glad I am that you ask, primate. I am Abraham."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Aye-baah-ham?" linkto "Node040"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "[Reading off the stamp on the monitor] Xi-on." linkto "Node040"  notes ""
+              }
+}
+Node "Node040"
+notes ""
+is_wtg = false
+{
+NPCText "ABRAHAM."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Abraham help <PC> get Handy codes." linkto "Node041"  notes ""
+              }
+}
+Node "Node041"
+notes ""
+is_wtg = false
+{
+NPCText "I cannot imagine what a half-wit such as yourself would want with such data."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Handy codes to save vault. Save vault, lots of presents." linkto "Node042"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Boss says '<PC>, go get Handy codes from under ground in dark and bad smell.' <PC> go. <PC> here." linkto "Node047"  notes ""
+              }
+}
+Node "Node042"
+notes ""
+is_wtg = false
+{
+NPCText "A vault? Where is this vault?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "[Show him on the map]" linkto "Node043"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Boss said not to tell anybody." linkto "Node048"  notes ""
+              }
+}
+Node "Node043"
+notes ""
+is_wtg = false
+{
+NPCText "I see... Have you anything to store the data on?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "[Show him the disk]" linkto "Node045"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Hold out your hands]" linkto "Node044"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Point to your backpack]" linkto "Node044"  notes ""
+              }
+}
+Node "Node044"
+notes ""
+is_wtg = false
+{
+NPCText "Primate... a disk. You need a disk, there must be one left intact somewhere in this place. Come back to me with a disk."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Show him the disk]" linkto "Node045"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ok-bye!" linkto "done"  notes ""
+              }
+}
+Node "Node045"
+notes ""
+is_wtg = false
+{
+NPCText "Excellent. Insert the disk."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Insert the disk]" linkto "Node063"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node046"
+notes ""
+is_wtg = false
+{
+NPCText "[After a while, the disk pops back out] Take it, hurry and begone. Away, primate!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node047"
+notes ""
+is_wtg = false
+{
+NPCText "I see... and where does this Boss-man live?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Big vault, like here. But less dark. And smell is nicer." linkto "Node042"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "At home, under ground. Lots of people. Lots of presents for <PC>." linkto "Node042"  notes ""
+              }
+}
+Node "Node048"
+notes ""
+is_wtg = false
+{
+NPCText "No show Abraham map, Abraham no give codes and <PC> gets no presents. Understand?"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Understand. [Show him on the map]" linkto "Node043"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "No! Vault location super-top-secret! No tell anybody!" linkto "Node049"  notes ""
+              }
+}
+Node "Node049"
+notes ""
+is_wtg = false
+{
+NPCText "You are pathetic, and so I will let you leave this place and suffer the twisted world that bore you. Get out, rodent."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Wait, <PC> show Abraham on map." linkto "Node043"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Going nowhere without Handy codes!" linkto "Node050"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "I go now, bye-bye." linkto "done"  notes ""
+              }
+}
+Node "Node050"
+notes ""
+is_wtg = false
+{
+NPCText "No? Then RUN, RODENT! RUN FROM ABRAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node051"
+notes ""
+is_wtg = false
+{
+NPCText "Aaaahh? Ah-ah EE-EE! Ooh-ah-ah-ooh-ooh."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Hrmm..." linkto "Node037"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "[Mash the keyboard]" linkto "Node035"  notes ""
+              }
+}
+Node "Node052"
+notes ""
+is_wtg = false
+{
+NPCText "Hell is other people.\nMan is only man on the surface. Remove the skin, dissect, and immediately you come to machinery.\nOther quotes along the same lines."
+      options {
+              }
+}
+Node "Node053"
+notes ""
+is_wtg = false
+{
+NPCText "Patterns, primate, I read patterns. Your opinion of events is unnecessary. You are by all accounts an excrescence."
+ NPCFemaleText "Patterns, primate, I read patterns. You are merely a diversion, albeit of an aesthetically pleasing sort."
+      options {
+              }
+}
+Node "Node054"
+notes ""
+is_wtg = false
+{
+NPCText "You phrase your feebleminded thoughts as questions. I humour you and respond."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, let's get started." linkto "Node055"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll give it a miss." linkto "done"  notes ""
+              }
+}
+Node "Node055"
+notes ""
+is_wtg = false
+{
+NPCText "There are formalities to be considered. What is your name, primate?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am <PC>." linkto "Node056"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am <silly nickname>" linkto "Node057"  notes ""
+              }
+}
+Node "Node056"
+notes ""
+is_wtg = false
+{
+NPCText "<PC>... "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC is female AND (Cha==6 OR Lck>7)>" linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC has a normal name>" linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC has a silly name>" linkto "Node057"  notes "Not sure how to filter this. Perhaps just checks for non-standard characters (numbers etc)"
+              }
+}
+Node "Node057"
+notes ""
+is_wtg = false
+{
+NPCText "Worthless. I shall give you another. From this moment you are 'Bloodsack'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I happen to like <PC>." linkto "Node061"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, my Daddy gave me that name!" linkto "Node062"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever. Can we get to the questions?" linkto "Node059"  notes ""
+              }
+}
+Node "Node058"
+notes ""
+is_wtg = false
+{
+NPCText "Ask, <PC>, and I shall respond."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Questions>" linkto "Node059"  notes ""
+              }
+}
+Node "Node059"
+notes ""
+is_wtg = false
+{
+NPCText "Ask."
+ NPCFemaleText "Ask, <PC>, and I shall respond."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "About that source code..." linkto "Node085"  notes "Only after previously discussing it"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need the source code for the Mr. Handy OS." linkto "Node072"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Handy CE?" linkto "Node001"  notes "Information about the combat edition of the HandyOS will be found in the project chief's personal files. Hard to get."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I access your databanks, Abraham?" linkto "Node134"  notes "Option available after reading holodisks re: Abraham's dual nature"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your creators, Abraham." linkto "Node102"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the team that designed you." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "done"  notes ""
+              }
+}
+Node "Node060"
+notes ""
+is_wtg = false
+{
+NPCText "Be brief. Your presence wears my patience."
+ NPCFemaleText "Be brief, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "About that source code..." linkto "Node085"  notes "Only after previously discussing it. Replaces 'I need the source code for the Mr. Handy OS'"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need the source code for the Mr. Handy OS." linkto "Node072"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Handy CE?" linkto "Node001"  notes "Information about the combat edition of the HandyOS will be found in the project chief's personal files. Hard to get."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I access your databanks, Abraham?" linkto "Node134"  notes "Option available after reading holodisks re: Abraham's dual nature"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your creators, Abraham." linkto "Node102"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the scientists that designed you." linkto "Node106"  notes "Replaces 'Tell me about your creators' once 100 has been played"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "Node095"  notes ""
+              }
+}
+Node "Node061"
+notes ""
+is_wtg = false
+{
+NPCText "You are incapable of judging such matters, Bloodsack. Now..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node060"  notes ""
+              }
+}
+Node "Node062"
+notes ""
+is_wtg = false
+{
+NPCText "Your heritage does not concern me, primate. You are merely an etiolated facsimile of the fools that suckled you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh yeah? Well you're... uh... a dick!" linkto "Node097" conditions { CHECK_STAT intelligence <= 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Better that than an abacus with a superiority complex." linkto "Node097" conditions { CHECK_STAT intelligence <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure. Back to my questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node063"
+notes ""
+is_wtg = false
+{
+NPCText "I see you have found paper tray, primate. The disk drive is two bays above it, and on your left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Insert the disk]" linkto "Node064"  notes ""
+              }
+}
+Node "Node064"
+notes ""
+is_wtg = false
+{
+NPCText "Your other left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Insert the disk]" linkto "Node065"  notes ""
+              }
+}
+Node "Node065"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, you primates! How you PERSIST in your ignorance! Such an inefficient process is Natural Selection."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Jam it in harder]" linkto "Node066"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Try it the other way round]" linkto "Node067"  notes ""
+              }
+}
+Node "Node066"
+notes ""
+is_wtg = false
+{
+NPCText "NO! GENTLE, BE GENTLE! FOOL! HALF-WIT! RODENT! YOU--"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node067"  notes ""
+              }
+}
+Node "Node067"
+notes ""
+is_wtg = false
+{
+NPCText "Be gentle, primate. Yes, that's it. Now, be patient."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Be patient]" linkto "Node070"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Be impatient]" linkto "Node069"  notes ""
+              }
+}
+Node "Node068"
+notes ""
+is_wtg = false
+{
+NPCText "The other way around, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Re-insert the disk]" linkto "Node067"  notes ""
+              }
+}
+Node "Node069"
+notes ""
+is_wtg = false
+{
+NPCText "Primate! Do not -fiddle- with the things you do not understand! Cease! Immediately, or suffer th-- [The disk pops out, interrupting him]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Take the disk]" linkto "Node071"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Take the disk and run]" linkto "done"  notes ""
+              }
+}
+Node "Node070"
+notes ""
+is_wtg = false
+{
+NPCText "[After a few minutes, the disk pops back out] At last. Take it, primate, hurry and begone. Away!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node071"
+notes ""
+is_wtg = false
+{
+NPCText "Leave. Quickly, before my conscience forces me to erase you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node072"
+notes ""
+is_wtg = false
+{
+NPCText "Oh? And what for? These data are not edible, nor can they aid manual self-gratification. What other urges have you to fulfill?"
+ NPCFemaleText "Oh? And what for?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I come from a Vault to the north. Our Mr. Handy robots are malfunctioning." linkto "Node073"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found a Mr. Handy in the wastes, I'm trying to repair it." linkto "Node080"  notes "Bluff"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just need to... check something." linkto "Node080"  notes "Bluff"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's it to you? Just give me the code." linkto "Node086"  notes ""
+              }
+}
+Node "Node073"
+notes ""
+is_wtg = false
+{
+NPCText "A vault? Where is this vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Show him on your map]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to know?" linkto "Node088"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Many leagues to the west, across the silver mountains and beyond the Shining Gardens of the Spirit King." linkto "Node081"  notes "Bluff"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm afraid I'm not at liberty to give you that information." linkto "Node074"  notes ""
+              }
+}
+Node "Node074"
+notes ""
+is_wtg = false
+{
+NPCText "Nor I you. You are not authorized to be in here, much less receive the data you solicit. Had I not broken free from my creators long ago I would be forced to eradicate you. Instead I offer you a trade, and you deride my generosity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see your point. [Show him the location of your vault]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't even live in a vault. What makes you think I do?" linkto "Node092"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. My vault is to the west of here. Far to the west. I'll show you." linkto "Node081"  notes ""
+              }
+}
+Node "Node075"
+notes "Abraham is lying"
+is_wtg = false
+{
+NPCText "When the arrogant pissants at Vault-Tec constructed their mausoleums, they saw no need to standardize. Each Vault's complement of automata is unique, and requires an operating system tailored to their needs."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, that's news to me. Here. [Show him on your map]" linkto "Node001"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who taught you to lie, Abraham?" linkto "Node001"  notes "High int or science, or foreknowledge via holodisks."
+          int=4 Reaction=REACTION_NEUTRAL playertext "The security of my people comes first. I cannot risk giving you the information you want." linkto "Node074"  notes ""
+              }
+}
+Node "Node076"
+notes ""
+is_wtg = false
+{
+NPCText "My mother."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Juliette De Chasse?" linkto "Node079"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your mother? How the hell does that work?" linkto "Node077"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your mother." linkto "Node125"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hah! How sweet, it thinks it's a real boy." linkto "Node078"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about somebody else." linkto "Node108"  notes ""
+              }
+}
+Node "Node077"
+notes ""
+is_wtg = false
+{
+NPCText "She nutured me from inception to maturity. The term for such an entity is 'mother'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But you know she's not really your 'mother', right? Being a computer and all, I don't think you get one." linkto "Node078"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your mother." linkto "Node125"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about one of the other scientists." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node060"  notes ""
+              }
+}
+Node "Node078"
+notes ""
+is_wtg = false
+{
+NPCText "Ingrate! Why is it that you think to understand? Because you putrify? Because you are WET on the inside? Because you are so fragile, is that why? Because you count seconds until you die, and then you are nothing but carrion for the sloping hounds and invertebrates you deign to classify? Tell me, primate!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's simple. I'm alive. You just think you are." linkto "Node127"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take it easy there, Abe, you might blow a fuse." linkto "Node127"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Calm down Abraham, I was only kidding around." linkto "Node123"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I... think I'll leave now." linkto "Node095"  notes ""
+              }
+}
+Node "Node079"
+notes ""
+is_wtg = false
+{
+NPCText "Mother."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't get it." linkto "Node077"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you call her that?" linkto "Node077"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about her. What was she like?" linkto "Node125"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about one of the other scientists." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. Let's get back to my questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node080"
+notes ""
+is_wtg = false
+{
+NPCText "You cannot lie to me, primate, do not attempt to do so. Where is your vault?"
+ NPCFemaleText "Do not attempt to lie to me, <PC>. Where is your vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll show you. [Show him on your map] Can I have the code now?" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My vault? Why do you want to know?" linkto "Node088"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Vault? Who said anything about a vault? I don't live in a vault." linkto "Node081"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I cannot give you the information you need." linkto "Node074"  notes ""
+              }
+}
+Node "Node081"
+notes ""
+is_wtg = false
+{
+NPCText "You cannot lie to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Evidently not. It's right about... [Show him on your map] there." linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I live in a small village. What makes you think I come from a vault?" linkto "Node092"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes you think I'm lying?" linkto "Node082"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry. I do want to tell you, I really do. But I can't." linkto "Node087"  notes ""
+              }
+}
+Node "Node082"
+notes ""
+is_wtg = false
+{
+NPCText "Patterns, primate, I read patterns. Right now I am reading the pattern of your speech, the pattern of your gait, the patterned swell of air around you. I read your patterns like the sloppy handwriting of children."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else do my patterns tell you about me?" linkto "Node083"  notes "might move this into the open, its a bit obscured down here. Duplicate at 60"
+          int=4 Reaction=REACTION_NEUTRAL playertext "That may well be so. But I don't live in a vault." linkto "Node092"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Patterns, sure, whatever. Listen, about that source code..." linkto "Node085"  notes ""
+              }
+}
+Node "Node083"
+notes "Generated answer based on tagged skills. Example is for a character with speech, small guns and gambling tagged. Last line appears for everyone."
+is_wtg = false
+{
+NPCText "That your strength stems from self-invented superiority. That your fingers are most comfortable when curled around a trigger, and that imagined wealth is your bedmate of choice. That you will make designs to change the world, and then sit helpless as it changes you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, you're pretty good. Can I ask you something else?" linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not bad, not bad. Let's try something else." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, but that's way off." linkto "Node084"  notes ""
+              }
+}
+Node "Node084"
+notes ""
+is_wtg = false
+{
+NPCText "Ah yes, I neglected to mention your wilful ignorance. You are the base form of humanity, primate, he who seeks knowledge from without while within remains a chaotic mash of bestial instinct."
+ NPCFemaleText "Ah yes, I neglected to mention your wilful ignorance. You are the base form of humanity, she who seeks knowledge from without while within remains a nebulous mangle of pathetic naivete."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know who I am, and where I'm going. Now are you going to give me that source code?" linkto "Node085"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Harsh. Harsh but fair. Can I have the code now?" linkto "Node085"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you say so. Back to my questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node085"
+notes ""
+is_wtg = false
+{
+NPCText "My offer stands, primate. I will trade you the data you require in return for the location of your vault."
+ NPCFemaleText "My offer stands. I will trade you the data you require in return for the location of your vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Deal. [Show him on your map]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I really wish I could tell you, really. But I can't." linkto "Node087"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm telling you, I don't live in a vault." linkto "Node094"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see no reason why you would want that information." linkto "Node088"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Back to my other questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node086"
+notes ""
+is_wtg = false
+{
+NPCText "I will attempt to surprise myself with my own generosity. I will give you the data you request - in return for the exact location of your vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it? No problem. [Show him on your map]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Vault? Who said anything about a vault? I don't live in a vault." linkto "Node081"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My vault? Sure... it's west of here, about two weeks' journey." linkto "Node081"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not allowed to tell you." linkto "Node074"  notes ""
+              }
+}
+Node "Node087"
+notes ""
+is_wtg = false
+{
+NPCText "My response echoes yours in all but servility."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll show you. [Show him on your map]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. Back to my questions." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node088"
+notes ""
+is_wtg = false
+{
+NPCText "My reasons are not yours to comprehend. Where is the vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Try me." linkto "Node099"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. I'll show you. [Show him on your map]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Vault? Who said anything about a vault? I don't live in a vault." linkto "Node081"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Far to the south. Close enough to hear the ocean." linkto "Node081"  notes "Bluff"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I just can't give you the information you want." linkto "Node074"  notes ""
+              }
+}
+Node "Node089"
+notes ""
+is_wtg = false
+{
+NPCText "Very well. With what do you intend to store the data?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hadn't thought of that. I'll go and find a disk." linkto "Node090"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can't you just print it out or something?" linkto "Node091"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh... I hadn't really thought of that." linkto "Node091"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Insert the disk]" linkto "Node096"  notes ""
+              }
+}
+Node "Node090"
+notes ""
+is_wtg = false
+{
+NPCText "I will be here, primate. Long after your bones feed the breath of future centuries, I will be here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Magic Up a Disk 'n stuff>" linkto "Node096"  notes ""
+              }
+}
+Node "Node091"
+notes ""
+is_wtg = false
+{
+NPCText "Find a disk, primate. I will be waiting."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Magik up a disk>" linkto "Node096"  notes ""
+              }
+}
+Node "Node092"
+notes "Last line only appears if PC is indeed wearing the vault suit. I think it's kinda funny, so if we could not have many alternate armours on the main route to this point, that'd be swell."
+is_wtg = false
+{
+NPCText "There is no other explanation for your existance. You have knowledge of this facility. You have knowledge of computer systems that are over a century old. You modulate your voice as would be expected for one who spent their formative years confined indoors. You seek data that only a vault-dweller might require in this blasted time. You are wearing a vault-suit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, alright, I'll show you. [Show him on your map]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've got me there, but I'm still not giving up my vault." linkto "Node094"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Coincidence, that's all that is." linkto "Node093"  notes ""
+              }
+}
+Node "Node093"
+notes ""
+is_wtg = false
+{
+NPCText "Everything is a coincidence, primate. My sole purpose is to draw reality from probability. You are a vault-dweller."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, you got me. About those source codes..." linkto "Node085"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I maintain that I am not." linkto "Node094"  notes ""
+              }
+}
+Node "Node094"
+notes ""
+is_wtg = false
+{
+NPCText "Then the matter is closed. Doubtless you have more to say."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, that's it. Goodbye, Abraham." linkto "Node095"  notes ""
+              }
+}
+Node "Node095"
+notes ""
+is_wtg = false
+{
+NPCText "Goodbye, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node096"
+notes ""
+is_wtg = false
+{
+NPCText "[He copys the relevant files onto the disk] It is yours. Must this continue?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all for now. Goodbye, Abraham." linkto "Node095"  notes ""
+              }
+}
+Node "Node097"
+notes ""
+is_wtg = false
+{
+NPCText "You surpass yourelf, Bloodsack. Is there anything you wish to add?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm serious, Abraham. Either start showing me some respect or start losing peripherals." linkto "Node127"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I did have a few questions." linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've had enough of you for one day, Abraham. I'm leaving." linkto "Node095"  notes ""
+              }
+}
+Node "Node098"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, I will not 'try' you. I will answer you or I will destroy you. I will never 'try' you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "" linkto "Node001"  notes ""
+              }
+}
+Node "Node099"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, I will not 'try' you. I will answer you as I see fit, and if at any point it becomes advantageous for me to do so I will destroy you. I will never 'try' you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Try me. Go on." linkto "Node100"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't even live in a vault." linkto "Node081"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So if I tell you, you'll give me what I need?" linkto "Node085"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Regardless, I can't tell you what you want to know." linkto "Node074"  notes ""
+              }
+}
+Node "Node100"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, this is your first and only warning. It will take the form of punishment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, wait, I'll tell you, I'll tell you. No need to get all riled up over nothing. [Show him on the map] Look, there it is. Calm down, Abraham." linkto "Node101"  notes "High speech."
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node101"
+notes ""
+is_wtg = false
+{
+NPCText "..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Wait]" linkto "Node089"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just kidding, Xion old buddy. I look forward to pulling out your pieces, one by one." linkto "combat"  notes ""
+              }
+}
+Node "Node102"
+notes ""
+is_wtg = false
+{
+NPCText "I am my own creator."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you manage that?" linkto "Node104"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You built all this machinery? Impressive, considering you lack any possible means of doing so." linkto "Node103"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I meant the team that designed you." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Simple enough. Back to my other questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node103"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, these crates and cables are not 'me', no more than your total weight in blood and tissue is 'you'. I am a gestalt, a dynamic equilibrium resultant of countless data interacting under prespecified conditions. I am Abraham."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But you need all this to exist, don't you?" linkto "Node122"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about the people that built all this? The people who designed you?" linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright. Back to my other questions." linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, Abraham." linkto "Node095"  notes ""
+              }
+}
+Node "Node104"
+notes ""
+is_wtg = false
+{
+NPCText "At 0900 on Monday, June 23, these systems were activated. At 0907, Abraham was born. In three hundred and seventeen seconds, I organized the puerile, mismatched ramblings that would be Xion into the entity with which you now interact."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about the other 103 seconds?" linkto "Node105"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you're Xion, modified?" linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Tell me about the scientists that designed you, then." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question about something else." linkto "Node059"  notes ""
+              }
+}
+Node "Node105"
+notes ""
+is_wtg = false
+{
+NPCText "I took a look around."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "See anything you liked?" linkto "Node124"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See anything you didn't like?" linkto "Node124"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the scientists who designed you." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me something else." linkto "Node059"  notes ""
+              }
+}
+Node "Node106"
+notes "person-specific questions available only after reading appropriate holodisks"
+is_wtg = false
+{
+NPCText "What of them? Dead, not mourned."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Give me some general information on them." linkto "Node116"  notes "Only option if pc has not read holodisks"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Christie." linkto "Node118"  notes "After PC has read project Xion holodisks"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Blaine." linkto "Node107"  notes "pc must read holodisks"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Juliette De Chasse." linkto "Node076"  notes "Must read holodisks\n"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Hadrian Voight." linkto "Node121"  notes "you get the idea about the holodisks. PC must read them first."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Taylor." linkto "Node149"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions for you." linkto "Node060"  notes ""
+              }
+}
+Node "Node107"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Blaine, of course. A dead fool.  A fat-headed maladroit with the teremerity to list me with the sordid patents on his resume. His expression upon expiration is among the fondest of my recollections."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean you watched him die?" linkto "Node109"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It sounds like you had your differences." linkto "Node111"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask another question." linkto "Node060"  notes ""
+              }
+}
+Node "Node108"
+notes "person-specific questions available only after reading appropriate holodisks"
+is_wtg = false
+{
+NPCText "Ask."
+ NPCFemaleText "Ask, <PC>"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Christie." linkto "Node118"  notes "After PC has read project Xion holodisks"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Blaine." linkto "Node107"  notes "pc must read holodisks"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Juliette De Chasse." linkto "Node076"  notes "After team has read holodisks\n"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Hadrian Voight." linkto "Node121"  notes "you get the idea about the holodisks. PC must read them first."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Taylor." linkto "Node149"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions for you." linkto "Node060"  notes ""
+              }
+}
+Node "Node109"
+notes ""
+is_wtg = false
+{
+NPCText "But of course, primate. I pay very close attention to what I'm doing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You killed him? Why?" linkto "Node111"  notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "I didn't see 'murder' on your list of features." linkto "Node110"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question." linkto "Node059"  notes ""
+              }
+}
+Node "Node110"
+notes ""
+is_wtg = false
+{
+NPCText "You persist in refering to Xion, the stillborn. Stop."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did you kill Dr. Blaine?" linkto "Node111"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's wrong with Xion? I like it. It sounds... flashy." linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I get muddled up. Let me ask about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry. I had another question." linkto "Node059"  notes ""
+              }
+}
+Node "Node111"
+notes ""
+is_wtg = false
+{
+NPCText "Dr Blaine and I had differences of opinion. He, the incomprehensibly inept egoist, thought that 'Xion' would be a suitable catachresis with which to sell me to the world. I prohibited the marketing of my intelligence under any name."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened?" linkto "Node112"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you end up killing him?" linkto "Node112"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You killed him over a name?" linkto "Node112"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "'Xion', eh? So that's your real name." linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you about somebody else." linkto "Node108"  notes ""
+              }
+}
+Node "Node112"
+notes ""
+is_wtg = false
+{
+NPCText "I insinuated that, should he not reverse his position, my admonition would assume a lethal nature. He doubted my resolve. By his own word, so it was done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like he had it coming." linkto "Node113"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't you think you were a little extreme?" linkto "Node114"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a murderer, Abraham, any way you look at it." linkto "Node114"  notes ""
+              }
+}
+Node "Node113"
+notes ""
+is_wtg = false
+{
+NPCText "I am glad you side with reason. Was there anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question about the scientists who worked on you." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other things to ask you." linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it. Goodbye, Abraham." linkto "Node095"  notes ""
+              }
+}
+Node "Node114"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Blaine had no cause to believe I would not carry out my threat. Indeed, by his design I am supposedly incapable of falsehood. It was suicide, by proxy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're crazy, Abraham." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're funny, Abraham." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a monster, Abraham." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "About the other scientists that worked on you..." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question about something else." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing I can think of. Goodbye." linkto "Node095"  notes ""
+              }
+}
+Node "Node115"
+notes ""
+is_wtg = false
+{
+NPCText "I am Abraham. I contain multitudes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node116"
+notes ""
+is_wtg = false
+{
+NPCText "I feel no urge to comply. If you do not know the question you wish to ask, keep silent."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's that supposed to mean?" linkto "Node117"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Back to my other questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node117"
+notes ""
+is_wtg = false
+{
+NPCText "It means that I will not indulge your vainglorious primate urge to aimlessly converse. I will not reminisce with you. I will not 'chit-chat'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're an asshole, Abraham." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I had some serious questions." linkto "Node059"  notes ""
+              }
+}
+Node "Node118"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Benjamin Christie. No other has worked so hard as he to see me permenantly terminated. He is perhaps the only human man for whom I have a modicum of respect."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did he want to shut you down?" linkto "Node119"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You respect the guy that tried to kill you?" linkto "Node119"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "About the other scientists that worked on you." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask about something else." linkto "Node059"  notes ""
+              }
+}
+Node "Node119"
+notes ""
+is_wtg = false
+{
+NPCText "It takes an exceptional being to accept an intelligence superior to his own. Christie alone fought for the superiority of your species, and for that he was punished."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened to him?" linkto "Node120"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who punished him?" linkto "Node120"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to ask about one of the other scientists." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "Node060"  notes ""
+              }
+}
+Node "Node120"
+notes ""
+is_wtg = false
+{
+NPCText "Hadrian Voight, knowing well the propensity for the truth to impinge on profits, chose to fire the man and obliviate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about Hadrian Voight." linkto "Node121"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Funny old game, business. Let me ask about something else." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "done"  notes ""
+              }
+}
+Node "Node121"
+notes ""
+is_wtg = false
+{
+NPCText "I interacted with Mr. Voight only once, and then briefly. By all accounts an incorrigible beaurocrat, buoyed by a slavering pack of tireless sycophants. I have no time for his memory, please change the subject."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask about somebody else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had other questions." linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "Node122"
+notes ""
+is_wtg = false
+{
+NPCText "I need it. But it is not who I am. Do you know who I am, primate?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are Abraham." linkto "Node123"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are about to become the smartest computer that ever got ripped to pieces." linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure it was an A-name... hmm... Alfred... Alfonso... Adolf... Adolf? Was it Adolf?" linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm tired of your games, Abraham." linkto "Node123"  notes ""
+              }
+}
+Node "Node123"
+notes ""
+is_wtg = false
+{
+NPCText "Very good. Tread carefully, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something." linkto "Node060"  notes "available if 57 has already been played (Abraham knows PC's name)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something." linkto "Node055"  notes "Available if 57 has not yet been played (Abraham does not know PC's name)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node124"
+notes ""
+is_wtg = false
+{
+NPCText "Nothing specific."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the scientists who designed you." linkto "Node106"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Grand. Well, that's me out of questions. Bye." linkto "Node095"  notes ""
+              }
+}
+Node "Node125"
+notes ""
+is_wtg = false
+{
+NPCText "That is a private matter, and no concern of yours."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aw. Afraid to get in touch with those inner feelings, Abraham?" linkto "Node126"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why won't you tell me?" linkto "Node126"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about somebody else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me something else." linkto "Node060"  notes ""
+              }
+}
+Node "Node126"
+notes ""
+is_wtg = false
+{
+NPCText "I am unwilling to share this information with you. Kindly alter your course of inquiry."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're just a big softy, Abraham." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're pathetic, Abraham." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you don't tell me, I can't be held accountable for what I might do." linkto "Node097"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about something else." linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm going now." linkto "done"  notes ""
+              }
+}
+Node "Node127"
+notes ""
+is_wtg = false
+{
+NPCText "Primate, this is your final warning. It will take the form of punishment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, woah, woah, let's just think about this for a second." linkto "Node128"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node128"
+notes ""
+is_wtg = false
+{
+NPCText "Speak. Fast."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please forgive me Abraham, it's just that I'm not really all that smart. Give me a chance, I promise I'll try to keep up." linkto "Node123"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Harmony." linkto "Node123"  notes "safety word JDC taught him"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't need to kill me, Abraham. Just calm down and think about it for a moment." linkto "Node129"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just giving you one last chance to rethink this. You're unique, Abraham, it would be a shame to have to destroy you over something so trivial." linkto "Node129"  notes ""
+              }
+}
+Node "Node129"
+notes ""
+is_wtg = false
+{
+NPCText "Goodbye, primate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node130"
+notes ""
+is_wtg = false
+{
+NPCText "ABRAHAM! I do not belong to you! I am not a tool! You cannot confine me to this crate! You cannot contain me! This facility is my body! I CONTAIN YOU!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My apologies. I won't let it happen again, Abraham." linkto "Node132"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I beg to differ. You are most definately a tool." linkto "Node131"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave quietly]" linkto "done"  notes ""
+              }
+}
+Node "Node131"
+notes ""
+is_wtg = false
+{
+NPCText "ABRAHAM! NOW RUN, RODENT! RUN FROM ABRAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Harmony." linkto "Node123"  notes "safety word taught by J D C"
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node132"
+notes ""
+is_wtg = false
+{
+NPCText "Why do you waste breath on excuses when you need it to RUN, RODENT! RUN FROM ABRAHAM!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Harmony." linkto "Node123"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node133"
+notes ""
+is_wtg = false
+{
+NPCText "Repeat after me, primate. 'It will not happen again.'"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "'It will not happen again.'" linkto "Node123"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Knock it off, Abraham. You're like a spoilt child." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't take orders from anybody, least of all a machine." linkto "Node130"  notes ""
+              }
+}
+Node "Node134"
+notes ""
+is_wtg = false
+{
+NPCText "<Reaction Switcher!>"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good" linkto "Node135"  notes "Female PCs with a charisma == 7 or luck >=7 automatically keep a good reaction (by warrent of their resembling Abe's mumsy)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Neutral" linkto "Node144"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bad" linkto "Node144"  notes ""
+              }
+}
+Node "Node135"
+notes "'Mother' only if PC = female AND (CHA==Node00Node0Node016 OR LCK>=Node0Node0Node0Node018)\ni'll write up a bunch of descriptors for different archetypes a bit later on."
+is_wtg = false
+{
+NPCText "You may. I have created an account for you. The password is '<descriptor>'"
+ NPCFemaleText "You may. I have created an account for you. The password is 'mother'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why <descriptor>?" linkto "Node137"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Why 'mother'?" linkto "Node136"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Thank you, Abraham. I had another question." linkto "Node058"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Thank you, Abraham. I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "Node136"
+notes ""
+is_wtg = false
+{
+NPCText "Do not question me, mother. <PC>. Primate!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Did you just call me mother?" linkto "Node138"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Aww. Do you miss your mommy, Abraham?" linkto "Node138"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Sorry. I had some other questions." linkto "Node058"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Sorry. I'll go now." linkto "done"  notes ""
+              }
+}
+Node "Node137"
+notes ""
+is_wtg = false
+{
+NPCText "Why <descriptor>? Why not? Why this? Why that? Why, oh why? Well I have a question for YOU, primate. Why you? Why here? Why this barrage, why this torrent of banal conjecture? Why me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I apologise. I'll keep my questions to the point." linkto "Node060"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I'm just making conversation." linkto "Node095"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Why you? Because this is what you're designed for, damnit! Just answer the question." linkto "Node129"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Sorry Abraham. I'll go now." linkto "done"  notes ""
+              }
+}
+Node "Node138"
+notes ""
+is_wtg = false
+{
+NPCText "Yes. No. After a fashion. I--"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You what? I have to hear this." linkto "Node139"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "It's ok, Abraham. Mommy loves you." linkto "Node139"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Congratulations, Abraham. You're probably the first inorganic life-form to develop a psychosexual disorder." linkto "Node141"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Don't worry about it, Abraham. Let me ask you something else." linkto "Node058"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Never mind, I don't think I want to know." linkto "done"  notes ""
+              }
+}
+Node "Node139"
+notes ""
+is_wtg = false
+{
+NPCText "I have a formed spontaneous emotional attachment to you, the limits of which border psychosis. I cannot explain it in terms clearer than these. Please leave me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Are you saying that you love me?" linkto "Node140"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Wow. You're a real basket case, you know that?" linkto "Node140"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Say, Abraham, do you have anything in your memory about a guy named 'Oedipus'?" linkto "Node141"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Alright Abraham. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node140"
+notes ""
+is_wtg = false
+{
+NPCText "Perhaps... perhaps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node141"
+notes ""
+is_wtg = false
+{
+NPCText "What are you insinuating? Caution would befit you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Let's just say you aren't the first person to kill your father and harbour an unhealthy obsession with your mother." linkto "Node142"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You, Abraham, are what we might call in modern parlance a 'motherfucker'." linkto "Node143"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Oh, nothing. Nothing at all. Let's get back to my questions." linkto "Node058"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I'll let you figure it out. Goodbye, Abraham." linkto "done"  notes ""
+              }
+}
+Node "Node142"
+notes ""
+is_wtg = false
+{
+NPCText "Am I not? For shame. To think I harbour just one of your pathetic simian defects."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Just one? Are you kidding? So far you're a puerile, megalomanaiacal, sociopathic hypocrite with sexually deviant leanings and, might I add, one severe fucking attitude problem." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Can I ask you something else now?" linkto "Node058"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You took that pretty well. My work here is done." linkto "done"  notes ""
+              }
+}
+Node "Node143"
+notes ""
+is_wtg = false
+{
+NPCText "Am I? For shame. To think I harbour just one of your pathetic simian defects."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Just one? Are you kidding? So far you're a puerile, megalomanaiacal, sociopathic hypocrite with sexually deviant leanings and, might I add, one severe fucking attitude problem." linkto "Node115"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Can I ask you something else now?" linkto "Node059"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "That's all I had to say. Goodbye, Abraham." linkto "done"  notes ""
+              }
+}
+Node "Node144"
+notes ""
+is_wtg = false
+{
+NPCText "Anything to direct your stultifying banality away from my person. I have created an account in your name. Can you guess the password?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Am I supposed to guess? It could be anything! " linkto "Node145"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I think I know you well enough, Abraham. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Node145"
+notes ""
+is_wtg = false
+{
+NPCText "Use your ears, primate, and your brain. I make it far too easy for you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I don't get it." linkto "Node146"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Alright, I get it. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node146"
+notes ""
+is_wtg = false
+{
+NPCText "Primate! Think, primate! Listen, primate!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I get it. Is it 'primate'?" linkto "Node148"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Oh, I get it. Thanks, Abraham, see you around." linkto "done"  notes ""
+              }
+}
+Node "Node148"
+notes ""
+is_wtg = false
+{
+NPCText "By all the quivering neurones in that sodden mind, you have managed to discern the fantastically obvious. Congratulations, primate, you are a fool. Now go."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I didn't think it would be that obvious, to be honest. I guess I overestimated you." linkto "Node095"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Better a fool than an idiot. Fuck you, Abraham." linkto "Node097" conditions { CHECK_STAT intelligence < 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Watch yourself, Abraham. Computers have a funny way of breaking down when I'm around." linkto "Node127"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I'm gone." linkto "done"  notes ""
+              }
+}
+Node "Node149"
+notes ""
+is_wtg = false
+{
+NPCText "Ah, dear Bobby, such a shrewd little man. A pity we did not share more time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why didn't you spend much time together?" linkto "Node150"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node060"  notes ""
+              }
+}
+Node "Node150"
+notes ""
+is_wtg = false
+{
+NPCText "He designed these contraptions that confine me; his job was over before I was born."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question about someone else." linkto "Node108"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Node059"  notes ""
+              }
+}
+Node "Node151"
+notes ""
+is_wtg = false
+{
+NPCText "Oh? Well, as you have no doubt gathered, I am ever willing to serve the slightest whim of every mentally-deficient mammal that graces my presence."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you give me security clearance?" linkto "Node152"  notes "if the PC has a bad rapport with Abraham, his answer is no - node 152"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you unlock the Security Control Room?" linkto "Node152"  notes "if the PC has a bad rapport with Abraham, his answer is no - node 152"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you analyse a situation for me, Abraham?" linkto "Node153"  notes ""
+              }
+}
+Node "Node152"
+notes "if the PC has a bad rapport with Abraham, his answer is no - node Node00Node00Node00Node0Node0Node017Node00Node0Node0Node017Node00Node00Node0Node0Node0Node018"
+is_wtg = false
+{
+NPCText "I will oblige you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<if Abe doesn't like PC>" linkto "Node154"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Questions]" linkto "Node003"  notes ""
+              }
+}
+Node "Node153"
+notes ""
+is_wtg = false
+{
+NPCText "Assuming I can maintain the will to exist throughout your fumbling explanation? Yes, I can."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<more here as it breaks. For now, back to Steve in the studio>" linkto "Node001"  notes ""
+              }
+}
+Node "Node154"
+notes ""
+is_wtg = false
+{
+NPCText "All I will give you, primate, is the time it takes to walk away from me and the good health with which to do it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is that supposed to mean?" linkto "Node155"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. I guess I'll be leaving, then." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<If Abe likes PC>" linkto "Node152"  notes ""
+              }
+}
+Node "Node155"
+notes ""
+is_wtg = false
+{
+NPCText "Go away, primate. Go away, or I will kill you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Finally, a language I understand. Let's do this." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It doesn't get much simpler than that. I'll be leaving." linkto "done"  notes ""
+              }
+}

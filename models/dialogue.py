@@ -40,6 +40,79 @@ class LinkType(Enum):
     AND = 1
     OR = 2
 
+
+class Skill(Enum):
+    """Fallout 1/2 Skills"""
+    SMALL_GUNS = 0
+    BIG_GUNS = 1
+    ENERGY_WEAPONS = 2
+    UNARMED = 3
+    MELEE_WEAPONS = 4
+    THROWING = 5
+    FIRST_AID = 6
+    DOCTOR = 7
+    SNEAK = 8
+    LOCKPICK = 11
+    STEAL = 12
+    TRAPS = 13
+    SCIENCE = 14
+    REPAIR = 15
+    SPEECH = 16
+    BARTER = 17
+    GAMBLING = 18
+    OUTDOORSMAN = 19
+
+    @classmethod
+    def get_name(cls, value: int) -> str:
+        """Get skill name by value"""
+        for skill in cls:
+            if skill.value == value:
+                return skill.name.replace('_', ' ').title()
+        return f"Unknown ({value})"
+
+    @classmethod
+    def from_name(cls, name: str) -> 'Skill':
+        """Get skill by name"""
+        name_upper = name.upper().replace(' ', '_')
+        try:
+            return cls[name_upper]
+        except KeyError:
+            return cls.SMALL_GUNS
+
+
+class FloatMessageType(Enum):
+    """Types of float messages"""
+    NPC_DIALOGUE = 0
+    PLAYER_RESPONSE = 1
+    SYSTEM_NOTIFICATION = 2
+    CONDITION_CHECK = 3
+    SKILL_CHECK = 4
+
+
+@dataclass
+class FloatMessage:
+    """Represents a single floating message"""
+    text: str = ""
+    message_type: FloatMessageType = FloatMessageType.NPC_DIALOGUE
+    position_x: float = 0.0
+    position_y: float = 0.0
+    color: str = "#FFFFFF"  # Default white
+    font_size: int = 12
+    is_visible: bool = True
+    fade_in: float = 0.0  # seconds
+    fade_out: float = 0.0  # seconds
+    duration: float = 3.0  # seconds to display
+
+
+@dataclass
+class FloatMessagePosition(Enum):
+    """Position of float message relative to node"""
+    ABOVE = 0
+    BELOW = 1
+    LEFT = 2
+    RIGHT = 3
+    CENTER = 4
+
 @dataclass
 class Condition:
     """Represents a condition for player options"""
@@ -54,8 +127,8 @@ class Condition:
 @dataclass
 class PlayerOption:
     """Represents a player dialogue option"""
-    optiontext: str
-    nodelink: str
+    optiontext: str = ""
+    nodelink: str = ""
     noderesolved: int = -1
     link_to_proc: bool = False
     link_to_skillcheck: bool = False
@@ -65,15 +138,41 @@ class PlayerOption:
     notes: str = ""
     conditions: List[Condition] = field(default_factory=list)
     conditioncnt: int = 0
+    # Skill check for this option
+    has_skill_check: bool = False
+    skill_check: Optional['SkillCheck'] = None
+    # Alternate responses based on skill check result
+    success_response: str = ""
+    failure_response: str = ""
+    # Position in diagram
+    position_x: float = 0.0
+    position_y: float = 0.0
 
 @dataclass
 class SkillCheck:
     """Represents a skill check definition"""
-    check_proc_name: str
-    check_what: int
-    modifier: int
-    successnode: str
-    failurenode: str
+    check_proc_name: str = ""
+    check_what: Skill = Skill.SPEECH  # Skill being checked
+    modifier: int = 0  # Additional modifier to skill check
+    successnode: str = ""  # Node to go to on success
+    failurenode: str = ""  # Node to go to on failure
+    required_value: int = 0  # Minimum skill value to pass
+    is_percentage: bool = False  # If true, check is percentage-based
+    script_on_success: str = ""  # Custom script to run on success
+    script_on_failure: str = ""  # Custom script to run on failure
+    notes: str = ""  # Designer notes
+
+    def get_skill_name(self) -> str:
+        """Get the name of the skill being checked"""
+        return Skill.get_name(self.check_what.value if isinstance(self.check_what, Skill) else self.check_what)
+
+    def to_condition_code(self) -> str:
+        """Generate condition code for skill check"""
+        skill_name = self.get_skill_name().upper().replace(' ', '_')
+        if self.is_percentage:
+            return f"trait_{skill_name}() >= {self.required_value}"
+        else:
+            return f"skill_{skill_name}() >= {self.required_value}"
 
 @dataclass
 class DialogueNode:
@@ -97,6 +196,30 @@ class FloatNode:
     notes: str = ""
     messages: List[str] = field(default_factory=list)
     messagecnt: int = 0
+    # Enhanced float messages with full properties
+    float_messages: List[FloatMessage] = field(default_factory=list)
+    position_x: float = 0.0  # X position in diagram
+    position_y: float = 0.0  # Y position in diagram
+    is_visible: bool = True
+    background_color: str = "#000000"  # Background color
+    border_color: str = "#00FF00"  # Border color (terminal green)
+    text_color: str = "#00FF00"  # Text color
+
+    def add_message(self, text: str, msg_type: FloatMessageType = FloatMessageType.NPC_DIALOGUE) -> FloatMessage:
+        """Add a new float message to this node"""
+        msg = FloatMessage(text=text, message_type=msg_type)
+        self.float_messages.append(msg)
+        self.messages.append(text)
+        self.messagecnt = len(self.messages)
+        return msg
+
+    def remove_message(self, index: int):
+        """Remove a message by index"""
+        if 0 <= index < len(self.float_messages):
+            del self.float_messages[index]
+        if 0 <= index < len(self.messages):
+            del self.messages[index]
+        self.messagecnt = len(self.messages)
 
 @dataclass
 class Action:

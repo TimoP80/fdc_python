@@ -1,0 +1,100 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Adam"
+Location "V31"
+Description "Conspiracy Guy"
+Unknown_Desc "You see Adam"
+Known_Desc ""
+Detailed_Desc "He looks like he needs a shave, and smells like he needs a shower."
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "Psst! Hey, <PC>, come here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do I know you?" linkto "Node_002"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "Sure you do! It's me, Adam."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't ring any bells." linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I help you, Adam?" linkto "Node_010"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "Hmm... they got to you sooner than I expected."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Got to me? What are you talking about? Who are 'they'?" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you want something?" linkto "Node_010"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "Just watch them. Watch the way they move. There's something not right about them... They're cold-hearted machines!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Androids?" linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll keep an eye out." linkto "done"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "Them! The Board, <PC>, they're watching us. Controlling our every move! It's in the water!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's in the water?" linkto "Node_006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are they controlling us?" linkto "Node_006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll leave now. You smell like crazy." linkto "done"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "Who knows?! Drugs, chemicals, nano-robots? What else aren't they telling us?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes you think the Board would do such a thing?" linkto "Node_009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is there something you wanted, Adam?" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Riiight..." linkto "done"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "What makes you think they wouldn't?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you want something, Adam?" linkto "Node_010"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "Yes! You're going up to see them, aren't you? I need your eyes! Tell me what you see up there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What am I looking for?" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Adam, I don't have time to file reports for crazy people." linkto "done"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "Perhaps... perhaps. You be careful up there. They're always watching..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll keep an eye out." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're crazy." linkto "done"  notes ""
+              }
+}

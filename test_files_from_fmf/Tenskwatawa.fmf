@@ -1,0 +1,555 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Tenskwatawa"
+Location "CotC"
+Description "Dialogue for Tenskwatawa"
+Unknown_Desc "You see a young man wearing slightly frayed robes."
+Known_Desc "You see Tenskwatawa."
+Detailed_Desc "You see a young man with a beatific smile on his face. His robes are frayed and patched, but he goes about his job enthusiastically."
+/* Regular nodes */
+
+Node "Switcher"
+notes ""
+is_wtg = false
+{
+NPCText "switch"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Player is a member of the rat temple" linkto "Member"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Player has not met Tenskwatawa before - not a member" linkto "FirstTime"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Subsequent conversations with Tenskwatawa - not a member" linkto "Subsequent"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Player has been kicked out of the temple for killing rats." linkto "KilledRats"  notes ""
+              }
+}
+Node "Member"
+notes ""
+is_wtg = false
+{
+NPCText "Greetings, brother! Another wondrous day, Kunsia be praised!"
+ NPCFemaleText "Greetings, sister! Another wondrous day, Kunsia be praised!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, sure. Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Brother? What do you mean by that?" linkto "BrotherSister"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Sister? What do you mean by that?" linkto "BrotherSister"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Questions"
+notes "Option 5 only available if player has talked to Butch about the rat problem\nOption 4 only available if player has not joined the Temple"
+is_wtg = false
+{
+NPCText "Of course. What would you like to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your religion's beliefs." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's your story?" linkto "LifeStory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "Job"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do I join the Temple?" linkto "JoinUp"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Some of the farmers in town are angry that rats have been eating their crops. What do you think about this?" linkto "Butch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, nothing. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "FirstTime"
+notes ""
+is_wtg = false
+{
+NPCText "Welcome to the Rat Temple, friend. I am Tenskwatawa. How can I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tenskwatawa? What kind of name is that?" linkto "Tenskwatawa"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing right now. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello!" linkto "Stupid"  notes ""
+              }
+}
+Node "Subsequent"
+notes ""
+is_wtg = false
+{
+NPCText "Welcome back, friend. How can I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing right now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello!" linkto "Stupid"  notes ""
+              }
+}
+Node "BrotherSister"
+notes ""
+is_wtg = false
+{
+NPCText "I heard the wonderful news that you have joined our Temple, friend. You are now part of my family - you and all of Kunsia's children."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kunsia's children?" linkto "ChildrenMember"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's great, Tenskwatawa. Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not sure I want to be part of your family." linkto "Notfamily"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good to know. See you around." linkto "done"  notes ""
+              }
+}
+Node "ChildrenMember"
+notes ""
+is_wtg = false
+{
+NPCText "Rats, of course! Our rodent friends, as well as ourselves, are all disciples of the great Kunsia. They are as much members of our church as we are."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me get this straight. I'm in an exclusive club, along with all the vermin in the wastes?" linkto "Blessed"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I certainly picked the right religion. Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's just scary. Any way I can stop being a disciple of the great Kunsia?" linkto "QuitReligion"  notes ""
+              }
+}
+Node "Tenskwatawa"
+notes ""
+is_wtg = false
+{
+NPCText "It is the name I assumed upon joining the Temple. It means \"open door\", in the language of our religion."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does an open door have to do with anything?" linkto "TellStory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your Temple." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to know about something else." linkto "Questions"  notes ""
+              }
+}
+Node "TellStory"
+notes ""
+is_wtg = false
+{
+NPCText "It shall become clear when you listen to the tale of how I found the grace and love of Kunsia - a story of tragedy, loss and eventual redemption."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm intrigued. Go on." linkto "LifeStory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else first." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe some other time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Notfamily"
+notes ""
+is_wtg = false
+{
+NPCText "[His smile falters for a second, then redoubles.] Yes. You seem an independent man. But when you leave, know that the prayers of Kunsia's faithful travel with you - whether you accept it or not, you are our brother."
+ NPCFemaleText "[His smile falters for a second, then redoubles.] Yes. You seem an independent woman. But when you leave, know that the prayers of Kunsia's faithful travel with you - whether you accept it or not, you are our sister."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's just scary. I'm not sure I want to stay in this cult of crazies." linkto "QuitReligion"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I appreciate it, Tenskwatawa. Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "KilledRats"
+notes ""
+is_wtg = false
+{
+NPCText "Friend, I am truly saddened by your excommunication. I truly thought that one such as you could spread Kunsia's word to the rest of the wastes. A pity, a pity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, it turned out I had a couple of brain cells left after all. You should try using yours sometime." linkto "BrainCells"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The rest of the wastes have enough trouble surviving without having to observe your crazy religion." linkto "RestWastes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry for disappointing you. See you around." linkto "done"  notes ""
+              }
+}
+Node "QuitReligion"
+notes ""
+is_wtg = false
+{
+NPCText "[He looks shocked.] I cannot see how one who has taken the first steps towards true Enlightenment would wish to turn their back on it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But just say that they did. Hypothetically, how would they go about doing it?" linkto "HowToQuit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right, I don't know why anyone would want to do that. Let me ask you some other questions." linkto "Questions"  notes ""
+              }
+}
+Node "HowToQuit"
+notes ""
+is_wtg = false
+{
+NPCText "Well, we would be forced to cast out any disciple that harmed one of Kunsia's children. But such an act would be unthinkable, impossible, for a man or woman of faith!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kunsia's children?" linkto "ChildrenMember"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds fair enough. Let me ask you about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better make sure not to kill any rats, then. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "BrainCells"
+notes ""
+is_wtg = false
+{
+NPCText "You might mock me now, but when you perish and are denied a Second Life in the service of Kunsia, you will see the folly of your blasphemy. I shall pray for you to see the light and someday return to the fold."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wouldn't hold my breath." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "RestWastes"
+notes ""
+is_wtg = false
+{
+NPCText "[He sighs.] Perhaps a more suitable missionary will one day appear to convince the masses of the true faith. Nevertheless, I wish you good luck in your travels despite your blasphemy. Maybe you will one day return to the embrace of Kunsia."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, right after my lobotomy. Later." linkto "done"  notes ""
+              }
+}
+Node "LifeStory"
+notes ""
+is_wtg = false
+{
+NPCText "I was born in this very City, in a shed by the docks. In fact, I have never been more than a few miles from this place. My destiny, determined by the great Kunsia, is tied to this coastline. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "LifeStory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This explains a lot. Staying here for a couple of decades would send anybody crazy." linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about Kunsia." linkto "Kunsia"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Crazy"
+notes ""
+is_wtg = false
+{
+NPCText "Maybe it is you that has been driven insane by the crushing bleakness of these wastes. I was also confused, groping blindly in the dark, until I found faith and the scales fell from my eyes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's possible. Go on with your story." linkto "LifeStory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Spare me the sermon. I want to ask about something else now." linkto "Questions"  notes ""
+              }
+}
+Node "LifeStory2"
+notes ""
+is_wtg = false
+{
+NPCText "Growing up here was difficult, with many trials and travails placed in my path to test me. My father, a troubled man, left when I was but nine years old and I was forced to go to work for Royce, the owner of a warehouse."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's rough. You must be pretty mad at your dad." linkto "AngryDad"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about working for Royce." linkto "LifeStory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to know about something else now." linkto "Questions"  notes ""
+              }
+}
+Node "AngryDad"
+notes ""
+is_wtg = false
+{
+NPCText "It is true - until I joined the Temple, I was angry at my abandonment. But does the Bible not say \"Bear not malice in thy heart towards thy litter's begetter, lest it consume you\"? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes it does. Preach on, Tenskwatawa." linkto "LifeStory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "But does it not also say \"Suffer thee not a man nor rat that spurneth his brood\"?" linkto "BadQuote"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you say so." linkto "LifeStory3"  notes ""
+              }
+}
+Node "BadQuote"
+notes ""
+is_wtg = false
+{
+NPCText "I confess, that is not a quote with which I am familiar, and I consider myself something of a student of the Bible. I think that you are mistaken, friend."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right, I'm not sure where that came from. Go on with your story." linkto "LifeStory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're evidently not as advanced within the religion as I am. I happen to be a Level 8 Grand Rat Master, and I'll thank you to show some respect." linkto "Taunt"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Taunt"
+notes ""
+is_wtg = false
+{
+NPCText "[He smiles more broadly.] Ah! I see, you seek to taunt me. This is common among unbelievers. I suggest you learn more about our religion, and then perhaps you will see the light."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry. Go on with the story you were telling." linkto "LifeStory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right, tell me about your religion." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not likely. See you around." linkto "done"  notes ""
+              }
+}
+Node "LifeStory3"
+notes ""
+is_wtg = false
+{
+NPCText "For seven years, I toiled in the filth of the warehouse, cleaning the toilets, carrying buckets of fish guts, scrubbing the floor - a series of humble and demeaning tasks. Royce is an profane man, and I suspect that he will never accept Kunsia as his Savior. He treated his employees poorly, and I am told he still does. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So that's why you quit?" linkto "LifeStory4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to ask about something else now." linkto "Questions"  notes ""
+              }
+}
+Node "LifeStory4"
+notes ""
+is_wtg = false
+{
+NPCText "Alas, no. I needed the job - but one day, Royce slipped on a patch of floor I had just mopped. His ears were shut to my apologies, and I was cast out of the job I had performed faithfully all those years."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "LifeStory5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's tough. I want to ask another question." linkto "Questions"  notes ""
+              }
+}
+Node "LifeStory5"
+notes ""
+is_wtg = false
+{
+NPCText "It was truly a dark time for me. I had no food and no job - I had spent my last few coins on a bottle of cheap alcohol. I was a helpless, drunken, hungry wretch, lying in the filth of my humble shack. But then... who did I see?!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kunsia!" linkto "LifeStory6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The landlord!" linkto "LifeStory6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know!" linkto "LifeStory6c"  notes ""
+              }
+}
+Node "LifeStory6"
+notes ""
+is_wtg = false
+{
+NPCText "Yes indeed! The great Kunsia appeared to me in all of His glory! Descending from the sky, unfolding His great wings, wreathed in light. A great chorus of squeaks sounded as a choir of rats sang His praises."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Praise Kunsia! What happened next?" linkto "LifeStory7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. And how much did you say you drank?" linkto "Alcohol"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's terrifying. I don't want to hear any more, tell me about something else." linkto "Questions"  notes ""
+              }
+}
+Node "LifeStory6b"
+notes ""
+is_wtg = false
+{
+NPCText "No! The great Kunsia Himself appeared to me in all of His glory! Descending from the sky, unfolding His great wings, wreathed in light. A great chorus of squeaks sounded as a choir of rats sang His praises."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Praise Kunsia! What happened next?" linkto "LifeStory7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. And how much did you say you drank?" linkto "Alcohol"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's terrifying. I don't want to hear any more, tell me about something else." linkto "Questions"  notes ""
+              }
+}
+Node "LifeStory6c"
+notes ""
+is_wtg = false
+{
+NPCText "I shall tell you! It was the great Kunsia Himself that appeared to me in all of His glory! Descending from the sky, unfolding His great wings, wreathed in light. A great chorus of squeaks sounded as a choir of rats sang His praises."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Praise Kunsia! What happened next?" linkto "LifeStory7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. And how much did you say you drank?" linkto "Alcohol"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's terrifying. I don't want to hear any more, tell me about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Alcohol"
+notes ""
+is_wtg = false
+{
+NPCText "I can assure you, this was no fevered dream of a drunkard. The Lord was as real as you are to me now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Tenskwatawa. What happened next?" linkto "LifeStory7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, Rummy. I'm bored with this story - tell me about something else." linkto "Questions"  notes ""
+              }
+}
+Node "LifeStory7"
+notes "Option 1 only available if PC has not joined the Temple"
+is_wtg = false
+{
+NPCText "Kunsia landed before me and spoke gravely. \"Follow Me\", He uttered! The door of my shack swung open with a bang, and the Lord Kunsia was abruptly gone. As soon as my terror had departed, I obeyed His commandment and joined the Temple. I was given the name Tenskwatawa - 'open door' - in honor of my Holy vision."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's an amazing story. A worthless drunk, saved by Kunsia's grace. Where do I sign up? I've got sins that need cleansing." linkto "JoinUp"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. I want to know about something else now." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What a load of crap. You're all obviously insane. See you around." linkto "done"  notes ""
+              }
+}
+Node "Job"
+notes ""
+is_wtg = false
+{
+NPCText "I am an acolyte here at the Temple - this is my fifth year here. I work as a graveyard keeper, tending the graves of disciples who have departed the First Life. I also bury any rats that are found dead within the temple boundaries."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you believe that life is only the \"First Life\"?" linkto "Beliefs1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds like a pretty crummy job." linkto "Crummy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to know about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Crummy"
+notes ""
+is_wtg = false
+{
+NPCText "Not at all! I can be close to the rats at all times, and give them the respect that they deserve when they pass into Kunsia's embrace. I am proving my dedication to the Temple while doing what I love. If only all could be so blessed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you say so. Let's talk about something else now." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds great. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "TempleQuestions"
+notes ""
+is_wtg = false
+{
+NPCText "I live to spread the glad tidings of Kunsia, may His coat remain sleek and shiny. Ask your questions, and I will answer them as best I can."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Kunsia?" linkto "Kunsia"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are the main beliefs of the religion?" linkto "Beliefs1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do you worship Kunsia?" linkto "Worship"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, let me ask about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Kunsia"
+notes ""
+is_wtg = false
+{
+NPCText "Kunsia is the great Rat God, praise His name. He holds dominion over all rats in the world, and ushers humans who heed His commandments into new lives - better lives - as rats."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's so great about rats?" linkto "RatsGreat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "There's something else about the religion I wanted to know..." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Questions"  notes ""
+              }
+}
+Node "RatsGreat"
+notes ""
+is_wtg = false
+{
+NPCText "They are created in the image of Kunsia. They do not know the trials and worries that beset us humans. They are paragons of the animal kingdom, and we aspire to live as they do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. I want to know something else about the religion." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Rats are just about the filthiest creatures in the wastes, Tenskwatawa. They're vermin. You're all crazy - goodbye." linkto "done"  notes ""
+              }
+}
+Node "Beliefs1"
+notes ""
+is_wtg = false
+{
+NPCText "Our main belief is that there are four stages of existence. The first is the human life, which you and I are living now. It is a time full of strife that we can escape from by adhering to Kunsia's commandments. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Beliefs2"  notes ""
+              }
+}
+Node "Beliefs2"
+notes ""
+is_wtg = false
+{
+NPCText "When we die, Kunsia will reincarnate us as rats. We shall find this life infinitely more fruitful than that of humanity, as we shall be shaped in the image of the Great One. When this life, too, has passed, we shall progress to the Third Life - the Shapeless Wait."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Beliefs3"  notes ""
+              }
+}
+Node "Beliefs3"
+notes ""
+is_wtg = false
+{
+NPCText "During the Wait, we shall live in harmony, sitting at the right hand of our Lord. During this time, we shall wait for the prophecy of Paradise to be fulfilled, whereupon the fourth and final life shall begin. Kunsia will walk the earth in corporeal form, and all of mankind shall be reborn as divine rats. The world will be bathed in Kunsia's love for all eternity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Beliefs4"  notes ""
+              }
+}
+Node "Beliefs4"
+notes ""
+is_wtg = false
+{
+NPCText "But one thing must come to pass before Kunsia returns in His glory - our Dream Juice must be perfected, so one who takes it may truly speak to our Lord and tell Him that His time has come. We shall strive to achieve this ultimate connection - even if it takes us a thousand generations."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. There's something else about the religion I want to know..." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to talk about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's a load of nonsense. I haven't got time to talk to you nuts any more." linkto "done"  notes ""
+              }
+}
+Node "Worship"
+notes ""
+is_wtg = false
+{
+NPCText "We worship by venerating and respecting all rats, according to the tenets of the Bible. We also create and take Dream Juice, which allows us to communicate with Kunsia and reaffirm our devotion to Him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Dream Juice? Where can I get some of that?" linkto "Saul"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "There's something else about the religion I want to know..." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Butch"
+notes ""
+is_wtg = false
+{
+NPCText "I believe that Butch and his compatriots must see the light eventually, and come to know Kunsia as their Savior. The rats in their fields are emissaries sent by the Lord to hasten this happy day."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. There's something else I wanted to know about..." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's nuts. See you around." linkto "done"  notes ""
+              }
+}
+Node "JoinUp"
+notes ""
+is_wtg = false
+{
+NPCText "Go to see Jeremiah, the High Priest, inside the Temple. He will tell you what you need to do in order to join. I look forward to calling you my brother."
+ NPCFemaleText "Go to see Jeremiah, the High Priest, inside the Temple. He will tell you what you need to do in order to join. I look forward to calling you my sister."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "Switcher"  notes ""
+              }
+}
+Node "Saul"
+notes ""
+is_wtg = false
+{
+NPCText "The priest Saul produces and dispenses Dream Juice. However, one must be an acolyte of the Temple in order to be worthy of imbibing it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. There's something else about the religion I wanted to know..." linkto "TempleQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Questions"  notes ""
+              }
+}
+Node "Blessed"
+notes ""
+is_wtg = false
+{
+NPCText "And you are blessed because of it! But we must be careful not to make the religion exclusive - the love of Kunsia must be available to one and all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. I had some questions for you..." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a scary man, Tenskwatawa. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Stupid"
+notes ""
+is_wtg = false
+{
+NPCText "Well, greetings to you too!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You help me? Me lost." linkto "StupidKunsia"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Nope. Me fine." linkto "done"  notes ""
+              }
+}
+Node "StupidKunsia"
+notes ""
+is_wtg = false
+{
+NPCText "It is not me who can help you, but a great big rat named Kunsia. If He's your friend, then when you die, you can be a rat! Would you like that?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Rats nice. Yeah, me rat! Squeak, squeak!" linkto "StupidRat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No! Rats dirty, hairy, smelly! Me hate rats." linkto "StupidHate"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You stupid. Go now." linkto "done"  notes ""
+              }
+}
+Node "StupidRat"
+notes ""
+is_wtg = false
+{
+NPCText "[He chuckles.] Well, you have to die first. But I think you've got the right idea, friend."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You kill me? Then I die, be rat." linkto "StupidKill"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Squeak, squeak! Squeaky squeaky! Squeak." linkto "done"  notes ""
+              }
+}
+Node "StupidKill"
+notes ""
+is_wtg = false
+{
+NPCText "Heavens, no! Kunsia will come for you in His own time. But when it comes, it will truly be a happy day."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. Bye-bye." linkto "done"  notes ""
+              }
+}
+Node "StupidHate"
+notes ""
+is_wtg = false
+{
+NPCText "Come on now, rats aren't that bad! A rat's never called you names like people have, am I right?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You right. Me forget, me like rats really." linkto "StupidFriend"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "They do. One call me 'squeak squeak'. That very bad name." linkto "StupidInsult"  notes ""
+              }
+}
+Node "StupidFriend"
+notes ""
+is_wtg = false
+{
+NPCText "Well - just remember, Kunsia is your friend from now on, yes? Remember that."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. Bye bye." linkto "done"  notes ""
+              }
+}
+Node "StupidInsult"
+notes ""
+is_wtg = false
+{
+NPCText "[He laughs.] My friend, that was not an insult. Kunsia and His rats love you, and want you to be their friend."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No! Rat was mean. Me not talk now. Stupid rats." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. Kunsia good. Rats good too." linkto "StupidFriend"  notes ""
+              }
+}

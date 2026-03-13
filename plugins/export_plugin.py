@@ -1,4 +1,4 @@
-w"""
+"""
 Export Plugin for Fallout Dialogue Creator
 
 This plugin provides export functionality for .ssl (script) and .msg (message) files

@@ -1,0 +1,683 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.24-beta
+
+*/
+
+vars {
+}
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Carl_0"
+notes ""
+{
+NPCText "*STARTING CONDITIONS*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The player has never spoken to Carl before." linkto "Carl_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The player has spoken to Carl before." linkto "Carl_1b"  notes ""
+              }
+}
+Node "Carl_1a"
+notes ""
+{
+NPCText "Hey there, stranger. Carl's the name. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pleased to meet you, Carl. What do you do around here?" linkto "Carl_2G"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on, then. What's your story?" linkto "Carl_2N_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello! What that red stuff you covered in?" linkto "Carl_2D_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck off." linkto "Carl_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Carl_1b"
+notes "This node begins the conversation IF the player has spoken to Carl before."
+{
+NPCText "Hello, again. How's things?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Carl. I wonder if you've got time to answer a question or two?" linkto "Carl_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello. I come back to see if you leave moo-moos alone now." linkto "Carl_1b_D1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Carl. I'm just passing through and I thought I'd drop by. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Carl_1b_B1"
+notes ""
+{
+NPCText "Well, you've changed your tune. What's brought this on?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Carl. You didn't deserve that." linkto "Carl_1b_B2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, well, did anyone tell you you're a boring asshole?" linkto "Carl_2B_2b"  notes ""
+              }
+}
+Node "Carl_1b_B2"
+notes ""
+{
+NPCText "Damn right I didn't. Perhaps you'd better come back another time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Carl_1b_D1"
+notes ""
+{
+NPCText "Look, you really shouldn't be in here, OK? It's dangerous. You have to go."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done"  notes ""
+              }
+}
+Node "Carl_2B_1"
+notes ""
+{
+NPCText "*Carl gives a lop-sided grin like he's heard it all before* You know, you won't get very far in life using that kind of talk, boy."
+ NPCFemaleText "*Carl gives a lop-sided grin like he's heard it all before* You know, you won't get very far in life using that kind of talk, lady."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Carl. I'm just having a bad day. Could you please tell me a bit about what you do here?" linkto "Carl_2B_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When I want your damn opinion, I'll ask for it. Understand?" linkto "Carl_2B_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's worked for me so far. Goodbye." linkto "done"  notes "If the PC chooses this option, Carl will no longer talk to the PC, but will float as normal."
+              }
+}
+Node "Carl_2B_2a_1"
+notes ""
+{
+NPCText "And just give me one damn good reason why I should help you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about two caps for your troubles?" linkto "Carl_2B_2a_2a"  notes "If the player cannot afford to pay, go to Carl_2B_2a_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "Carl_2B_2a_2a"
+notes "Deduct 2 caps from the PC's inventory."
+{
+NPCText "Hell, I'll take your money."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what's your story?" linkto "Carl_2N_1"  notes ""
+              }
+}
+Node "Carl_2B_2a_2b"
+notes "Carl will no longer talk to the PC, but will float as normal."
+{
+NPCText "You don't even have two caps! Get the hell out of here and quit wasting my time!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done"  notes ""
+              }
+}
+Node "Carl_2B_2b"
+notes "Carl will no longer talk to the PC, but will float as normal."
+{
+NPCText "*He shrugs indifferently and goes back to his work.* Just get the hell out of my barn and don't bother me again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done"  notes ""
+              }
+}
+Node "Carl_2D_1"
+notes ""
+{
+NPCText "*Carl looks down at his apron* Oh, hell, son, this here's blood."
+ NPCFemaleText "*Carl looks down at his apron* Oh, hell, girl, this here's blood."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Are you hurted?" linkto "Carl_2D_2"  notes ""
+              }
+}
+Node "Carl_2D_2"
+notes ""
+{
+NPCText "No... *The realisation dawns that he's speaking to someone of limited intelligence* I'm a butcher. BUTCHER."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You are a man that hurts moo-moos?!" linkto "Carl_2D_3"  notes ""
+              }
+}
+Node "Carl_2D_3"
+notes ""
+{
+NPCText "*He looks around the barn* Perhaps this isn't a safe place for you to be. Run along now, OK?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I go, but you stop hurting moo-moos!" linkto "done"  notes ""
+              }
+}
+Node "Carl_2G"
+notes ""
+{
+NPCText "I do the butchery work 'round here. Plus, I tan some of the skins we send out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Butchery work? Killing what?" linkto "Carl_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What skins are those?" linkto "Carl_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Well, I ought to be moving on." linkto "done"  notes ""
+              }
+}
+Node "Carl_2N_1"
+notes ""
+{
+NPCText "I'm the ranch's butcher and tanner."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you butcher?" linkto "Carl_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that tanner as in leather and hides?" linkto "Carl_2N_2"  notes ""
+              }
+}
+Node "Carl_2N_2"
+notes ""
+{
+NPCText "Yup."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What hides do you work on?" linkto "Carl_4_1"  notes ""
+              }
+}
+Node "Carl_3_1"
+notes ""
+{
+NPCText "You see those brahmin in the pens outside?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Carl_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No." linkto "Carl_3_2b"  notes ""
+              }
+}
+Node "Carl_3_2a"
+notes ""
+{
+NPCText "Well, they don't turn themselves into jerky all by themselves. Someone has to, you know... *He passes a finger over his throat.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You must produce a lot of meat. What do you use it for?" linkto "Carl_5_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nice. I'll be seeing you, then." linkto "done"  notes ""
+              }
+}
+Node "Carl_3_2b"
+notes ""
+{
+NPCText "You obviously can't have been on the ranch for long, then. We're one of the biggest cattle farms in the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. So somebody has to be the slaughterman." linkto "Carl_3_2a"  notes ""
+              }
+}
+Node "Carl_4_1"
+notes ""
+{
+NPCText "Any brahmin we slaughter for their meat, we keep the skins. I tan them, then sell them on."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "To where do you sell the skins?" linkto "Carl_4_2"  notes ""
+              }
+}
+Node "Carl_4_2"
+notes ""
+{
+NPCText "For the main part, we sell them to Rusty Springs. There's a tanner there who takes the skins and makes all sorts out of them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, didn't you say you were a tanner, though?" linkto "Carl_4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you something else." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_4_3"
+notes ""
+{
+NPCText "I only tan the skins enough so that they're preserved for their journeys to other places. This guy in Rusty Springs, he does all sorts with leather that I can't - not that I would have the time to, either."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That makes sense. Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_1"
+notes ""
+{
+NPCText "There's always call for food in the wastes and we produce it in bulk. We sell to all of the nearest major groups and cities."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which places in particular do you sell to?" linkto "Carl_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could I ask you about something else?" linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Carl_5_2"
+notes ""
+{
+NPCText "We sell to Lone Star, Rusty Springs, Sandover and the City on the Coast."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which city on which coast?" linkto "Carl_5_3d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. I've got another question for you." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3a_1"
+notes ""
+{
+NPCText "Lone Star? It's a big place built out of the ruins of a what was a metropolis before the war. There's a lot of people there, and that means a lot of hungry mouths to feed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get there?" linkto "Carl_5_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3a_2"
+notes ""
+{
+NPCText "Nope, I've never been there. If I'm not mistaken, it's north-west of here, but I only know that from the merchants that go there from here. You'd be best off asking them the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Can I ask you about something else?" linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh well, I ought to be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Carl_5_3b_1"
+notes ""
+{
+NPCText "Rusty Springs is a place that only exists because it has the biggest source of the most precious thing in the known wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's that?" linkto "Carl_5_3b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Water?" linkto "Carl_5_3b_2b"  notes "This node only appears if the PC has a high (60+?) Outdoorsman skill."
+              }
+}
+Node "Carl_5_3b_2a"
+notes ""
+{
+NPCText "Water. Abundant, clean drinking water."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does Rusty Springs produce that it can trade to you?" linkto "Carl_5_3b_3"  notes ""
+              }
+}
+Node "Carl_5_3b_2b"
+notes ""
+{
+NPCText "That's right. No flies on you! Fresh, clean drinking water."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does Rusty Springs produce that it can trade to you?" linkto "Carl_5_3b_3"  notes ""
+              }
+}
+Node "Carl_5_3b_3"
+notes ""
+{
+NPCText "That self-same precious water. We can source enough here to feed the cattle on, but it ain't really high enough quality for people, especially since Crossroads has grown so much."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get to Rusty Springs?" linkto "Carl_5_3b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3b_4"
+notes ""
+{
+NPCText "No. I don't know how to reach it. It's in a dangerous part of the wastes on account of everyone wanting their water. I've also heard tales of strange goings-on there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me where it is roughly?" linkto "Carl_5_3b_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3b_5"
+notes ""
+{
+NPCText "Sure. It's sort of west of here, I think. Ask the caravaners that go there if you really need to know the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3c_1"
+notes ""
+{
+NPCText "Terrible place. There's a fortune in pre-war tech lying thereabouts, but the rad-level is so high that no-one survives there for long."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get there?" linkto "Carl_5_3c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3c_2"
+notes ""
+{
+NPCText "I can, I know the place too damn well. But I won't. I've lost too many friends to that place and I don't want the responsibility of your death."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What if I cross your palm with five caps?" linkto "Carl_5_3c_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't make me hurt you, Carl. Just tell me." linkto "Carl_5_3c_3b_a"  notes "Take an average of the PC's Strength and Luck, rounded up. IF the number is less than 7, then go to Carl_5_3c_3b_b, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Carl, I've got plenty of Rad-X. I've dealt with 'hot' places before. You can tell me." linkto "Carl_5_3c_3c_a1"  notes "Speech check. If failed, go to Carl_5_3c_3c_b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3c_3a"
+notes ""
+{
+NPCText "No! I'm not trying to wring money out of you! Seriously, just avoid the place if you've got any sense."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't make me hurt you, Carl. Just tell me." linkto "Carl_5_3c_3b_a"  notes "Take an average of the PC's Strength and Luck, rounded up. IF the number is less than 7, then go to Carl_5_3c_3b_b, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Carl, I've got plenty of Rad-X. I've dealt with 'hot' places before. You can tell me." linkto "Carl_5_3c_3c_a1"  notes "Speech check. If failed, go to Carl_5_3c_3c_b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3c_3b_a"
+notes "Add Sandover to the PC's map."
+{
+NPCText "OK! OK! Take it easy. Here, look at this. *He draws a crude map on the tin wall of the barn with a piece of chalk*. This is Crossroads here, and this is Sandover here. You got it? Don't say I didn't warn you, when you get there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That wasn't too hard, was it? Now tell me something else." linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good. I'll see you around, Carl. Stay out of mischief." linkto "done"  notes ""
+              }
+}
+Node "Carl_5_3c_3b_b"
+notes "Carl will no longer talk to the PC, but will float as normal."
+{
+NPCText "Who are you trying to kid? *He laughs heartily in your face* Go on, scram, before I take my belt to yer hide."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Leave -" linkto "done"  notes ""
+              }
+}
+Node "Carl_5_3c_3c_a1"
+notes ""
+{
+NPCText "Well, so long as you know what you're letting yourself in for."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Trust me. I'm prepared." linkto "Carl_5_3c_3c_a2"  notes ""
+              }
+}
+Node "Carl_5_3c_3c_a2"
+notes "Add Sandover to the PC's map."
+{
+NPCText "Take a look at this, then. *He draws a crude map on the tin wall of the barn with a piece of chalk*. This is Crossroads here, and this is Sandover here. You got it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yup. What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, thanks. What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Got it. What can you tell me about the City on the Coast?" linkto "Carl_5_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, I've got it. Could I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3c_3c_b"
+notes ""
+{
+NPCText "No. I've only got your word that you know what you're doing. That's not enough."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What if I cross your palm with five caps?" linkto "Carl_5_3c_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't make me hurt you, Carl. Just tell me." linkto "Carl_5_3c_3b_a"  notes "Take an average of the PC's Strength and Luck, rounded up. IF the number is less than 7, then go to Carl_5_3c_3b_b, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3d_1"
+notes ""
+{
+NPCText "No, THE City on the Coast. That's what they call it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. What can you tell me about it?" linkto "Carl_5_3d_2"  notes ""
+              }
+}
+Node "Carl_5_3d_2"
+notes ""
+{
+NPCText "It's a community sort of south east of here which is, no surprises, on the coast."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's the place like?" linkto "Carl_5_3d_3"  notes ""
+              }
+}
+Node "Carl_5_3d_3"
+notes ""
+{
+NPCText "I hear there's some folks down there who've got a strange thing about rats."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Rats? They're afraid of them?" linkto "Carl_5_3d_4"  notes ""
+              }
+}
+Node "Carl_5_3d_4"
+notes ""
+{
+NPCText "No, not afraid. Just the opposite; they say the people there worship them or somesuch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's odd. What does the City produce that it trades to Crossroads?" linkto "Carl_5_3d_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll bear that in mind if I ever visit there. Can I ask you another question?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3d_5"
+notes ""
+{
+NPCText "Well, there's their fish. That sure makes a pleasant change to your diet after the fiftieth brahmin burger."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me how to get there?" linkto "Carl_5_3d_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_5_3d_6"
+notes ""
+{
+NPCText "Nope. That's another place I've never visited. I'm not too keen on rats, see? *He looks uncomfortable talking about the vermin* The caravan workers that go there will know, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Lone Star?" linkto "Carl_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Carl_5_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Carl_5_3c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_6_1"
+notes ""
+{
+NPCText "How did I come to be here? Wow. It must be all of ten years ago that I decided to live here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you weren't born here?" linkto "Carl_6_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to settle here?" linkto "Carl_6_2d_1"  notes ""
+              }
+}
+Node "Carl_6_2a"
+notes ""
+{
+NPCText "Born here? *He laughs* That's a good one! When I was born, this place was just an abandoned ruin. That's just the way it had been since the war, presumably."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. So how old is Crossroads?" linkto "Carl_6_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you do before you settled here?" linkto "Carl_6_2c_1"  notes ""
+              }
+}
+Node "Carl_6_2b"
+notes ""
+{
+NPCText "Crossroads is only fifteen years old. I settled five years after Jack founded it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did you settle here?" linkto "Carl_6_2d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you do before you settled here?" linkto "Carl_6_2c_1"  notes ""
+              }
+}
+Node "Carl_6_2c_1"
+notes ""
+{
+NPCText "I used to be a caravan guard. It was a dangerous life and not one for an older man like me now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which route did you work on?" linkto "Carl_6_2c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So how did you come to end up in Crossroads?" linkto "Carl_6_2d_1"  notes ""
+              }
+}
+Node "Carl_6_2c_2"
+notes ""
+{
+NPCText "The route we used to run was between Crossroads and Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So how did you come to end up in Crossroads?" linkto "Carl_6_2d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else altogether?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_6_2d_1"
+notes ""
+{
+NPCText "Back in the day, when I was still working as a caravan guard, we would wind up in Crossroads a lot. We were here so often that I got friendly with Jack and his family."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Carl_6_2d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, which caravan route did you work on?" linkto "Carl_6_2c_2"  notes ""
+              }
+}
+Node "Carl_6_2d_2"
+notes ""
+{
+NPCText "I told John, Jack's youngest son, that I'd had enough of running the route, and he mentioned that Crossroads - or 'the Ranch' as most folks called it back then - needed a butcher on account of it expanding so much."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were you the best person for the job?" linkto "Carl_6_2d_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which caravan route did you run?" linkto "Carl_6_2c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_6_2d_3"
+notes ""
+{
+NPCText "The ranch was expanding fast but it was still fairly small. Labour was thin on the ground and Jack took anyone on who was willing. Him and his family showed me the basics of the job and I built on that with years of experience."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you something else." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_7_1"
+notes ""
+{
+NPCText "We don't breed any cattle any more. The brahmin here come from other settlements. Crossroads' land acts as a giant holding pen for them, like a staging point before they either get butchered or moved on as livestock to our customers."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which places does Crossroads sell its produce to?" linkto "Carl_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do the cattle traders bring their brahmin here instead of taking it directly to their customers?" linkto "Carl_7_2b_1"  notes "If the player's perception is under 7, go to Carl_7_2a instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_7_2a_1"
+notes ""
+{
+NPCText "Well, people have seen the wisdom of the Brahmin Trading Group's ideas."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are they?" linkto "Carl_7_2a_2"  notes ""
+              }
+}
+Node "Carl_7_2a_2"
+notes ""
+{
+NPCText "They're run by Jack Junior and are based here. They're responsible for consolidating nearly all the brahmin raised hereabouts for market, at Crossroads. There's more money to be made in selling them on wholesale."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can see the logic in that. Can I ask you another question?" linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. I have to be going now, Carl. See you." linkto "done"  notes ""
+              }
+}
+Node "Carl_7_2b_1"
+notes ""
+{
+NPCText "Well, people have seen the wisdom of the Brahmin Trading Group's ideas. *You notice that he feels uncomfortable talking about this subject.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are they?" linkto "Carl_7_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You look as if you don't like this Brahmin Trading Group very much. What's their story?" linkto "Carl_7_2b_2"  notes ""
+              }
+}
+Node "Carl_7_2b_2"
+notes ""
+{
+NPCText "*He frowns* I don't know what you're talking about. They just organise the consolidation of all the cattle raised and traded hereabouts for market towards here, Crossroads. That's all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're obviously not comfortable talking about them. Why is that?" linkto "Carl_7_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, OK. Can I ask you a question about something else?" linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_7_2b_3"
+notes ""
+{
+NPCText "Why don't you 'ask me about something else'?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, come on, Carl. Here's five caps. Tell me what you know. I won't tell a soul." linkto "Carl_7_2b_4a"  notes "Difficult speech test. IF failed, go to Carl_7_2b_4b instead.\nIF the PC passes the test AND cannot afford the money, go to Carl_7_2b_4c instead.\nIF the PC passes the test AND can afford the money, deduct five caps from the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you insist." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_7_2b_4a"
+notes ""
+{
+NPCText "*He takes your money* OK, but you better not breathe a word of this to anyone."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have my word." linkto "Carl_7_2b_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, whatever you say." linkto "Carl_7_2b_5"  notes ""
+              }
+}
+Node "Carl_7_2b_4b"
+notes ""
+{
+NPCText "Keep your money. There isn't anything else to know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, ten caps and not a bottle top more." linkto "Carl_7_2b_4a"  notes "IF the PC cannot afford the money, go to Carl_7_2b_4c instead.\nIF the PC can afford the money, deduct ten caps from the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you say so. Let me ask you about something else instead." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_7_2b_4c"
+notes ""
+{
+NPCText "You're offering me money you don't even have!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'll talk to you about that again when I've got more money. Can I ask you about something completely different?" linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How embarrassing for me. I'd better leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Carl_7_2b_5"
+notes ""
+{
+NPCText "*He leans towards you conspiratorially and speaks in a low voice* The Brahmin Traders are a perfectly legitimate organisation... nowadays."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Carl_7_2b_6"  notes ""
+              }
+}
+Node "Carl_7_2b_6"
+notes ""
+{
+NPCText "They started out differently, though. You see, it was down to them to convince all the brahmin traders in the area around here to stockpile their cattle in Crossroads and join the Brahmin Traders syndicate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What was the point of that?" linkto "Carl_7_2b_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's wrong with that?" linkto "Carl_7_2b_7b_1"  notes ""
+              }
+}
+Node "Carl_7_2b_7a"
+notes ""
+{
+NPCText "If you've got lots of brahmin in one convenient place, you can then drive them in one big run to your customers, instead of in drips and drabs. That way you cut an awful lot of your costs and push up your profits."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And why is that such a bad thing?" linkto "Carl_7_2b_7b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. let me ask you about something else, instead." linkto "Carl_9"  notes ""
+              }
+}
+Node "Carl_7_2b_7b_1"
+notes ""
+{
+NPCText "Well, this is it. Not all the farmers and traders hereabouts wanted to join the Brahmin Traders. Jack Junior isn't the sort to take no for an answer, though, and it turned pretty ugly once or twice."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ugly? How so?" linkto "Carl_7_2b_7b_2"  notes ""
+              }
+}
+Node "Carl_7_2b_7b_2"
+notes ""
+{
+NPCText "The rumours at the time were that Jack Junior started to get into intimidation and brahmin rustling. Those traders who wouldn't join, he just stole their brahmin from them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's a serious allegation!" linkto "Carl_7_2b_7b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why was he so keen to press all the traders into his organisation?" linkto "Carl_7_2b_7a"  notes ""
+              }
+}
+Node "Carl_7_2b_7b_3"
+notes ""
+{
+NPCText "Damn right it is! And you never heard it from me, neither. Like I said, they were just rumours."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So, wait, why was Jack Junior so keen to force the other traders to join his group?" linkto "Carl_7_2b_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's change the subject. Have you got time for another question?" linkto "Carl_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it, Carl. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Carl_9"
+notes ""
+{
+NPCText "What do you need to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What livestock do you butcher?" linkto "Carl_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do with all the meat that you produce?" linkto "Carl_5_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "With which places does Crossroads trade?" linkto "Carl_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you come to be here?" linkto "Carl_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does Crossroads breed all its own livestock?" linkto "Carl_7_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I can't think of anything I need to ask. Goodbye for now." linkto "done"  notes ""
+              }
+}

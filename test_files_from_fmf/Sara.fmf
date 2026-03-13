@@ -1,0 +1,711 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.5-stable
+
+*/
+
+vars {
+var Sara_Round notes "This monitors the number of rounds the PC has bought for the patrons of Sara's Place!" = "0";
+var Sara_Free_Booze notes "This monitors whether or not Sara has given the PC a bottle of Booze on the house." = "0";
+var Sara_Robbery notes "This determines whether the PC has tried to rob Sara, successful so or not. If he has, Sara will float the appropriate nodes, and will attack the PC if directly spoken to again." = "0";
+}
+NPCName "Sara"
+Location "Sara's Place, Crossroads"
+Description "Sara is the eponymous owner and bar-keep of Sara's Place, in Crossroads."
+Unknown_Desc "The bar-keep see a woman in her late thirties."
+Known_Desc "It's Sara. She looks busy as usual."
+Detailed_Desc "She looks tired as she struggles to keep up with her patrons' constant demands."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "Sara_0"
+{
+    SSL "default" var_param "" eval -1 value_to_check "" ini_index 5 link 0
+}
+};
+
+/* Float message nodes */
+
+Floatnode "Sara_Generic"
+notes "Sara's basic floats."
+{
+"I think you've already had enough, buddy.",
+"I'm going to need to get another crate in a minute.",
+"Roll on closing time.",
+"Don't you people have real homes to go to?",
+"For the last time, no, you can't have a tab.",
+"You people could drink Rusty Springs dry."
+}
+Floatnode "Sara_Robbery_1"
+notes "These are the strings Sara floats if the variable Sara_Robbery>0, meaning that the PC has successfully robbed her."
+{
+"I don't think the bar will survive, now.",
+"I should have brought in some security.",
+"Fat lot you people were when I was getting robbed.",
+"I won't even be able to afford the next consignment of water.",
+"I can't cope with this!",
+"If that asshole robber shows up again, I'll shoot to kill!"
+}
+
+/* Regular nodes */
+
+Node "Sara_0"
+notes ""
+{
+NPCText "*** STARTING CONDITIONS ***"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has never spoken to Sara before -" linkto "Sara_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Sara before -" linkto "Sara_1b_1"  notes ""
+              }
+}
+Node "Sara_1a_1"
+notes ""
+{
+NPCText "*The female bar-keep looks up from her work.* Hey there, stranger. Welcome to Sara's Place. What'll it be?"
+ NPCFemaleText "*The female bar-keep looks up from her work.* Hey there, sister. Welcome to Sara's Place. What'll it be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You must be Sara?" linkto "Sara_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to buy a round for the whole bar." linkto "Sara_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*In a quiet voice.* Just hand over your takings and nobody has to get hurt." linkto "Sara_B1_a1"  notes "IF the PC's Perception<7 OR the PC has a weapon in neither weapon slot, go to Sara_B1_b1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now, thanks." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What what be?" linkto "Sara_1a_2D_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_1a_2"
+notes ""
+{
+NPCText "That's right. What'll it be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to buy a round for the whole bar." linkto "Sara_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*In a quiet voice.* Just hand over your takings and nobody has to get hurt." linkto "Sara_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now, thanks." linkto "done"  notes ""
+              }
+}
+Node "Sara_1a_2D_1"
+notes ""
+{
+NPCText "Well, what do you want? A drink? something to eat?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I thirsty." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want eat." linkto "Sara_3_2a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not want those. *Leave.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_1a_2D_2"
+notes ""
+{
+NPCText "*She looks at you thoughtfully for a moment.* I think you'd better not have any of the hard stuff. Would you like a Nuka-Cola or water?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Nukie-Cole." linkto "Sara_3_2c_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Water." linkto "Sara_3_2b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not want those. *Leave.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_1b_1"
+notes ""
+{
+NPCText "Hello, again. You drinking?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. Remind me of what's on offer, please." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was after some food if you're serving." linkto "Sara_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Me and everyone else in the bar. I'd like to buy everyone a drink." linkto "Sara_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*In a quiet voice.* Just hand over your takings and nobody has to get hurt." linkto "Sara_B1_a1"  notes "IF the PC's Perception<7 OR the PC has a weapon in neither weapon slot, go to Sara_B1_b1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, just saying hello. Maybe next time. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I drinking what?" linkto "Sara_1a_2D_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No. <PC> go." linkto "done"  notes ""
+              }
+}
+Node "Sara_2_1"
+notes ""
+{
+NPCText "*Sara raises her voice so everyone in the bar can hear it.* Drinks on the gentleman here, folks. Come and get 'em."
+ NPCFemaleText "*Sara raises her voice so everyone in the bar can hear it.* Drinks on the lady here, folks. Come and get 'em."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Sara_2_2"  notes ""
+              }
+}
+Node "Sara_2_2"
+notes ""
+{
+NPCText "*A drunken, ragged cheer goes up as the patrons storm the bar.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Sara_2_3"  notes ""
+              }
+}
+Node "Sara_2_3"
+notes ""
+{
+NPCText "*Sara writes the patrons' orders on a scrap of paper as quickly as she can. Over the din, she gathers your attention again.* This's gonna set you back thirty caps, mister. You good for it?"
+ NPCFemaleText "*Sara writes the patrons' orders on a scrap of paper as quickly as she can. Over the din, she gathers your attention again.* This's gonna set you back thirty caps, sister. You good for it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, no problem. Here. *Hand her the money.*" linkto "Sara_2_4a" conditions { CHECK_MONEY dude_caps >= 30 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually... no." linkto "Sara_2_4b_1" conditions { CHECK_MONEY dude_caps < 30 link_next NONE } notes ""
+              }
+}
+Node "Sara_2_4a"
+notes "IF the variable Sara_Round<1, the condition is triggered where Harris, the bar patron, finds the Lucky Horseshoe in his drink, as per the quest of the same name.\nIncrement the variable Sara_Round by 1 afterwards.\n\n"
+{
+NPCText "*The patrons gather up the drinks Sara pours for them and, after giving you a torrent of friendly back-slaps, retire to their seats again.* You having one yourself, stranger?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_2_4b_1"
+notes ""
+{
+NPCText "Ahh, for crying out loud. *She raises her voice again.* Sorry, folks, false alarm. The Beer Fairy here can't afford it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Sara_2_4b_2"  notes ""
+              }
+}
+Node "Sara_2_4b_2"
+notes ""
+{
+NPCText "*With a collective groan, the patrons filter away from the bar, muttering some choice insults at you as they go. Sara looks at you reproachfully.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could still use a drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any food?" linkto "Sara_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_1"
+notes ""
+{
+NPCText "I got water, Nuka-Cola, beer and liquor."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have water." linkto "Sara_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have a Nuka-Cola." linkto "Sara_3_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have a beer." linkto "Sara_3_2d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hit me with the liquor." linkto "Sara_3_2e_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any food?" linkto "Sara_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get one another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_1"
+notes ""
+{
+NPCText "Yup."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's on the menu?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get something another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_2"
+notes ""
+{
+NPCText "On the menu is jerky, or Iguana Shish-Kebab."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is a portion of jerky?" linkto "Sara_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is an Iguana Kebab?" linkto "Sara_3_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll go for a drink, instead. What have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get something another time. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Gimmie jerk." linkto "Sara_3_2a_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ig-wun Shish-bib!" linkto "Sara_3_2a_3b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Want drink, not eat, now." linkto "Sara_1a_2D_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_3a_1"
+notes ""
+{
+NPCText "Jerky's five caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's the five caps." linkto "Sara_3_2a_3a_2a" conditions { CHECK_MONEY dude_caps >= 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't afford five caps." linkto "Sara_3_2a_3a_2b" conditions { CHECK_MONEY dude_caps < 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is an Iguana Kebab?" linkto "Sara_3_2a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll go for a drink, instead. What have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get something another time. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- PAY -" linkto "Sara_3_2a_3a_2a" conditions { CHECK_MONEY dude_caps >= 5 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I thirsty now. Not want eat." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Gah! *Leave.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_3a_2a"
+notes "Deduct five caps from the PC's inventory. Add one Meat Jerky to the PC's inventory."
+{
+NPCText "Okay. 'Scuse fingers. *She hands you a large strip of the dried meat.\""
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use a drink, now." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could still use some more food. What do you have on offer again?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Want drink, now." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "More food." linkto "Sara_3_2a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_3a_2b"
+notes ""
+{
+NPCText "Then you won't be able to afford the Ignuana, either. You want a drink, instead?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, what have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get something another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_3b_1"
+notes ""
+{
+NPCText "The kebabs are eight caps each."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's eight caps for one." linkto "Sara_3_2a_3b_2a" conditions { CHECK_MONEY dude_caps >= 8 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't afford eight caps." linkto "Sara_3_2a_3b_2b" conditions { CHECK_MONEY dude_caps < 8 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is a portion of jerky?" linkto "Sara_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll go for a drink, instead. What have you got?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get something another time. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- PAY -" linkto "Sara_3_2a_3b_2a" conditions { CHECK_MONEY dude_caps >= 8 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I thirsty now. Not want eat." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_3b_2a"
+notes "Deduct eight caps from the PC's inventory. Add one Iguana-on-a-stick to the PC's inventory."
+{
+NPCText "Okay. *She walks over to a rack of cooking sticks, which are sweating slowly over a low fire. She picks one up, being careful not to burn her fingers on the greasy chunks of meat on it, and brings it over to you.\" Here you are. Mind, it's still pretty hot."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use a drink, now." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could still use some more food. What do you have on offer again?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "More food. More." linkto "Sara_3_2a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Now want drink." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2a_3b_2b"
+notes ""
+{
+NPCText "Hmm. You might want to try the jerky, then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. How much is that?" linkto "Sara_3_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I think I'd prefer a drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get something another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2b_1"
+notes ""
+{
+NPCText "Water's two caps a mug."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You want me to pay for water?" linkto "Sara_3_2b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's the two caps." linkto "Sara_3_2b_2b" conditions { CHECK_MONEY dude_caps >= 2 link_next NONE } notes "Deduct two caps from the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't even afford that." linkto "Sara_3_2b_2c" conditions { CHECK_MONEY dude_caps < 2 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- PAY -" linkto "Sara_3_2b_2b" conditions { CHECK_MONEY dude_caps >= 2 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2b_2a_1"
+notes ""
+{
+NPCText "Of course. We don't bring it in all the way from Rusty Springs just to give it away. You got two caps or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's the two caps." linkto "Sara_3_2b_2b" conditions { CHECK_MONEY dude_caps >= 2 link_next NONE } notes "Deduct two caps from the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't even afford that." linkto "Sara_3_2b_2c" conditions { CHECK_MONEY dude_caps < 2 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where's Rusty Springs?" linkto "Sara_3_2b_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2b_2a_2"
+notes ""
+{
+NPCText "You don't know where Rusty Springs is? *She looks surprised.* Go ask one of the caravan guys who run there. They'll tell you all about it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's two caps for the water." linkto "Sara_3_2b_2b" conditions { CHECK_MONEY dude_caps >= 2 link_next NONE } notes "Deduct two caps from the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't even afford two caps for the water." linkto "Sara_3_2b_2c" conditions { CHECK_MONEY dude_caps < 2 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2b_2b"
+notes ""
+{
+NPCText "Here you go. *She puts an earthenware mug filled with clean-looking water in front of you. You drink it.\""
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you have in the way of food?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "More drink." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Food, now." linkto "Sara_3_2a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Burp.* Hah! 'Bye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2b_2c"
+notes ""
+{
+NPCText "Ah, hell. I can't have you dying of thirst. Come on, this one's on me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks!" linkto "Sara_3_2b_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, if water costs two caps, I'll go and earn them. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2c_1"
+notes ""
+{
+NPCText "Nuka Cola's three caps a bottle."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's the three caps." linkto "Sara_3_2c_2a" conditions { CHECK_MONEY dude_caps >= 3 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't afford that." linkto "Sara_3_2c_2b_1" conditions { CHECK_MONEY dude_caps < 3 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- PAY -" linkto "Sara_3_2c_2a" conditions { CHECK_MONEY dude_caps >= 3 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2c_2a"
+notes "Deduct three caps from the PC's inventory. Add a bottle of Nuka Cola to the PC's inventory."
+{
+NPCText "Here you go. *She slides a bottle of the flavored soft drink across the bar's surface to you.\""
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you have in the way of food?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "More drink." linkto "Sara_1a_2D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Food, now." linkto "Sara_3_2a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2c_2b_1"
+notes ""
+{
+NPCText "Only thing we've got cheaper than Nuka is water."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is that?" linkto "Sara_3_2b_1" conditions { CHECK_MONEY dude_caps >= 3 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You want me to pay for water?" linkto "Sara_3_2b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might have something to eat, instead." linkto "Sara_3_2c_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2c_2b_2"
+notes ""
+{
+NPCText "Forget it. You wouldn't be able to afford anything on the menu."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What drinks do you have on offer, again?" linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better be going, then." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2d_1"
+notes ""
+{
+NPCText "Beer's five caps a bottle."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's the five caps." linkto "Sara_3_2d_2a" conditions { CHECK_MONEY dude_caps >= 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't afford that." linkto "Sara_3_2d_2b" conditions { CHECK_MONEY dude_caps < 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2d_2a"
+notes "Deduct five caps from the PC's inventory. Add a bottle of beer (normal, not Gamma Gulp) to the PC's inventory."
+{
+NPCText "Here you go. *She slides a bottle of beer across the bar's surface to you.\""
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you have in the way of food?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2d_2b"
+notes ""
+{
+NPCText "Well, then, only drinks we've got cheaper than beer is Nuka Cola or water."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is water?" linkto "Sara_3_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You want me to pay for water?" linkto "Sara_3_2b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is a Nuka Cola?" linkto "Sara_3_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might have something to eat, instead." linkto "Sara_3_2c_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_1"
+notes ""
+{
+NPCText "Sure. Having a bad day, or something?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not really, no. I just fancy something strong. How much is it?" linkto "Sara_3_2e_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You could say that." linkto "Sara_3_2e_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2a_1"
+notes ""
+{
+NPCText "The strong booze is ten caps a bottle."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's ten caps. Let's have it." linkto "Sara_3_2e_2a_2a_1" conditions { CHECK_MONEY dude_caps >= 10 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't afford it." linkto "Sara_3_2e_2a_2b" conditions { CHECK_MONEY dude_caps < 10 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2a_2a_1"
+notes "Deduct ten caps from the PC's inventory. Add a bottle of Booze to the PC's inventory."
+{
+NPCText "Here you go. *She slides a bottle of evil-looking liquor across the bar's surface to you.\" That'll do the job, if nothing else will."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_2e_2a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you have in the way of food?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2a_2a_2"
+notes ""
+{
+NPCText "You still want more? *She looks at you in mild alarm.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. Keep them coming." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, no, I'd better have something to eat. What do you have?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going, now." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2a_2b"
+notes ""
+{
+NPCText "How about a beer, instead?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is a beer?" linkto "Sara_3_2d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might go for something to eat, actually. What's on the menu?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2b_1"
+notes ""
+/* Skill checks for node Sara_3_2e_2b_1 */
+
+      define_skill_check SkillCheck_0_Sara_3_2e_2b_1 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Sara_3_2e_2b_2;
+      onfailure => Sara_3_2e_2b_9;
+      }
+
+{
+NPCText "You want to talk about it?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I've got a lot of people depending on me. It's too much to bear at times." linkto "SkillCheck_0_Sara_3_2e_2b_1"  notes "If the variable Sara_Free_Booze>0, go straight to Sara_3_2e_2b_9 instead.\nModerate speech check. IF failed, go to Sara_3_2e_2b_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not really. How much was that drink, again?" linkto "Sara_3_2e_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2b_2"
+notes ""
+/* Skill checks for node Sara_3_2e_2b_2 */
+
+      define_skill_check SkillCheck_0_Sara_3_2e_2b_2 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Sara_3_2e_2b_3;
+      onfailure => Sara_3_2e_2b_9;
+      }
+
+{
+NPCText "Yeah, I know where you're coming from, buddy. *She looks around at the bar-tent's patrons wearily.*"
+ NPCFemaleText "Yeah, I know where you're coming from, sister. *She looks around at the bar-tent's patrons wearily.*"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "It's like everyone I know would die if I wasn't here." linkto "SkillCheck_0_Sara_3_2e_2b_2"  notes "Moderate speech check. IF failed, go to Sara_3_2e_2b_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anyway, how much was that drink, again?" linkto "Sara_3_2e_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2b_3"
+notes ""
+/* Skill checks for node Sara_3_2e_2b_3 */
+
+      define_skill_check SkillCheck_0_Sara_3_2e_2b_3 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Sara_3_2e_2b_4;
+      onfailure => Sara_3_2e_2b_9;
+      }
+
+{
+NPCText "Amen to that! *She picks up a glass and begins polishing it with a dirty towel.*"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Sometimes I'd like to wonder off and just leave them to fend for themselves, you know?" linkto "SkillCheck_0_Sara_3_2e_2b_3"  notes "Moderate speech check. IF failed, go to Sara_3_2e_2b_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anyway, how much was that drink, again?" linkto "Sara_3_2e_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2b_4"
+notes ""
+/* Skill checks for node Sara_3_2e_2b_4 */
+
+      define_skill_check SkillCheck_0_Sara_3_2e_2b_4 {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Sara_3_2e_2b_5;
+      onfailure => Sara_3_2e_2b_9;
+      }
+
+{
+NPCText "*Sara flicks her towel down onto the bar and laughs.* You know, I wake up to that thought every morning."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Anyway, how much was that drink, again?" linkto "SkillCheck_0_Sara_3_2e_2b_4"  notes "Moderate speech check. IF failed, go to Sara_3_2e_2b_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, hold the drink. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2b_5"
+notes "Add a bottle of Booze to the PC's inventory. Increment the variable Sara_Free_Booze by 1."
+{
+NPCText "Forget about it, buddy. This one's on me. Here you go."
+ NPCFemaleText "Forget about it, sister. This one's on me. Here you go."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what can you tell me about Crossroads?" linkto "Sara_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_2e_2a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you have in the way of food?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I ought to be going, though." linkto "done"  notes ""
+              }
+}
+Node "Sara_3_2e_2b_9"
+notes ""
+{
+NPCText "It sure is a hard life. You still want that drink?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes please. How much was it?" linkto "Sara_3_2e_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, no. I have to be going." linkto "done"  notes ""
+              }
+}
+Node "Sara_4_1"
+notes ""
+{
+NPCText "Crossroads is a decent enough place to live. There's plenty of thirsty mouths around, so I'm never short of business. If you want the full low-down on the place, though, you should go see Old Man Rich. What he doesn't know about Crossroads ain't worth knowing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Old Man Rich?" linkto "Sara_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you serving in the way of food?" linkto "Sara_3_2a_2"  notes ""
+              }
+}
+Node "Sara_4_2"
+notes ""
+{
+NPCText "You can ususlly find him *PUT LOCATION OF OLD MAN RICH IN.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another drink." linkto "Sara_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you serving in the way of food?" linkto "Sara_3_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. I'd better be going, then." linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a1"
+notes "After this dialogue has finished, Sara will attack the PC if he ever tries to speak to her again."
+{
+NPCText "*Her expression does not change, but she looks like she might be reaching under the bar for something.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever it is, leave it, and put both your hands on the bar." linkto "Sara_B1_a2"  notes "IF the PC's strength<7, go to Sara_B1_b1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Draw weapon.*" linkto "combat"  notes ""
+              }
+}
+Node "Sara_B1_a2"
+notes ""
+{
+NPCText "Okay. *Sara slowly puts her hands face down on the bar's surface, with her fingers spread. She swallows nervously.* You want the money, right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's right. Where is it?" linkto "Sara_B1_a3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. *Leave.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a3"
+notes ""
+{
+NPCText "Behind me, in that box. *Without turning round, she indicates with a backwards nod of her head a large, iron-bound strong box on the floor.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go and get it. And don't try anything smart." linkto "Sara_B1_a4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. *Leave.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a4"
+notes ""
+{
+NPCText "*Sara goes to the box and unlocks it with a small key. Its lid gives a complaining squeak as she lifts it.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Sara_B1_a5_a1"  notes "Difficult roll against the PC's Luck. IF failed, go to Sara_B1_a5_b1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a5_a1"
+notes ""
+{
+NPCText "*She comes back to you and offers a sackful of bottle caps. You see tears running down her face.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Take the caps.*" linkto "Sara_B1_a5_a2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Leave without taking the caps.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a5_a2"
+notes "Increase the number of caps in the PC's inventory by 200 + [(PC's luck) * 5]\nLots of negative karma, etc.\nIncrement the variable Sara_Robbery by 1."
+{
+NPCText "*Having given you the sack of caps, Sara screws her eyes up and turns away.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "This better be all of them, or I'm coming back." linkto "done"  notes "Increase the number of caps in the PC's inventory by 200 + [(PC's luck) * 5]\nLots of negative karma, etc."
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a5_b1"
+notes ""
+{
+NPCText "*One of the bar's patron's attention is aroused by the squeak. He looks up and gives you a suspicious glance. With his eyes still on you, he speaks to the bar's owner.* Everything okay, Sara?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Sara_B1_a5_b2_a1"  notes "Moderate roll against the PC's Luck. IF failed, go to Sara_B1_a5_b2_b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "- FIGHT -" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a5_b2_a1"
+notes ""
+{
+NPCText "*Sara is still facing away from both you and the patron.* Yeah, everything's fine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Sara_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- FIGHT -" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a5_b2_a2"
+notes ""
+{
+NPCText "*The patron shrugs and looks away. Sara comes back to you and offers a sackful of bottle caps. You see tears running down her face.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You just saved your life and his life. Now, hand the caps over." linkto "Sara_B1_a5_a2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Leave without taking the caps.*" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_a5_b2_b"
+notes ""
+{
+NPCText "*Sara looks around at the patron with a tear-streaked face. The patron glances from Sara to you quickly, sizing up the situation. After a few seconds, he slides his bar-stool back and starts towards you menacingly.* What the hell is going on, here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was... that is to say... err..." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- FIGHT -" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_b1"
+notes "After this dialogue has finished, Sara will attack the PC if he ever tries to speak to her again."
+{
+NPCText "*She pulls a sawn-off shotgun out from under the bar and levels it at your belly.* Don't think I won't use this, mister. Get the hell out of my bar."
+ NPCFemaleText "*She pulls a sawn-off shotgun out from under the bar and levels it at your belly.* Don't think I won't use this, sister. Get the hell out of my bar."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Put that pea-shooter away. You don't want to be making trouble with me." linkto "Sara_B1_b2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Draw weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- LEAVE -" linkto "done"  notes ""
+              }
+}
+Node "Sara_B1_b2"
+notes ""
+{
+NPCText "*Sara pulls the shotgun's trigger.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- FIGHT -" linkto "combat"  notes ""
+              }
+}

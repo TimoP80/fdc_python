@@ -1,0 +1,28 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.28.0-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "esa"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "piippa" linkto "done" conditions { CHECK_STAT agility == 8 link_next AND, GLOBAL_VARIABLE GVAR_PLAYER_MARRIED == 1 link_next NONE } notes ""
+              }
+}

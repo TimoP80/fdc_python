@@ -1,0 +1,704 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.24-beta
+
+*/
+
+vars {
+}
+NPCName "Bruce"
+Location "Outside the main door of Vault 31."
+Description "The PC will find Bruce, the Explorer Representitive in front of Vault 31's main blast door if the PC has told two or more people in the wastes that he comes 'from a vault from the north.'"
+Unknown_Desc "You see an energetic, well-travelled looking man in a leather jacket."
+Known_Desc "It's Bruce. He looks like his usual, lively self."
+Detailed_Desc "This man has rough hands and a wind-burned face. His eyes are lively and he looks generally cheerful."
+/* Regular nodes */
+
+Node "Bruce2_0"
+notes ""
+{
+NPCText "*** STARTING CONDITIONS ***"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Bruce has spoken to the PC before and found out about V31 directly from him/her -" linkto "Bruce2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Bruce has spoken to the PC before but found out about V31 from another source -" linkto "Bruce2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Bruce has never spoken to the PC before and found out about V31 from another source -" linkto "Bruce2_1c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Bruce since meeting him at V31; Bruce knows the PC is from V31 -" linkto "Bruce2_1d_a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Bruce since meeting him at V31; Bruce does not know the PC is from V31 -" linkto "Bruce2_1d_b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Bruce has threatened the PC with violence if he does not get the door open -" linkto "Bruce2_1e"  notes "Bruce must have spoken node Bruce2_B_3a for this condition."
+          int=4 Reaction=REACTION_NEUTRAL playertext "- Bruce has paid the PC to get the door open -" linkto "Bruce2_1e"  notes ""
+              }
+}
+Node "Bruce2_1_Da_1"
+notes ""
+{
+NPCText "Well, yes. Of course it is. *Bruce looks at you oddly.* Have you taken a bump on the head, or something?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not bump head. Why you here?" linkto "Bruce2_1_Da_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No bump. I go now." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1_Da_2"
+notes ""
+{
+NPCText "I'm here because I want to see what's inside your vault. *He gives you that strange, calculating look again.* Say, think you could get the door open for us?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I help you. I open door. People inside friends." linkto "Bruce2_2_3a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No. I not open door. You stranger. You stay on outside." linkto "Bruce2_1_Db_3"  notes ""
+              }
+}
+Node "Bruce2_1_Db_1"
+notes ""
+{
+NPCText "*Bruce looks you up and down with a slowly creeping smile.* I know who you are. You're that guy who's been telling people about this vault. <PC>, I presume? You're not... what I expected, though. Are you okay?"
+ NPCFemaleText "*Bruce looks you up and down with a slowly creeping smile.* I know who you are. You're that chick who's been telling people about this vault. <PC>, I presume? You're not... what I expected, though. Are you okay?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "That my name! You are friend?" linkto "Bruce2_1_Db_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me good. I go now." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1_Db_2"
+notes ""
+{
+NPCText "Err... yeah. If you say so. Say, do you think you could get this door open for us?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I help you. I open door. People inside friends." linkto "Bruce2_2_3a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No. I not open door. You stranger. You stay on outside." linkto "Bruce2_1_Db_3"  notes ""
+              }
+}
+Node "Bruce2_1_Db_3"
+notes ""
+{
+NPCText "C'mon, not even if I ask really nicely?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay, then. I open door." linkto "Bruce2_2_3a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Still no. You leave now." linkto "Bruce2_B_1"  notes ""
+              }
+}
+Node "Bruce2_1a"
+notes ""
+{
+NPCText "Hey, good to see you again. The Vault's here, just like you said it was."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find this place?" linkto "Bruce2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto "Bruce2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "This vault my home!" linkto "Bruce2_1_Da_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1b_1"
+notes ""
+{
+NPCText "Oh, it's you. So this is where you live, then?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find this place?" linkto "Bruce2_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yes. This my home." linkto "Bruce2_1_Da_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1b_2"
+notes ""
+{
+NPCText "You've been talking to a lot of people. Word has a habit of getting around. *Bruce gives you a winning smile.* Sorry, buddy, but business is business."
+ NPCFemaleText "You've been talking to a lot of people. Word has a habit of getting around. *Bruce gives you a winning smile.* Sorry, lady, but business is business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's that supposed to mean?" linkto "Bruce2_1b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto "Bruce2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1b_3"
+notes ""
+{
+NPCText "It means that learning about a great exploration opportunity like a completely intact vault is worth a lot. When certain people whom I deal with found out about the vault from you, they sold that information to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "By opportunity, you mean the chance to make yourself lots of caps, no doubt." linkto "Bruce2_1b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto "Bruce2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1b_4"
+notes ""
+{
+NPCText "There's nothing wrong with trying to make a living. Relax - I'm not here to hurt anyone."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what are you doing at the moment?" linkto "Bruce2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto "Bruce2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1c_1"
+notes ""
+{
+NPCText "Howdy, stranger. The name's Bruce. What's your business around here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Bruce2_1c_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_1c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "This place home. *Point to yourself.*" linkto "Bruce2_1_Db_1"  notes ""
+              }
+}
+Node "Bruce2_1c_2a"
+notes ""
+{
+NPCText "I said my name's Bruce. *He indicates the other people in his group.* We're the Wasteland Explorers."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_1c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1c_2b_1"
+notes ""
+{
+NPCText "We're trying to find a way into this vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are you trying to do that?" linkto "Bruce2_1c_2b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This vault is my home." linkto "Bruce2_1c_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1c_2b_2a"
+notes ""
+{
+NPCText "Because, being explorers, we're curious about what's inside."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "This vault is my home." linkto "Bruce2_1c_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1c_2b_2b_1"
+notes ""
+{
+NPCText "*Bruce looks you up and down with a slowly creeping smile.* I know who you are. You're that guy who's been telling people about this vault. <PC>, I presume?"
+ NPCFemaleText "*Bruce looks you up and down with a slowly creeping smile.* I know who you are. You're that chick who's been telling people about this vault. <PC>, I presume?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's right. I suppose you'd like me to get the main door open for you." linkto "Bruce2_2_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I never told you about the vault." linkto "Bruce2_1c_2b_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1c_2b_2b_2"
+notes ""
+{
+NPCText "You didn't need to tell me about it. You've been speaking to a lot of people, <PC>. I heard it on the grape-vine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose you'd like me to get the main door open for you." linkto "Bruce2_2_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1d_a"
+notes ""
+{
+NPCText "Hello, again, Vault Dweller. We're still trying to get the door of your vault open. Don't suppose you could save us time by doing it for us?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to get the door open?" linkto "Bruce2_2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me speak to my people inside. I'll get the door open in no time." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get this door open for you if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "IF Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Answer me a question, first." linkto "Bruce2_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I help. Wait. I open door." linkto "Bruce2_2_3a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No. I not open door. You stranger. You stay on outside." linkto "Bruce2_1_Db_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1d_b"
+notes ""
+{
+NPCText "Hello, again. Look, you'd better leave. This site could be dangerous."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Bruce2_1c_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_1c_2b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I have secret! This really my home!" linkto "Bruce2_1_Db_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go if this place nasty." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, then. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_1e"
+notes ""
+{
+NPCText "Why is the door still closed? Get it open."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Open it yourself, dick-head." linkto "Bruce2_B_3b"  notes ""
+              }
+}
+Node "Bruce2_2_1"
+notes ""
+{
+NPCText "I'm trying to find a way into your vault. Stubborn door you've got here. Maybe you can show us how to get 'round it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to get the door open?" linkto "Bruce2_2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me speak to my people inside. I'll get the door open in no time." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get this door open for you if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "IF Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Answer me a question, first." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_2_1"
+notes ""
+{
+NPCText "Well, we're hoping that the folks inside will want to trade with us. Your vault must contain a lot of valuable items."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you want me to get the door open for you." linkto "Bruce2_2_2_3"  notes ""
+          int=7 Reaction=REACTION_NEUTRAL playertext "Wait a minute. You don't have any trade goods. What are you going to barter with?" linkto "Bruce2_2_2_2a"  notes "Note the intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you tried using the intercom to speak to the people inside?" linkto "Bruce2_2_2_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bruce, I'm going to ask you a favour. It's very important to us that no-one interferes with the vault. Please leave us alone and don't tell anyone else that it's here." linkto "Bruce2_2_4_1"  notes ""
+              }
+}
+Node "Bruce2_2_2_2a"
+notes ""
+{
+NPCText "*Bruce gives you a bright and breezy smile.* You don't think we're daft enough to bring a fortune in trade goods before we've even met your friends? No, we're here just to say 'hello' and get to know the people inside, today."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you want me to get the door open for you." linkto "Bruce2_2_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bruce, I'm going to ask you a favour. It's very important to us that no-one interferes with the vault. Please leave us alone and don't tell anyone else that it's here." linkto "Bruce2_2_4_1"  notes ""
+              }
+}
+Node "Bruce2_2_2_2b"
+notes ""
+{
+NPCText "Of course we have. We didn't think there was anyone in there because we haven't had an answer, yet."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Presumably you want me to get the door open for you all the same." linkto "Bruce2_2_2_3"  notes ""
+          int=7 Reaction=REACTION_NEUTRAL playertext "Wait a minute. You don't have any trade goods. What are you going to barter with?" linkto "Bruce2_2_2_2a"  notes "Note intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That doesn't surprise me. It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "IF Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+              }
+}
+Node "Bruce2_2_2_3"
+notes ""
+{
+NPCText "We would certainly appreciate that, friend."
+ NPCFemaleText "We would certainly appreciate that, doll."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me speak to my people inside. I'll get the door open in no time." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get this door open for you if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "If Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Answer me a question, first." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3a"
+notes ""
+{
+NPCText "That's mighty good of you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just give me a moment." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I open door in no time. You watch. See." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3b_1"
+notes "For this part of the dialogue, a variable is needed, which is referred to in the designer notes for the player response options. Call it Bruce2_Price for now. Starting value is 0, although this does not reset if this node is spoken again."
+{
+NPCText "'If the price is right,' eh? Okay, I'll bite. What kind of price are you thinking of?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "5,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 5000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "4,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 4000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "3,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 3000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "2,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 2000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "1,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 1000 THEN go to Bruce2_2_3b_2c instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Give me a moment to think about this." linkto "Bruce2_2_1"  notes ""
+              }
+}
+Node "Bruce2_2_3b_2a"
+notes "Give the correct money to the PC."
+{
+NPCText "Okay, deal. You know how to drive a damn hard bargain, Vault Dweller, I'll give you that. *He produces the money and gives it to you.* Now get that door open. No funny business, either."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just give me a moment." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3b_2b"
+notes "Add 500 to Bruce2_Price."
+{
+NPCText "Pff. I'm not an idiot. Try again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "5,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 5000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "4,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 4000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "3,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 3000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "2,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 2000 THEN go to Bruce2_2_3b_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "1,000 caps." linkto "Bruce2_2_3b_2a"  notes "IF [([PC's Barter skill] * 50) - Bruce2_Price] < 1000 THEN go to Bruce2_2_3b_2c instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Give me a moment to think about this." linkto "Bruce2_2_1"  notes ""
+              }
+}
+Node "Bruce2_2_3b_2c"
+notes ""
+{
+NPCText "No deal. I'll give you 500 caps and that's my final offer. We'll find another way to open this door if we have to; it'll only slow us down for a while."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. I'll take the 500 caps." linkto "Bruce2_2_3b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Give me a moment to think about this." linkto "Bruce2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's not enough. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3c_1a"
+notes ""
+{
+NPCText "What do you mean, 'it's a bad idea?'"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There's nothing in there of interest to you." linkto "Bruce2_2_3c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know what my people are like. They'll kill you the minute they see you're not from Vault 31." linkto "Bruce2_2_3c_2b_1a"  notes "Note that by being too convincing, the PC lands himself in hotter water!\n\nModerate speech check. If failed, go to Bruce2_2_2c_2b_1b instead."
+          int=7 Reaction=REACTION_NEUTRAL playertext "The people inside are suffering from a rare strain of smallpox. It's an extremely contagious form which kills in hours." linkto "Bruce2_2_3c_2c_1"  notes "Note intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bruce, I'm going to ask you a favour. It's very important to us that no-one interferes with the vault. Please leave us alone and don't tell anyone else that it's here." linkto "Bruce2_2_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know. Perhaps it isn't such a bad idea." linkto "Bruce2_2_1"  notes ""
+              }
+}
+Node "Bruce2_2_3c_1b"
+notes ""
+{
+NPCText "You tried that one already. If you're not going to help us get this door open, you're better off out of here. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, I'll get the door open for you, then. Stand back." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you want the door opened that badly. I'll do it... if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're the outsider, Bruce. Fuck off back to Crossroads; we don't want your sort around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "At least answer a question for me." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, then." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2a_1"
+notes ""
+{
+NPCText "You're joking, right? An unharmed vault that no-one has heard of since the war?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Trust me. We don't have anything to offer the world." linkto "Bruce2_2_3c_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You'll find nothing but trouble. It's the Overseer's policy to shoot outsiders on sight." linkto "Bruce2_2_3c_2b_1a"  notes "Note that by being too convincing, the PC lands himself in hotter water!\n\nModerate speech check. If failed, go to Bruce2_2_2c_2b_1b instead."
+              }
+}
+Node "Bruce2_2_3c_2a_2"
+notes ""
+{
+NPCText "I'll be the judge of that. Are you going to help us get this door open or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, it won't take me a second." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it... if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You'll find nothing but trouble. It's the Overseer's policy to shoot outsiders on sight." linkto "Bruce2_2_3c_2b_1a"  notes "Note that by being too convincing, the PC lands himself in hotter water!\n\nModerate speech check. If failed, go to Bruce2_2_3c_2b_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not. You're on your own. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question, first." linkto "Bruce2_9"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2b_1a"
+notes ""
+{
+NPCText "*Bruce looks uncertain.* Is that so? In that case, you'll do the talking for us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce2_B_1"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2b_1b"
+notes ""
+{
+NPCText "*Bruce laughs and the rest of the Explorers dutifully join in.* A bunch of soft vault-dwellers? They wouldn't know what hit them. We can handle your friends. Seriously, it's not going to come to that, though. Convince them to open the door, will you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, no problem." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can get this door open if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question?" linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're on your own. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_1"
+notes ""
+{
+NPCText "*Bruce glances nervously at Vault 31's blast door but then does a double-take.* If your vault is infected, why aren't you?"
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "The outbreak occured after I had left the vault. I found out about it in a message on my Pipboy." linkto "Bruce2_2_3c_2c_2"  notes "Wrong choice. This explanation is too convenient. Punishment is a difficult speech check.\n\nDifficult speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=7 Reaction=REACTION_NEUTRAL playertext "The outbreak occured on the lowest level of the vault and was easily sealed off. I was on the top floor, which was why I was chosen to go out into the wastes to find a cure." linkto "Bruce2_2_3c_2c_2"  notes "More plausible. Reward is a moderate speech check.\n\nModerate speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. There's no smallpox. I was only joking." linkto "Bruce2_B_1"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_2"
+notes ""
+{
+NPCText "*The explorer looks at you suspiciously.* Hold on, I've heard about smallpox before. I thought it was eradicated a long time before the war."
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "Vault 31 was used as a military storage facility before the war. On the lowest level, there are hundreds of canisters of an engineered super-strain of smallpox. It was a leak from one of those which caused the outbreak." linkto "Bruce2_2_3c_2c_3"  notes "The more plausible option. Reward is a moderate speech check.\n\nModerate speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=7 Reaction=REACTION_NEUTRAL playertext "Science only managed to eradicate the harmful strains of smallpox. Inert strains survived the Great War. In our isolated vault environment, one of the inert strains mutated and became lethal." linkto "Bruce2_2_3c_2c_3"  notes "Less plausible. Punishment is a difficult speech check.\n\nDifficult speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. There's no smallpox. I was only joking." linkto "Bruce2_B_1"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_3"
+notes ""
+{
+NPCText "*Bruce and his companions look increasingly horrified.* What the hell are you doing here if this place is so dangerous?"
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "The virus is trapped on the lower levels of the vault. It's safe to move around on the upper-most floor." linkto "Bruce2_2_3c_2c_4a_1"  notes "Wrong choice. Bruce spots the flaw in the plan.\n\nModerate speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=7 Reaction=REACTION_NEUTRAL playertext "I am naturally immune to smallpox." linkto "Bruce2_2_3c_2c_6_1"  notes "Highly unlikely. Punishment is an extremely hard speech check of the sort that only characters with very high speech skill values are liable to pass.\n\nExtremely hard speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=7 Reaction=REACTION_NEUTRAL playertext "I have to find a cure for the people inside and I need to use the intercom to speak to the vault's doctors about it." linkto "Bruce2_2_3c_2c_6_1"  notes "Correct choice. Reward is a moderate speech check.\n\nModerate speech check. If failed, go to Bruce2_2_3c_2c_5 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "There is no smallpox. I was only joking." linkto "Bruce2_B_1"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_4a_1"
+notes ""
+{
+NPCText "*The explorer stops and thinks.* Well, if it's trapped on the lower floors, there's nothing to stop us from having a look around on those at the top."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're willing to stake your life on that?" linkto "Bruce2_2_3c_2c_4a_2"  notes "Difficult speech check. If passed, go to Bruce2_2_3c_2c_6_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "There is no smallpox. I was only joking." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have it your way. I have to go, though." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_4a_2"
+notes ""
+{
+NPCText "Yes, I am. So, are you going to get the door open for us?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to get the door open?" linkto "Bruce2_2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me speak to my people inside. I'll get the door open in no time." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get this door open for you if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "IF Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Answer me a question, first." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_5"
+notes ""
+{
+NPCText "*Bruce's eyes narrow shrewdly.* You know, somehow I doubt there's any smallpox behind that door."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Presumably you still want my help in getting the door open, then." linkto "Bruce2_2_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you all willing to stake your lives on that?" linkto "Bruce2_2_3c_2c_4a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. There's no smallpox. I was only joking." linkto "Bruce2_B_1"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_6_1"
+notes ""
+{
+NPCText "*The Explorer's eyes nervously dart back and forth from you and the door.* Come on, guys, I don't like the sound of this. Let's get out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce2_2_3c_2c_6_2"  notes ""
+              }
+}
+Node "Bruce2_2_3c_2c_6_2"
+notes "As the conversation ends, a script has Bruce and the Explorers fleeing for the nearest exit grid. They will not come back to V31 again."
+{
+NPCText "*Bruce and his companions hastily gather up their equipment.* You're out of your mind staying here, Vault Dweller. If you've got any sense, you'll leave as soon as you can, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "'Bye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_4_1"
+notes ""
+{
+NPCText "I can appreciate that, but you have to understand that this could be the big find we're been after for years. I can't just pass it up as a favour to you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I risked my life bringing the bones of your friends back from Sandover. Does that not mean anything to you?" linkto "Bruce2_2_4_2a_1"  notes "This node only appears if the PC has completed the bones quest.\nIF the PC completed the bones quest without taking the scoped hunting rifle as payment, go to Bruce2_2_4_2G_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Let me ask you about something else, in that case." linkto "Bruce2_9"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_1"
+notes ""
+{
+NPCText "That's right, and we paid you well. Those hunting rifles aren't easy to come by, and getting a calibrated scope fitted for them is even harder."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I still have that rifle. Let me give you it back in return for you agreeing to leave Vault 31 and forgetting you ever heard about it." linkto "Bruce2_2_4_2a_2a_1"  notes "This option only appears if the PC has a scoped hunting rifle in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "If I paid you for the scoped hunting rifle, where would we stand then?" linkto "Bruce2_2_4_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Let me ask you about something else, in that case." linkto "Bruce2_9"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_2a_1"
+notes ""
+{
+NPCText "*Bruce pauses in thought for a long time.* I suppose it was pretty ballsy, you going into that high-rad area like you did. But I'm going to want more than that rifle back if you want us to go away and keep our mouths shut, Vault Dweller."
+ NPCFemaleText "*Bruce pauses in thought for a long time.* I suppose it was pretty gutsy, you going into that high-rad area like you did. But I'm going to want more than that rifle back if you want us to go away and keep our mouths shut, Vault Dweller."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much more?" linkto "Bruce2_2_4_2a_2a_2"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_2a_2"
+notes "VALUE = 500 - [PC's barter skill *2]"
+{
+NPCText "*The explorer pauses again, mentally weighing up a great many things. Finally, he comes to a decision.* You give me back that rifle, plus [VALUE], and we walk away from Vault 31 and never breathe a word of it to anyone. You have my word."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. Here's the gun and the money." linkto "Bruce2_2_4_4a"  notes "This node only appears if the PC has 500 or more caps in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's way too much. No deal." linkto "Bruce2_2_4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why should I trust you?" linkto "Bruce2_2_4_2a_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't afford that much money." linkto "Bruce2_2_4_3"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_2a_3"
+notes "VALUE = 500 - [PC's barter skill *2]"
+{
+NPCText "*Bruce looks genuinely offended.* I've given you my word, Vault Dweller, and you should accept it. Business is business, but getting the bodies of our friends back meant a lot to me. I'll not betray your confidence. So the rifle and [VALUE] caps and you'll never see us around here again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Here's the gun and the money." linkto "Bruce2_2_4_4a"  notes "This node only appears if the PC has VALUE or more caps in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's way too much. No deal." linkto "Bruce2_2_4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't afford that much money." linkto "Bruce2_2_4_3"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_2b_1"
+notes ""
+{
+NPCText "*Bruce pauses in thought for a long time.* I suppose it was pretty ballsy, you going into that high-rad area like you did. It's going to cost you more than the value of that rifle if you want us to go away and keep our mouths shut, Vault Dweller."
+ NPCFemaleText "*Bruce pauses in thought for a long time.* I suppose it was pretty gutsy, you going into that high-rad area like you did. It's going to cost you more than the value of that rifle if you want us to go away and keep our mouths shut, Vault Dweller."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much do you want?" linkto "Bruce2_2_4_2a_2b_2"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_2b_2"
+notes ""
+{
+NPCText "*The explorer pauses again, mentally weighing up a great many things. Finally, he comes to a decision.* Two thousand caps. Two big ones, and we walk away from Vault 31 and never breathe a word of it to anyone. You have my word."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. Here's the money." linkto "Bruce2_2_4_4b"  notes "This node only appears if the PC has 2000 or more caps in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's way too much. No deal." linkto "Bruce2_2_4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do I know I can trust you?" linkto "Bruce2_2_4_2a_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't afford that much money." linkto "Bruce2_2_4_3"  notes ""
+              }
+}
+Node "Bruce2_2_4_2a_2b_3"
+notes "VALUE = 500 - [PC's barter skill *2]"
+{
+NPCText "*Bruce looks genuinely offended.* I've given you my word, Vault Dweller, and you should accept it. Business is business, but getting the bodies of our friends back meant a lot to me. I'll not betray your confidence. Give me [VALUE] caps and you'll never see us around here again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Here's the money." linkto "Bruce2_0"  notes "This node only appears if the PC has 2000 or more caps in his inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's way too much. No deal." linkto "Bruce2_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't afford that much money." linkto "Bruce2_0"  notes ""
+              }
+}
+Node "Bruce2_2_4_2G_1"
+notes ""
+{
+NPCText "*The Explorer stares at you as he wrestles with his conscience. Finally, he gives in to his better nature and visibly sags.* You're right. You're right. I owe you that, Vault Dweller. I wish I'd known your people wouldn't want us snooping around before we left Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce2_2_4_2G_2"  notes ""
+              }
+}
+Node "Bruce2_2_4_2G_2"
+notes "Once the dialogue ends, a script has Bruce and his group of Explorers walking towards the nearest exit grid. They will not appear at V31's entrance again."
+{
+NPCText "*Bruce runs a hand through his hair and looks at Vault 31's blast door in frustration.* You have no idea how hard it is to walk away from this, Vault Dweller. *He smiles at you.* Don't worry, though. You won't see us around here again. Neither will we tell another soul about this place. Goodbye for now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, Bruce. Take care." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Off you go, then." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_4_3"
+notes ""
+{
+NPCText "Well, then, Vault Dweller, I don't owe you anything. Sooner or later, we're going to get this door open. Are you going to help us?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to get the door open?" linkto "Bruce2_2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me speak to my people inside. I'll get the door open in no time." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get this door open for you if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "If Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Answer me a question, first." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_4_4a"
+notes "Subtract a scoped hunting rifle and VALUE caps from the PC's inventory. VALUE = 500 - [PC's barter skill *2]. Once the dialogue ends, a script has Bruce and his group of Explorers walking towards the nearest exit grid. They will not appear at V31's entrance again."
+{
+NPCText "*Bruce takes the rifle and money from you. He takes one last look at Vault 31's huge blast door with a rueful half-smile.* What lies behind that door? *He shakes his head.* I don't know if I've just made a terrible mistake, Vault Dweller. Well, I'll see you around."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take care, Bruce. Goodbye for now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just make sure it isn't here." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_2_4_4b"
+notes "Subtract 2000 caps from the PC's inventory. VALUE = 500 - [PC's barter skill *2]. Once the dialogue ends, a script has Bruce and his group of Explorers walking towards the nearest exit grid. They will not appear at V31's entrance again."
+{
+NPCText "*Bruce takes the money from you. He takes one last look at Vault 31's huge blast door with a rueful half-smile.* What lies behind that door?  *He shakes his head.* I don't know if I've just made a terrible mistake, Vault Dweller. Well, I'll see you around."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take care, Bruce. Goodbye for now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just make sure it isn't here." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_3"
+notes ""
+{
+NPCText "It wasn't hard to find with your instructions. This is only a few hundred yards away from where we've been exploring, just like you said."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_2_1"  notes "IF"
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto "Bruce2_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clear off, asshole. We don't want your sort poking around here." linkto "Bruce2_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_4"
+notes ""
+{
+NPCText "We left Crossroads soon after you did. It didn't take us long to find this door, but we haven't been able to move it once inch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want to get the door open?" linkto "Bruce2_2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me get that door open for you." linkto "Bruce2_2_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can get you in, if the price is right." linkto "Bruce2_2_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a bad idea for you to open that door." linkto "Bruce2_2_3c_1a"  notes "IF Bruce has spoken node Bruce2_2_3c_1a before, which means the PC has tried the 'bad idea' path already, go to Bruce2_2_3c_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you." linkto "Bruce2_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have time to speak now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_9"
+notes ""
+{
+NPCText "What is it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you doing here?" linkto "Bruce2_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto "Bruce2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find Vault 31?" linkto "Bruce2_3"  notes "Only link to node Bruce2_3a IF Bruce found out about V31 from the PC directly.\nIF Bruce found out about V31 indirectly from another source, then go to Bruce2_3b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce2_B_1"
+notes ""
+{
+NPCText "*Bruce's usually friendly expression goes icy cold. He primes his firearm, whose suggestive click is loud in the cave-like area. Still facing you, he speaks to his team-mates, who stand behind him.* I think we just found the key to this door, fellas."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce2_B_2"  notes "This one's for the non-dumb path."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce2_B_2"  notes "This one's for the dumb path."
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Reach for your weapon.*" linkto "combat"  notes ""
+              }
+}
+Node "Bruce2_B_2"
+notes ""
+{
+NPCText "You're not going anywhere until you've got this door open for us. *Bruce gestures towards Vault 31's huge blast door with the muzzle of his gun.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just give me a second to talk to the people inside and it will be open." linkto "Bruce2_B_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, Bruce!" linkto "Bruce2_B_3b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wait! Not be so nasty! I open door. You not kill me!" linkto "Bruce2_B_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "First, let me ask you a question." linkto "Bruce2_B_3c"  notes ""
+              }
+}
+Node "Bruce2_B_3a"
+notes "I recommend a script which causes the Explorers to attack the PC if he wanders too far away from the door whilst they are expecting him to get it open under this threat of violence."
+{
+NPCText "Okay. No funny business, I'll be watching you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done"  notes "This one's for the non-dumb path."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done"  notes "This one's for the dumb path."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, Bruce!" linkto "Bruce2_B_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "First, let me ask you a question." linkto "Bruce2_B_3c"  notes ""
+              }
+}
+Node "Bruce2_B_3b"
+notes ""
+{
+NPCText "Have it your way. Kill him, guys."
+ NPCFemaleText "Have it your way. Kill her, guys."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- FIGHT -" linkto "combat"  notes ""
+              }
+}
+Node "Bruce2_B_3c"
+notes ""
+{
+NPCText "No questions. *He levels his gun at your chest* Open the door."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just give me a second to talk to the people inside and it will be open." linkto "Bruce2_B_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, Bruce!" linkto "Bruce2_B_3b"  notes ""
+              }
+}

@@ -1,0 +1,482 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.2-beta
+
+*/
+
+NPCName "Jack"
+Location "Crossroads House"
+Description "Jack will initiate dialogue when the player enters his room. He has three well-armed guards and carries a .223 Pistol. The player won't get far with him until Warren recommends you for the job; this happens when the Brahmin are cured, the well problem is solved and/or the slaver operation has been destroyed."
+Unknown_Desc "You see a rugged-looking man in his fifties."
+Known_Desc "You see Jack, the founder of Crossroads."
+Detailed_Desc "The years have not been kind, but he projects the inspiring determination of a born leader."
+/* Regular nodes */
+
+Node "Jack_start"
+notes "Jack will initiate dialogue when the player enters his room."
+{
+NPCText "START CONDITION:"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "-Player isn't working for Jack.-" linkto "Jack_unmet"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "-Player is working for Jack.-" linkto "Jack_met"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "-Player has completed the town hall quest.-" linkto "Jack_happy"  notes ""
+              }
+}
+Node "Jack_unmet"
+notes ""
+{
+NPCText "Well, what do you want?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Who are you?" linkto "Jack_impatient"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "No, my good sir. The question is, what do YOU want?" linkto "Jack_impatient" conditions { CHECK_SKILL speech >= 50 } notes "Speech doesn't always help."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>. Warren said you have a job that needs doing." linkto "Jack_job"  notes "Only an option if Warren has told the player about the job."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about slavery in Crossroads." linkto "Jack_slavery"  notes "Only available if the player has discovered the underground slaver operation."
+          int=-3 Reaction=REACTION_BAD playertext "Ugh ... who you?" linkto "Jack_stupid"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just thought I'd say hi before I kill you." linkto "combat"  notes "The slavers can ask the player to \"take care\" of Jack, or perhaps it's just senseless violence."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, wrong room." linkto "done"  notes ""
+              }
+}
+Node "Jack_impatient"
+notes ""
+{
+NPCText "*he frowns* I don't have time for this. State your business or get out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Warren said something about a job?" linkto "Jack_job"  notes "Only available if Warren has told the player about the job."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you aware of the slavery in Crossroads?" linkto "Jack_slavery"  notes "Only available if PC has discovered the slavers."
+          int=4 Reaction=REACTION_BAD playertext "Can you tell me about the town?" linkto "Jack_crossroadsno"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'm leaving." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you try and MAKE me leave?!" linkto "combat"  notes ""
+              }
+}
+Node "Jack_stupid"
+notes ""
+{
+NPCText "Damn it, how'd this idiot get in here? Look ... YOU GO. *he points to door*"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me NO go!" linkto "combat"  notes ""
+              }
+}
+Node "Jack_crossroadsno"
+notes ""
+{
+NPCText "*he rolls his eyes* Talk to Old Rich or someone else with spare time. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay then..." linkto "done"  notes ""
+              }
+}
+Node "Jack_job"
+notes ""
+{
+NPCText "*he studies you* What I'm looking for now is a skilled negotiator. Think you fit the bill?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, I can negotiate. What's the job?" linkto "Jack_job2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "I'm no fancy talker, but I'll make them see things your way. " linkto "Jack_job3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not my kind of deal. Seeya." linkto "done"  notes ""
+              }
+}
+Node "Jack_job2"
+notes ""
+{
+NPCText "I'll have to see you in action before I trust you with something this important. Let's see ... Booker's Supplies is complaining about the Texas Traders again; something to do with caravan guards this time. You fix it so everyone's happy and I'll know you've got what I need."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is there more you can tell me?" linkto "Jack_job4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, do I get paid for this?" linkto "Jack_job5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back when it's fixed." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "On second thought, I'd better pass. Seeya." linkto "done"  notes ""
+              }
+}
+Node "Jack_job3"
+notes ""
+{
+NPCText "*he scowls* That isn't how I do business. Can you negotiate or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll talk to them. What's the job?" linkto "Jack_job2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm outta here." linkto "done"  notes ""
+              }
+}
+Node "Jack_job4"
+notes ""
+{
+NPCText "Talk to Rachel and Frank, the caravan reps. I told them I'd send someone to settle this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back when it's settled." linkto "done"  notes ""
+              }
+}
+Node "Jack_job5"
+notes ""
+{
+NPCText "*he frowns* You get my thanks. Will you do it or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it." linkto "Jack_job4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not right now. Seeya." linkto "done"  notes ""
+              }
+}
+Node "Jack_slavery"
+notes ""
+{
+NPCText "*his eyes widen* Slavery?! There's no slavery in MY town, mister."
+ NPCFemaleText "*his eyes widen* Slavery?! There's no slavery in MY town, missy."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Well, not anymore. I found their underground base and wiped them out. " linkto "Jack_slavery2"  notes "Only available if the PC has killed the slavers."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, but there is. They have an underground base a few miles south of town." linkto "Jack_slavery3"  notes ""
+              }
+}
+Node "Jack_slavery2"
+notes ""
+{
+NPCText "That so? *he studies you* Well, I do believe you're telling the truth. Go see Warren for some compensation ... 1000 caps for ridding Crossroads of such scum. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I'll go see him." linkto "done"  notes ""
+              }
+}
+Node "Jack_slavery3"
+notes ""
+{
+NPCText "*he studies you* I do believe you're telling the truth. Damnation! I won't have people being sold like Brahmin here. Listen, if you get rid of these bastards, I'll compensate you for your troubles."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds good. I'll come back when I've shut them down." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whoa, this is a bit out of my league. I just wanted to let you know." linkto "Jack_slavery4"  notes ""
+              }
+}
+Node "Jack_slavery4"
+notes ""
+{
+NPCText "*he frowns* Look, if you can't handle it, my men and I will deal with the slavers. But you're still coming along to show us the way; I'm not walking into any traps, understand?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess I don't have a choice...(fadeout to slaver base)" linkto "Jack_slavery5"  notes "This triggers a fadeout to the slaver base, where combat commences..."
+              }
+}
+Node "Jack_slavery5"
+notes "This is following the battle with the slavers. Jack and his guards will go back to his room when the PC leaves the slaver map."
+{
+NPCText "*he grins* That looks like the last of them, eh? Nice to get out of the office. I appreciate your help, and I'll have Warren arrange your payment ... 500 caps for exposing this scum to the light of justice.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I'll go see Warren." linkto "done"  notes ""
+              }
+}
+Node "Jack_slavery6"
+notes ""
+{
+NPCText "*he smiles* Good to hear. I've had Warren arrange for your compensation ... 1000 caps for ridding Crossroads of such scum."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I'll go see him." linkto "done"  notes ""
+              }
+}
+Node "Jack_met"
+notes ""
+{
+NPCText "What is it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I got rid of those slavers." linkto "Jack_slavery6"  notes "Only available if the PC wiped out the slavers."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I took care of that caravan dispute." linkto "Jack_townhall"  notes "Only available if the PC settled the dispute."
+          int=4 Reaction=REACTION_BAD playertext "Would you mind telling me a bit about the town?" linkto "Jack_crossroadsno"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, never mind." linkto "done"  notes ""
+              }
+}
+Node "Jack_townhall"
+notes ""
+{
+NPCText "I heard about that, good work. You've proven yourself a negotiator, which is what I need. See, I'm going to call a meeting to set up a government for the town. Crossroads is getting too big and I'm getting too old to manage it all, but I won't feel right retiring until some rules are set up to keep things from falling apart. Anyway, I need you to be my representative and keep the meeting running smoothly.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you just run this meeting yourself?" linkto "Jack_townhall1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's going to be at this meeting?" linkto "Jack_townhall2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How's this government supposed to work?" linkto "Jack_townhall3"  notes ""
+              }
+}
+Node "Jack_townhall1"
+notes ""
+{
+NPCText "*he lets out a long sigh and you realize how exhausted he is* Because I'm sick of it, that's why. I've had enough of wheeling and dealing. Besides, if I'm there it won't look like I'm willing to give up control, which is the whole point."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Who's coming to this meeting?" linkto "Jack_townhall1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, but how is this new government supposed to work?" linkto "Jack_townhall1c"  notes ""
+              }
+}
+Node "Jack_townhall1b"
+notes ""
+{
+NPCText "*he glances at his desk* There'll be ten others: Frank from Texas Traders, Rachel from Booker's Supplies, Christopher from Sunnie & Tash, Mark from Springwater Supplies, Arnold from Rusty Springs Rawhide, Carol from Liberty Caravans, Steve from Crossroads Meat, Ray from General Pharmaceuticals, Clarissa from the Caravan Guards, and Marty of Marty's Outback Caravan Supplies representing the local merchants. You're the tie-breaker."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, okay. But how is this new government supposed to work?" linkto "Jack_townhall1e"  notes ""
+              }
+}
+Node "Jack_townhall1c"
+notes ""
+{
+NPCText "*he chuckles* That's a good question, but I don't have the answer. They'll have a council of some sort ... hopefully once you get that set up, the rest can be sorted out. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, who's coming to the meeting?" linkto "Jack_townhall1d"  notes ""
+              }
+}
+Node "Jack_townhall1d"
+notes ""
+{
+NPCText "*he glances at his desk* There'll be ten others: Frank from Texas Traders, Rachel from Booker's Supplies, Christopher from Sunnie & Tash, Mark from Springwater Supplies, Arnold from Rusty Springs Rawhide, Carol from Liberty Caravans, Steve from Crossroads Meat, Ray from General Pharmaceuticals, Clarissa from the Caravan Guards, and Marty of Marty's Outback Caravan Supplies representing the local merchants. You're the tie-breaker."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "Jack_townhall4"  notes ""
+              }
+}
+Node "Jack_townhall1e"
+notes ""
+{
+NPCText "*he chuckles* That's a good question, but I don't have the answer. They'll have a council of some sort ... hopefully once you get that set up, the rest can be sorted out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "Jack_townhall4"  notes ""
+              }
+}
+Node "Jack_townhall2"
+notes ""
+{
+NPCText "*he glances at his desk* There'll be ten others: Frank from Texas Traders, Rachel from Booker's Supplies, Christopher from Sunnie & Tash, Mark from Springwater Supplies, Arnold from Rusty Springs Rawhide, Carol from Liberty Caravans, Steve from Crossroads Meat, Ray from General Pharmaceuticals, Clarissa from the Caravan Guards, and Marty of Marty's Outback Caravan Supplies representing the local merchants. You're the tie-breaker. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, okay. But why don't you just run this meeting yourself?" linkto "Jack_townhall2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. But how's this new government supposed to work?" linkto "Jack_townhall2c"  notes ""
+              }
+}
+Node "Jack_townhall2b"
+notes ""
+{
+NPCText "*he lets out a long sigh and you realize how exhausted he is* Because I'm sick of it, that's why. I've had enough of wheeling and dealing. Besides, if I'm there it won't look like I'm willing to give up control, which is the whole point."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. But how is this new government supposed to work?" linkto "Jack_townhall2d"  notes ""
+              }
+}
+Node "Jack_townhall2c"
+notes ""
+{
+NPCText "*he chuckles* That's a good question, but I don't have the answer. They'll have a council of some sort ... hopefully once you get that set up, the rest can be sorted out. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But why don't you just run the meeting yourself?" linkto "Jack_townhall2e"  notes ""
+              }
+}
+Node "Jack_townhall2d"
+notes ""
+{
+NPCText "*he chuckles* That's a good question, but I don't have the answer. They'll have a council of some sort ... hopefully once you get that set up, the rest can be sorted out. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "Jack_townhall4"  notes ""
+              }
+}
+Node "Jack_townhall2e"
+notes ""
+{
+NPCText "*he lets out a long sigh and you realize how exhausted he is* Because I'm sick of it, that's why. I've had enough of wheeling and dealing. Besides, if I'm there it won't look like I'm willing to give up control, which is the whole point."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "Jack_townhall4"  notes ""
+              }
+}
+Node "Jack_townhall3"
+notes ""
+{
+NPCText "*he chuckles* That's a good question, but I don't have the answer. They'll have a council of some sort ... hopefully once you get that set up, the rest can be sorted out. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But why don't you just run the meeting yourself?" linkto "Jack_townhall3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's coming to this meeting?" linkto "Jack_townhall3c"  notes ""
+              }
+}
+Node "Jack_townhall3b"
+notes ""
+{
+NPCText "*he lets out a long sigh and you realize how exhausted he is* Because I'm sick of it, that's why. I've had enough of wheeling and dealing. Besides, if I'm there it won't look like I'm willing to give up control, which is the whole point."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Who's supposed to come to this meeting?" linkto "Jack_townhall3e"  notes ""
+              }
+}
+Node "Jack_townhall3c"
+notes ""
+{
+NPCText "*he glances at his desk* There'll be ten others: Frank from Texas Traders, Rachel from Booker's Supplies, Christopher from Sunnie & Tash, Mark from Springwater Supplies, Arnold from Rusty Springs Rawhide, Carol from Liberty Caravans, Steve from Crossroads Meat, Ray from General Pharmaceuticals, Clarissa from the Caravan Guards, and Marty of Marty's Outback Caravan Supplies representing the local merchants. You're the tie-breaker."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But why don't you just run this meeting?" linkto "Jack_townhall3d"  notes ""
+              }
+}
+Node "Jack_townhall3d"
+notes ""
+{
+NPCText "*he lets out a long sigh and you realize how exhausted he is* Because I'm sick of it, that's why. I've had enough of wheeling and dealing. Besides, if I'm there it won't look like I'm willing to give up control, which is the whole point."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "Jack_townhall4"  notes ""
+              }
+}
+Node "Jack_townhall3e"
+notes ""
+{
+NPCText "*he glances at his desk* There'll be ten others: Frank from Texas Traders, Rachel from Booker's Supplies, Christopher from Sunnie & Tash, Mark from Springwater Supplies, Arnold from Rusty Springs Rawhide, Carol from Liberty Caravans, Steve from Crossroads Meat, Ray from General Pharmaceuticals, Clarissa from the Caravan Guards, and Marty of Marty's Outback Caravan Supplies representing the local merchants. You're the tie-breaker."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "Jack_townhall4"  notes ""
+              }
+}
+Node "Jack_townhall4"
+notes ""
+{
+NPCText "*he leans back* I know it's a big job, but I think you're the best one to do it. And you'll have the gratitude of this whole town if you pull it off. Let me know when you're ready for the meeting. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back when I'm ready." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm ready now (fadeout to town hall)" linkto "Jack_townhall5"  notes ""
+              }
+}
+Node "Jack_townhall5"
+notes "After the meeting (assuming success)..."
+{
+NPCText "*Jack looks ten years younger* You did it! Hot damn, now I can start retiring. All of Crossroads owes you, <PC>, and don't think they won't remember it. As for me ... well, hell, now that you've freed me up, I shouldn't need this darling anymore. *he hands you his .223 pistol* She got me through a lot of tight spots over the years, and I trust she'll do the same for you. Thanks again, friend."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, Jack! Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jack_happy"
+notes ""
+{
+NPCText "*Jack smiles* Good to see you, <PC>. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi Jack, got any more work?" linkto "Jack_happy2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to know more about you, Jack." linkto "Jack_history"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me about Crossroads, Jack?" linkto "Jack_crossroadsyes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jack, I need to talk to you about the Unified Traders." linkto "Jack_UT"  notes "Only available when the PC has evidence incriminating the UT."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jack, I need to talk to you about Brahmin rustling." linkto "Jack_rustling"  notes "Only available if the PC has talked to Brahmin farmers about the rustling (if we even want to include this)."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just stopping by to say hi, Jack." linkto "done"  notes ""
+              }
+}
+Node "Jack_happy2"
+notes ""
+{
+NPCText "*he chuckles* I'm retiring, remember. Check with Warren."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Say, I'd like to hear more about you." linkto "Jack_history"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Would you mind telling me about Crossroads?" linkto "Jack_crossroadsyes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right, I'll do that. See you later, Jack." linkto "done"  notes ""
+              }
+}
+Node "Jack_history"
+notes ""
+{
+NPCText "*he blinks* Me? Well, ah, there's not much to tell. Grew up on a Lone Star ranch, took over when the old man died, ran Brahmin for  many years, then brought my family here fifteen years ago and set up Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the town?" linkto "Jack_crossroadsyes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you leave Lone Star?" linkto "Jack_history2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your family." linkto "Jack_family"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your travels." linkto "Jack_travels"  notes ""
+              }
+}
+Node "Jack_crossroadsyes"
+notes ""
+{
+NPCText "What do you want to know? Fifteen years ago I set up this town, and blah blah blah. I'll have more to say when my dialogue writer does more work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about your family?" linkto "Jack_family"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about your travels?" linkto "Jack_travels"  notes ""
+              }
+}
+Node "Jack_history2"
+notes ""
+{
+NPCText "*he sighs* Well, there a few reasons. The deathclaw attacks were getting worse, my landlord was getting greedy, and my wife died. Felt like I needed a change after that.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's a deathclaw?" linkto "Jack_deathclaw"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask about your wife?" linkto "Jack_wife"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about Crossroads?" linkto "Jack_crossroadsyes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye" linkto "done"  notes ""
+              }
+}
+Node "Jack_family"
+notes ""
+{
+NPCText "Family? It's just me and my boys, Lawrence and Warren. My wife Meg died years ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask about Meg?" linkto "Jack_wife"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Lawrence." linkto "Jack_lawrence"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Warren." linkto "Jack_warren"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it for now. Seeya." linkto "done"  notes ""
+              }
+}
+Node "Jack_travels"
+notes ""
+{
+NPCText "Oh, I've been all over. When my dialogue writer does more work, I'll tell you about it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about your family?" linkto "Jack_family"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about the town?" linkto "Jack_crossroadsyes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "done"  notes ""
+              }
+}
+Node "Jack_wife"
+notes ""
+{
+NPCText "*his smile fades* I don't want to talk about her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jack, I think it would do you some good to share your feelings." linkto "Jack_wife2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you about Lawrence?" linkto "Jack_lawrence"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you about Warren?" linkto "Jack_warren"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I'll let you be now. Seeya." linkto "done"  notes ""
+              }
+}
+Node "Jack_wife2"
+notes ""
+{
+NPCText "Share my feelings?! Just drop it."
+ NPCFemaleText "I appreciate the thought, but it'll just open old wounds that took a long time to heal over."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Can I ask you about Lawrence?" linkto "Jack_lawrence"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Can I ask you about Warren?" linkto "Jack_warren"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, I'll be seeing you then." linkto "done"  notes ""
+              }
+}
+Node "Jack_lawrence"
+notes ""
+{
+NPCText "Lawrence? He's my eldest, a tough boy. *he frowns* Too tough in some ways ... anyway, I'm glad he wasn't interested in taking over."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll ask you about The Club and stuff when the dialogue writer does more work." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about Warren?" linkto "Jack_warren"  notes ""
+              }
+}
+Node "Jack_warren"
+notes ""
+{
+NPCText "Warren?  He's a good boy. * he leans closer* Between you and me, though, he's a bit naive ... I'm glad he won't be filling my shoes. I don't like his association with those Unified Traders."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the Unified Traders?" linkto "Jack_UT"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about Lawrence?" linkto "Jack_lawrence"  notes ""
+              }
+}
+Node "Jack_deathclaw"
+notes ""
+{
+NPCText "You haven't seen a deathclaw yet? Count yourself fortunate then. They're nasty beasts and no mistake."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about your family?" linkto "Jack_family"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about the town?" linkto "Jack_crossroadsyes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "Jack_UT"
+notes ""
+{
+NPCText "There's something not right with that organization. Can't put my finger on it, but I'll have more to say when the dialogue writer does more work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've uncovered evidence that Salvation is pulling the strings behind the UT!" linkto "Jack_UT2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "done"  notes ""
+              }
+}
+Node "Jack_UT2"
+notes ""
+{
+NPCText "Terrific, but let's wait for the dialogue writer."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, fine." linkto "done"  notes ""
+              }
+}
+Node "Jack_rustling"
+notes ""
+{
+NPCText "I ain't saying a damn thing about Brahmin rustling until the dialogue writer writes it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "done"  notes ""
+              }
+}

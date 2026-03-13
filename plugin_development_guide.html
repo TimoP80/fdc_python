@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fallout Dialogue Creator 2.0 - Plugin Development Guide</title>
+    <style>
+        :root {
+            --primary-color: #1a5c1a;
+            --secondary-color: #2d8a2d;
+            --accent-color: #4db84d;
+            --bg-dark: #0d1a0d;
+            --bg-medium: #1a2e1a;
+            --bg-light: #243624;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --terminal-green: #33ff33;
+            --warning-color: #ff9933;
+            --error-color: #ff4444;
+            --code-bg: #0a0f0a;
+            --border-color: #3d5c3d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--bg-medium));
+            padding: 2rem;
+            border-bottom: 3px solid var(--terminal-green);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(51, 255, 51, 0.03) 2px,
+                rgba(51, 255, 51, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--terminal-green);
+            text-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        header .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+        }
+
+        header .version {
+            display: inline-block;
+            background: var(--terminal-green);
+            color: var(--bg-dark);
+            padding: 0.2rem 0.8rem;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        nav {
+            background: var(--bg-medium);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        nav a:hover {
+            background: var(--primary-color);
+            color: var(--terminal-green);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background: var(--bg-medium);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        section h2 {
+            color: var(--terminal-green);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        section h3 {
+            color: var(--accent-color);
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        section h4 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--terminal-green);
+            padding: 1rem;
+            overflow-x: auto;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: var(--code-bg);
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: var(--terminal-green);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--primary-color);
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+        }
+
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .callout {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout-info {
+            background: rgba(51, 153, 255, 0.1);
+            border-color: #3399ff;
+        }
+
+        .callout-warning {
+            background: rgba(255, 153, 51, 0.1);
+            border-color: var(--warning-color);
+        }
+
+        .callout-danger {
+            background: rgba(255, 68, 68, 0.1);
+            border-color: var(--error-color);
+        }
+
+        .callout-success {
+            background: rgba(51, 255, 51, 0.1);
+            border-color: var(--terminal-green);
+        }
+
+        .tabs {
+            margin: 1rem 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        .tab-button {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            color: var(--terminal-green);
+            border-color: var(--terminal-green);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .diagram {
+            background: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--text-primary);
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            margin: 0.5rem;
+            border: 2px solid var(--terminal-green);
+        }
+
+        .diagram-arrow {
+            color: var(--terminal-green);
+            font-size: 1.5rem;
+            margin: 0 1rem;
+        }
+
+        .api-method {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .api-signature {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'Consolas', monospace;
+        }
+
+        .api-signature .method-name {
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+
+        .api-signature .param {
+            color: var(--accent-color);
+        }
+
+        .api-signature .return-type {
+            color: var(--warning-color);
+        }
+
+        .api-description {
+            padding: 1rem;
+        }
+
+        .faq-item {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: var(--primary-color);
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .faq-question:hover {
+            background: var(--secondary-color);
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            display: none;
+            background: var(--bg-dark);
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        footer {
+            background: var(--bg-medium);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: var(--terminal-green);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid var(--terminal-green);
+            font-size: 1.5rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-top:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+        .class { color: #8be9fd; }
+        .number { color: #bd93f9; }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8rem; }
+            nav ul { flex-direction: column; }
+            main { padding: 1rem; }
+            section { padding: 1rem; }
+            pre { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>▒ FALLOUT DIALOGUE CREATOR</h1>
+        <div class="subtitle">Plugin Development Guide</div>
+        <div class="version">Version 2.0</div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#concepts">Concepts</a></li>
+            <li><a href="#tutorials">Tutorials</a></li>
+            <li><a href="#best-practices">Best Practices</a></li>
+            <li><a href="#api-reference">API Reference</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#testing">Testing</a></li>
+            <li><a href="#debugging">Debugging</a></li>
+            <li><a href="#deployment">Deployment</a></li>
+            <li><a href="#migration">Migration</a></li>
+            <li><a href="#examples">Examples</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="introduction">
+            <h2>1. Introduction</h2>
+            <p>Welcome to the Fallout Dialogue Creator 2.0 Plugin Development Guide. This comprehensive documentation provides everything you need to create powerful plugins that extend the functionality of the Fallout Dialogue Creator application.</p>
+            
+            <h3>What is the Plugin System?</h3>
+            <p>The plugin system is a modular architecture that allows developers to extend the Fallout Dialogue Creator without modifying the core application code. Plugins can:</p>
+            <ul>
+                <li>Add new export formats for dialogue data</li>
+                <li>Integrate with external tools and services</li>
+                <li>Create custom UI elements and menus</li>
+                <li>Process dialogue in specialized ways</li>
+                <li>Add new scripting capabilities</li>
+                <li>Implement custom parsers for dialogue file formats</li>
+            </ul>
+
+            <h3>Plugin Types</h3>
+            <table>
+                <thead>
+                    <tr><th>Type</th><th>Description</th><th>Use Case</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>UI_EXTENSION</code></td><td>Adds UI elements, menus, dialogs</td><td>Custom tools, visualizations</td></tr>
+                    <tr><td><code>DIALOGUE_PROCESSOR</code></td><td>Processes dialogue data</td><td>Validation, transformation</td></tr>
+                    <tr><td><code>PARSER_EXTENSION</code></td><td>Adds file format support</td><td>Import/export formats</td></tr>
+                    <tr><td><code>SCRIPTING_EXTENSION</code></td><td>Extends scripting capabilities</td><td>Custom commands, functions</td></tr>
+                    <tr><td><code>TESTING_EXTENSION</code></td><td>Adds testing functionality</td><td>Dialogue testing, validation</td></tr>
+                    <tr><td><code>EXPORT_EXTENSION</code></td><td>Exports dialogue to formats</td><td>SSL, MSG, custom formats</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout callout-info"><strong>Note:</strong> The plugin system is designed for Python 3.8+ and uses PyQt6 for UI components. All plugins must follow the PluginInterface contract.</div>
+        </section>
+
+        <section id="architecture">
+            <h2>2. Plugin Architecture Overview</h2>
+            
+            <h3>System Components</h3>
+            <p>The plugin system consists of several key components that work together:</p>
+
+            <div class="diagram">
+                <div class="diagram-box">Application Core</div>
+                <span class="diagram-arrow">→</span>
+                <div class="diagram-box">PluginManager</div>
+                <span class="diagram-arrow">→</span>
+                <div class="diagram-box">Plugin Interface</div>
+                <span class="diagram-arrow">→</span>
+                <div class="diagram-box">Your Plugin</div>
+            </div>
+
+            <h4>PluginManager</h4>
+            <p>The <code>PluginManager</code> class is the central hub for all plugin operations. It handles discovery, loading, lifecycle management, and hook dispatching.</p>
+
+            <h4>PluginInterface</h4>
+            <p>The <code>PluginInterface</code> is the base class that all plugins must inherit from:</p>
+
+            <pre><code><span class="keyword">class</span> <span class="class">PluginInterface</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.plugin_info = <span class="class">PluginInfo</span>(...)
+
+    <span class="keyword">def</span> <span class="function">initialize</span>(self, plugin_manager) -> <span class="class">bool</span>:
+        <span class="string">"""Called when plugin is first loaded"""</span>
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">activate</span>(self) -> <span class="class">bool</span>:
+        <span class="string">"""Called when plugin becomes active"""</span>
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">deactivate</span>(self) -> <span class="class">bool</span>:
+        <span class="string">"""Called when plugin is deactivated"""</span>
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">shutdown</span>(self):
+        <span class="string">"""Called when plugin is unloaded"""</span>
+        <span class="keyword">pass</span>
+
+    <span class="keyword">def</span> <span class="function">get_hooks</span>(self) -> <span class="class">Dict</span>[<span class="class">str</span>, <span class="class">List</span>[<span class="class">Callable</span>]]:
+        <span class="string">"""Return hook functions for events"""</span>
+        <span class="keyword">return</span> {}</code></pre>
+
+            <h3>Plugin Lifecycle</h3>
+            <pre><code><span class="comment"># Plugin Lifecycle States</span>
+<span class="class">PluginState</span>:
+    UNLOADED   <span class="comment"># Initial state</span>
+    LOADING    <span class="comment"># Currently loading</span>
+    LOADED     <span class="comment"># Successfully loaded</span>
+    ACTIVE     <span class="comment"># Fully operational</span>
+    ERROR      <span class="comment"># Encountered error</span>
+    DISABLED   <span class="comment"># Manually disabled</span></code></pre>
+
+            <div class="callout callout-success"><strong>Tip:</strong> The plugin system automatically handles most lifecycle management. You only need to implement the core methods in your plugin class.</div>
+        </section>
+
+        <section id="concepts">
+            <h2>3. Core Concepts and Terminology</h2>
+
+            <h3>Essential Terms</h3>
+            <table>
+                <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Plugin</strong></td><td>A Python module extending application functionality by implementing PluginInterface</td></tr>
+                    <tr><td><strong>Hook</strong></td><td>A predefined event point where plugins register handlers</td></tr>
+                    <tr><td><strong>PluginManager</strong></td><td>Central system managing discovery, loading, lifecycle, and event dispatching</td></tr>
+                    <tr><td><strong>PluginInfo</strong></td><td>Metadata container with name, version, author, type, and dependencies</td></tr>
+                    <tr><td><strong>Dialogue</strong></td><td>Complete dialogue data structure including nodes, options, variables</td></tr>
+                    <tr><td><strong>DialogueNode</strong></td><td>Individual node with NPC text and player response options</td></tr>
+                    <tr><td><strong>PlayerOption</strong></td><td>A single response option available to the player</td></tr>
+                    <tr><td><strong>SkillCheck</strong></td><td>Definition of a skill check that can appear on options</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Hook System</h3>
+            <pre><code><span class="comment"># Application Lifecycle</span>
+<span class="class">PluginHooks</span>.APP_STARTUP
+<span class="class">PluginHooks</span>.APP_SHUTDOWN
+
+<span class="comment"># UI Events</span>
+<span class="class">PluginHooks</span>.UI_MAIN_WINDOW_CREATED
+<span class="class">PluginHooks</span>.UI_MENU_BAR_CREATED
+<span class="class">PluginHooks</span>.UI_TOOLBAR_CREATED
+
+<span class="comment"># Dialogue Events</span>
+<span class="class">PluginHooks</span>.DIALOGUE_LOADED
+<span class="class">PluginHooks</span>.DIALOGUE_SAVED
+<span class="class">PluginHooks</span>.DIALOGUE_MODIFIED
+
+<span class="comment"># Node Events</span>
+<span class="class">PluginHooks</span>.NODE_CREATED
+<span class="class">PluginHooks</span>.NODE_MODIFIED
+<span class="class">PluginHooks</span>.NODE_DELETED
+
+<span class="comment"># Option Events</span>
+<span class="class">PluginHooks</span>.OPTION_CREATED
+<span class="class">PluginHooks</span>.OPTION_MODIFIED
+<span class="class">PluginHooks</span>.OPTION_DELETED</code></pre>
+
+            <h3>Data Models</h3>
+            <pre><code><span class="keyword">@dataclass</span>
+<span class="keyword">class</span> <span class="class">Dialogue</span>:
+    npcname: <span class="class">str</span>
+    location: <span class="class">Optional</span>[<span class="class">str</span>] = <span class="keyword">None</span>
+    description: <span class="class">Optional</span>[<span class="class">str</span>] = <span class="keyword">None</span>
+    nodes: <span class="class">List</span>[<span class="class">DialogueNode</span>] = field(default_factory=list)
+    customprocs: <span class="class">List</span>[<span class="class">CustomProc</span>] = field(default_factory=list)
+    variables: <span class="class">List</span>[<span class="class">Variable</span>] = field(default_factory=list)
+    nodecount: <span class="class">int</span> = 0
+
+<span class="keyword">@dataclass</span>
+<span class="keyword">class</span> <span class="class">DialogueNode</span>:
+    nodename: <span class="class">str</span> = <span class="string">""</span>
+    npctext: <span class="class">str</span> = <span class="string">""</span>
+    npctext_female: <span class="class">str</span> = <span class="string">""</span>
+    is_wtg: <span class="class">bool</span> = <span class="keyword">False</span>
+    hidden: <span class="class">bool</span> = <span class="keyword">False</span>
+    options: <span class="class">List</span>[<span class="class">PlayerOption</span>] = field(default_factory=list)
+    skillchecks: <span class="class">List</span>[<span class="class">SkillCheck</span>] = field(default_factory=list)
+
+<span class="keyword">@dataclass</span>
+<span class="keyword">class</span> <span class="class">PlayerOption</span>:
+    optiontext: <span class="class">str</span> = <span class="string">""</span>
+    nodelink: <span class="class">str</span> = <span class="string">""</span>
+    noderesolved: <span class="class">int</span> = -1
+    conditions: <span class="class">List</span>[<span class="class">Condition</span>] = field(default_factory=list)
+    has_skill_check: <span class="class">bool</span> = <span class="keyword">False</span>
+    skill_check: <span class="class">Optional</span>[<span class="class">SkillCheck</span>] = <span class="keyword">None</span></code></pre>
+        </section>
+
+        <section id="tutorials">
+            <h2>4. Step-by-Step Implementation Tutorials</h2>
+
+            <h3>Tutorial 1: Basic Plugin</h3>
+            <p>Create a simple plugin that responds to events and adds a menu item.</p>
+
+            <pre><code><span class="string">"""
+My First Plugin for Fallout Dialogue Creator
+"""</span>
+
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>, <span class="class">PluginType</span>, <span class="class">PluginHooks</span>, <span class="class">PluginInfo</span>
+
+
+<span class="keyword">class</span> <span class="class">MyFirstPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="string">"""A simple example plugin"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="keyword">super</span>().__init__()
+        
+        self.plugin_info = <span class="class">PluginInfo</span>(
+            name=<span class="string">"My First Plugin"</span>,
+            version=<span class="string">"1.0.0"</span>,
+            description=<span class="string">"A simple demonstration plugin"</span>,
+            author=<span class="string">"Your Name"</span>,
+            plugin_type=<span class="class">PluginType</span>.UI_EXTENSION
+        )
+        
+        self.menu_action = <span class="keyword">None</span>
+
+    <span class="keyword">def</span> <span class="function">initialize</span>(self, plugin_manager):
+        print(<span class="string">f"Initializing {self.plugin_info.name} v{self.plugin_info.version}"</span>)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">activate</span>(self):
+        print(<span class="string">f"Activating {self.plugin_info.name}"</span>)
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">deactivate</span>(self):
+        print(<span class="string">f"Deactivating {self.plugin_info.name}"</span>)
+        <span class="keyword">if</span> self.menu_action:
+            self.menu_action.deleteLater()
+            self.menu_action = <span class="keyword">None</span>
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">shutdown</span>(self):
+        print(<span class="string">f"Shutting down {self.plugin_info.name}"</span>)
+
+    <span class="keyword">def</span> <span class="function">get_hooks</span>(self):
+        <span class="keyword">return</span> {
+            <span class="class">PluginHooks</span>.APP_STARTUP: [self.on_app_startup],
+            <span class="class">PluginHooks</span>.UI_MENU_BAR_CREATED: [self.on_menu_bar_created],
+            <span class="class">PluginHooks</span>.DIALOGUE_LOADED: [self.on_dialogue_loaded],
+        }
+
+    <span class="keyword">def</span> <span class="function">on_app_startup</span>(self, app):
+        print(<span class="string">"MyFirstPlugin: Application has started!"</span>)
+
+    <span class="keyword">def</span> <span class="function">on_menu_bar_created</span>(self, menu_bar):
+        print(<span class="string">"MyFirstPlugin: Adding menu item"</span>)
+        tools_menu = <span class="keyword">None</span>
+        <span class="keyword">for</span> action <span class="keyword">in</span> menu_bar.actions():
+            <span class="keyword">if</span> action.text() == <span class="string">"&Tools"</span>:
+                tools_menu = action.menu()
+                <span class="keyword">break</span>
+
+        <span class="keyword">if</span> tools_menu:
+            tools_menu.addSeparator()
+            self.menu_action = tools_menu.addAction(<span class="string">"My Plugin"</span>)
+            self.menu_action.triggered.connect(self.show_welcome)
+
+    <span class="keyword">def</span> <span class="function">on_dialogue_loaded</span>(self, dialogue):
+        print(<span class="string">f"MyFirstPlugin: Loaded dialogue for {dialogue.npcname}"</span>)
+        print(<span class="string">f"  Nodes: {dialogue.nodecount}"</span>)
+
+    <span class="keyword">def</span> <span class="function">show_welcome</span>(self):
+        <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+        <span class="class">QMessageBox</span>.information(
+            <span class="keyword">None</span>,
+            <span class="string">"My First Plugin"</span>,
+            <span class="string">"Hello from my first plugin!\n\nThis demonstrates the basic plugin structure."</span>
+        )</code></pre>
+
+            <div class="callout callout-warning"><strong>Important:</strong> Plugin filenames must be lowercase with underscores for proper discovery.</div>
+
+            <h3>Tutorial 2: Export Plugin</h3>
+            <p>Create a plugin that exports dialogue data to JSON format.</p>
+
+            <pre><code><span class="string">"""
+JSON Export Plugin for Fallout Dialogue Creator
+Exports dialogue data to JSON format.
+"""</span>
+
+<span class="keyword">import</span> json
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> <span class="class">Path</span>
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>, <span class="class">PluginType</span>, <span class="class">PluginHooks</span>, <span class="class">PluginInfo</span>
+
+
+<span class="keyword">class</span> <span class="class">JSONExportPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="string">"""Plugin for exporting dialogues to JSON format"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="keyword">super</span>().__init__()
+        self.plugin_info = <span class="class">PluginInfo</span>(
+            name=<span class="string">"JSON Export Plugin"</span>,
+            version=<span class="string">"1.0.0"</span>,
+            description=<span class="string">"Export dialogue data to JSON format"</span>,
+            author=<span class="string">"Your Name"</span>,
+            plugin_type=<span class="class">PluginType</span>.EXPORT_EXTENSION
+        )
+        self.menu_action = <span class="keyword">None</span>
+        self.current_dialogue = <span class="keyword">None</span>
+
+    <span class="keyword">def</span> <span class="function">initialize</span>(self, plugin_manager):
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">activate</span>(self):
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">deactivate</span>(self):
+        <span class="keyword">if</span> self.menu_action:
+            self.menu_action.deleteLater()
+            self.menu_action = <span class="keyword">None</span>
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">get_hooks</span>(self):
+        <span class="keyword">return</span> {
+            <span class="class">PluginHooks</span>.UI_MENU_BAR_CREATED: [self.on_menu_bar_created],
+            <span class="class">PluginHooks</span>.DIALOGUE_LOADED: [self.on_dialogue_loaded],
+            <span class="class">PluginHooks</span>.DIALOGUE_SAVED: [self.on_dialogue_saved],
+        }
+
+    <span class="keyword">def</span> <span class="function">on_menu_bar_created</span>(self, menu_bar):
+        <span class="keyword">for</span> action <span class="keyword">in</span> menu_bar.actions():
+            <span class="keyword">if</span> action.text() == <span class="string">"&Tools"</span>:
+                tools_menu = action.menu()
+                tools_menu.addSeparator()
+                export_menu = tools_menu.addMenu(<span class="string">"Export to JSON"</span>)
+                self.menu_action = export_menu.addAction(<span class="string">"Export Current Dialogue"</span>)
+                self.menu_action.triggered.connect(self.export_dialogue)
+                <span class="keyword">break</span>
+
+    <span class="keyword">def</span> <span class="function">on_dialogue_loaded</span>(self, dialogue):
+        self.current_dialogue = dialogue
+
+    <span class="keyword">def</span> <span class="function">on_dialogue_saved</span>(self, dialogue, file_path):
+        self.current_dialogue = dialogue
+
+    <span class="keyword">def</span> <span class="function">export_dialogue</span>(self):
+        <span class="keyword">if</span> <span class="keyword">not</span> self.current_dialogue:
+            <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+            <span class="class">QMessageBox</span>.warning(<span class="keyword">None</span>, <span class="string">"Export Error"</span>, <span class="string">"No dialogue loaded"</span>)
+            <span class="keyword">return</span>
+
+        <span class="keyword">try</span>:
+            dialogue_data = self._dialogue_to_dict(self.current_dialogue)
+
+            <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QFileDialog</span>
+            default_name = <span class="string">f"{self.current_dialogue.npcname}.json"</span>
+            file_path, _ = <span class="class">QFileDialog</span>.getSaveFileName(
+                <span class="keyword">None</span>,
+                <span class="string">"Export Dialogue to JSON"</span>,
+                default_name,
+                <span class="string">"JSON Files (*.json);;All Files (*.*)"</span>
+            )
+
+            <span class="keyword">if</span> file_path:
+                <span class="keyword">with</span> <span class="builtin">open</span>(file_path, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:
+                    json.dump(dialogue_data, f, indent=2, ensure_ascii=False)
+
+                <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+                <span class="class">QMessageBox</span>.information(<span class="keyword">None</span>, <span class="string">"Export Complete"</span>, <span class="string">f"Dialogue exported to:\n{file_path}"</span>)
+
+        <span class="keyword">except</span> <span class="class">Exception</span> <span class="keyword">as</span> e:
+            <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+            <span class="class">QMessageBox</span>.critical(<span class="keyword">None</span>, <span class="string">"Export Error"</span>, <span class="string">f"Failed to export:\n{str(e)}"</span>)
+
+    <span class="keyword">def</span> <span class="function">_dialogue_to_dict</span>(self, dialogue):
+        result = {
+            <span class="string">"metadata"</span>: {
+                <span class="string">"npc_name"</span>: dialogue.npcname,
+                <span class="string">"location"</span>: dialogue.location,
+                <span class="string">"node_count"</span>: dialogue.nodecount,
+                <span class="string">"export_date"</span>: datetime.now().isoformat()
+            },
+            <span class="string">"nodes"</span>: [],
+            <span class="string">"variables"</span>: [],
+            <span class="string">"custom_procedures"</span>: []
+        }
+
+        <span class="keyword">for</span> node <span class="keyword">in</span> dialogue.nodes:
+            node_dict = {
+                <span class="string">"name"</span>: node.nodename,
+                <span class="string">"text"</span>: node.npctext,
+                <span class="string">"text_female"</span>: node.npctext_female,
+                <span class="string">"is_starting_node"</span>: node.is_wtg,
+                <span class="string">"options"</span>: []
+            }
+
+            <span class="keyword">for</span> option <span class="keyword">in</span> node.options:
+                option_dict = {
+                    <span class="string">"text"</span>: option.optiontext,
+                    <span class="string">"target_node"</span>: option.nodelink,
+                    <span class="string">"has_skill_check"</span>: option.has_skill_check
+                }
+                
+                <span class="keyword">if</span> option.has_skill_check and option.skill_check:
+                    option_dict[<span class="string">"skill_check"</span>] = {
+                        <span class="string">"skill"</span>: option.skill_check.check_what.name,
+                        <span class="string">"required_value"</span>: option.skill_check.required_value
+                    }
+                
+                node_dict[<span class="string">"options"</span>].append(option_dict)
+            
+            result[<span class="string">"nodes"</span>].append(node_dict)
+
+        <span class="keyword">for</span> var <span class="keyword">in</span> dialogue.variables:
+            result[<span class="string">"variables"</span>].append({
+                <span class="string">"name"</span>: var.name,
+                <span class="string">"value"</span>: var.value
+            })
+
+        <span class="keyword">return</span> result</code></pre>
+
+            <h3>Tutorial 3: Dialogue Validator Plugin</h3>
+            <p>Create a plugin that validates dialogues for common issues.</p>
+
+            <pre><code><span class="string">"""
+Dialogue Validator Plugin
+Validates dialogues for common issues.
+"""</span>
+
+<span class="keyword">from</span> collections <span class="keyword">import</span> Counter
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>, <span class="class">PluginType</span>, <span class="class">PluginHooks</span>, <span class="class">PluginInfo</span>
+
+
+<span class="keyword">class</span> <span class="class">ValidationResult</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.errors = []
+        self.warnings = []
+    
+    <span class="keyword">def</span> <span class="function">add_error</span>(self, message, node_name=<span class="keyword">None</span>):
+        location = <span class="string">f" [{node_name}]"</span> <span class="keyword">if</span> node_name <span class="keyword">else</span> <span class="string">""</span>
+        self.errors.append(f<span class="string">"Error{location}: {message}"</span>)
+    
+    <span class="keyword">def</span> <span class="function">add_warning</span>(self, message, node_name=<span class="keyword">None</span>):
+        location = <span class="string">f" [{node_name}]"</span> <span class="keyword">if</span> node_name <span class="keyword">else</span> <span class="string">""</span>
+        self.warnings.append(f<span class="string">"Warning{location}: {message}"</span>)
+    
+    <span class="keyword">@property</span>
+    <span class="keyword">def</span> <span class="function">is_valid</span>(self):
+        <span class="keyword">return</span> <span class="builtin">len</span>(self.errors) == 0
+
+
+<span class="keyword">class</span> <span class="class">DialogueValidatorPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="string">"""Plugin that validates dialogues"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="keyword">super</span>().__init__()
+        self.plugin_info = <span class="class">PluginInfo</span>(
+            name=<span class="string">"Dialogue Validator"</span>,
+            version=<span class="string">"1.0.0"</span>,
+            description=<span class="string">"Validates dialogues for common issues"</span>,
+            author=<span class="string">"Your Name"</span>,
+            plugin_type=<span class="class">PluginType</span>.DIALOGUE_PROCESSOR
+        )
+        self.menu_action = <span class="keyword">None</span>
+        self.current_dialogue = <span class="keyword">None</span>
+
+    <span class="keyword">def</span> <span class="function">initialize</span>(self, plugin_manager):
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">activate</span>(self):
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">deactivate</span>(self):
+        <span class="keyword">if</span> self.menu_action:
+            self.menu_action.deleteLater()
+        <span class="keyword">return</span> <span class="keyword">True</span>
+
+    <span class="keyword">def</span> <span class="function">get_hooks</span>(self):
+        <span class="keyword">return</span> {
+            <span class="class">PluginHooks</span>.UI_MENU_BAR_CREATED: [self.on_menu_bar_created],
+            <span class="class">PluginHooks</span>.DIALOGUE_LOADED: [self.on_dialogue_loaded],
+        }
+
+    <span class="keyword">def</span> <span class="function">on_menu_bar_created</span>(self, menu_bar):
+        <span class="keyword">for</span> action <span class="keyword">in</span> menu_bar.actions():
+            <span class="keyword">if</span> action.text() == <span class="string">"&Tools"</span>:
+                tools_menu = action.menu()
+                tools_menu.addSeparator()
+                self.menu_action = tools_menu.addAction(<span class="string">"Validate Dialogue"</span>)
+                self.menu_action.triggered.connect(self.run_validation)
+                <span class="keyword">break</span>
+
+    <span class="keyword">def</span> <span class="function">on_dialogue_loaded</span>(self, dialogue):
+        self.current_dialogue = dialogue
+
+    <span class="keyword">def</span> <span class="function">run_validation</span>(self):
+        <span class="keyword">if</span> <span class="keyword">not</span> self.current_dialogue:
+            <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+            <span class="class">QMessageBox</span>.warning(<span class="keyword">None</span>, <span class="string">"Validation"</span>, <span class="string">"No dialogue loaded"</span>)
+            <span class="keyword">return</span>
+
+        result = <span class="class">ValidationResult</span>()
+        self._validate_dialogue_structure(result)
+        self._validate_nodes(result)
+        self._validate_options(result)
+        self._validate_links(result)
+        
+        <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+        
+        <span class="keyword">if</span> result.is_valid:
+            <span class="class">QMessageBox</span>.information(<span class="keyword">None</span>, <span class="string">"Validation Results"</span>, 
+                <span class="string">"✓ Validation passed! No errors found."</span>)
+        <span class="keyword">else</span>:
+            msg = <span class="string">"✗ Validation failed:\n\n"</span> + <span class="string">"\n"</span>.join(result.errors + result.warnings)
+            <span class="class">QMessageBox</span>.critical(<span class="keyword">None</span>, <span class="string">"Validation Results"</span>, msg)
+
+    <span class="keyword">def</span> <span class="function">_validate_dialogue_structure</span>(self, result):
+        <span class="keyword">if</span> <span class="keyword">not</span> self.current_dialogue.npcname:
+            result.add_error(<span class="string">"NPC name is missing"</span>)
+        
+        <span class="keyword">if</span> <span class="builtin">len</span>(self.current_dialogue.nodes) == 0:
+            result.add_error(<span class="string">"Dialogue has no nodes"</span>)
+            <span class="keyword">return</span>
+
+        has_starting = <span class="keyword">any</span>(node.is_wtg <span class="keyword">for</span> node <span class="keyword">in</span> self.current_dialogue.nodes)
+        <span class="keyword">if</span> <span class="keyword">not</span> has_starting:
+            result.add_warning(<span class="string">"No starting node (is_wtg) defined"</span>)
+
+    <span class="keyword">def</span> <span class="function">_validate_nodes</span>(self, result):
+        <span class="keyword">for</span> i, node <span class="keyword">in</span> <span class="builtin">enumerate</span>(self.current_dialogue.nodes):
+            <span class="keyword">if</span> <span class="keyword">not</span> node.nodename:
+                result.add_error(<span class="string">f"Node {i} has no name"</span>)
+            <span class="keyword">if</span> <span class="keyword">not</span> node.npctext.strip():
+                result.add_warning(<span class="string">"Node has no NPC text"</span>, node.nodename)
+
+    <span class="keyword">def</span> <span class="function">_validate_options</span>(self, result):
+        <span class="keyword">for</span> node <span class="keyword">in</span> self.current_dialogue.nodes:
+            <span class="keyword">if</span> <span class="builtin">len</span>(node.options) == 0:
+                result.add_warning(<span class="string">"Node has no options"</span>, node.nodename)
+
+    <span class="keyword">def</span> <span class="function">_validate_links</span>(self, result):
+        node_names = {node.nodename <span class="keyword">for</span> node <span class="keyword">in</span> self.current_dialogue.nodes}
+        <span class="keyword">for</span> node <span class="keyword">in</span> self.current_dialogue.nodes:
+            <span class="keyword">for</span> i, option <span class="keyword">in</span> <span class="builtin">enumerate</span>(node.options):
+                <span class="keyword">if</span> option.nodelink and option.nodelink <span class="keyword">not</span> in node_names:
+                    result.add_error(<span class="string">f"Option links to non-existent node"</span>, node.nodename)</code></pre>
+
+            <h3>Tutorial 4: Multi-Language Support</h3>
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="openTab(event, 'tab-py')">Python</button>
+                    <button class="tab-button" onclick="openTab(event, 'tab-ts')">TypeScript</button>
+                </div>
+                <div id="tab-py" class="tab-content active">
+                    <pre><code><span class="comment"># Python implementation</span>
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>
+
+<span class="keyword">class</span> <span class="class">PythonProcessor</span>(<span class="class">PluginInterface</span>):
+    <span class="keyword">def</span> <span class="function">process_dialogue</span>(self, dialogue):
+        results = []
+        <span class="keyword">for</span> node <span class="keyword">in</span> dialogue.nodes:
+            processed = self._process_node(node)
+            results.append(processed)
+        <span class="keyword">return</span> results</code></pre>
+                </div>
+                <div id="tab-ts" class="tab-content">
+                    <pre><code><span class="comment">// TypeScript (for future WebAssembly support)</span>
+<span class="keyword">interface</span> <span class="class">DialogueNode</span> {
+    nodename: <span class="class">string</span>;
+    npctext: <span class="class">string</span>;
+}
+
+<span class="keyword">class</span> <span class="class">TypeScriptProcessor</span> {
+    processDialogue(dialogue: <span class="class">Dialogue</span>): <span class="class">ProcessedNode</span>[] {
+        <span class="keyword">return</span> dialogue.nodes.map(n => this.processNode(n));
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="best-practices">
+            <h2>5. Best Practices for Modular Design</h2>
+
+            <h3>Code Organization</h3>
+            <h4>Single Responsibility Principle</h4>
+            <pre><code><span class="comment"># BAD: One plugin doing everything</span>
+<span class="keyword">class</span> <span class="class">MegaPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="comment"># Too many responsibilities!</span>
+    <span class="keyword">pass</span>
+
+<span class="comment"># GOOD: Focused, single-purpose plugins</span>
+<span class="keyword">class</span> <span class="class">JSONExportPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="comment"># Only handles JSON export</span>
+    <span class="keyword">pass</span>
+
+<span class="keyword">class</span> <span class="class">DialogueValidatorPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="comment"># Only handles validation</span>
+    <span class="keyword">pass</span></code></pre>
+
+            <h4>Configuration Management</h4>
+            <pre><code><span class="keyword">from</span> core.settings <span class="keyword">import</span> <span class="class">Settings</span>
+
+<span class="keyword">class</span> <span class="class">MyPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.settings = <span class="class">Settings</span>()
+    
+    <span class="keyword">def</span> <span class="function">initialize</span>(self, plugin_manager):
+        self.output_path = <span class="class">Path</span>(
+            self.settings.get(<span class="string">'myplugin_output_path'</span>, <span class="string">'./output'</span>)
+        )
+        <span class="keyword">return</span> <span class="keyword">True</span></code></pre>
+
+            <h3>Error Handling</h3>
+            <pre><code><span class="keyword">def</span> <span class="function">perform_action</span>(self):
+        <span class="keyword">try</span>:
+            result = self._do_something()
+        <span class="keyword">except</span> <span class="class">FileNotFoundError</span> <span class="keyword">as</span> e:
+            self._show_error(<span class="string">f"Required file not found: {e.filename}"</span>)
+        <span class="keyword">except</span> <span class="class">PermissionError</span> <span class="keyword">as</span> e:
+            self._show_error(<span class="string">f"Cannot access file: {e.filename}"</span>)
+        <span class="keyword">except</span> <span class="class">Exception</span> <span class="keyword">as</span> e:
+            self._show_error(<span class="string">f"Unexpected error: {type(e).__name__}: {e}"</span>)
+            logging.getLogger(__name__).exception(<span class="string">"Plugin error"</span>)</code></pre>
+
+            <h3>Logging Best Practices</h3>
+            <pre><code><span class="keyword">import</span> logging
+
+logger = logging.getLogger(__name__)
+
+<span class="keyword">class</span> <span class="class">MyPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="keyword">def</span> <span class="function">perform_operation</span>(self):
+        self.logger.debug(<span class="string">"Debug info"</span>)
+        self.logger.info(<span class="string">"Normal operation"</span>)
+        self.logger.warning(<span class="string">"Unexpected but handled"</span>)
+        self.logger.error(<span class="string">"Operation failed"</span>)</code></pre>
+
+            <h3>UI Design Principles</h3>
+            <pre><code><span class="keyword">from</span> ui.fallout_theme <span class="keyword">import</span> <span class="class">FalloutUIHelpers</span>
+
+<span class="keyword">class</span> <span class="class">MyPluginDialog</span>(<span class="class">QDialog</span>):
+    <span class="keyword">def</span> <span class="function">setup_ui</span>(self):
+        self.button = <span class="class">QPushButton</span>(<span class="string">"Click Me"</span>)
+        <span class="class">FalloutUIHelpers</span>.style_button(self.button)
+        self.label = <span class="class">QLabel</span>(<span class="string">"Status: Active"</span>)
+        self.label.setStyleSheet(<span class="string">"color: #33ff33;"</span>)</code></pre>
+
+            <div class="callout callout-info"><strong>Tip:</strong> Check for dependencies in your initialize method and provide clear error messages if required plugins are missing.</div>
+        </section>
+
+        <section id="api-reference">
+            <h2>6. API Reference Documentation</h2>
+
+            <h3>Plugin Interface</h3>
+            
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="keyword">class</span> <span class="class-name">PluginInterface</span>
+                </div>
+                <div class="api-description">Base class that all plugins must inherit from.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">__init__</span>(self) -> <span class="keyword">None</span>
+                </div>
+                <div class="api-description">Initialize the plugin. Subclasses must call super().__init__() and set self.plugin_info.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">initialize</span>(self, plugin_manager: <span class="class-type">PluginManager</span>) -> <span class="class-type">bool</span>
+                </div>
+                <div class="api-description">Called when plugin is first loaded. Use for one-time initialization.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">activate</span>(self) -> <span class="class-type">bool</span>
+                </div>
+                <div class="api-description">Called when plugin becomes active. Use for enabling functionality.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">deactivate</span>(self) -> <span class="class-type">bool</span>
+                </div>
+                <div class="api-description">Called when plugin is deactivated. Use for cleanup.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">shutdown</span>(self) -> <span class="keyword">None</span>
+                </div>
+                <div class="api-description">Called when plugin is being unloaded. Final cleanup.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">get_hooks</span>(self) -> <span class="class-type">Dict</span>[<span class="class-type">str</span>, <span class="class-type">List</span>[<span class="class-type">Callable</span>]]
+                </div>
+                <div class="api-description">Return dictionary of hook handlers.</div>
+            </div>
+
+            <h3>PluginManager</h3>
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">discover_plugins</span>(self) -> <span class="class-type">List</span>[<span class="class-type">PluginInfo</span>]
+                </div>
+                <div class="api-description">Discover available plugins in configured directories.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">load_plugin</span>(self, plugin_name: <span class="class-type">str</span>, plugin_file: <span class="class-type">Path</span>) -> <span class="class-type">bool</span>
+                </div>
+                <div class="api-description">Load a plugin by name and file path.</div>
+            </div>
+
+            <div class="api-method">
+                <div class="api-signature">
+                    <span class="method-name">call_hook</span>(self, hook_name: <span class="class-type">str</span>, *args, **kwargs) -> <span class="class-type">List</span>[<span class="class-type">Any</span>]
+                </div>
+                <div class="api-description">Call all handlers registered for a specific hook.</div>
+            </div>
+
+            <h3>Data Models</h3>
+            <table>
+                <thead><tr><th>Model</th><th>Key Attributes</th></tr></thead>
+                <tbody>
+                    <tr><td><code>Dialogue</code></td><td>npcname, location, nodes, variables, customprocs, nodecount</td></tr>
+                    <tr><td><code>DialogueNode</code></td><td>nodename, npctext, is_wtg, options, skillchecks</td></tr>
+                    <tr><td><code>PlayerOption</code></td><td>optiontext, nodelink, conditions, has_skill_check</td></tr>
+                    <tr><td><code>SkillCheck</code></td><td>check_what, required_value, modifier, successnode</td></tr>
+                    <tr><td><code>Condition</code></td><td>check_type, check_eval, check_value</td></tr>
+                    <tr><td><code>Variable</code></td><td>name, value, vartype, flags</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="security">
+            <h2>7. Security Considerations</h2>
+
+            <h3>Input Validation</h3>
+            <pre><code><span class="keyword">def</span> <span class="function">process_user_input</span>(self, user_input: <span class="class">str</span>) -> <span class="class">str</span>:
+    <span class="comment"># Validate input length</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(user_input) > 10000:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"Input too long"</span>)
+    
+    <span class="comment"># Sanitize for file operations</span>
+    sanitized = user_input.replace(<span class="string">".."</span>, <span class="string">""</span>).replace(<span class="string">"/"</span>, <span class="string">"_</span>")
+    
+    <span class="comment"># Validate characters</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> sanitized.isalnum() and <span class="keyword">not</span> <span class="string">"_"</span> <span class="keyword">in</span> sanitized:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"Invalid characters"</span>)
+    
+    <span class="keyword">return</span> sanitized</code></pre>
+
+            <h3>Path Traversal Prevention</h3>
+            <pre><code><span class="keyword">import</span> os
+
+<span class="keyword">def</span> <span class="function">safe_path_join</span>(self, base_dir: <span class="class">Path</span>, user_path: <span class="class">str</span>) -> <span class="class">Path</span>:
+    target = (base_dir / user_path).resolve()
+    <span class="keyword">try</span>:
+        target.relative_to(base_dir.resolve())
+    <span class="keyword">except</span> <span class="class">ValueError</span>:
+        <span class="keyword">raise</span> <span class="class">SecurityError</span>(<span class="string">"Path traversal attempt detected"</span>)
+    <span class="keyword">return</span> target</code></pre>
+
+            <h3>Secure File Operations</h3>
+            <pre><code><span class="keyword">def</span> <span class="function">write_to_file</span>(self, file_path: <span class="class">Path</span>, content: <span class="class">str</span>):
+    <span class="comment"># Validate file extension</span>
+    allowed_extensions = {<span class="string">'.json'</span>, <span class="string">'.txt'</span>, <span class="string">'.xml'</span>}
+    <span class="keyword">if</span> file_path.suffix.lower() <span class="keyword">not</span> in allowed_extensions:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"Invalid file type"</span>)
+    
+    <span class="comment"># Check file size</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(content.encode(<span class="string">'utf-8'</span>)) > 10 * 1024 * 1024:
+        <span class="keyword">raise</span> <span class="class">ValueError</span>(<span class="string">"File too large"</span>)</code></pre>
+
+            <div class="callout callout-danger"><strong>Warning:</strong> Never use <code>eval()</code> or <code>exec()</code> with untrusted input.</div>
+        </section>
+
+        <section id="performance">
+            <h2>8. Performance Optimization</h2>
+
+            <h3>Efficient Data Processing</h3>
+            <h4>Lazy Loading</h4>
+            <pre><code><span class="keyword">class</span> <span class="class">MyPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self._heavy_data = <span class="keyword">None</span>
+    
+    <span class="keyword">@property</span>
+    <span class="keyword">def</span> <span class="function">heavy_data</span>(self):
+        <span class="keyword">if</span> self._heavy_data is <span class="keyword">None</span>:
+            self._heavy_data = self._load_heavy_data()
+        <span class="keyword">return</span> self._heavy_data</code></pre>
+
+            <h4>Caching</h4>
+            <pre><code><span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache, cached_property
+
+<span class="keyword">class</span> <span class="class">MyPlugin</span>(<span class="class">PluginInterface</span>):
+    @lru_cache(maxsize=128)
+    <span class="keyword">def</span> <span class="function">process_node</span>(self, node_id: <span class="class">str</span>):
+        <span class="keyword">return</span> self._expensive_computation(node_id)
+    
+    @cached_property
+    <span class="keyword">def</span> <span class="function">configuration</span>(self):
+        <span class="keyword">return</span> self._load_configuration()</code></pre>
+
+            <h3>Memory Management</h3>
+            <pre><code><span class="comment"># GOOD: Use generators for large datasets</span>
+<span class="keyword">def</span> <span class="function">iterate_nodes</span>(self, dialogue):
+    <span class="keyword">yield from</span> dialogue.nodes
+
+<span class="comment"># GOOD: Process in batches</span>
+<span class="keyword">def</span> <span class="function">process_in_batches</span>(self, items, batch_size=100):
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(0, <span class="builtin">len</span>(items), batch_size):
+        batch = items[i:i + batch_size]
+        <span class="keyword">yield from</span> self._process_batch(batch)</code></pre>
+
+            <h3>UI Responsiveness</h3>
+            <pre><code><span class="keyword">from</span> PyQt6.QtCore <span class="keyword">import</span> <span class="class">QThread</span>, pyqtSignal
+
+<span class="keyword">class</span> <span class="class">WorkerThread</span>(<span class="class">QThread</span>):
+    finished = pyqtSignal(<span class="class">dict</span>)
+    progress = pyqtSignal(<span class="class">int</span>)
+    error = pyqtSignal(<span class="class">str</span>)
+
+    <span class="keyword">def</span> <span class="function">run</span>(self):
+        <span class="keyword">try</span>:
+            result = self._do_work()
+            self.finished.emit(result)
+        <span class="keyword">except</span> <span class="class">Exception</span> <span class="keyword">as</span> e:
+            self.error.emit(str(e))</code></pre>
+        </section>
+
+        <section id="testing">
+            <h2>9. Testing Strategies</h2>
+
+            <h3>Unit Tests</h3>
+            <pre><code><span class="keyword">import</span> unittest
+<span class="keyword">from</span> unittest.mock <span class="keyword">import</span> Mock, MagicMock
+
+<span class="keyword">class</span> <span class="class">TestMyPlugin</span>(unittest.TestCase):
+    
+    <span class="keyword">def</span> <span class="function">setUp</span>(self):
+        self.dialogue = <span class="class">MagicMock</span>()
+        self.dialogue.npcname = <span class="string">"Test NPC"</span>
+        self.dialogue.nodecount = 1
+        self.dialogue.nodes = []
+    
+    <span class="keyword">def</span> <span class="function">test_dialogue_creation</span>(self):
+        self.assertEqual(self.dialogue.npcname, <span class="string">"Test NPC"</span>)</code></pre>
+
+            <h3>Integration Tests</h3>
+            <pre><code><span class="keyword">import</span> pytest
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> <span class="class">Path</span>
+
+<span class="keyword">class</span> <span class="class">TestExportIntegration</span>:
+    
+    <span class="keyword">def</span> <span class="function">test_full_export_cycle</span>(self, tmp_path):
+        test_file = tmp_path / <span class="string">"test.json"</span>
+        
+        dialogue = load_dialogue(test_file)
+        exporter = <span class="class">JSONExportPlugin</span>()
+        output_file = tmp_path / <span class="string">"output.json"</span>
+        exporter.export(dialogue, output_file)
+        
+        assert output_file.exists()</code></pre>
+
+            <h3>Mock Implementations</h3>
+            <pre><code><span class="keyword">def</span> <span class="function">create_mock_plugin_manager</span>():
+    mock_manager = <span class="class">Mock</span>()
+    mock_manager.plugins = {}
+    mock_manager.hooks = {}
+    mock_manager.settings = <span class="class">Mock</span>()
+    mock_manager.settings.get = <span class="class">Mock</span>(side_effect=lambda k, d=None: d)
+    <span class="keyword">return</span> mock_manager</code></pre>
+        </section>
+
+        <section id="debugging">
+            <h2>10. Debugging and Troubleshooting</h2>
+
+            <h3>Common Issues</h3>
+            <h4>Plugin Not Loading</h4>
+            <ul>
+                <li>Plugin file is in the correct directory</li>
+                <li>Plugin class inherits from PluginInterface</li>
+                <li>PluginInfo is properly defined in __init__</li>
+                <li>No syntax errors in the plugin file</li>
+            </ul>
+
+            <h4>Hook Not Being Called</h4>
+            <ul>
+                <li>Hook is registered in get_hooks() method</li>
+                <li>Handler function has correct signature</li>
+                <li>Plugin is in ACTIVE state</li>
+                <li>Hook name is spelled correctly</li>
+            </ul>
+
+            <h3>Debugging Tools</h3>
+            <pre><code><span class="comment"># Enable debug logging</span>
+<span class="keyword">import</span> logging
+logging.basicConfig(level=logging.DEBUG)
+
+<span class="comment"># Add debug output</span>
+<span class="keyword">def</span> <span class="function">my_method</span>(self):
+    print(f<span class="string">"Debug: variable = {self.my_var}"</span>)
+    self.logger.debug(f<span class="string">"Processing node: {node_name}"</span>)</code></pre>
+        </section>
+
+        <section id="deployment">
+            <h2>11. Deployment and Distribution</h2>
+
+            <h3>Plugin Directory Structure</h3>
+            <pre><code>plugins/
+    example_plugin.py       <span class="comment"># Bundled plugins</span>
+    export_plugin.py
+    ssl_msg_export_plugin.py
+    
+~/.fallout_dialogue_creator/plugins/  <span class="comment"># User plugins</span>
+    my_custom_plugin.py</code></pre>
+
+            <h3>Distribution Formats</h3>
+            <h4>Single File Plugin</h4>
+            <pre><code><span class="comment"># my_plugin.py - Single file</span>
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>, <span class="class">PluginType</span>
+
+<span class="keyword">class</span> <span class="class">MyPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="keyword">pass</span></code></pre>
+
+            <h3>Installation Instructions</h3>
+            <ol>
+                <li>Download the plugin file(s)</li>
+                <li>Place in user plugins directory:
+                    <ul>
+                        <li>Windows: <code>%USERPROFILE%\.fallout_dialogue_creator\plugins\</code></li>
+                        <li>Linux/Mac: <code>~/.fallout_dialogue_creator/plugins/</code></li>
+                    </ul>
+                </li>
+                <li>Restart the application</li>
+            </ol>
+        </section>
+
+        <section id="migration">
+            <h2>12. Version Compatibility and Migration</h2>
+
+            <h3>Plugin Version Compatibility</h3>
+            <table>
+                <thead><tr><th>Plugin Version</th><th>App Version</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td>1.x</td><td>1.x</td><td>Legacy version</td></tr>
+                    <tr><td>2.0.x</td><td>2.0.x</td><td>Current stable</td></tr>
+                    <tr><td>2.1.x</td><td>2.0.5+</td><td>Uses new features</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Migrating from v1 to v2</h3>
+            <pre><code><span class="comment"># v2 Plugin (Current)</span>
+<span class="keyword">class</span> <span class="class">MigratedPlugin</span>(<span class="class">PluginInterface</span>):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="keyword">super</span>().__init__()
+        self.plugin_info = <span class="class">PluginInfo</span>(
+            name=<span class="string">"Migrated Plugin"</span>,
+            version=<span class="string">"2.0.0"</span>,
+            description=<span class="string">"Migrated from v1"</span>,
+            author=<span class="string">"Author"</span>,
+            plugin_type=<span class="class">PluginType</span>.UI_EXTENSION
+        )
+    
+    <span class="keyword">def</span> <span class="function">initialize</span>(self, plugin_manager):
+        <span class="keyword">return</span> <span class="keyword">True</span></code></pre>
+        </section>
+
+        <section id="examples">
+            <h2>13. Real-World Use Case Examples</h2>
+
+            <h3>Example 1: XML Export Plugin</h3>
+            <pre><code><span class="string">"""
+XML Export Plugin
+Exports dialogues to XML format.
+"""</span>
+
+<span class="keyword">import</span> xml.etree.ElementTree <span class="keyword">as</span> ET
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>, <span class="class">PluginType</span>, <span class="class">PluginHooks</span>, <span class="class">PluginInfo</span>
+
+
+<span class="keyword">class</span> <span class="class">XMLExportPlugin</span>(<span class="class">PluginInterface</span>):
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="keyword">super</span>().__init__()
+        self.plugin_info = <span class="class">PluginInfo</span>(
+            name=<span class="string">"XML Export"</span>,
+            version=<span class="string">"1.0.0"</span>,
+            description=<span class="string">"Export dialogue to XML format"</span>,
+            author=<span class="string">"FDC Team"</span>,
+            plugin_type=<span class="class">PluginType</span>.EXPORT_EXTENSION
+        )
+        self.dialogue = <span class="keyword">None</span>
+
+    <span class="keyword">def</span> <span class="function">get_hooks</span>(self):
+        <span class="keyword">return</span> {
+            <span class="class">PluginHooks</span>.UI_MENU_BAR_CREATED: [self.add_menu],
+            <span class="class">PluginHooks</span>.DIALOGUE_LOADED: [self.store_dialogue],
+        }
+
+    <span class="keyword">def</span> <span class="function">add_menu</span>(self, menu_bar):
+        <span class="keyword">for</span> action <span class="keyword">in</span> menu_bar.actions():
+            <span class="keyword">if</span> action.text() == <span class="string">"&Tools"</span>:
+                export = action.menu().addMenu(<span class="string">"Export XML"</span>)
+                export.addAction(<span class="string">"Export to XML"</span>).triggered.connect(self.export)
+                <span class="keyword">break</span>
+
+    <span class="keyword">def</span> <span class="function">store_dialogue</span>(self, dialogue):
+        self.dialogue = dialogue
+
+    <span class="keyword">def</span> <span class="function">export</span>(self):
+        <span class="keyword">if</span> <span class="keyword">not</span> self.dialogue: <span class="keyword">return</span>
+        
+        <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QFileDialog</span>
+        path, _ = <span class="class">QFileDialog</span>.getSaveFileName(<span class="keyword">None</span>, <span class="string">"Export XML"</span>, <span class="string">f"{self.dialogue.npcname}.xml"</span>)
+
+        <span class="keyword">if</span> path:
+            xml = self.create_xml()
+            <span class="builtin">open</span>(path, <span class="string">'w'</span>).write(xml)
+
+    <span class="keyword">def</span> <span class="function">create_xml</span>(self) -> <span class="class">str</span>:
+        root = ET.Element(<span class="string">"dialogue"</span>)
+        root.set(<span class="string">"exported"</span>, datetime.now().isoformat())
+        
+        meta = ET.SubElement(root, <span class="string">"metadata"</span>)
+        ET.SubElement(meta, <span class="string">"npc"</span>).text = self.dialogue.npcname
+        
+        nodes = ET.SubElement(root, <span class="string">"nodes"</span>)
+        <span class="keyword">for</span> node <span class="keyword">in</span> self.dialogue.nodes:
+            node_el = ET.SubElement(nodes, <span class="string">"node"</span>)
+            node_el.set(<span class="string">"name"</span>, node.nodename)
+            ET.SubElement(node_el, <span class="string">"text"</span>).text = node.npctext
+            
+            <span class="keyword">for</span> opt <span class="keyword">in</span> node.options:
+                opt_el = ET.SubElement(node_el, <span class="string">"option"</span>)
+                ET.SubElement(opt_el, <span class="string">"text"</span>).text = opt.optiontext
+
+        ET.indent(root)
+        <span class="keyword">return</span> ET.tostring(root, encoding=<span class="string">'unicode'</span>)</code></pre>
+
+            <h3>Example 2: Statistics Analyzer</h3>
+            <pre><code><span class="string">"""
+Statistics Plugin
+Analyzes dialogue and provides statistics.
+"""</span>
+
+<span class="keyword">from</span> collections <span class="keyword">import</span> Counter
+<span class="keyword">from</span> core.plugin_system <span class="keyword">import</span> <span class="class">PluginInterface</span>, <span class="class">PluginType</span>, <span class="class">PluginHooks</span>, <span class="class">PluginInfo</span>
+
+
+<span class="keyword">class</span> <span class="class">StatisticsPlugin</span>(<span class="class">PluginInterface</span>):
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="keyword">super</span>().__init__()
+        self.plugin_info = <span class="class">PluginInfo</span>(
+            name=<span class="string">"Dialogue Statistics"</span>,
+            version=<span class="string">"1.0.0"</span>,
+            description=<span class="string">"Analyze dialogue statistics"</span>,
+            author=<span class="string">"FDC Team"</span>,
+            plugin_type=<span class="class">PluginType</span>.DIALOGUE_PROCESSOR
+        )
+        self.dialogue = <span class="keyword">None</span>
+
+    <span class="keyword">def</span> <span class="function">get_hooks</span>(self):
+        <span class="keyword">return</span> {
+            <span class="class">PluginHooks</span>.UI_MENU_BAR_CREATED: [self.add_menu],
+            <span class="class">PluginHooks</span>.DIALOGUE_LOADED: [self.store_dialogue],
+        }
+
+    <span class="keyword">def</span> <span class="function">add_menu</span>(self, menu_bar):
+        <span class="keyword">for</span> action <span class="keyword">in</span> menu_bar.actions():
+            <span class="keyword">if</span> action.text() == <span class="string">"&Tools"</span>:
+                action.menu().addAction(<span class="string">"Show Statistics"</span>).triggered.connect(self.show_stats)
+                <span class="keyword">break</span>
+
+    <span class="keyword">def</span> <span class="function">store_dialogue</span>(self, dialogue):
+        self.dialogue = dialogue
+
+    <span class="keyword">def</span> <span class="function">show_stats</span>(self):
+        <span class="keyword">if</span> <span class="keyword">not</span> self.dialogue: <span class="keyword">return</span>
+
+        total_nodes = <span class="builtin">len</span>(self.dialogue.nodes)
+        total_options = <span class="builtin">sum</span>(<span class="builtin">len</span>(n.options) <span class="keyword">for</span> n <span class="keyword">in</span> self.dialogue.nodes)
+        
+        skill_counts = Counter()
+        <span class="keyword">for</span> node <span class="keyword">in</span> self.dialogue.nodes:
+            <span class="keyword">for</span> opt <span class="keyword">in</span> node.options:
+                <span class="keyword">if</span> opt.has_skill_check and opt.skill_check:
+                    skill_counts[opt.skill_check.check_what.name] += 1
+
+        text = <span class="string">f"""Dialogue Statistics
+
+NPC: {self.dialogue.npcname}
+Total Nodes: {total_nodes}
+Total Options: {total_options}
+
+Skill Checks:"""</span>
+        
+        <span class="keyword">for</span> skill, count <span class="keyword">in</span> skill_counts.items():
+            text += <span class="string">f"\n  {skill}: {count}"</span>
+
+        <span class="keyword">from</span> PyQt6.QtWidgets <span class="keyword">import</span> <span class="class">QMessageBox</span>
+        <span class="class">QMessageBox</span>.information(<span class="keyword">None</span>, <span class="string">"Statistics"</span>, text)</code></pre>
+        </section>
+
+        <section id="faq">
+            <h2>14. Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I create my first plugin?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Create a new Python file in the <code>plugins/</code> directory. Inherit from <code>PluginInterface</code>, define your <code>PluginInfo</code>, and implement the required methods. See Tutorial 1 for a complete example.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Where should I place my plugin files?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Bundled plugins go in <code>./plugins/</code>, user plugins go in <code>~/.fallout_dialogue_creator/plugins/</code>.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I add a menu item to the application?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Register for the <code>UI_MENU_BAR_CREATED</code> hook. In your handler, find the desired menu and add your action.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I access the current dialogue from my plugin?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! Register for the <code>DIALOGUE_LOADED</code> hook. The dialogue object will be passed to your handler.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I handle errors gracefully?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Always wrap potentially failing operations in try/except blocks. Provide clear error messages to users via QMessageBox. Log errors for debugging.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can plugins depend on other plugins?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, declare dependencies in your <code>PluginInfo</code>. Check for them in your <code>initialize</code> method.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I test my plugin?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Use Python's unittest or pytest. Create mock objects for <code>PluginManager</code>, <code>Dialogue</code>, etc.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Why is my hook not being called?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Check: 1) Hook is registered in get_hooks(), 2) Handler has correct signature, 3) Plugin is in ACTIVE state, 4) Hook name is correct.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I export data from the dialogue?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Create an export plugin. Access the dialogue object, iterate through nodes/options, and write to your desired format.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What if my plugin needs to store settings?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Use the application's <code>Settings</code> class. Call <code>settings.get()</code> to read and <code>settings.set()</code> to save.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I use external Python packages in my plugin?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, but consider portability. Document requirements clearly. Consider using the standard library when possible.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Fallout Dialogue Creator 2.0 - Plugin Development Guide</p>
+        <p>Version 2.0 | Documentation for plugin developers</p>
+    </footer>
+
+    <div class="scroll-top" onclick="scrollToTop()">▲</div>
+
+    <script>
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function toggleFaq(element) {
+            element.nextElementSibling.classList.toggle('active');
+            element.querySelector('span:last-child').innerHTML = 
+                element.nextElementSibling.classList.contains('active') ? '▲' : '▼';
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                var targetId = this.getAttribute('href');
+                var target = document.querySelector(targetId);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

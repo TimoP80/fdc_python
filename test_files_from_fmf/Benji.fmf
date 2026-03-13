@@ -1,0 +1,133 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Benji"
+Location "Sandover"
+Description "dialogue with Benji"
+Unknown_Desc "You see a tired-looking barman."
+Known_Desc "You see Benji the barman."
+Detailed_Desc "You see a tired-looking barman. Weeping sores cover his face and exposed arms."
+/* Regular nodes */
+
+Node "Switcher"
+notes "check to see if Pc has met Benji before"
+{
+NPCText "switch"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "first meeting" linkto "Start"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "met before" linkto "Goback"  notes ""
+              }
+}
+Node "Start"
+notes ""
+{
+NPCText "You look like you could use a drink, stranger. Name's Benji. What'll it be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What've you got?" linkto "Menu"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use information. What can you tell me about this place?" linkto "Info"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Rink? Wan' rink!" linkto "Stoopid"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now, friend." linkto "done"  notes ""
+              }
+}
+Node "Goback"
+notes ""
+{
+NPCText "Back again, stranger? What'll it be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What've you got?" linkto "Menu"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use information. What can you tell me about this place?" linkto "Info"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Rink? Wan' rink!" linkto "Stoopid"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now. See you later, Benji." linkto "done"  notes ""
+              }
+}
+Node "Menu"
+notes "corrected - options 1 and 3 only appear if player has respective amount of caps, 2 and 4 only appear if they don't\n- 1 and 3 need to remove correct amount of money and add drink to inventory"
+{
+NPCText "5 caps'll get you a beer. For the more discerning customer, it's 8 for a bottle've Rot Gut. I can't promise it won't send you blind, but it does the job."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have a beer." linkto "Beer" conditions { CHECK_MONEY dude_caps >= 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have a beer." linkto "NoMoney" conditions { CHECK_MONEY dude_caps < 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll take my chances with the Rot Gut." linkto "Rotgut" conditions { CHECK_MONEY dude_caps >= 8 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll take my chances with the Rot Gut." linkto "NoMoney" conditions { CHECK_MONEY dude_caps < 8 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can think of more creative ways to destroy my liver. Later." linkto "done"  notes ""
+              }
+}
+Node "NoMoney"
+notes ""
+{
+NPCText "Hey! What're you trying to pull? Go scavenge some more and come back when you got money."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Beer"
+notes ""
+{
+NPCText "Drink up... finest brew in Texas. Well, almost. Best you'll find in this forsaken hole, anyhow."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Info"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, Benji. Goodbye." linkto "Start"  notes ""
+              }
+}
+Node "Rotgut"
+notes ""
+{
+NPCText "Take it easy with this stuff. One time, I drank a whole bottle, and I could've sworn I saw guts in the bowl the next - um, I mean, enjoy your drink."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Info"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, Benji. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Info"
+notes ""
+{
+NPCText "Not much to tell you, really. Sandover's a place where the sick and the lame come to get sicker. I wouldn't recommend you hang around here too long. You don't want to end up looking like me, do you? [He gestures at the sores across his face.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's your story?" linkto "Story"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It doesn't look so bad, Benji. See you later." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure don't - you do look pretty hideous. See you around." linkto "done"  notes ""
+              }
+}
+Node "Story"
+notes ""
+{
+NPCText "It's a boring story. Was a trader, passed too close to here, copped too big a dose of radiation. Thought I might as well make myself a home here, for the days I got left. It's not so bad, I suppose. Folks round here are mostly friendly enough. Do you want a drink or not? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. What's on tap?" linkto "Menu"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not right now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Stoopid"
+notes "corrected - option 1 appears if player has enough (5) for a beer, option 2 only appears if they don't\n- option 1 needs to subtract 5 from PC money and add beer to inventory"
+{
+NPCText "Great, a bright one... Listen, pal, you give me five of those shiny round things, I give you one of these tasty wet things. Get me?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Kay... wet make not thirsty." linkto "StoopidDrink" conditions { CHECK_MONEY dude_caps >= 5 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Kay... wet make not thirsty." linkto "NoMoney" conditions { CHECK_MONEY dude_caps < 5 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wha? No! Shinies mine!" linkto "StoopidNoDrink"  notes ""
+              }
+}
+Node "StoopidNoDrink"
+notes ""
+{
+NPCText "Hhhh. Never mind, all right? Go talk to that nice man over there."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ohh-kayy!" linkto "done"  notes ""
+              }
+}
+Node "StoopidDrink"
+notes ""
+{
+NPCText "Here you are. Don't drink it too fast, understand? Too much wet thing make head spin, make retard sick."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Than'oo." linkto "done"  notes ""
+              }
+}

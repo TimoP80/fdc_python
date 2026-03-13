@@ -1,0 +1,137 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName "Mitch"
+Location "Vault 31"
+Description "Dialog for Mitch the Vault guard v1.0"
+Unknown_Desc "A burly, but kind-looking man."
+Known_Desc "Its Mitch, Vault 31's door guard."
+Detailed_Desc "A security guard for Vault 31. He's wearing combat armor, and his stance is relaxed. Maybe not the most alert guy in the world, but he IS guarding a door which hasn't opened in a long, looong time."
+Node "Start"
+notes ""
+{
+NPCText "Oh hey, <PC>. How's it going?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey Mitch. How are you?" linkto "A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry Mitch, gotta run." linkto "B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Oh, it good. How you?" linkto "A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "(Blank stare)" linkto "K"  notes ""
+              }
+}
+Node "A"
+notes ""
+{
+NPCText "Oh, I'm doing all right. It gets a little boring standing here all day, but a job is a job, y'know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Amen to that. Say, how long has it been since that door closed?" linkto "C"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Speaking of jobs, I've got to get back to mine. Later, Mitch." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh huh. How long have we been down here?" linkto "C"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got work to do. Bye bye Mitch." linkto "done"  notes ""
+              }
+}
+Node "B"
+notes ""
+{
+NPCText "Well, in that case, I won't keep you. Come by and chat if you have time, ok?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure thing Mitch. See you later." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "(Wave goodbye)" linkto "done"  notes ""
+              }
+}
+Node "C"
+notes ""
+{
+NPCText "It's been over a hundred years now. You know, I'm starting to think it never will open."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're not the only one. I wonder what it looks like out there?" linkto "D"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aren't you curious to see what it looks like out there?" linkto "E"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, would you look at the time! I'll see you later, Mitch." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me too. What it like outside?" linkto "D"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You not curious?" linkto "E"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uhhh, I need go now." linkto "done"  notes ""
+              }
+}
+Node "D"
+notes ""
+{
+NPCText "I don't much care, to tell you the truth. All I know is that it's dangerous up top, and this door keeps us safe."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You aren't the curious type, are you?" linkto "F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. Listen, I've got to run. See you later, Mitch!" linkto "B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You no fun Mitch! Me want see outside!" linkto "F"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go work now, ok?" linkto "B"  notes ""
+              }
+}
+Node "E"
+notes ""
+{
+NPCText "Nope. As far as I'm concerned, we might as well stay here as long as we can."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't you get tired of standing here every day?" linkto "G"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We can't stay here forever, Mitch. Eventually the reactor will shut down and we'll have to leave." linkto "H"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You not bored of guard job?" linkto "G"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Power run out one day..." linkto "H"  notes ""
+              }
+}
+Node "F"
+notes ""
+{
+NPCText "Hey, curiousity killed the cat, and it'll get you killed too if you aren't careful."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The reactor isn't going to run forever. Think about that." linkto "I"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Speaking of killing, I'm dead meat if I miss my shift. See you later Mitch!" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Power not last for always. Think, Mitch." linkto "I"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh oh, I late for work. Bye Mitch!" linkto "done"  notes ""
+              }
+}
+Node "G"
+notes ""
+{
+NPCText "Well sure, but what's else am I going to do? Its way too dangerous on the surface to leave. Besides, its not like I can go ask to do something else."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess it IS out of your hands. Don't you ever wonder what will happen when the reactor shuts down?" linkto "I"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you're just going to stand here for the rest of your life? Sounds kind of boring." linkto "D"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh uh. You stuck here until power goes bye bye." linkto "I"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not like guard job. It boring." linkto "D"  notes ""
+              }
+}
+Node "H"
+notes ""
+{
+NPCText "And that's when we leave. No point in taking chances, right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(Sigh) Listen, I need to get back to work. I'll see you later." linkto "B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uhhhm. I go to work now." linkto "B"  notes ""
+              }
+}
+Node "I"
+notes ""
+{
+NPCText "Listen, that's not my problem, ok? I'm the door guard, not a Techie. It's their job to come up with a plan."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And there's a good reason too. I'll see you later, Mitch." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me sorry, Mitch. Don't get mad." linkto "J"  notes ""
+              }
+}
+Node "J"
+notes ""
+{
+NPCText "I'm not mad, okay? Just... just get back to work."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye Bye." linkto "done"  notes ""
+              }
+}
+Node "K"
+notes ""
+{
+NPCText "Right. Uhhh, I'll see you later, ok?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}

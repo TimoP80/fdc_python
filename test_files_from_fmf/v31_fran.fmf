@@ -1,0 +1,72 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "I saw you talking to Adam over there. You should watch yourself around him. He's got a bad case of the crazies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe he just sees more than we do." linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're telling me. He thinks the vault is being run by androids." linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He does seem a little strange. I'm sure he's harmless." linkto "Node_004"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "Yeah, right. You sound half as crazy as he does."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "Is it androids now? Last week it was aliens. Week before, he thought the CEO was possessed by the ghost of some guy named 'Nixon.' Like I said, Adam's crazy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure he's harmless." linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll watch my back around him." linkto "done"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "That's what you say now. Wait till he decides you're some sort of immortal monster and comes at you with a wooden stake."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He actually did that?" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's sick, that's all." linkto "Node_006"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "[She shows you a thin scar along her collarbone] Twice. Just stay away from him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It sounds like he needs help." linkto "Node_006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I will." linkto "done"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "He's sick all right, but he's beyond help. They should do something about him before he kills someone."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll bear that in mind." linkto "done"  notes ""
+              }
+}

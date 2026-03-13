@@ -1,0 +1,1466 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.2-stable
+
+*/
+
+vars {
+local var LVAR_Quinn_Story_Before notes "Keeps track of whether Quinn has told the story of CotC's origins before." = 0;
+}
+NPCName "Quinn"
+Location "Whaler, City on the Coast"
+Description "See the http://www.fanmadefallout.com/forums/viewtopic.php?t=1536&start=75 thread on the FMF forums for details on how we're going to link the Quinn_M* random madness paths to the rest of his 'sane' dialogue."
+Unknown_Desc "You see: an old man."
+Known_Desc "You see: Captain Quinn."
+Detailed_Desc "(Before cure): He seems distracted, as if upset about something. (After cure): He's wearing old-fashioned sailor-looking clothes."
+/* Float message nodes */
+
+Floatnode "Quinn_mad"
+notes "Quinn's general floats whilst he's still mad."
+{
+"More longer friend see that sky?",
+"Claws and paws and guts and gore.",
+"I can't think straight!",
+"Where's Polly? She usually deals with this.",
+"I had a terrible dream about Polly last night.",
+"Where's my pretty parrot gone?",
+"Guts everywhere, like you've never seen!",
+"But it can't have happened like that. Can't have.",
+"Claws in the night, such a fright.",
+"The beast!",
+"I hear it!",
+"I hear your voice, monster!",
+"Come out from behind there!"
+}
+Floatnode "Quinn_cured"
+notes "Quinn's general floats after he's cured."
+{
+"I feel like a new man.",
+"Might even put out to sea again one of these days.",
+"I might be better, but this town don't run itself.",
+"I got those rat fellers all wrong; they're okay.",
+"Should think about making some memorial to Polly.",
+"Just take it one day at a time, Quinn.",
+"I've missed so much...",
+"Better make sure this town knows I'm back in charge."
+}
+Floatnode "Quinn_combat"
+notes "Quinn's combat taunts."
+{
+"I'll have your gizzards for me breakfast!",
+"I'll keel haul yer, d'you hear?",
+"You picked the wrong man for a fight!",
+"I may be old, but I still know a few tricks!",
+"Gut yer like a damn fish!",
+"I'll decorate the wall o' me cabin with yer skull!"
+}
+Floatnode "Quinn_trip"
+notes "Quinn's dream juice trip. Quinn floats the first four lines on his own as he enters the map. The 'Quinn, wait.' is spoken by the deathclaw; Quinn floats the next one; the Dclaw the one after that, and so on. The Dclaw morphs into Polly when Quinn speaks the line, 'Wife, what the... what's happening? Polly, is that you?' Polly disappears after the last node."
+{
+"What the hell is this place?",
+"What's that?",
+"The thing! The beast! I see it!",
+"Have at you, animal!",
+"Quinn, wait.",
+"Did... did you just speak?",
+"Of course, don't you recognize your own wife?",
+"Wife, what the... what's happening? Polly, is that you?",
+"Yes, dear.",
+"For the holy love of mackerel, will you tell me what's going on?",
+"I have a message for you.",
+"From who?",
+"'From whom.' Do learn to speak properly, dear.",
+"Heh. That's my Polly all right.",
+"Listen, you've got to let go of what happened to me on the night I left you.",
+"It's all I can think about. I think I'm going mad. I think I've *gone* mad.",
+"It's never too late. Let go, Quinn. Let go.",
+"I'm just an old man... what use is my mind to anyone anyway?",
+"That's not the Quinn I married. The City still needs much from you.",
+"That's as maybe, but how can a captain lead with such a guilt on his shoulders?",
+"You carry the guilt for nothing, my love.",
+"What do you mean?",
+"There was nothing you could have done to stop the beast, you must know that.",
+"Do you... do you forgive me?",
+"Same old Quinn, deaf as a post. There's nothing to forgive, my love.",
+"Polly, I miss you so much.",
+"Stay well, Quinn.",
+"Don't go!"
+}
+
+/* Regular nodes */
+
+Node "Quinn_0"
+notes ""
+is_wtg = false
+{
+NPCText "- SWITCHER -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC has never met Quinn>" linkto "Quinn_01_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC is female (and not dumb) and never met Quinn>" linkto "Quinn_01_1F_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC has met Quinn before>" linkto "Quinn_01_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC has cured Quinn's madness>" linkto "Quinn_01_1c_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC is dumb and never met Quinn>" linkto "Quinn_01_1a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC is dumb and has met Quinn before>" linkto "Quinn_01_1b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC is dumb and has cured Quinn's madness>" linkto "Quinn_01_1c_1"  notes ""
+              }
+}
+Node "Quinn_01_1a"
+notes ""
+is_wtg = false
+{
+NPCText "Who are you? What have you done with my Polly?"
+ NPCFemaleText "Polly, is that you?"
+      options {
+          int=4 Reaction=REACTION_GOOD Gender=FEMALE playertext "No, I'm not Polly. I'm <PC>; good to meet you." linkto "Quinn_01_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "I'm sorry, I don't know who you mean. I'm <PC>; glad to meet you." linkto "Quinn_01_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "No. Who's this Polly?" linkto "Quinn_01_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I haven't done anything to anyone called Polly." linkto "Quinn_01_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "What the fuck are you gibbering about?" linkto "Quinn_01_1a_2B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Who Polly?" linkto "Quinn_01_1a_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Me not Polly. Me <PC>." linkto "Quinn_01_1a_2a_1"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "You stupid. <PC> kill old man." linkto "combat"  notes ""
+              }
+}
+Node "Quinn_01_1a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Polly, my dear, pretty girl-parrot."
+ NPCFemaleText "No, of course you're not. Ignore me; I get... confused sometimes. So, what can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Polly's a parrot?" linkto "Quinn_02_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Polly?" linkto "Quinn_02_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm here to ask you a few questions." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just leaving." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Polly a parrot?" linkto "Quinn_02_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Who Polly?" linkto "Quinn_02_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask question." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1a_2B"
+notes ""
+is_wtg = false
+{
+NPCText "What? Think you've found a weakling in old Quinn, do you? Think again, boy."
+ NPCFemaleText "What? Think you've found a weakling in old Quinn, do you? Think again, girl."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "We'll see about that. [Draw weapon]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "I was going to kill you, but now I can't be bothered." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Who's there? Come for my blessing, have you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "We've met before. Don't you remember?" linkto "Quinn_01_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the beast that took your wife. It's dead." linkto "Quinn_03a_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn is still mad."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few questions for you." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've come from the Rat Temple. I think there is a way to help you." linkto "Quinn_04a_1"  notes "if PC is a prophet of the rat temple"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want another story!" linkto "Quinn_08_01" conditions { LOCAL_VARIABLE LVAR_Quinn_Story_Before > 0 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I killed bad nightmare-man! Look at me!" linkto "Quinn_03a_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn is still mad."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "<PC> got a thing he want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC> got a thing she want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You smell old." linkto "Quinn_0D_1"  notes "If PC has not got Nemesis quest"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man! Giant rat from the sky can fix your brain!" linkto "Quinn_04D"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bah. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1b_2"
+notes ""
+is_wtg = false
+{
+NPCText "We have? It must've slipped my mind. Never get old, boy. It does things to you."
+ NPCFemaleText "We have? It must've slipped my mind. Never get old. It does things to you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the beast that took your wife. It's dead." linkto "Quinn_03a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've come from the Rat Temple. I think there is a way to help you." linkto "Quinn_04a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few questions for you." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll keep that in mind. See you around." linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1c_1"
+notes ""
+is_wtg = false
+{
+NPCText "<PC>, my favorite rat-lovin' guy! How does the day find you?"
+ NPCFemaleText "<PC>, my favorite rat-lovin' girl! How does the day find you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you now, Captain?" linkto "Quinn_01_1c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the beast that took your wife. It's dead." linkto "Quinn_03b_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn has been cured."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few questions for you." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "How old man feeling?" linkto "Quinn_01_1c_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I killed bad nightmare-man! Look at me!" linkto "Quinn_03b_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn has been cured."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "<PC> got a thing he want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC> got a thing she want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bah. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Good. I'm good. Taking it ahead easy: one day at a time. Your rat-juice took me to some places I needed to go."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're cured?" linkto "Quinn_01_1c_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the beast that took your wife. It's dead." linkto "Quinn_03b_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn has been cured."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few questions for you." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man brain-fixed?" linkto "Quinn_01_1c_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I killed bad nightmare-man! Look at me!" linkto "Quinn_03b_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn has been cured."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "<PC> got a thing he want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC> got a thing she want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bah. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1c_3"
+notes ""
+is_wtg = false
+{
+NPCText "In a kinda way, I don't think I ever was really ill. It's just... funny the way the mind plays tricks when you ignore the things you need to take care of the most."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_01_1c_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_01_1c_4"  notes ""
+              }
+}
+Node "Quinn_01_1c_4"
+notes ""
+is_wtg = false
+{
+NPCText "Anyway, thanks, if I didn't say so before. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the beast that took your wife. It's dead." linkto "Quinn_03b_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn has been cured."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a few questions for you." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I killed bad nightmare-man! Look at me!" linkto "Quinn_03b_1"  notes "This option only appears if the PC has killed the deathclaw AND Quinn has been cured."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "<PC> got a thing he want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC> got a thing she want ask old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bah. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1F_1"
+notes ""
+is_wtg = false
+{
+NPCText "About time, Polly. Why, a man could die of thirstiness in the time it takes you to... What's this then? What've you done?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you talking about? Who's Polly?" linkto "Quinn_01_1F_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Quinn_01_2"  notes "if PC has never heard of quinn"
+          int=4 Reaction=REACTION_NEUTRAL playertext "My name's <PC>. I've come to ask you some questions." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_1F_2"
+notes ""
+is_wtg = false
+{
+NPCText "Ah, my Polly. Those eyes, those eyes. Eyes and worms and flies. But you're not her! So what is it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to know what happened to your wife." linkto "Quinn_02_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about this town of yours." linkto "Quinn_07_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing, forget it." linkto "done"  notes ""
+              }
+}
+Node "Quinn_01_2"
+notes ""
+is_wtg = true
+{
+NPCText "Why, I can't believe you'd need to ask. I'm the Captain of this fine boat. Captain Quinn! Best remember the name, boy."
+ NPCFemaleText "Why, I can't believe you'd need to ask. I'm the Captain of this fine boat. Captain Quinn! Best remember the name, girl."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_01_3"  notes ""
+              }
+}
+Node "Quinn_01_3"
+notes ""
+is_wtg = true
+{
+NPCText "So that's me. What about you? What're you here for?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to know what happened to your wife." linkto "Quinn_02_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about this town of yours." linkto "Quinn_07_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mind me. I was just leaving." linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_1"
+notes ""
+is_wtg = false
+{
+NPCText "'Til death do us apart, for richer or poorer. My lovely lady wife, her guts for garters."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Polly's your wife?" linkto "Quinn_02_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What was that about guts?" linkto "Quinn_02_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just leaving." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Guts?" linkto "Quinn_02_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask a question about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Aye, my pretty parrot. That she be, all inside out and made of muss."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What was that about guts?" linkto "Quinn_02_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You thought I'd done something to Polly when we first met. Has she been missing?" linkto "Quinn_02_3"  notes "This is not the first time the PC has spoken to Quinn; the PC is male."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You thought I was Polly when we first spoke. Has she been missing?" linkto "Quinn_02_3"  notes "This is not the first time the PC has spoken to Quinn; the PC is female."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You said earlier you thought I'd done something to Polly. Has she been missing?" linkto "Quinn_02_3"  notes "This is the first time the PC has spoken to Quinn; the PC is male."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You said earlier you thought I was Polly. Has she been missing?" linkto "Quinn_02_3"  notes "This is the first time the PC has spoken to Quinn; the PC is female."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just leaving." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Guts?" linkto "Quinn_02_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Where you think Polly lady-parrot is?" linkto "Quinn_02_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask a question about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Gizzards and innards and dangly things. We're all made of 'em, boy. Some of us see more of them than most."
+ NPCFemaleText "Gizzards and innards and dangly things. We're all made of 'em, girl. Some of us see more of them than most."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Polly's your wife?" linkto "Quinn_02_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You thought I'd done something to Polly when we first met. Has she been missing?" linkto "Quinn_02_3"  notes "This is not the first time the PC has spoken to Quinn; the PC is male."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You thought I was Polly when we first spoke. Has she been missing?" linkto "Quinn_02_3"  notes "This is not the first time the PC has spoken to Quinn; the PC is female."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You said earlier you thought I'd done something to Polly. Has she been missing?" linkto "Quinn_02_3"  notes "This is the first time the PC has spoken to Quinn; the PC is male."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You said earlier you thought I was Polly. Has she been missing?" linkto "Quinn_02_3"  notes "This is the first time the PC has spoken to Quinn; the PC is female."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just leaving." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where you think Polly lady-parrot is?" linkto "Quinn_02_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask a question about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_3"
+notes "The Quinn_06_* path is where the PC can find out from Quinn about his wife."
+is_wtg = true
+{
+NPCText "My Polly. The brute took her bones and the sea took her blood and all I'm left with are these worms in my throat."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Some people say you killed her." linkto "Quinn_02_4a"  notes "If the PC has heard rumours about the death in CotC."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What brute? Who are you talking about?" linkto "Quinn_02_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me what happened." linkto "Quinn_02_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for clearing that up. Bye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear you kill Polly!" linkto "Quinn_02_4a"  notes "If the PC has heard rumours about the death in CotC."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What this brute?" linkto "Quinn_02_4b_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> more." linkto "Quinn_02_4b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Now <PC> got an ask about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_4a"
+notes ""
+is_wtg = false
+{
+NPCText "They say, they say! Well I say they can have her! They can clean their teeth on her guts for what I care! I don't want her anymore, I don't want her blood tasting in my mouth, I don't want these flies' eggs in my belly. I want her out!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me what happened to her." linkto "Quinn_02_4b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> more." linkto "Quinn_02_4b_1"  notes ""
+              }
+}
+Node "Quinn_02_4b_1"
+notes ""
+is_wtg = true
+{
+NPCText "Nothing left to tell. Her blood grew worms. They swam away. Now there's only me and him. The brute."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The brute? Who are you talking about?" linkto "Quinn_02_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've heard it said you killed her." linkto "Quinn_02_4a"  notes "If the PC has heard rumours about the death in CotC."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What this brute? Tell more." linkto "Quinn_02_4b_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear you kill Polly." linkto "Quinn_02_4a"  notes ""
+              }
+}
+Node "Quinn_02_4b_2"
+notes ""
+is_wtg = false
+{
+NPCText "The beast! Oh, that brute, I saw him I did! Dipped in blood up to his neck, all claws and teeth and eyes deep as the night sky, colder, emptier still. Came out of the night mist and snapped her all to bits."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_02_4b_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_02_4b_3"  notes ""
+              }
+}
+Node "Quinn_02_4b_3"
+notes ""
+is_wtg = false
+{
+NPCText "I only watched as he bit her and shook her and he chewed her up and the blood and the screams and all that blood and the screams went on for hours! Oh, my Polly. Where did you fly off to now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Has anyone else ever seen this 'brute' of yours? " linkto "Quinn_02_4b_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe this monster to me." linkto "Quinn_02_4b_4c"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Do you really expect people to believe this crap?" linkto "Quinn_02_4b_4B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who else seen monster?" linkto "Quinn_02_4b_4a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> more about monster." linkto "Quinn_02_4b_4c"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "This a story for childs. <PC> too clever to believe!" linkto "Quinn_02_4b_4B_1"  notes ""
+              }
+}
+Node "Quinn_02_4b_4a"
+notes ""
+is_wtg = true
+{
+NPCText "I expect more than a few have! But lived to say? There's only me. Me and the brute and all these flies in my belly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe this monster to me." linkto "Quinn_02_4b_4c"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "A monster ate your wife, and only you saw it. No wonder nobody believes you." linkto "Quinn_02_4b_4B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the story. I'll be leaving now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> more about monster." linkto "Quinn_02_4b_4c"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "This a story for childs. <PC> too clever to believe!" linkto "Quinn_02_4b_4B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> got an ask about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_4b_4b"
+notes ""
+is_wtg = false
+{
+NPCText "Blades, cruel blades, and the moon and the blood. Oceans! And those eyes, and oh Polly. Where did you get to now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I better get going. Thanks for your help." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See you later, you crazy old man." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bad man killed your bird with a sword?!" linkto "Quinn_0D_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask old man about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_4b_4B_1"
+notes ""
+is_wtg = true
+{
+NPCText "I believe it! He believes it, in whatever blackened hole of a mind he has. And Polly, where she is I don't know, but best think she believes it too!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Has anyone else ever seen this 'brute'?" linkto "Quinn_02_4b_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Describe it to me, this monster." linkto "Quinn_02_4b_4c"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Well, it sounds like the ravings of a lunatic to me." linkto "Quinn_02_4b_4B_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who else seen monster?" linkto "Quinn_02_4b_4a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> more about monster." linkto "Quinn_02_4b_4c"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "This silly! <PC> not listen to old man silly-talk!" linkto "Quinn_02_4b_4B_2"  notes ""
+              }
+}
+Node "Quinn_02_4b_4B_2"
+notes ""
+is_wtg = true
+{
+NPCText "Then you're one of them, eh? Thinks it were me that did it, or elsewise she just got lost? Bah! Get away with you! Out! "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_02_4b_4c"
+notes ""
+is_wtg = false
+{
+NPCText "I told you, didn't I? Tall as the trees, faster than a high wind. Horns and claws like great blades, jaws that could swallow you whole. And the eyes! They'll bind your feet with a glance and empty your bladder just as fast."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know these creatures. People to the north call them 'deathclaws'." linkto "Quinn_02_4b_4b"  notes "PC has encountered deathclaws elsewhere/heard about them. There's talk that this can be handled by the generic deathclaw script, which increments a GVAR when the PC sees them..."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Has anyone ever seen this monster besides you?" linkto "Quinn_02_4b_4a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "What a load of crap. No wonder nobody believes you." linkto "Quinn_02_4b_4B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting story. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wait! <PC> know these monster called a 'deathclaw'." linkto "Quinn_02_4b_4b"  notes "PC has encountered deathclaws elsewhere/heard about them. There's talk that this can be handled by the generic deathclaw script, which increments a GVAR when the PC sees them..."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who else seen monster?" linkto "Quinn_02_4b_4a"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "This a story for childs. <PC> too clever to believe!" linkto "Quinn_02_4b_4B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> got an ask about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_03a_1"
+notes "The Quinn_03a_* path is where the PC reveals he's killed the nemesis (deathclaw) to Quinn, before he's been cured by the rat cultists."
+is_wtg = false
+{
+NPCText "That's a cruel joke to tell an old man, boy. You could no more kill the brute than I could walk on the sea."
+ NPCFemaleText "That's a cruel joke to tell a grieving old man, girl. You could no more kill the brute than I could walk on the sea."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found it in an old farmhouse out of town. It put up quite a fight." linkto "Quinn_03a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've brought its skin back. Look familiar?" linkto "Quinn_03a_2b_1"  notes "If PC has the skin"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. See you later." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No joking! Smashing. Look! [Show him the skin.]" linkto "Quinn_03a_2b_1"  notes "If PC has the skin"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No joking! Smashing." linkto "Quinn_03a_2a"  notes "if PC doesnt have the skin"
+              }
+}
+Node "Quinn_03a_2a"
+notes ""
+is_wtg = true
+{
+NPCText "Have to catch it to kill it. Only the ocean can catch the moonlight. Can't kill the ocean."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I brought it's skin back with me. Look familiar?" linkto "Quinn_03a_2b_1"  notes "If PC has the deathclaw skin."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about somthing else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Erm. Good point. I guess I'll be back later." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> got skin of monster. <PC> show old man. [Show Quinn the 'monster's' skin]." linkto "Quinn_03a_2b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask old man about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Only the... Eh? [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_03a_2b_1"
+notes ""
+is_wtg = true
+{
+NPCText "Skin? Let's see it, then. Let's see the skin of it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_03a_2b_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_03a_2b_2"  notes "DUMB"
+              }
+}
+Node "Quinn_03a_2b_2"
+notes ""
+is_wtg = true
+{
+NPCText "Scars. All these scars, like storms in the night sky. He was wearing it that night, all those storms along its belly. But then... It can die?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "It's just an animal. One with razor sharp claws and bulletproof skin, maybe, but still just an animal." linkto "Quinn_03a_2b_3"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Everything dies, Quinn. Even monsters." linkto "Quinn_03a_2b_3"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Either it can die, or it can live without skin. Or blood." linkto "Quinn_03a_2b_3"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Die! Die, die! Haha!" linkto "Quinn_03a_2b_3"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Yes! I can kill it. I did. Look. Here is the skin." linkto "Quinn_03a_2b_3"  notes ""
+              }
+}
+Node "Quinn_03a_2b_3"
+notes "Reaction to BAD AND ANGRY here."
+is_wtg = false
+/* Skill checks for node Quinn_03a_2b_3 */
+
+      define_skill_check Skill_03a_2b_3a {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Quinn_03a_2b_4a;
+      onfailure => Quinn_03a_2b_4B;
+      }
+      define_skill_check Skill_03a_2b_3b {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Quinn_03a_2b_4bB;
+      onfailure => Quinn_03a_2b_4B;
+      }
+      define_skill_check Skill_03a_2b_3c {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Quinn_03a_2b_4c;
+      onfailure => Quinn_03a_2b_4B;
+      }
+
+{
+NPCText "Then... I'm locked in this box, boiling in my own skull meat, while you - stranger! - are out killing the brute? Killing the beast! What have you done to me?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I avenged your wife. What's the problem here?" linkto "Skill_03a_2b_3a"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "You don't sound as grateful as I thought you'd be." linkto "Skill_03a_2b_3a"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Don't be too hard on yourself. There's no way you could've killed it, old as you are." linkto "Skill_03a_2b_3b"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I assumed there'd be some kind of reward for this." linkto "Skill_03a_2b_3c"  notes ""
+          int=-3 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Old man looks mad. Did I do it wrong?" linkto "Skill_03a_2b_3a"  notes ""
+          int=-3 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Yes! Can I have some money?" linkto "Skill_03a_2b_3c"  notes ""
+              }
+}
+Node "Quinn_03a_2b_4a"
+notes ""
+is_wtg = true
+{
+NPCText "She wasn't yours! It was all mine, and now she's dead, and who are you? Nobody, that's who! Tomorrow you'll be gone with everyone else, and she'll be dead."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, crazy man. I killed the beast that killed your wife. Wasn't that what you wanted?" linkto "Quinn_03a_2b_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess a reward is out of the question?" linkto "Quinn_03a_2b_4c"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bird already dead. Now nightmare-man is dead as well! So... You say 'Thank you!'" linkto "Quinn_03a_2b_5D_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You talk funny. Can <PC> have your money now?" linkto "Quinn_03a_2b_4c"  notes ""
+              }
+}
+Node "Quinn_03a_2b_4bB"
+notes ""
+is_wtg = false
+{
+NPCText "Old as I am, I earned it! You earned nothing. You are nothing! He's as old as the sky, and you killed him. Why? Why are you doing this?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was a dangerous animal. I put it down. Isn't that what you wanted?" linkto "Quinn_03a_2b_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did I miss something? Didn't I avenge your wife? Why are you so angry?" linkto "Quinn_03a_2b_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't really know. I guess I assumed there would be some sort of reward." linkto "Quinn_03a_2b_4c"  notes ""
+              }
+}
+Node "Quinn_03a_2b_4B"
+notes ""
+is_wtg = false
+{
+NPCText "She was all I had and you took it away from me! Monster! Clawed monster! [He advances on you angrily]."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Wait, can't we talk about this some more?" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "I suppose this would be a bad time to talk about a reward?" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "You want to join your monster friend, that's fine with me. [Draw weapon]." linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Why old man so angry?" linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Old man not give nice thing to <PC> for deading monster?" linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Now old man want smash. <PC> smash old man!" linkto "combat"  notes ""
+              }
+}
+Node "Quinn_03a_2b_4c"
+notes ""
+is_wtg = false
+{
+NPCText "A reward? What's my reward, eh? What did you bring me but dead flesh and misery? Nothing. Nothing!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I killed your damn monster. You got what you wanted, so when do I get what I want?" linkto "Quinn_03a_2b_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I did you a favour, old man. What's with the attitude?" linkto "Quinn_03a_2b_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget this. If you're not paying me, I got no time for your crazy talk." linkto "Quinn_03a_2b_5a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> makes it better! Why angry?" linkto "Quinn_03a_2b_4a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man says 'help my bird is dead, nightmare-man is bad'. <PC> says yes and kills nightmare-man. Old man says 'Thank you!'. Do it like this!" linkto "Quinn_03a_2b_5D_1"  notes ""
+              }
+}
+Node "Quinn_03a_2b_5a_1"
+notes ""
+is_wtg = false
+{
+NPCText "I didn't want any of it! But it's mine and you took it, so now it's nothing. She's nothing, so you killed her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess this is what you get for trying to help crazy people." linkto "Quinn_03a_2b_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Enough of this crap. I killed your 'brute'. Just thought you'd want to know. Now I'm going." linkto "Quinn_03a_2b_5a_2"  notes "quinn - float end? or last node"
+              }
+}
+Node "Quinn_03a_2b_5a_2"
+notes "Once PC leaves the room, PIP or float a 'bang', and quinn caps himself. Or does he? Idea went round earlier, but not so sure. If we keep him alive, PC can do this part and then cure him after?"
+is_wtg = true
+{
+NPCText "No, no. Once the eggs are burst, the flies come out as worms. Can't stop them. Gods can't stop them. There's nothing there to stop. Nothing there any more. [Quinn becomes unresponsive, mumbling drowsily to himself.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_03a_2b_5D_1"
+notes ""
+is_wtg = true
+{
+NPCText "Thank you? I ought to throttle you right here!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Say 'Thank you! Thank you <PC>!'" linkto "Quinn_03a_2b_5D_2"  notes ""
+              }
+}
+Node "Quinn_03a_2b_5D_2"
+notes ""
+is_wtg = false
+{
+NPCText "No, no thanks from me! You ruined it all. You ruined everything!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "'Thank you <PC>! Thank you for being big and strong and killing nightmare-man. You are great and very strong.'" linkto "Quinn_03a_2b_5D_3"  notes "Male"
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "'Thank you <PC>! Thank you for killing nightmare-man. You are great and strong and very pretty! Thank you!'" linkto "Quinn_03a_2b_5D_3"  notes "Female"
+              }
+}
+Node "Quinn_03a_2b_5D_3"
+notes ""
+is_wtg = false
+{
+NPCText "Out! Out, out, you wretched worm of a man. Leave me alone!"
+ NPCFemaleText "Out! Out, out, you wretched wasp. Leave me alone!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hrmph." linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_1"
+notes "The Quinn_03a_* path is where the PC reveals he's killed the nemesis (deathclaw) to Quinn, after he's been cured by the rat cultists."
+is_wtg = false
+{
+NPCText "Is that so? That thing was still alive, huh? I suppose you brought proof."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found it in an old farmhouse out of town. It put up quite a fight." linkto "Quinn_03b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've brought its skin back. Look familiar?" linkto "Quinn_03b_2b_1"  notes "If PC has the skin"
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but I can go and get it for you. Bye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No joking! Smashing. Look! [Show him the skin.]" linkto "Quinn_03b_2b_1"  notes "If PC has the skin"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No joking! Smashing." linkto "Quinn_03b_2a"  notes "if PC doesnt have the skin"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not lie! <PC> find truth, bring it to old man. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "I dare say. But listen, being the sea-dog that I am, I've heard my fair share of tall tales in my time. I know I owe you and all, but I'm gonna have to see something a bit more solid afore I buy that one."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've brought its skin back. Look familiar?" linkto "Quinn_03b_2b_1"  notes "If PC has the skin"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have proof on me, but I can go and get it for you. Bye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No joking! Smashing. Look! [Show him the skin.]" linkto "Quinn_03b_2b_1"  notes "If PC has the skin"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want to ask another thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not lie! <PC> find truth, bring it to old man. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, I'll be damned. The hide o' the beast. I guess that's it, although it looks a lot... droopier than when I last saw it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess that's the result of it not having any bones in it." linkto "Quinn_03b_2b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "One good deed deserves another; any chance of a reward?" linkto "Quinn_03b_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just thought you'd like to know. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> kill old man enemy-monster. Now old man give <PC> a nice thing?" linkto "Quinn_03b_2b_2b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want to ask another thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hope old man like. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_2b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "[He laughs]. Yeah, you could say that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "One good deed deserves another; any chance of a reward?" linkto "Quinn_03b_2b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just thought you'd like to know. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_2b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Reward? I never said anything about a reward."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what, don't I even get a \"thank you\"?" linkto "Quinn_03b_2b_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just thought you'd like to know. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You not like what <PC> do for old man?" linkto "Quinn_03b_2b_2b_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want to ask another thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hope old man like. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_2b_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "I guess I should thank you for keeping the City safe for the future, but if you want me to kiss yer feet for killing the thing that took Polly, forget it. Beast only did what nature made it do."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "You miserable, miserly old bastard!" linkto "Quinn_03b_2b_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just thought you'd like to know. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Now <PC> angry at old man! <PC> risk life; old man not give-a-shit!" linkto "Quinn_03b_2b_2b_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want to ask another thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hope old man like. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_03b_2b_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Easy there, young feller. You expect the world to roll over and kiss your hairy ass every time you do what *you* think is a good deed, you're in for a sorry surprise."
+ NPCFemaleText "Easy there, missy. You expect the world to roll over and kiss your sweet ass every time you do what *you* think is a good deed, you're in for a sorry surprise."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "How about I just take what due to me? [Draw weapon]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just thought you'd like to know. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "If old man not give nice thing, <PC> take nice thing! [Draw weapon]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC> want to ask another thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hope old man like. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_04a_1"
+notes "The Quinn_04_* path is where the PC tells Quinn about the rite which might save his sanity."
+is_wtg = true
+{
+NPCText "Rats don't need help. Rats help themselves. I can't help her. Nobody can help me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There is a rite at the temple that might help you see clearly again." linkto "Quinn_04a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Flying talking rat can help. She says so!" linkto "Quinn_04a_2"  notes ""
+              }
+}
+Node "Quinn_04a_2"
+notes ""
+is_wtg = true
+{
+NPCText "No, no. They're deep. Too deep to see! Down there at the bottom, looking up at everything. It all goes black and red through them, and I can't help it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "We can make you yourself again. Just come with me." linkto "Quinn_04a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here, Quinn. I will return for you." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Flappy rat lady will help! Double promise." linkto "Quinn_04a_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Stay here for later." linkto "done"  notes ""
+              }
+}
+Node "Quinn_04a_3"
+notes ""
+is_wtg = true
+{
+NPCText "[Quinn allows himself to be led like a docile child.] Where are we going now? To the markets? Is there a speech I have to give?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Take Quinn to the Temple]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Lead Quinn to the Temple]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_04D"
+notes ""
+is_wtg = false
+{
+NPCText "What? Rats? In the sky? What's going on?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Come to Rat House. Be better! No more sad or talking like stupid baby." linkto "Quinn_04a_2"  notes ""
+              }
+}
+Node "Quinn_05a_1"
+notes "The Quinn_05_* path allows the PC to quiz Quinn about Daisy's murder; Quinn is still mad."
+is_wtg = false
+{
+NPCText "No, no. It's no murder when the night grows jaws and snaps her up apart. No murder, no, just a little killing. Oh gods, won't you help her? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, are we still talking about Daisy?" linkto "Quinn_05a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What the hell are you talking about?" linkto "Quinn_05a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps this wasn't such a good idea. I'll be leaving now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> confused now. Old man talk about Daisy?" linkto "Quinn_05a_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Whuh?" linkto "Quinn_05a_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_05a_2a"
+notes ""
+is_wtg = true
+{
+NPCText "She did so love flowers, aye. All those petals on the water. Oceans of red lace, and oh, where did she go?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is going nowhere. I'll leave you to it." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> got an ask about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_05a_2b"
+notes ""
+is_wtg = true
+{
+NPCText "The brute! The beast! Will you plant a flower in the ground when he takes me? When he takes me away like he took my poor Polly?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not talking about Polly. I'm talking about Daisy." linkto "Quinn_05a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps this wasn't such a good idea. I'll be leaving now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> ask about Daisy, not Polly. Old man not smart like <PC>." linkto "Quinn_05a_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bah! [Leave]." linkto "done"  notes ""
+              }
+}
+Node "Quinn_05b_1"
+notes "The Quinn_05_* path allows the PC to quiz Quinn about Daisy's murder; Quinn is cured."
+is_wtg = false
+{
+NPCText "I heard about that. The Duket girl? Terrible business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you know about the murder?" linkto "Quinn_05b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. [Leave]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> what old man know about the Daisy-dead." linkto "Quinn_05b_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> thought of another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_05b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Believe me, I've had enough death in my life not to want anything to do with it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And?" linkto "Quinn_05b_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_05b_3"  notes ""
+              }
+}
+Node "Quinn_05b_3"
+notes ""
+is_wtg = false
+{
+NPCText "You're best off talking to Hoskins about it. He's been in charge of keeping the peace whilst I was... otherwise occupied."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. [Leave]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> got an ask about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_07_1"
+notes "The Quinn_07_* path is where the PC can find out what Quinn knows about CotC."
+is_wtg = false
+{
+NPCText "Ah, Fisherman's Rest. A fine young village it's growing into. Did you ever hear the story of Landfall? That fateful tale..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You told me already. Don't you remember?" linkto "Quinn_07_2a" conditions { LOCAL_VARIABLE LVAR_Quinn_Story_Before > 0 link_next NONE } notes "If Quinn has already spoken Quinn_08_02."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about what is happening in the town now?" linkto "Quinn_07_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to hear your story." linkto "Quinn_08_02"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I've got other things to do. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yay! Story time!" linkto "Quinn_08_02"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear old man tell Land-fill tale. <PC> want new story!" linkto "Quinn_07_2a" conditions { LOCAL_VARIABLE LVAR_Quinn_Story_Before > 0 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask old man about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_07_2a"
+notes ""
+is_wtg = true
+{
+NPCText "Bah! Do you know how many times I've told that story? Can't expect me to remember everyone who ever listened. Now what are you doing here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I'd like to hear the story again." linkto "Quinn_08_01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. I'm leaving." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> need ask old man about a thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_07_2b"
+notes ""
+is_wtg = false
+{
+NPCText "An impatient one, huh? You want to get to know the City, go get to know the folks who live here. Fine people."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to hear your story." linkto "Quinn_08_02"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I've got other things to do. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell story to <PC>." linkto "Quinn_08_01"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want ask old man about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_01"
+notes "The Quinn_08_* path is where the PC learns about CotC's origins, and the whaler ship's role in them."
+is_wtg = true
+{
+NPCText "We call the day the City was founded Landfall Day. Take a moment and I'll tell yer how it came to be."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm listening." linkto "Quinn_08_02"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, can I ask you about something else, instead?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> heard this story before! Another!" linkto "Quinn_08_11D" conditions { LOCAL_VARIABLE LVAR_Quinn_Story_Before > 0 link_next NONE } notes "If Quinn has spoken the Quinn_08_02 node before."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Story? Yay!" linkto "Quinn_08_02"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Nah. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_02"
+notes "Set LVAR_Quinn_Story_Before to 1."
+is_wtg = true
+{
+NPCText "Great days, terrible days they were back then, and all men alive were at war. This ship, this very ship you're standing in, was lost in the waters. Lost far beyond the farthest point, where waves are ten times higher than a man and there's not a speck of sand wherever you look."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Quinn_08_03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I get the picture. It's not an interesting picture. Let's change the subject." linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the story. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Listen]" linkto "Quinn_08_03"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Boring. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_03"
+notes ""
+is_wtg = true
+{
+NPCText "Well, then the bombs got to fallin' - folks call it the Great War. This here ship and many others like her were out to sea when their harbor was hit by the bombs - boom! - nuked to ashes, she were."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_04"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_04"  notes ""
+              }
+}
+Node "Quinn_08_04"
+notes ""
+is_wtg = true
+{
+NPCText "For many a year that raggle-taggle fleet bested the elements, their atom-engines keeping their crews alive and warm, whilst the seas put fish in their bellies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_05"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_05"  notes ""
+              }
+}
+Node "Quinn_08_05"
+notes ""
+is_wtg = false
+{
+NPCText "But even the mightiest vessel can only go so far before she has to put to port. The fleet made for land when one of its number sank, taking all hands with her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_06"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've heard enough. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_06"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man talk too much. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_06"
+notes ""
+is_wtg = false
+{
+NPCText "The captain of the fleet at the time - my predecessor, you understand - took the decision to ram this here ship into the ground and build the new settlement around it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did he not just dock the ship without crashing it?" linkto "Quinn_08_07"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_07"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've heard enough. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_07"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man talk too much. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_07"
+notes ""
+is_wtg = false
+{
+NPCText "It was shrewd thinking on his part. Meant the crew could kinda build the settlement around the ship without having to venture out where the rads could get 'em."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Rads?" linkto "Quinn_08_08a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_08b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've heard enough. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Rads?" linkto "Quinn_08_08a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_08b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man talk too much. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_08a"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah, rads! Radiation, fer Pete's sakes!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_08b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've heard enough. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_08b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man talk too much. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_08b"
+notes ""
+is_wtg = false
+{
+NPCText "So the city came to grow out of that and became City on the Coast. Catchy kind o' name, huh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've heard enough. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man talk too much. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_09"
+notes ""
+is_wtg = false
+{
+NPCText "And speaking o' catches, 'twas the fishes that made the founding fathers choose this spot. See, the mutie fishes that live hereabouts, you eat them, and over time, your body a-comes hardier to the rads. Like that Rad-X you occasionally come across."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but can I ask you about something else?" linkto "Quinn_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've heard enough. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_08_10"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> hear enough. Got another ask for old man." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man talk too much. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_10"
+notes ""
+is_wtg = false
+{
+NPCText "So, that's the story o' the City, young 'un. What else can Cap'n Quinn do yer for?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else." linkto "Quinn_09"  notes ""
+          int=7 Reaction=REACTION_NEUTRAL playertext "Interesting. Universal mythological archetypes within coastal apocrypha. Goodbye for now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting story. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Another story!" linkto "Quinn_08_11D"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> need to ask a thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_08_11D"
+notes ""
+is_wtg = false
+{
+NPCText "Well, I'd love to, but that there's about the only one I can recall. Why don't you run along now. You're a little old for stories anyhow."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> need to ask a thing about another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_09"
+notes ""
+is_wtg = false
+{
+NPCText "Oh. Go on then, I say. Stick your oar in, if that's what you want."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You thought I'd done something to Polly when we first met. Has she been missing?" linkto "Quinn_02_3"  notes "This is not the first time the PC has spoken to Quinn; the PC is male; Quinn is still mad."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You thought I was Polly when we first spoke. Has she been missing?" linkto "Quinn_02_3"  notes "This is not the first time the PC has spoken to Quinn; the PC is female; Quinn is still mad."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "You said earlier you thought I'd done something to Polly. Has she been missing?" linkto "Quinn_02_3"  notes "This is the first time the PC has spoken to Quinn; the PC is male; Quinn is still mad."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You said earlier you thought I was Polly. Has she been missing?" linkto "Quinn_02_3"  notes "This is the first time the PC has spoken to Quinn; the PC is female; Quinn is still mad."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to to talk to you about Daisy's murder." linkto "Quinn_05a_1"  notes "This option only appears if the PC has been given the 'Who Killed Daisy'? quest; Quinn is still mad."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to to talk to you about Daisy's murder." linkto "Quinn_05b_1"  notes "This option only appears if the PC has been given the 'Who Killed Daisy'? quest; Quinn is cured."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about this town of yours." linkto "Quinn_07_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. I'll be leaving now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who that Polly old man talk about?" linkto "Quinn_02_3"  notes "Quinn is not cured."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What old man know about who make Daisy dead?" linkto "Quinn_05a_1"  notes "This option only appears if the PC has been given the 'Who Killed Daisy'? quest; Quinn is still mad."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What old man know about who make Daisy dead?" linkto "Quinn_05b_1"  notes "This option only appears if the PC has been given the 'Who Killed Daisy'? quest; Quinn is cured."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Teach <PC> things about town we in." linkto "Quinn_07_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_0D_1"
+notes ""
+is_wtg = false
+{
+NPCText "I am old! Sometimes I feel older than the ocean. But she never aged a day. My Polly."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What Polly? Where?" linkto "Quinn_0D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> go. Bad smell." linkto "done"  notes ""
+              }
+}
+Node "Quinn_0D_2"
+notes ""
+is_wtg = true
+{
+NPCText "My little bird. Oh, how I told her to stay away. But she took one step out of her cage and he killed her. That brute!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bad man kill old man bird? Bad man! Where?" linkto "Quinn_0D_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ha ha! Your bird is dead and you are sad." linkto "Quinn_02_4b_4b"  notes ""
+              }
+}
+Node "Quinn_0D_3"
+notes ""
+is_wtg = false
+{
+NPCText "No! Not a man. A nightmare grown real. A beast, fast as stormwind, dark and cold as the ocean depths. Snatched her up, feathers and all."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I can kill him. Where?" linkto "Quinn_0D_4"  notes ""
+              }
+}
+Node "Quinn_0D_4"
+notes ""
+is_wtg = true
+{
+NPCText "Oh, no. You'll never find him. If the time comes, he'll be finding you. Watch he doesn't take something you can't live without."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. Where is that?" linkto "Quinn_0D_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go now!" linkto "done"  notes ""
+              }
+}
+Node "Quinn_0D_5"
+notes ""
+is_wtg = false
+{
+NPCText "The gaps between the sand; the blackness in the sky. Wherever you least expect, that's where!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Now <PC> want ask another thing." linkto "Quinn_09"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go now!" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M1_1"
+notes "The Quinn_M1_* path is one of Quinn's madness strings, where Quinn is distracted by voices in his head. The PC can be 'derailed' to this path from normal dialogue at random, based on a few variables (ie: PC's luck, speech skill, and a random generator). "
+is_wtg = false
+{
+NPCText "What's that you say? Show yourself, brigand! I can see you!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm right here." linkto "Quinn_M1_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry?" linkto "Quinn_M1_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What the hell?" linkto "Quinn_M1_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Duh?" linkto "Quinn_M1_2"  notes ""
+              }
+}
+Node "Quinn_M1_2"
+notes ""
+is_wtg = false
+{
+NPCText "[Quinn seems to have forgotten you, distracted by something]. The hell you say! You weren't there; what do you know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have no idea what you're talking about." linkto "Quinn_M1_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wasn't *where*?" linkto "Quinn_M1_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What you saying?" linkto "Quinn_M1_3"  notes ""
+              }
+}
+Node "Quinn_M1_3"
+notes ""
+is_wtg = false
+{
+NPCText "Lies! All lies! Why won't you shut up? Why are you doing this to me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not doing anything; you're not making any sense." linkto "Quinn_M1_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't tell me to shut up, you senile old bastard." linkto "Quinn_M1_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is starting to get strange. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not do anything. Why you be like this?" linkto "Quinn_M1_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M1_4"
+notes ""
+is_wtg = false
+{
+NPCText "[He pauses, as if listening to someone else talking.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello?" linkto "Quinn_M1_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Listen closely as well]" linkto "Quinn_M1_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is starting to get strange. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello?" linkto "Quinn_M1_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M1_5"
+notes ""
+is_wtg = false
+{
+NPCText "So what would you have done, huh? What do you do when the night comes alive with tooth and claw and gore?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'd better come back when you're a bit less insane." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is starting to get strange. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Old man frighten <PC>. <PC> go now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M2_1"
+notes "The Quinn_M2_* path is one of Quinn's madness strings, where he mistakes the PC for Polly (male or female). The PC can be 'derailed' to this path from normal dialogue at random, based on a few variables (ie: PC's luck, speech skill, and a random generator). "
+is_wtg = false
+{
+NPCText "[His eyes seem to glaze over]. Polly, me dear. It's you, isn't it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you still talking to me?" linkto "Quinn_M2_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Duh?" linkto "Quinn_M2_2"  notes ""
+              }
+}
+Node "Quinn_M2_2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, Polly, pretty Polly. I thought that thing had done ripped you to pieces. How is it you're here with your gizzards all tucked in so neat?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "There's no Polly here, old timer. Only <PC>. *Mr.* <PC>." linkto "Quinn_M2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind my gizzards, what are you talking about?" linkto "Quinn_M2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I'm not called Polly, I'm <PC>." linkto "Quinn_M2_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not Polly. <PC> called <PC>" linkto "Quinn_M2_3"  notes ""
+              }
+}
+Node "Quinn_M2_3"
+notes ""
+is_wtg = false
+{
+NPCText "[He laughs]. No need to be coy, my love. I'm not angry; I'm just glad you've come back to me. Won't you sit a while and share a dram?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is starting to get weird." linkto "Quinn_M2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I don't know where you got the idea that I'm \"your love\". " linkto "Quinn_M2_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "\"Love\"? I don't swing that way, old man. I'll be leaving." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back when you're acting less bat-shit crazy." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What a dram?" linkto "Quinn_M2_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> confused. Bad confused." linkto "Quinn_M2_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M2_4"
+notes ""
+is_wtg = false
+{
+NPCText "We've so much to catch up on. [He laughs again]. Lord, I don't know what I'd been drinking that night, but the things I saw: you being eaten by monsters... it's enough to put a man off the grog for life!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm pretty certain I'd know if I'd been eaten by monsters." linkto "Quinn_M2_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "In case I've not made myself clear: what the hell are you talking about?" linkto "Quinn_M2_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back when you're acting less bat-shit crazy." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Please not be crazy, crazy man." linkto "Quinn_M2_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Monsters! <PC> no like monsters. <PC> afraid of monsters." linkto "Quinn_M2_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Monsters! <PC> no like monsters. <PC> kill monsters." linkto "Quinn_M2_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M2_5"
+notes ""
+is_wtg = false
+{
+NPCText "So, my pretty parrot, tell me where you've been for the past god knows how many years."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "For the last time, I'm <PC>. Not a parrot; not Polly. <PC>." linkto "Quinn_M2_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Seriously, do I look like a pretty parrot to you?" linkto "Quinn_M2_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "\"Pretty parrot\"? I've never had someone try that line before." linkto "Quinn_M2_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back when you're acting less bat-shit crazy." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not a parrot. Why you be so silly?" linkto "Quinn_M2_6"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M2_6"
+notes ""
+is_wtg = false
+{
+NPCText "I know it's been a while but there's no need for that, Polly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is going nowhere. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back when you're acting less bat-shit crazy." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "This making <PC>'s head hurt. <PC> go now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M3_1"
+notes "The Quinn_M3_* path is one of Quinn's madness strings, where he mistakes the PC for the monster. The PC can be 'derailed' to this path from normal dialogue at random, based on a few variables (ie: PC's luck, speech skill, and a random generator). "
+is_wtg = false
+{
+NPCText "Wait... wait a minute."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure." linkto "Quinn_M3_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why? What's up?" linkto "Quinn_M3_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why wait?" linkto "Quinn_M3_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Wait]" linkto "Quinn_M3_2"  notes ""
+              }
+}
+Node "Quinn_M3_2"
+notes ""
+is_wtg = false
+{
+NPCText "You almost had me fooled. It's you, isn't it? I'd know you anywhere. So you've found me at last."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "We've met elsewhere?" linkto "Quinn_M3_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Didn't I introduce myself earlier? I'm <PC>." linkto "Quinn_M3_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I <PC>. What you mean?" linkto "Quinn_M3_3"  notes ""
+              }
+}
+Node "Quinn_M3_3"
+notes ""
+is_wtg = false
+{
+NPCText "You disguise yourself well, beast. Show yer claws and yer teeth, then. Let's get it over with."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you calling a beast?" linkto "Quinn_M3_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get what over with?" linkto "Quinn_M3_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not a beast. What you mean?" linkto "Quinn_M3_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not understand." linkto "Quinn_M3_4"  notes ""
+              }
+}
+Node "Quinn_M3_4"
+notes ""
+is_wtg = false
+{
+NPCText "You should have killed me when you took Polly, you animal. You left me suffering for years. I wouldn't put a dog through what I've been through."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "\"Beast\", now \"animal\". What is it you think I am?" linkto "Quinn_M3_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you've mistaken me for someone else. Some*thing* else." linkto "Quinn_M3_5"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Wait, you want me to kill you? Glad to be of service. [Draw weapon]." linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not take anything. <PC> confused now." linkto "Quinn_M3_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M3_5"
+notes ""
+is_wtg = false
+{
+NPCText "Don't prolong my suffering any more, demon. Do it now, before me courage deserts me. DO IT!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back away slowly and quietly leave]" linkto "done"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Wait, you want me to kill you? Glad to be of service. [Draw weapon]." linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Back away slowly and quietly leave]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "<PC> think old man want <PC> to kill old man. <PC> kill old man!" linkto "combat"  notes ""
+              }
+}
+Node "Quinn_M4_1"
+notes "The Quinn_M4_* path is one of Quinn's madness strings, where he suddenly becomes convinced he killed Polly, instead of the deathclaw. The PC can be 'derailed' to this path from normal dialogue at random, based on a few variables (ie: PC's luck, speech skill, and a random generator). "
+is_wtg = false
+{
+NPCText "Wait, of course. That's it!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pardon?" linkto "Quinn_M4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What?" linkto "Quinn_M4_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Whuh?" linkto "Quinn_M4_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Quinn_M4_2"  notes ""
+              }
+}
+Node "Quinn_M4_2"
+notes ""
+is_wtg = false
+{
+NPCText "Don'cha see? It's obvious! There ain't no monster; it's all in my head. All of it. Those brain doctors'll be able to tell ya. I done made it all up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have absolutely no idea what you're talking about." linkto "Quinn_M4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "Quinn_M4_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Buh?" linkto "Quinn_M4_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> getting confused now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_M4_3"
+notes ""
+is_wtg = false
+{
+NPCText "That's it; I made it all up 'cos I was too yeller to face the fact I killed my Polly. My little girl-parrot."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you confessing to a murder?" linkto "Quinn_M4_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Quinn_M4_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you're getting a little confused. I'll come back after you've had a rest." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Duh?" linkto "Quinn_M4_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You kill?" linkto "Quinn_M4_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not like this story. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_M4_4"
+notes ""
+is_wtg = false
+{
+NPCText "I can't... seem to picture why I did it. I guess we must have argued some..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you quite sure about this?" linkto "Quinn_M4_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Quinn_M4_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you're getting a little confused. I'll come back after you've had a rest." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Guh?" linkto "Quinn_M4_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> confused now." linkto "Quinn_M4_5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not like this story. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Quinn_M4_5"
+notes ""
+is_wtg = false
+{
+NPCText "Get Hoskins to find a rope, boy. I'll have to dance the gallows jig for my crimes. Never let it be said Quinn ran away from his just desserts."
+ NPCFemaleText "Get Hoskins to find a rope, girl. I'll have to dance the gallows jig for my crimes. Never let it be said Quinn ran away from his just desserts."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving before this gets any stranger." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you're getting a little confused. I'll come back after you've had a rest." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not like this story. <PC> go now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M5_1"
+notes "The Quinn_M5_* path is one of Quinn's madness strings, where he suddenly becomes obsessed with the minutae of his work and doesn't want to talk to the PC. The PC can be 'derailed' to this path from normal dialogue at random, based on a few variables (ie: PC's luck, speech skill, and a random generator). "
+is_wtg = false
+{
+NPCText "Listen, youngster, I could stand here flapping my gums all day, but I have things to be getting on with."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was it something I said?" linkto "Quinn_M5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Quinn_M5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Did <PC> say a thing old man not like?" linkto "Quinn_M5_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M5_2"
+notes ""
+is_wtg = false
+{
+NPCText "No. Just look at all this I have to deal with. [He sweeps his arm round, taking in various ancient maps and papers]. This town don't run itself, you know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I apologize if I said anything to offend, seriously." linkto "Quinn_M5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> sorry if <PC> say a bad thing." linkto "Quinn_M5_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M5_3"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, yes. Now, where did I put my... [He pats his pockets down]. You haven't seen my... no, you wouldn't of done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Seen what?" linkto "Quinn_M5_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What you look for?" linkto "Quinn_M5_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Quinn_M5_4"
+notes ""
+is_wtg = false
+{
+NPCText "I must have left it under these... papers, papers. Have you ever seen so much goddamn paper?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back when you've done whatever it is you want to do." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Maybe <PC> should go now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}

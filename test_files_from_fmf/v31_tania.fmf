@@ -1,0 +1,167 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Tania"
+Location "V31, entrance to compound"
+Description "Tania is the head tech."
+Unknown_Desc "You see a red-headed woman with a firm expression."
+Known_Desc "You see Tania"
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "Name?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>. I have an appointment with the board." linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, I'm nobody special." linkto "Node_004"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "So you're the one. Go on up to the third floor, they're waiting for you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a few questions first?" linkto "Node_007"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "I'm Tania. Which is something you should already know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do here?" linkto "Node_005"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "Well leave me alone. I'm a busy woman."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "A busy woman with beautiful eyes." linkto "Node_016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "I'm in charge. Which is another thing you should already know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're in charge of the whole vault?" linkto "Node_006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me anything about the Board?" linkto "Node_017"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "What? No, of course not! I'm in charge of the technicians. I get my orders from the Board."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the Board?" linkto "Node_017"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "Can I stop you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the Board?" linkto "Node_017"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "No. I just know they asked to see you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're not a very good liar. What's going on?" linkto "Node_009"  notes "moderate speech check"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright. I'll go see what they want." linkto "done"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "Watch your mouth, <PC>. I told you I don't know. If I had to guess, though..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is it?" linkto "Node_010"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "The call for you came down with orders to shift some equipment out of storage. I'd say they were going to send you outside."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Outside? Whatever for?" linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds exciting." linkto "Node_012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What? I'm not going out there!" linkto "Node_013"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "Which part of 'I don't know' is lost on you? Now get lost, I've got work to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You know, anger really brings out your eyes." linkto "Node_016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_012"
+notes ""
+{
+NPCText "If you say so. You'd never get me out there, that's for sure."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Surely nothing out there could daunt a strong, beautiful woman like you?" linkto "Node_016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the heads up." linkto "Node_014"  notes ""
+              }
+}
+Node "Node_013"
+notes ""
+{
+NPCText "What are you telling me for? Go and tell them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will. Thanks for the heads up." linkto "Node_014"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought we had a little connection going on." linkto "Node_015"  notes ""
+              }
+}
+Node "Node_014"
+notes ""
+{
+NPCText "Whatever."
+      options {
+              }
+}
+Node "Node_015"
+notes ""
+{
+NPCText "You thought wrong. Now stop wasting my time and stop wasting the Board's time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_016"
+notes ""
+{
+NPCText "You've got to be kidding. Move it along, Casanova, I've got work to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_017"
+notes ""
+{
+NPCText "I can tell you they don't like to be kept waiting. So step to it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know what they want with me?" linkto "Node_008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and see what they want." linkto "done"  notes ""
+              }
+}

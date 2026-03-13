@@ -1,0 +1,98 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Isaac"
+Location "SandLevel2"
+Description "Isaac the merchant."
+Unknown_Desc "Another Sandover citizen."
+Known_Desc "Isaac the mentally-impaired merchant."
+Detailed_Desc "A bald man in leather armor. He doesn't look like he fits in."
+/* Regular nodes */
+
+Node "ISAAC001"
+notes ""
+is_wtg = true
+{
+NPCText "Well well, not too often I lay eyes on a new face. Name's Isaac. Can I help you with something stranger?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for supplies." linkto "ISAAC002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't look like you're from around here, Isaac." linkto "ISAAC003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think so." linkto "done"  notes ""
+              }
+}
+Node "ISAAC002"
+notes "Node enters Barter menu."
+is_wtg = false
+{
+NPCText "Oh, my old mind's wandering again. Of course you are! Here, let me show you what I've got..."
+      options {
+              }
+}
+Node "ISAAC003"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah, that's what they tell me. Hehe, truth be told I don't rightly know where the hell I came from. Last bit I remember is coming out here on a brahmin run from some old place in the east."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "ISAAC003B"  notes ""
+              }
+}
+Node "ISAAC003B"
+notes ""
+is_wtg = false
+{
+NPCText "Damn air made me too sick to manage the trip back, so they left me. When I got back on my feet Alexander was nice enough to give me a job scavenging and the rest, as the old man said, is history."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lovely story. Can I take a look at your stock?" linkto "ISAAC004"  notes "Node enters barter menu."
+          int=4 Reaction=REACTION_NEUTRAL playertext "The air made you sick?" linkto "ISAAC005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Alexander?" linkto "ISAAC007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then maybe I'd better get going..." linkto "done"  notes ""
+              }
+}
+Node "ISAAC004"
+notes "Node enters barter menu."
+is_wtg = false
+{
+NPCText "Forgive me stranger, old Isaac got lost in one of his stories. Here, let me show you what I've got..."
+      options {
+              }
+}
+Node "ISAAC005"
+notes ""
+is_wtg = false
+{
+NPCText "Yep. My old body wasn't used to the radiation around these parts and it sent me into a terrible fit of fever. I managed to get through without losing more than my mind, though. Hehe!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, yeah. Right. I have another question for you." linkto "ISAAC006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, maybe I should see if I can find that for you." linkto "done"  notes ""
+              }
+}
+Node "ISAAC006"
+notes ""
+is_wtg = false
+{
+NPCText "What can I do for ya, stranger?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for supplies." linkto "ISAAC002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Alexander?" linkto "ISAAC007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the info, Isaac. I'll be on my way." linkto "done"  notes ""
+              }
+}
+Node "ISAAC007"
+notes ""
+is_wtg = false
+{
+NPCText "Alexander runs the scavengers. Decent group of folks; they rummage the area around here for scrap to trade to the caravan runners for supplies. You can find him across the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. But for now, I'd like to see your goods." linkto "ISAAC004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the info, Isaac. I'll be on my way." linkto "done"  notes ""
+              }
+}

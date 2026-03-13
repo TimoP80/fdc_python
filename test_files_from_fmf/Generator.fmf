@@ -1,0 +1,176 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName "Generator Control"
+Location "GAI - Level 5"
+Description "This is the workstation that controls the generators. Auxiliary generators (AGs)  power essential computers (generator control and security control) as well as ventilation. Primary generators (PGs) power security systems (robots, fields), manufacturing equipment (handies etc) and non-essential computers (Abe, personal stations)."
+Unknown_Desc "You see a barely functional computer console. A plaque on the wall above it reads: 'Generator Control'"
+Known_Desc "You see the Generator Control computer."
+Detailed_Desc ""
+Node "Node_000"
+notes ""
+{
+NPCText "Switching"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Begin again." linkto "Node_001"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aux generators online" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "End" linkto "done"  notes ""
+              }
+}
+Node "Node_001"
+notes "This is the opening node when the computer is in hibernation (all generators are off)"
+{
+NPCText "The console is off. The monitor is dark."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Power up the console]" linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Walk away]" linkto "done"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "WARNING: Auxiliary reserves low. Engage auxiliary generators? Y/N"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes" linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "Auxiliary Generators online."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "GENERATOR CONTROL\n\nCommand?\n>"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Engage primary generators." linkto "Node_005"  notes "if PGs are offline"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Disengage primary generators." linkto "Node_006"  notes "if PGs are online"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Engage auxiliary generators." linkto "Node_003"  notes "if AGs are offline"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Disengage auxiliary generators." linkto "Node_007"  notes "if AGs are online"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Status Report]" linkto "Node_020"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Advanced Power Management]" linkto "Node_010"  notes "Only if primary generators are online."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logoff]" linkto "done"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "Access restricted. An emergency lockdown is in effect. Report to Security Control on Level 2."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Attempt to override the lockdown]" linkto "Node_008"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "Primary generators shutting down..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "Auxiliary generators disengaged. Hibernate? Y/N"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes" linkto "Node_009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "Executive override: Code 16. Primary generators engaged. A security detail has been dispatched to your location."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "Hibernating... [The monitor goes dark]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[End]" linkto "done"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "POWER MANAGEMENT\n\nCommand?\n>"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Divert power from Habitation." linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Divert power from Administration" linkto "Node_012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Divert power from Manufacturing." linkto "Node_013"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Restore power to Advanced Research." linkto "Node_014"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Status Report]" linkto "Node_020"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Generator Control]" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logoff]" linkto "done"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "Diverting power from Level 1: Habitation..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Generator Control]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_012"
+notes ""
+{
+NPCText "Diverting power from Level 2: Administration..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Generator Control]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_013"
+notes ""
+{
+NPCText "Diverting power from Level 3: Manufacturing..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Generator Control]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_014"
+notes ""
+{
+NPCText "Restoring power to Level 4: Advanced Research..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Generator Control]" linkto "Node_004"  notes ""
+              }
+}
+Node "Node_020"
+notes ""
+{
+NPCText "Air Processing: <!ERROR>\nSecurity Fields: <1/0>\nSecurity Robots: <1/0>\nAutomated Workshops: <1/0>\nLevel 4: <1/0>\n"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Run diagnostics on the Air Processing systems." linkto "Node_021"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Generator Control]" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Advanced Power Management]" linkto "Node_010"  notes "if PGs are online"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logoff]" linkto "done"  notes ""
+              }
+}
+Node "Node_021"
+notes ""
+{
+NPCText "Starting Diagnostics... failed. The system is not responding. Please contact maintenance."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Status Report]" linkto "Node_020"  notes ""
+              }
+}

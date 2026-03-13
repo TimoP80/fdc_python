@@ -1,0 +1,27 @@
+/*
+
+       Fallout Dialogue Creator
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.29.0-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "This is a test for the FMF save routine to see if the version is displayed correctly."
+      options {
+              }
+}

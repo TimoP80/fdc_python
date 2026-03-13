@@ -4,6 +4,7 @@ Settings management for Fallout Dialogue Creator
 
 from PyQt6.QtCore import QSettings, QStandardPaths
 from pathlib import Path
+from typing import Optional, Tuple
 
 class Settings:
     """Application settings manager"""
@@ -30,6 +31,7 @@ class Settings:
             'plugin_compat_warnings': False,
             'fo2_data_path': '',
             'ssl_path': '',
+            'script_compiler_path': '',
             'msg_path': '',
             'headers_path': '',
             'check_updates': True,
@@ -74,3 +76,54 @@ class Settings:
         ]
         for dir_path in dirs:
             dir_path.mkdir(parents=True, exist_ok=True)
+
+    def get_script_compiler_path(self) -> Optional[Path]:
+        """
+        Get the configured script compiler path.
+        
+        Returns:
+            Path to the compiler if configured and valid, None otherwise.
+        """
+        from core.script_compiler import DEFAULT_COMPILER_PATH
+        
+        # Get user-configured path
+        configured_path = self.get('script_compiler_path', '')
+        
+        if configured_path:
+            path = Path(configured_path)
+            if path.exists() and path.is_file():
+                return path
+        
+        # Fall back to default
+        if DEFAULT_COMPILER_PATH.exists():
+            return DEFAULT_COMPILER_PATH
+        
+        return None
+
+    def validate_script_compiler_path(self, path: str) -> Tuple[bool, str]:
+        """
+        Validate a script compiler path.
+        
+        Args:
+            path: The path string to validate.
+            
+        Returns:
+            Tuple of (is_valid, error_message).
+        """
+        # Empty path means use default compiler
+        if not path:
+            return True, "Using default compiler (leave empty to use default)"
+        
+        file_path = Path(path)
+        
+        if not file_path.exists():
+            return False, f"File does not exist: {path}"
+        
+        if not file_path.is_file():
+            return False, f"Path is not a file: {path}"
+        
+        # Check if file is executable (has proper extension)
+        if file_path.suffix.lower() not in ['.exe', '.bat', '.cmd', '.com']:
+            return False, f"File does not appear to be an executable: {path}"
+        
+        return True, ""

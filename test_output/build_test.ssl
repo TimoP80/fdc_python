@@ -1,0 +1,109 @@
+/*
+    Name:           TestCompiler
+    Location:       Test
+    Description:    Dialogue script
+
+    Created:        2026-03-13
+    Game Version:   Fallout 2
+    Script Number:  999
+*/
+
+/* Include Files */
+
+#define NPC_REACTION_VAR        7
+
+#include "headers\\define.h"
+#include "headers\\command.h"
+#include "headers\\ModReact.h"
+
+/* Script Number */
+#define NAME                    SCRIPT_999
+
+/* Helper Variables */
+variable Evil_Critter:=0;
+variable Slavery_Tolerant:=SLAVE_TOLERANT;
+variable Karma_Perception:=KARMA_PERCEPTION1;
+variable temp;
+
+
+/* Local Variables which are saved */
+#define LVAR_Herebefore                 (4)
+#define LVAR_Hostile                    (5)
+#define LVAR_Personal_Enemy             (6)
+#define LVAR_Caught_Thief               (7)
+
+
+
+/* Local variables which do not need to be saved between map changes */
+variable Only_Once:=0;
+variable global_temp:=0;
+
+/* Standard Script Procedures */
+procedure start;
+procedure critter_p_proc;
+procedure pickup_p_proc;
+procedure talk_p_proc;
+procedure destroy_p_proc;
+procedure look_at_p_proc;
+procedure description_p_proc;
+procedure use_skill_on_p_proc;
+procedure damage_p_proc;
+procedure map_enter_p_proc;
+procedure timed_event_p_proc;
+
+/* Node Procedures */
+procedure Node998;                                      // Combat
+procedure Node999;                                      // Ending
+
+/* Script Specific Procedures */
+procedure Node0;
+
+procedure start begin
+end
+
+procedure map_enter_p_proc begin
+   Only_Once:=0;
+end
+
+procedure critter_p_proc begin
+   if ((local_var(LVAR_Hostile) != 0) and (obj_can_see_obj(self_obj,dude_obj))) then begin
+       set_local_var(LVAR_Hostile,1);
+       self_attack_dude;
+   end
+end
+
+procedure damage_p_proc begin
+   if (obj_in_party(source_obj)) then begin
+       set_local_var(LVAR_Personal_Enemy,1);
+   end
+end
+
+procedure pickup_p_proc begin
+   if (source_obj == dude_obj) then begin
+       set_local_var(LVAR_Hostile,2);
+   end
+end
+
+procedure talk_p_proc begin
+   Evil_Critter:=0;
+   Slavery_Tolerant:=SLAVE_TOLERANT;
+   Karma_Perception:=KARMA_PERCEPTION1;
+
+   CheckKarma;
+   GetReaction;
+
+   start_gdialog(NAME, self_obj, 4, -1, -1);
+   gsay_start;
+
+
+procedure Node0 begin
+   gsay_reply(103, "Hello!");
+   giq_option(0, 0, "Hi", Node999, NEUTRAL_REACTION);
+   giq_option(-3, 0, "", Node999, NEUTRAL_REACTION);
+   gsay_end;
+   end_dialogue;
+end
+
+// No skill checks defined
+
+// No custom procedures

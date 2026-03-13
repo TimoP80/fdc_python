@@ -1,0 +1,749 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+Node "Kelly_1a"
+notes ""
+{
+NPCText "Hi, there, stranger. Haven't seen you in these parts before."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Hello, there. My name's <PC>. It's a pleasure to meet you." linkto "Kelly_2G" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess not. What's your name?" linkto "Kelly_2N_1" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Don't think you have. Not that it's any of your damn business." linkto "Kelly_2B_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I thought you were someone else. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_1b_G"
+notes "This node begins the conversation IF the PC has spoken to Kelly before AND Kelly has spoken the node Kelly_2G."
+{
+NPCText "Hey, <PC>! Good to see you again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good to see you too, Kelly. Have you got a moment? I need to talk to you about something." linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Not you again! When will you piss off, you stupid bitch?" linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Kelly. Just stopping to see how you were doing. See you later." linkto "done" notes ""
+              }
+}
+Node "Kelly_1b_N"
+notes "This node begins the conversation IF the PC has spoken to Kelly before."
+{
+NPCText "Hello, again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Kelly. Have you got a moment? I need to talk to you about something." linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Not you again! When will you piss off, you stupid bitch?" linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Kelly. Just stopping to see how you were doing. See you later." linkto "done" notes ""
+              }
+}
+Node "Kelly_2B_1"
+notes ""
+{
+NPCText "*Kelly's face darkens like a stormcloud* Hell, you want to try that again, mister?"
+ NPCFemaleText "*Kelly's darkens like a stormcloud* Hell, you want to try that again, lady?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "You're right, sorry. My name's <PC>" linkto "Kelly_2N_2" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Get fucked, bitch." linkto "Kelly_9_2b" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I don't. Goodbye." linkto "done" notes ""
+              }
+}
+Node "Kelly_2B_2"
+notes ""
+{
+NPCText "*She calls to a heavily muscled member of her team* Brute! I'm gonna need some help with this one!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Oh, shit..." linkto "combat" notes ""
+              }
+}
+Node "Kelly_2G"
+notes ""
+{
+NPCText "Well, it's a pleasure to meet you! I tell ya, manners are a rare commodity in the wastes. You're a dyin' breed, mister. My name's Kelly."
+ NPCFemaleText "Well, it's a pleasure to meet you too! I tell ya, manners are a rare commodity in the wastes. You're a dyin' breed, sister. My name's Kelly."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "So, Kelly, could you tell me a bit about what you do?" linkto "Kelly_3" notes ""
+              }
+}
+Node "Kelly_2N_1"
+notes ""
+{
+NPCText "Name's Kelly. And yours?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "I can't believe I didn't introduce myself first. Sorry, Kelly. My name is <PC>" linkto "Kelly_2G" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind that for now. What's your story?" linkto "Kelly_3" notes ""
+          int=4 Reaction=REACTION_BAD playertext "You don't get to know my name, bitch." linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, I have to be going. Goodbye." linkto "done" notes ""
+              }
+}
+Node "Kelly_2N_2"
+notes ""
+{
+NPCText "OK, <PC>, what do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, what's your story?" linkto "Kelly_3" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, nothing. Goodbye." linkto "done" notes ""
+              }
+}
+Node "Kelly_3"
+notes ""
+{
+NPCText "I work for Jedrek. Where his caravan goes, I go too. T'aint much of a life for a girl, but it pays my way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's Jedrek like to work for?" linkto "Kelly_4_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who else works for Jedrek?" linkto "Kelly_5_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the route your caravan takes?" linkto "Kelly_6_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kelly, I've been speaking to Alexander and I need to talk to you about something." linkto "Kelly_7_1" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices AND Kelly has NOT said node Kelly_7_2Na_4, where Kelly agrees to speak to Jedrek about his prices.\n\nIF Kelly has spoken node Kelly_7_2B_1, where the PC has told Kelly that Alexander said some very rude things about her, go to Kelly_7_2B_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, Kelly, I have to be going. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_4_1"
+notes ""
+{
+NPCText "Jedrek? He's OK, but working the same route for so many years has made him kinda cranky, I guess you'd say."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In what way 'cranky'?" linkto "Kelly_4_2" notes ""
+              }
+}
+Node "Kelly_4_2"
+notes ""
+{
+NPCText "Not mean to us or nothin'. But he treats his customers with contempt."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Abusively?" linkto "Kelly_4_3" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have to bear that in mind when I deal with him. Could I ask another question, though?" linkto "Kelly_8" notes ""
+              }
+}
+Node "Kelly_4_3"
+notes ""
+{
+NPCText "Not so much abuse or violence as putting his prices through the roof. There's no other caravans around to give us competition, y' see."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there no other caravans coming here?" linkto "Kelly_4_4" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll keep an eye out for his high prices. I've got another question, if you don't mind." linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Well, I might speak to you again soon. Goodbye, Kelly." linkto "done" notes ""
+              }
+}
+Node "Kelly_4_4"
+notes ""
+{
+NPCText "Sandover in particular has a reputation for being poverty stricken and highly radioactive. No-one else will touch it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll stock up on Rad-X. I've got another question, if you don't mind." linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Well, I ought to head off. 'Bye, Kelly." linkto "done" notes ""
+              }
+}
+Node "Kelly_5_1"
+notes ""
+{
+NPCText "Other than me, there's that guy over there everyone calls Brute."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, right. What's he like?" linkto "Kelly_5_2a" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do they call him that?" linkto "Kelly_5_2b_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just the three of you, then. Can I ask another question?" linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, thanks. I have to be going now. 'Bye." linkto "done" notes ""
+              }
+}
+Node "Kelly_5_2a"
+notes ""
+{
+NPCText "Not much to say about him, really. Kinda slow, if you catch my drift *she taps the side of her head*."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Has he always been like that?" linkto "Kelly_5_3" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm. Can I ask you about something else?" linkto "Kelly_8" notes ""
+              }
+}
+Node "Kelly_5_2b_1"
+notes ""
+{
+NPCText "'Cause he's a dumb brute is why! You tried talking to him yet?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I haven't." linkto "Kelly_5_2b_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's his story?" linkto "Kelly_5_2a" notes ""
+              }
+}
+Node "Kelly_5_2b_2"
+notes ""
+{
+NPCText "Well, you won't get much out of him. Talks more with his fists than he does his speakin'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's he like otherwise?" linkto "Kelly_5_2a" notes ""
+              }
+}
+Node "Kelly_5_3"
+notes ""
+{
+NPCText "I don't think so. Jedrek knows the full story. Something to do with Brute drinking too much one time and getting hisself into trouble. That's why Jedrek doesn't allow him to drink no more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what Jedrek knows. Can I ask you about something else?" linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. Anyway, I have to be going, Kelly. Goodbye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_6_1"
+notes ""
+{
+NPCText "This caravan just goes back and forth between Sandover and Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are the two places like?" linkto "Kelly_6_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Well, I've got a lot to be doing, Kelly. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_6_2"
+notes ""
+{
+NPCText "Well, which one first?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sandover." linkto "Kelly_6_3a_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Crossroads." linkto "Kelly_6_3b_1" notes ""
+              }
+}
+Node "Kelly_6_3a_1"
+notes ""
+{
+NPCText "Sandover, huh? There are fewer worse places in the wastes let me tell ya."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Kelly_6_3a_2_1" notes ""
+              }
+}
+Node "Kelly_6_3a_2_1"
+notes ""
+{
+NPCText "It's the radiation that does it. It's killing the people who live here bit by bit *she shudders*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The radiation doesn't bother you?" linkto "Kelly_6_3a_2_2a" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do they stay here?" linkto "Kelly_6_3a_2_2b" notes ""
+              }
+}
+Node "Kelly_6_3a_2_2a"
+notes ""
+{
+NPCText "No sir! I'm hopped up on so much Rad-X you could use my hide to line a Vault."
+ NPCFemaleText "No ma'am! I'm hopped up on so much Rad-X you could use my hide to line a Vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do the people in Sandover stay here?" linkto "Kelly_6_3a_2_2b" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's an interesting mental image. What about Crossroads?" linkto "Kelly_6_3b_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could I ask you about something else?" linkto "Kelly_8" notes ""
+              }
+}
+Node "Kelly_6_3a_2_2b"
+notes ""
+{
+NPCText "They've got nowhere else to go. No-one else'll take 'em in. There's good scavenging around here that helps pay their way, but... *She shakes her head sadly*."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The radiation doesn't bother you?" linkto "Kelly_6_3a_2_2a" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's Crossroads like?" linkto "Kelly_6_3b_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Rough deal. I've got something else I need to ask you." linkto "Kelly_8" notes ""
+              }
+}
+Node "Kelly_6_3b_1"
+notes ""
+{
+NPCText "Crossroads is run by a guy named Jack and his family. It's a trading town more'n anything else."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's it like compared to Sandover?" linkto "Kelly_6_3b_2a" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to get there?" linkto "Kelly_6_3b_2b" notes ""
+              }
+}
+Node "Kelly_6_3b_2a"
+notes ""
+{
+NPCText "Total contrast. The place is small, like this one, but it's going places. I like it there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds great. Could you tell me how to get there?" linkto "Kelly_6_3b_2b" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you think about Sandover itself?" linkto "Kelly_6_3a_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could I speak to you about something else?" linkto "Kelly_8" notes ""
+              }
+}
+Node "Kelly_6_3b_2b"
+notes ""
+{
+NPCText "You'll need to ask Jedrek if you need to know how to get there. He does directions and that better'n I do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you think of Sandover?" linkto "Kelly_6_3a_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Do you have time for another question?" linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and do just that. Thanks for your help, Kelly." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_1"
+notes ""
+{
+NPCText "What did Alexander have to say?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The jist was that he, and Sandover, were tired of having to pay through the nose for Jedrek's over-expensive goods." linkto "Kelly_7_2Na_1" notes "Speech test. If the PC fails, go to Kelly_8_1 instead."
+          int=4 Reaction=REACTION_BAD playertext "He said you were an ugly bitch who is as promiscuous as she is dumb." linkto "Kelly_7_2B_1" notes "This option only appears once. If the player has spoken it before, it should not appear again."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, can I ask you something else before we go into that?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'll have to do this another time, Kelly. I have to be going." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2B_1"
+notes "If this node is spoken by Kelly AND the PC never reveals to her it was a joke AND Kelly kills Jedrek in the scripted fight, the PC cannot persuade Kelly to take over the Sandover-Crossroads route in the dialogue where he may have had the chance."
+{
+NPCText "I'll kill that two-faced son of a bitch! I can't believe he called me those things!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Hey, I was only joking when I said that, Kelly. Don't take things so seriously." linkto "Kelly_7_2B_2a_1" notes ""
+          int=4 Reaction=REACTION_BAD playertext "*Smirk* " linkto "Kelly_7_2B_2b" notes ""
+          int=4 Reaction=REACTION_BAD playertext "He's got it coming! See you around, Kelly." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2B_2a_1"
+notes "IF this node is spoken by Kelly, the PC is re-allowed the opportunity to persuade Kelly to take over the Sandover-Crossroads route in the dialogue where he has had the chance."
+{
+NPCText "Wha... What?! That's your idea of a JOKE? What kind of person ARE you? What the HELL were you thinking?"
+ NPCFemaleText "Wha... What?! That's your idea of a JOKE? What kind of person are you? I could understand that sort of thing from a guy, but from you? What the HELL were you thinking?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Kelly, if you're dumb enough to fall for it, you've only got yourself to blame." linkto "Kelly_9_2b" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Actually, yeah. I suppose it was pretty stupid..." linkto "Kelly_7_2B_2a_2" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Just trying to have a bit of fun. Goodbye!" linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2B_2a_2"
+notes ""
+{
+NPCText "Damn straight it was stupid! Do you have ANY idea how much damage your little stunt could have caused?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Kelly, I'm so sorry. I promise I'll never do anything as silly as that again." linkto "Kelly_7_2B_2a_3" notes "Easy speech test. If failed, go to Kelly_9."
+          int=4 Reaction=REACTION_BAD playertext "I do; that's why I did it. And I'd happily do it again." linkto "Kelly_9_2b" notes ""
+          int=4 Reaction=REACTION_BAD playertext "I suppose so. Well, goodbye." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2B_2a_3"
+notes ""
+{
+NPCText "You must be one of the stupidest people I've ever dealt with, but I guess it doesn't do to hold a grudge. So OK, you're forgiven."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Phew. Let's change the subject." linkto "Kelly_7_2B_2b" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Lower guard* I'm glad we cleared the air... err.. goodbye." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2B_2b"
+notes ""
+{
+NPCText "So anyway, what were we talking about?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's Jedrek like to work for?" linkto "Kelly_4_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who else works for Jedrek?" linkto "Kelly_5_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the route your caravan takes?" linkto "Kelly_6_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think it's time you had that conversation with Jedrek about his prices." linkto "Kelly_7_2Na_4" notes "This node only comes up IF Kelly has said node Kelly_7_4, where Kelly agrees to speak to Jedrek about his prices."
+          int=4 Reaction=REACTION_BAD playertext "Come to think of it, I've got better things to do than waste my time listening to your bullshit." linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nope. It slipped my mind. I'll come back when I remember what it was." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2Na_1"
+notes ""
+{
+NPCText "Well, that's no surprise. What's it to do with me? Or you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, look, Kelly, open your eyes. Sandover relies on this caravan, and Jedrek is bleeding the place dry." linkto "Kelly_7_2Na_2" notes "Wrong response (patronising). Hard speech test. If the PC fails, go to Kelly_7_2Nb_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't mean to interfere, Kelly, but Jedrek's prices are killing Sandover." linkto "Kelly_7_2Na_2" notes "This is the correct response (polite). Easy speech check. If failed, go to Kelly_7_2Nb_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's a good point. It really isn't either of our concerns. Well, be seeing you!" linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2Na_2"
+notes ""
+{
+NPCText "Yeah, I know what you mean. But there ain't much I can do about it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's not true, Kelly. You're in a position where you can influence how Jedrek sets his prices." linkto "Kelly_7_2Na_4" notes "This is the correct response and can bypass Kelly_7_2Na_3. Speech test. If the PC fails, go to Kelly_7_2Nb_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kelly, for goodness sakes! Why can't you see that's not true?" linkto "Kelly_7_2Na_3" notes "Speech test. If the PC fails, go to Kelly_7_2Nb_1 instead.\n\nThis is the incorrect response even if the above speech test is successful (too ambivalent, requires response) punishment is an extra node containing a speech test (Kelly_7_2Na_3)."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me think about it. In the mean time, can I ask you something else?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK. In any case, I'd better be going. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2Na_3"
+notes ""
+{
+NPCText "How do you mean?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I shouldn't need to spell it out! You work with Jedrek all the time so he's got to listen to you, right?" linkto "Kelly_7_2Na_4" notes "Wrong response (patronising and brusque). Hard speech test. If the PC fails, go to Kelly_7_2Nb_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "If Jedrek has enough respect for you to include you in his team, he's bound to listen to your advice on his prices." linkto "Kelly_7_2Na_4" notes "This is the correct response (flattery will get you everywhere). Easy speech check. If failed, go toKelly_7_2Nb_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me think about it. In the mean time, can I ask you something else?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+              }
+}
+Node "Kelly_7_2Na_4"
+notes ""
+{
+NPCText "I suppose you're right. It's about time I had a serious conversation with him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sandover will be in debt to you, Kelly. Speak to him now, before he rips anyone else off." linkto "done" notes "This will instantly trigger the confrontation between Kelly and Jedrek. Brute will kill Kelly if he hasn't been knocked out with booze administered by the PC."
+          int=4 Reaction=REACTION_GOOD playertext "I'm glad you agree, Kelly. But let me see if I can do something to soften your companions up before you talk to them." linkto "Kelly_7_2Na_5" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, forget what I said. Can we talk about something else?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+              }
+}
+Node "Kelly_7_2Na_5"
+notes ""
+{
+NPCText "If you think it would help. I'd appreciate it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mention it. I'll speak to you again when I've thought of something." linkto "done" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "In the mean time, can I talk to you about something else?" linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, no promises. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2Nb_1"
+notes ""
+{
+NPCText "Listen, mister. I appreciate you're trying to do the decent thing and all, but you're best staying out of our business."
+ NPCFemaleText "Listen, sister. I appreciate you're trying to do the decent thing and all, but you're best staying out of our business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please, Kelly, it's very important you listen to what Alexander said." linkto "Kelly_7_1" notes "Speech test. If the PC fails, go to Kelly_7_2Nb_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can appreciate that. Can I ask you something else, in that case?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'll have to do this another time, Kelly. I have to be going." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2Nb_2"
+notes ""
+{
+NPCText "No! And for goodness sakes just drop the damn subject."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please!" linkto "Kelly_7_1" notes "Speech test. If the PC fails, go to Kelly_7_2Nb_3 instead."
+          int=4 Reaction=REACTION_BAD playertext "For pity's sakes, you are one stubborn, miserable bitch!" linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, I take the hint. Can I ask you something else, in that case?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I tried. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_7_2Nb_3"
+notes ""
+{
+NPCText "Read my lips: NO!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pretty please!" linkto "Kelly_7_1" notes "Speech test. If the PC fails, go to Kelly_7_2Nb_2 instead."
+          int=4 Reaction=REACTION_BAD playertext "You really ARE one stubborn, miserable bitch!" linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, I take the hint. Can I ask you something else, in that case?" linkto "Kelly_8" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I tried. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly_8"
+notes ""
+{
+NPCText "Fire away, mister."
+ NPCFemaleText "Fire away, sister."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's Jedrek like to work for?" linkto "Kelly_4_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who else works for Jedrek?" linkto "Kelly_5_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about the route your caravan takes?" linkto "Kelly_6_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kelly, I've been speaking to Alexander and I need to talk to you about something." linkto "Kelly_7_1" notes "This option only comes up if the player has spoken to Alexander about Jedrek's prices AND Kelly has NOT said node Kelly_7_2Na_4, where Kelly agrees to speak to Jedrek about his prices.\n\nIF Kelly has spoken node Kelly_7_2B_1, where the PC has told Kelly that Alexander said some very rude things about her, go to Kelly_7_2B_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think it's time you had that conversation with Jedrek about his prices." linkto "Kelly_7_2Na_4" notes "This node only comes up IF Kelly has said node Kelly_7_4, where Kelly agrees to speak to Jedrek about his prices."
+          int=4 Reaction=REACTION_BAD playertext "Come to think of it, I've got better things to do than waste my time listening to your bullshit." linkto "Kelly_9_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nope. It slipped my mind. I'll come back when I remember what it was." linkto "done" notes ""
+              }
+}
+Node "Kelly_9_1"
+notes ""
+{
+NPCText "*Kelly folds her arms and frowns at you* I suppose you think that kind of talk is clever?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Kelly, sometimes I don't know what comes over me. Will you accept my sincere apology?" linkto "Kelly_9_2a" notes "Speech check. If failed, go to Kelly_9_2b instead."
+          int=4 Reaction=REACTION_BAD playertext "You're a waste of space, you cheap piece of trash." linkto "Kelly_9_2b" notes ""
+              }
+}
+Node "Kelly_9_2a"
+notes ""
+{
+NPCText "I guess so, but don't you EVER talk to me like that again, y'hear?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You got it. So can I talk to you about something else?" linkto "Kelly_8" notes ""
+          int=4 Reaction=REACTION_BAD playertext "Forget it. You're a mouthy whore who needs putting in her place." linkto "Kelly_9_2b" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, I guess. I'll see you around sometime." linkto "done" notes ""
+              }
+}
+Node "Kelly_9_2b"
+notes "Kelly will no longer talk to the player after saying this node. She will only use aloof floats to communicate (at best)"
+{
+NPCText "*She gives you the finger* Kiss my ass!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pff!" linkto "done" notes "Luck test. If failed, go instead to Kelly_2B_2"
+              }
+}
+
+
+Node "Kelly2_1a_1"
+notes "Use this node to begin the conversation if the scripted scene where Kelly kills Jedrek has happened AND the player has NOT spoken to Kelly since."
+{
+NPCText "Well, that did it. I didn't think it would come to that... now Jedrek's dead!!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you going to do now?" linkto "Kelly2_1a_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That came as a bit of a shock. Well, goodbye, Kelly." linkto "done" notes ""
+              }
+}
+Node "Kelly2_1a_2"
+notes ""
+{
+NPCText "I don't know!! I..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Calm down, dear!" linkto "Kelly2_1a_3" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, who's going to run the caravan if Jedrek's dead?" linkto "Kelly2_1a_4" notes ""
+              }
+}
+Node "Kelly2_1a_3"
+notes ""
+{
+NPCText "This is all happening so fast!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, what do you think you should do?" linkto "Kelly2_1a_4" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can see you're shaken up. I'll leave you to it, Kelly." linkto "done" notes ""
+              }
+}
+Node "Kelly2_1a_4"
+notes ""
+{
+NPCText "Erm... I know Jedrek had bosses he worked for in a firm called Liberty Machinery. I ought to contact them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Liberty Machinery? Who are they?" linkto "Kelly2_2a_1_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, I'll leave you to it. 'Bye." linkto "done" notes ""
+              }
+}
+Node "Kelly2_1b"
+notes "Use this node to begin the conversation if the scripted scene where Kelly kills Jedrek has happened AND the player has convinced Kelly to take over the caravan run."
+{
+NPCText "Hello, again, <PC>. Kelly's always glad to see ya!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Kelly." linkto "Kelly2_Question" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I'm in the wrong place. 'Bye for now." linkto "done" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Piss off, Kelly." linkto "Kelly2_1b_B1" notes ""
+              }
+}
+Node "Kelly2_1b_B1"
+notes ""
+{
+NPCText "What the hell?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You heard me." linkto "Kelly2_1b_B2a" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I suppose I must be a bit tired. I take it back." linkto "Kelly2_1b_B2b" notes "Speech check. If failed, go to Kelly2_1b_B2c instead."
+              }
+}
+Node "Kelly2_1b_B2a"
+notes ""
+{
+NPCText "*She puts her hands on her hips and frowns at you* Well, what brought this on?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm done fixing your life for you and now I want nothing more to do with you." linkto "Kelly2_1b_B3" notes ""
+              }
+}
+Node "Kelly2_1b_B2b"
+notes ""
+{
+NPCText "Well, OK, <PC>. Just mind what comes out of your mouth in the future."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "Sure, sure. Can I ask you about something?" linkto "Kelly2_Question" notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "I will. Goodbye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly2_1b_B2c"
+notes "Kelly will no longer speak via the dialogue window and will merely use aloof floats if the PC tries to talk to her."
+{
+NPCText "Take it back my ass! I appreciate what you did an' all, but I'm not here to take your crap. Piss off yourself!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done" notes ""
+              }
+}
+Node "Kelly2_1b_B3"
+notes "Kelly will no longer speak via the dialogue window and will merely use aloof floats if the PC tries to talk to her."
+{
+NPCText "FINE!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done" notes ""
+              }
+}
+Node "Kelly2_2a_1_1"
+notes ""
+{
+NPCText "I don't know for sure. Big players, though. Jedrek sometimes used to mention them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it possible to keep running this route anyway without them knowing?" linkto "Kelly2_2a_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did Jedrek say about them?" linkto "Kelly2_2a_1_2" notes ""
+              }
+}
+Node "Kelly2_2a_1_2"
+notes ""
+{
+NPCText "Not much. He was kinda scared of them, I think, and always changed the subject pretty fast. God, I still can't believe he's dead!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Would it be possible to keep running this route anyway without Liberty realising what's happened?" linkto "Kelly2_2a_2" notes ""
+              }
+}
+Node "Kelly2_2a_2"
+notes ""
+{
+NPCText "No. There's a guy Jedrek used to meet in Crossroads every so often from the firm. I know Jedrek made regular payments to him in return for being allowed to run the route on their behalf."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is there a danger Liberty might come after you?" linkto "Kelly2_2a_3a" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And he never comes to Sandover?" linkto "Kelly2_2a_3b" notes ""
+              }
+}
+Node "Kelly2_2a_3a"
+notes ""
+{
+NPCText "Come after me? What do you mean?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You killed Jedrek and they might hold you responsible." linkto "Kelly2_2a_4" notes ""
+              }
+}
+Node "Kelly2_2a_3b"
+notes ""
+{
+NPCText "He sure don't. Too much of a radioactive dust bowl for a big-wig like him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But is there a danger Liberty might send someone else after you?" linkto "Kelly2_2a_3a" notes ""
+              }
+}
+Node "Kelly2_2a_4"
+notes ""
+{
+NPCText "Oh my God, do you think so? What would they do?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's not panic. Let's think about this." linkto "Kelly2_2a_5G_1" notes "Leads to potential good options."
+          int=4 Reaction=REACTION_NEUTRAL playertext "They'll kill you!" linkto "Kelly2_2a_5B_1_1" notes "Evil option."
+              }
+}
+Node "Kelly2_2a_5B_1_1"
+notes ""
+{
+NPCText "Oh shit, oh shit, oh SHIT!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You need to keep your head low." linkto "Kelly2_2a_5B_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, it might not come to that, though." linkto "Kelly2_2a_5G_1" notes "Easy speech/Luck check. If failed, go to Kelly2_2a_5B_1_1 instead."
+              }
+}
+Node "Kelly2_2a_5B_1_2"
+notes ""
+{
+NPCText "They will! Now you said it, I know they will!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, you need to keep your head low." linkto "Kelly2_2a_5B_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, Kelly! I'm sure it's not going to come to that." linkto "Kelly2_2a_5G_1" notes ""
+              }
+}
+Node "Kelly2_2a_5B_2"
+notes ""
+{
+NPCText "*She looks exasperated* What do you mean?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hang around here. Your only chance is to pretend you never heard about the caravan route." linkto "Kelly2_2a_5B_3" notes ""
+              }
+}
+Node "Kelly2_2a_5B_3"
+notes ""
+{
+NPCText "*Kelly looks physically sick as she sees her life crumbling before her eyes*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, goodbye." linkto "done" notes "From now on Kelly just stands around worrying. Float speech and unwillingness to talk to the PC to suit. Maybe affects end-game because caravan route fails?"
+              }
+}
+Node "Kelly2_2a_5G_1"
+notes ""
+{
+NPCText "OK, I'm listening..."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "The only reason Liberty could turn nasty is because Jedrek's death is bad for business, as they see it." linkto "Kelly2_2a_5G_2" notes "Note intelligence check. The PC is thinking on his/her feet!"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Kelly, I can't think of a thing." linkto "Kelly2_2a_5B_1_1" notes ""
+              }
+}
+Node "Kelly2_2a_5G_2"
+notes ""
+{
+NPCText "*She looks at you with desperate hope* Go on!"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "You need to keep the caravan route running. Make money." linkto "Kelly2_2a_5G_3" notes ""
+              }
+}
+Node "Kelly2_2a_5G_3"
+notes ""
+{
+NPCText "Won't that be dangerous? I mean, with Liberty after me and all?"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "Maybe. However, you'll never survive if you let the route fail. Where will go you?" linkto "Kelly2_2a_5G_4" notes ""
+              }
+}
+Node "Kelly2_2a_5G_4"
+notes ""
+{
+NPCText "You're right... I guess."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "You have to make a profit and meet Jedrek's payments in Crossroads." linkto "Kelly2_2a_5G_5" notes ""
+              }
+}
+Node "Kelly2_2a_5G_5"
+notes ""
+{
+NPCText "*Kelly listens*"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "If you do, they'll respect you as the caravan's new owner. Jedrek will be ancient history." linkto "Kelly2_2a_5G_6" notes ""
+              }
+}
+Node "Kelly2_2a_5G_6"
+notes ""
+{
+NPCText "Goddamn it, you're right. You're right! I could kiss you, <PC>!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Glad I could help!" linkto "Kelly2_2a_5G_7" notes ""
+              }
+}
+Node "Kelly2_2a_5G_7"
+notes ""
+{
+NPCText "It's not gonna be easy, but I'm going to make this work. *You can see her eyes glazing over as she begins making plans*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done" notes ""
+              }
+}
+Node "Kelly2_4_1a"
+notes ""
+{
+NPCText "After what you did for me, it'd be my pleasure."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. When shall I be here?" linkto "Kelly2_4_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I've just changed my mind. Can I talk about something else?" linkto "Kelly2_Question" notes ""
+              }
+}
+Node "Kelly2_4_1b"
+notes ""
+{
+NPCText "I already said yes, silly! Be here on *DATE OF DEPARTURE*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK. Can I ask you something else in the mean time?" linkto "Kelly2_Question" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see you then. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly2_4_2"
+notes ""
+{
+NPCText "Let me see... we'd better make it *DATE OF DEPARTURE*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK. Can I ask you something else in the mean time?" linkto "Kelly2_Question" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see you then. 'Bye for now." linkto "done" notes ""
+              }
+}
+Node "Kelly2_Question"
+notes ""
+{
+NPCText "What can I do you for?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I have a look at your trade goods?" linkto "Kelly2_Trade_1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I join your caravan, next time it makes the run?" linkto "Kelly2_4_1a" notes "IF Kelly has already agreed to take the player before the next caravan run, go to Kelly2_4_1b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, there's nothing I need right now." linkto "done" notes ""
+              }
+}
+Node "Kelly2_Trade_1"
+notes ""
+{
+NPCText "*TRADE WINDOW OPENS. THE FOLLOWING DIALOGUE OPTIONS ARE AVAILABLE WHEN IT CLOSES*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a lot cheaper than Jedrek used to be." linkto "Kelly2_Trade_2" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Have you got time to talk about something else?" linkto "Kelly2_Question" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That did it for me. Thanks, Kelly, I'll be going now." linkto "done" notes ""
+              }
+}
+Node "Kelly2_Trade_2"
+notes ""
+{
+NPCText "*Kelly looks awkward as the subject is brought up* Yeah, I guess so."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, that must still be a sore subject. Can I talk to you about something else?" linkto "Kelly2_Question" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That did it for me. Thanks, Kelly, I'll be going now." linkto "done" notes ""
+              }
+}

@@ -1,0 +1,25 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+Node "Node001"
+notes ""
+{
+NPCText "Export test node. Testing various condition combinations.!1!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is a player option with no gender check. Checking for Perception > 6" linkto "done" conditions { CHECK_STAT perception > 6 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "This is a player option with female gender check. Checking for Perception > 6" linkto "done" conditions { CHECK_STAT perception > 6 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "This is a player option with male gender check. Checking for Perception > 6" linkto "done" conditions { CHECK_STAT perception > 6 } notes ""
+              }
+}

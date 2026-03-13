@@ -1,0 +1,830 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.28.0-stable
+
+*/
+
+NPCName "Alexander"
+Location "Sandover Caves, Lower Level"
+Description "Scab Leader\n\nIf the PC refuses to give his name, Alexander calls him 'stranger'"
+Unknown_Desc "You see an aging man in threadbare robes."
+Known_Desc "You see Alexander."
+Detailed_Desc "sbzekoeb\n\nzheze"
+/* Regular nodes */
+
+Node "0"
+notes ""
+is_wtg = false
+{
+NPCText "[Select starting conditions]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fixed Autodoc" linkto "1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Broke Autodoc" linkto "1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "First meeting" linkto "1c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Subsequent visit" linkto "56"  notes ""
+              }
+}
+Node "-1"
+notes ""
+is_wtg = false
+{
+NPCText "Blarg! Uncharted territory! Turn about while ye still have legs t'carry ye!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back when Mouf's given you a bit more to say. Back to node 6." linkto "6c"  notes ""
+              }
+}
+Node "1a"
+notes ""
+is_wtg = false
+{
+NPCText "Ah, here he is, the man of the hour. You did us a great service by repairing that AutoDoc. Just let me know if there's any way we can accomodate you."
+ NPCFemaleText "Ah, here she is, the woman of the hour. You did us a great service by repairing that AutoDoc. Just let me know if there's any way we can accomodate you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "3"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Get your wallet out, it's time to discuss my reward." linkto "8"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "Your thanks are reward enough for me." linkto "16"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions for you." linkto "6c"  notes ""
+              }
+}
+Node "1b"
+notes ""
+is_wtg = false
+{
+NPCText "You... I've heard about you. What do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's with the tone of voice?" linkto "2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have some questions to ask." linkto "6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing, just having a look around." linkto "done"  notes ""
+              }
+}
+Node "1c"
+notes ""
+is_wtg = false
+{
+NPCText "[He looks at you with a frown] Welcome to Sandover. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who might you be?" linkto "3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have questions." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just passing through." linkto "done"  notes ""
+              }
+}
+Node "2"
+notes ""
+is_wtg = false
+{
+NPCText "Listen to me stranger, this community lives forever on the brink of collapse. This is the most inhospitable place imaginable: we need all the fortune we can get, and your cack-handed attempt at repairing our AutoDoc will cost lives. Now, I'll ask you again: what do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever, they would've died anyway. Tell me something." linkto "5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm really sorry about that. Can I ask you something?" linkto "6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing, I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "3"
+notes ""
+is_wtg = false
+{
+NPCText "I am Alexander, first among equals. I take care of the day-to-day business of Sandover: organizing duties and settling disputes between Scabs and so on. I'm also in charge of trade."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then you're the man I'm looking for." linkto "4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good to know. I'll be back if I have any questions." linkto "done"  notes ""
+              }
+}
+Node "4"
+notes ""
+is_wtg = false
+{
+NPCText "Perhaps I am. First, I need to know a little about you. Who are you, and what are you doing here in Sandover?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am <PC>. I heard you were having trouble with traders." linkto "42"  notes "Seed from Saman + others?"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am <PC>. I have come from the north, looking for the GAI headquarters." linkto "7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My name is <PC>. I have to ask you a few questions." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, if you don't mind, I had a few questions for you." linkto "6a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Who I am is none of your business, and I'm here to ask you some questions." linkto "5"  notes ""
+              }
+}
+Node "5"
+notes ""
+is_wtg = false
+{
+NPCText "[He smiles like a rattlesnake] Well, it's good to know where we stand."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "6a"  notes ""
+              }
+}
+Node "6a"
+notes "Hostile Node"
+is_wtg = false
+{
+NPCText "You can ask, but I promise nothing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you ever heard of GAI?" linkto "7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard you were having trouble with traders." linkto "42"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "17a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "45"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want your opinion on a person..." linkto "45"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<switch to neutral>" linkto "6b"  notes ""
+              }
+}
+Node "6b"
+notes "Neutral Node"
+is_wtg = false
+{
+NPCText "Yes?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you ever heard of GAI?" linkto "7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard you were having trouble with traders." linkto "42"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "17"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want your opinion on a person..." linkto "39"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<switch to hostile>" linkto "6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<switch to friendly>" linkto "6c"  notes ""
+              }
+}
+Node "6c"
+notes "Friendly Node"
+is_wtg = false
+{
+NPCText "I'll tell you whatever I can."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you ever heard of GAI?" linkto "7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard you were having trouble with traders." linkto "42"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "17"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want your opinion on a person..." linkto "39"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<switch to neutral>" linkto "6b"  notes ""
+              }
+}
+Node "7"
+notes ""
+is_wtg = false
+{
+NPCText "GAI? Sorry, that means nothing to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It stands for 'General Atomics International', they were a robotics manufacturer in the old days." linkto "10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sure? I was told their building is near here." linkto "15"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh well. I had other questions." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No? At least I tried. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "8"
+notes ""
+is_wtg = false
+{
+NPCText "[He frowns] I thought you were a man of principle... perhaps I misjudged you. In either case, a reward is out of the question."
+ NPCFemaleText "[He frowns] I thought you were a woman of principle... perhaps I misjudged you. In either case, a reward is out of the question."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Tell me something..." linkto "6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you at least answer my questions? Or are you too cheap for that as well?" linkto "5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'll just take what I want, and leave everything else in pieces." linkto "9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No reward? I'm outta here." linkto "done"  notes ""
+              }
+}
+Node "9"
+notes "Massacre time!"
+is_wtg = false
+{
+NPCText "Saman should never have let you down here. Now everybody pays for his mistake. Guards!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "10"
+notes ""
+is_wtg = false
+{
+NPCText "The old days? [He flashed a sardonic smile] I'm not sure if you've noticed, but not much of the old days has survived. What makes you think your GAI is an exception?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have no choice - it's the only hope for my people" linkto "11"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "It's all still there, it's just been... rearranged." linkto "12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about you Scabs? You live off what has survived from the old days." linkto "13"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. Let me ask something else." linkto "6b"  notes ""
+              }
+}
+Node "11"
+notes ""
+is_wtg = false
+{
+NPCText "Oh? Well then, I wish you the best of luck. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not luck I need, it's information. Are you sure you don't know anything about GAI?" linkto "14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Can I ask you something else?" linkto "6c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can keep your wishes, I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "12"
+notes ""
+is_wtg = false
+{
+NPCText "Rearranged? [he laughs] I only wish I could share your optimism."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well that's how you Scabs make a living, isn't it? Off the remains of the old days?" linkto "13"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you really don't know anything about GAI?" linkto "14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And I only wish you were even vaguely helpful. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "13"
+notes ""
+is_wtg = false
+{
+NPCText "True, true. But we only pass on what we find, and it takes great knowledge to reassemble it. Looking for one specific building in that rubble - now that's quite an undertaking."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You really don't know anything else about GAI?" linkto "14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about something else." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I'm off to undertake it." linkto "done"  notes ""
+              }
+}
+Node "14"
+notes ""
+is_wtg = false
+{
+NPCText "Nothing whatsoever. Ask the other Scabs. Someone may have seen it, if there's anything left to see."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you give me anything more specific? Like a name?" linkto "51"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Another question." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "15"
+notes ""
+is_wtg = false
+{
+NPCText "There are lots of buildings. It is not easy to tell one from another."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was an old robotics manufacturer from the old days. 'General Atomics International'." linkto "10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you don't know anything about it?" linkto "14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask about something else, then." linkto "6b"  notes ""
+              }
+}
+Node "16"
+notes ""
+is_wtg = false
+{
+NPCText "Well, the thanks and lives of many Scabs are owed to you. Is there anything I can help you with?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for the GAI headquarters." linkto "7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions." linkto "6c"  notes ""
+              }
+}
+Node "17"
+notes ""
+is_wtg = false
+{
+NPCText "Sandover is home to the Scabs, and the sick. There is poison in these grounds, slowly killing all of us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The guard at the entrance said that you were all outcasts." linkto "18"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you live here, if it's killing you all?" linkto "19"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you're in charge?" linkto "21"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Peachy. I had another question." linkto "6b"  notes ""
+              }
+}
+Node "17a"
+notes ""
+is_wtg = false
+{
+NPCText "Sandover is home to the Scabs. It is not a safe place to be."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The guard at the entrance said that you were all outcasts." linkto "18b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you live here, if it's killing you all?" linkto "19a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you're in charge?" linkto "45"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Peachy. I had another question." linkto "6a"  notes ""
+              }
+}
+Node "18"
+notes ""
+is_wtg = false
+{
+NPCText "Outcasts? Maybe once, a long time ago - the first to live here were, I'm sure of that. But nowadays its just the sick - most already have it when they arrive. They come here to die."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why would they come here, of all places?" linkto "19"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you?" linkto "20"  notes ""
+              }
+}
+Node "19"
+notes ""
+is_wtg = false
+{
+NPCText "Everybody dies, but nobody likes to be reminded of it. When you get sick, most towns just forget that you exist - you don't have anything left to contribute. Here it's different, we're all in the same boat. It's not an easy life, but it's better than what you get on the outside."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about you?" linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "But why live on poisoned ground?" linkto "22"  notes "[Science<30%]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "But why live in an area of high radiation?" linkto "22"  notes "[Science>30%]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure. Let me ask you about something else." linkto "6b"  notes ""
+              }
+}
+Node "20"
+notes ""
+is_wtg = false
+{
+NPCText "What about me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sick as well?" linkto "24"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you end up here?" linkto "26"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're in charge, right?" linkto "21"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Something else..." linkto "6b"  notes ""
+              }
+}
+Node "21"
+notes ""
+is_wtg = false
+{
+NPCText "I am the first among equals. I have no right to bend a person to my will, but for all intents and purposes I am in charge, yes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sick as well?" linkto "24"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you end up here?" linkto "26"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps you can answer some questions for me, then." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good luck with that. I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "22"
+notes ""
+is_wtg = false
+{
+NPCText "The wreckage here has been disturbed little since the war - precisely because of the poison. Once hope is lost, fear goes with it and the hopeless have a slim chance of comfort in their final days."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Comfort? You call this comfort?" linkto "23"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you talking about?" linkto "48"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. I had more questions." linkto "6b"  notes ""
+              }
+}
+Node "23"
+notes ""
+is_wtg = false
+{
+NPCText "If it does not meet your high standards, feel free to depart."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander, do you believe in moral scalability?" linkto "58"  notes "Bad karma+high int/speech"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions first." linkto "6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that." linkto "done"  notes ""
+              }
+}
+Node "24"
+notes ""
+is_wtg = false
+{
+NPCText "I am not the man I was when I arrived here, but for that I have age to thank. The poison has not taken me yet."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you leave, while you still can?" linkto "25"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When did you arrive here?" linkto "26"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, here's hoping. Later." linkto "done"  notes ""
+              }
+}
+Node "25"
+notes ""
+is_wtg = false
+{
+NPCText "Where would I go? What would I achieve? I have everything I need here in Sandover, not to mention a responsibility to its inhabitants."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, it's your funeral. Tell me something else." linkto "6a"  notes ""
+              }
+}
+Node "26"
+notes ""
+is_wtg = false
+{
+NPCText "First time I saw Sandover I was still working for the caravans. This was a long time ago, when the place still had some life left in it. The Scabs had hit a good seam of pre-war tech, well-preserved, worth a fortune in the right hands."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "27"  notes ""
+              }
+}
+Node "27"
+notes ""
+is_wtg = false
+{
+NPCText "I stuck around for a while to try and find the source, the company wanted to send a team in for the heavy stuff. My wife, Imogen, she was going to come with the team."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You agreed to stay here? Brave decision." linkto "28"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Couldn't you just get the Scabs to tell you where it was?" linkto "29"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your wife." linkto "33"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Tell me something else." linkto "6b"  notes ""
+              }
+}
+Node "28"
+notes ""
+is_wtg = false
+{
+NPCText "Well I was young, and greedy. The company gave me meds for the poison, and I never planned on staying for long. Just until I could find the source."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why didn't you just ask the Scabs?" linkto "29"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you find it?" linkto "30"  notes ""
+              }
+}
+Node "29"
+notes ""
+is_wtg = false
+{
+NPCText "That lot? You'd sooner drink out of a stone. Scabs are an insular people, they always have been. As far as they were concerned, I was just a nosy outsider trying to hustle in on their salvage. I paid my keep and they let me stay. Beyond that, I was on my own."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you ever find it?" linkto "30"  notes ""
+              }
+}
+Node "30"
+notes ""
+is_wtg = false
+{
+NPCText "I found it alright. There was a cave beneath one of the old buildings, got sealed off when the whole place collapsed. But the Scabs had a way in, that was how all the gear turned up at the trading table."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you get a message to your company?" linkto "31a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then why did you stay?" linkto "31b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you tell me where it was? It might be the place I'm looking for." linkto "46"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is fascinating, but I have to go." linkto "done"  notes ""
+              }
+}
+Node "31a"
+notes ""
+is_wtg = false
+{
+NPCText "Yes sir I did, I sent a message to them on the next caravan passing. Only when they got here - the haulin' crew and all - Imogen wasn't with them. Turns out they'd been attacked by raiders on the journey south - she was cut down where she stood."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to hear that." linkto "32"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a dangerous world." linkto "34"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you show me where you found the building?" linkto "46"  notes ""
+              }
+}
+Node "31b"
+notes ""
+is_wtg = false
+{
+NPCText "Well, I found the source of the salvage, got a message to the company on the next caravan passing. Only when they got here - the crew and all - Imogen wasn't with them. They told me she'd been killed by raiders not three days earlier."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to hear that." linkto "32"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a dangerous world." linkto "34"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Death is only nature's way of telling you you're a weakling. Tell me something else." linkto "5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How terrible. Let me change the subject." linkto "6b"  notes ""
+              }
+}
+Node "32"
+notes ""
+is_wtg = false
+{
+NPCText "Oh I was too, I was for the longest time. I just froze up, I couldn't do, or think, anything. I just stayed here, in the cave I paid for, crying over what I'd lost."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you never left?" linkto "40"  notes ""
+              }
+}
+Node "33"
+notes ""
+is_wtg = false
+{
+NPCText "Imogen? She and me got together when I was barely twenty years old. Me, I never believed in all that 'love-at-first-sight' - still don't, but that didn't stop me at the time. [He smiles wistfully] Poor Mog..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened to her?" linkto "31b"  notes ""
+              }
+}
+Node "34"
+notes ""
+is_wtg = false
+{
+NPCText "It is, it truely is - after lost Imogen, I couldn't stand to face it any more. I just froze up, didn't think anything, didn't do anything. Just stayed here, in the cave I paid for, crying over what I'd lost."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you never left?" linkto "40"  notes ""
+              }
+}
+Node "35"
+notes ""
+is_wtg = false
+{
+NPCText "Saman is a bitter man, quick to blame everyone and everything other than himself.  He is good at his job, though, and follows orders well enough."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is there something between you two?" linkto "-1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about someone else." linkto "39"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "6b"  notes ""
+              }
+}
+Node "36"
+notes ""
+is_wtg = false
+{
+NPCText "Look around you. Without the meagre supplies we receive we wouldn't last a month. The traders know this, and so do we."
+ NPCFemaleText "My dear, take a look around. Without the meagre supplies we receive we wouldn't last a month, and the traders know that."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Just tell me who you're trading with and where I can find them. I'll take care of it." linkto "54"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Some of the salvged equiment is worth a lot more than you realise." linkto "-1"  notes "Science? Found out from somewhere ie traders/other npc/by getting a look at the storeroom ('You recognize a lot of this equipment from your days in the vault. You were never allowed to touch any of it.')"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess you need them more than they need you." linkto "53"  notes ""
+              }
+}
+Node "37"
+notes ""
+is_wtg = false
+{
+NPCText "Oswald? A great man. Without him, this place would be nothing but another ghost town."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about someone else." linkto "39"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions" linkto "6b"  notes ""
+              }
+}
+Node "38"
+notes ""
+is_wtg = false
+{
+NPCText "I must confess I do not know him all that well. He was unfortunate enough to be born here in Sandover, and I think he resents me, or at least my position. He was here when I first arrived, and in many ways he still sees me as an outsider."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about how you came to live here." linkto "26"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about someone else." linkto "39"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "6b"  notes ""
+              }
+}
+Node "39"
+notes ""
+is_wtg = false
+{
+NPCText "Who did you have in mind?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Saman." linkto "35"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Dr. Oswald" linkto "37"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Jonathan" linkto "38"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "6b"  notes ""
+              }
+}
+Node "40"
+notes ""
+is_wtg = false
+{
+NPCText "I never did. I found a new life here, started a new family."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where is your family now?" linkto "41"  notes ""
+              }
+}
+Node "41"
+notes ""
+is_wtg = false
+{
+NPCText "Dust. Just dust. Nara went many years ago, our son barely a month past."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tragic. I'll have something more incisive to say on the matter a bit later, when Mouf gets around to it. For now, back to node 6." linkto "6b"  notes ""
+              }
+}
+Node "42"
+notes ""
+is_wtg = false
+{
+NPCText "Is that what you heard? It's no secret that we are exploited, but then again it is to be expected. We are in no position to make demands."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you think that?" linkto "36"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Everybody has the right to fair trade. You should demand more for yourselves." linkto "36"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You got that right. Tell me something else." linkto "6b"  notes ""
+              }
+}
+Node "43"
+notes ""
+is_wtg = false
+{
+NPCText "Make it good."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "The conditions here are appalling. I want to do everything I can to help you." linkto "44"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "This place is a nightmarish warren of misery, and you filthy idiots deserve it." linkto "23"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "It's a good thing that you're all dying, but you're taking far too long. I'm here to speed things up." linkto "9"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "I changed my mind." linkto "49"  notes ""
+              }
+}
+Node "44"
+notes "Karma check on scrutiny - negative karma gives negative response."
+is_wtg = false
+{
+NPCText "[He pauses for a moment, scrutinizing your face carefully] Your words sound sincere enough, stranger, but there is little you can do. Sandover is slow death."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Trust me, I have a knack for solving problems. " linkto "50"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you at least answer a few questions for me?" linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess I'll leave you to it, then." linkto "done"  notes ""
+              }
+}
+Node "45"
+notes ""
+is_wtg = false
+{
+NPCText "I am the person you come to when you have something to say to the Scabs. That's all you need to know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Now that you mention it, I did have something to say..." linkto "43"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had other questions." linkto "6a"  notes ""
+              }
+}
+Node "46"
+notes ""
+is_wtg = false
+{
+NPCText "I'm sorry, <PC>, but even if fate were that kind and that was the same building you now search for, the company took every last shred work taking."
+ NPCFemaleText "I'm sorry my dear, but even if fate were that kind and it was the building you search for, the company took every last shred work taking."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "They may have missed something. What have you got to lose by telling me?" linkto "47"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "Can you tell me something else?" linkto "6b"  notes ""
+              }
+}
+Node "47"
+notes "Location is somewhere in the footprint of houston, remains of an old building collapsed in on itself. Pip-message along the lines of 'this isn't the place'. Too much effort for a red herring? Maybe leads to 2ndary scav area with vault nearby?"
+is_wtg = false
+{
+NPCText "You don't let reality get you down, do you? Very well [He marks a location on your map]. That's as close as I can remember it. Was there anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. A few more questions..." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all for now." linkto "done"  notes ""
+              }
+}
+Node "48"
+notes ""
+is_wtg = false
+{
+NPCText "Not the brightest flame, I see. I mean that the only people willing to risk the poison out there are the people who have already been doomed by it. Clear enough for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You know, I don't usually let people get away with talking to me like that." linkto "52"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No need to be rude. I had other questions." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand now. Can I ask you something else?" linkto "6b"  notes ""
+              }
+}
+Node "49"
+notes ""
+is_wtg = false
+{
+NPCText "Kindly return when you have something worth saying."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "50"
+notes ""
+is_wtg = false
+{
+NPCText "I fear Sandover is beyond salvation. But, if you say you can help..."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "MORE" linkto "6c"  notes ""
+              }
+}
+Node "51"
+notes "Gnaghi is a placeholder name. Gnaghi says 'Nah!' and chews with his mouth open."
+is_wtg = false
+{
+NPCText "Gnaghi, if you're entirely incapable of doing anything on your own. Talk to Gnaghi."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "People don't often talk to me like that and get away with it." linkto "52"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Before I go -" linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and talk to him." linkto "done"  notes ""
+              }
+}
+Node "52"
+notes ""
+is_wtg = false
+{
+NPCText "Are you going to make this an exception? Or are you going to get yourself killed over some worthless sense of honour?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll let you off this time. But if I were you I'd watch myself." linkto "49"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The second one. Any last words?" linkto "9"  notes ""
+              }
+}
+Node "53"
+notes ""
+is_wtg = false
+{
+NPCText "You have it in one, <PC>."
+ NPCFemaleText "My dear, you have it in one."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Even so, I think I can help. Tell me about the situation." linkto "-1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Back to my questions, then." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "54"
+notes ""
+is_wtg = false
+{
+NPCText "The company is called 'Tech Supplies', they run out of the Ranch. The man I deal with is named Jedrek."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The Ranch? Where's that?" linkto "55"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Jedrek." linkto "57"  notes ""
+              }
+}
+Node "55"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, excuse me, I picked that up off my Pa. Nowadays they call it the Crossroads, but back in his day it was just Jack's Ranch. It's some way to the north - here, let me show you. [He marks the location on your map]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Jedrek, the man you deal with." linkto "57"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the info. I had some other questions for you." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back once I've had a word with the traders." linkto "done"  notes ""
+              }
+}
+Node "56"
+notes ""
+is_wtg = false
+{
+NPCText "Back so soon, <PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I talk to you, Alexander?" linkto "6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just keeping up appearences. Later." linkto "done"  notes ""
+              }
+}
+Node "57"
+notes ""
+is_wtg = false
+{
+NPCText "A self-infatuated simpleton. Once a month his caravan sets up outside to trade, the rest of the time you can probably find him at the Ranch."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Can you show me how to get to this Ranch?" linkto "55"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about something else." linkto "6b"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "I'll keep an eye out for him." linkto "done"  notes ""
+              }
+}
+Node "58"
+notes ""
+is_wtg = false
+{
+NPCText "<PC>, I have no idea what you are talking about."
+ NPCFemaleText "My dear, I have not the faintest idea what you are talking about."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I mean, to take a single life and save one hundred others may be acceptable. Would you say so?" linkto "61a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Neither do I. Back to my questions." linkto "6a"  notes ""
+              }
+}
+Node "59"
+notes ""
+is_wtg = false
+{
+NPCText "<PC>, where are you going with this?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm getting there. Do you know what I do when I find an animal in the wastes, prone under the sun, heaving its last, few, agonizing breaths?" linkto "60"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll make it simple. Any last words?" linkto "9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just musing. I had some other questions." linkto "6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, nowhere in particular." linkto "49"  notes ""
+              }
+}
+Node "60"
+notes ""
+is_wtg = false
+{
+NPCText "[He is beginning to look agitated] <PC>... I warn you..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I kill it. And do you know what I would do if I found a nest of such animals, cowering under the ground, awaiting slow, inescapable death?" linkto "63"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Long story short. Any last words?" linkto "9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I was just thinking out loud, I didn't mean anything by it." linkto "49"  notes ""
+              }
+}
+Node "61a"
+notes ""
+is_wtg = false
+{
+NPCText "Perhaps..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I agree. But could you kill a thousand to save one hundred thousand?" linkto "62"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you kill your own child, if it meant a million others could be saved?" linkto "62"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. I had some relevant questions, too." linkto "6a"  notes ""
+              }
+}
+Node "62"
+notes ""
+is_wtg = false
+{
+NPCText "I myself would not. Could not."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's where we differ. My morals are absolute." linkto "59"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Me neither. Let's change the subject." linkto "6a"  notes ""
+              }
+}
+Node "19a"
+notes ""
+is_wtg = false
+{
+NPCText "Because we can. Was there anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "As a matter of fact, there is something I wanted to say to you all." linkto "43"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I did have a few questions." linkto "6a"  notes ""
+              }
+}
+Node "18b"
+notes ""
+is_wtg = false
+{
+NPCText "Well, perhaps you should go and talk to him. Was there anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You want to know what *I* think? I'll tell you..." linkto "43"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question." linkto "6a"  notes ""
+              }
+}
+Node "63"
+notes ""
+is_wtg = false
+{
+NPCText "[He is visibly shaken] W-what? What would you do?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a smart man, Alexander. I'll give you the rest of your life to work it out." linkto "65"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll put it this way... Any last words?" linkto "9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I do everything I can to ease their pain." linkto "65"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I let nature take its course. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "65"
+notes ""
+is_wtg = false
+{
+NPCText "You... madman! [He scrambles for safety] Guards! Kill him!"
+ NPCFemaleText "[He scrambles for safety] Guards! Kill her!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}

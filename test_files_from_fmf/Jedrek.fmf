@@ -1,0 +1,668 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.24-beta
+
+*/
+
+vars {
+}
+NPCName "Jedrek"
+Location "Sandover"
+Description "Trader"
+Unknown_Desc "You see a wealthy looking man in his thirties."
+Known_Desc "It's Jedrek. He looks bored in his wealthy sort of way."
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Jedrek_0"
+notes "Generate the variable Jedrek_Temper and give it the value 0. This is referred to regularly in the dialogue."
+{
+NPCText "- Starting conditions for the conversation with Jedrek -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The player has never spoken to Jedrek before -" linkto "Jedrek_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The player has spoken to Jedrek before -" linkto "Jedrek_1b"  notes ""
+              }
+}
+Node "Jedrek_1a_1"
+notes ""
+{
+NPCText "*The well-travelled looking man looks you up and down with little interest* Yeah? And what do you want?"
+ NPCFemaleText "*The well-travelled looking man looks you up and down with a dirty leer* Hey there. What can Jedrek do you for?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Hey there, friend. My name's <PC>" linkto "Jedrek_1a_2a"  notes ""
+          int=4 Reaction=REACTION_GOOD Gender=FEMALE playertext "Well, aren't you the baddest thing I've seen in fifty miles? What's YOUR name, caravan man?" linkto "Jedrek_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi. What's your story?" linkto "Jedrek_1a_2b_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "How about you take a long hike without some Rad-X, asshole?" linkto "Jedrek_7_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who you, funny man?" linkto "Jedrek_1D_1"  notes "Dumb player option."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I can't stop to talk. I'll see you around." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_1a_2a"
+notes ""
+{
+NPCText "Well, howdy, <PC>. The name's Jedrek. It's good to meet a civ-il-ized face out here amongst all the savages. This here's the Crossroads-Sandover caravan and, for my sins, I run the operation."
+ NPCFemaleText "Well, pretty lady, the name's Jedrek and the pleasure is all mine, let me tell you that. This here's the Crossroads-Sandover caravan and, for my sins, I run the operation."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Good to meet you too, Jedrek. Can I have a look at your wares?" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "For your sins? You're not happy on this route? What's wrong with it?" linkto "Jedrek_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Crossroads? Where's that?" linkto "Jedrek_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, good luck. I haven't got all day to stand around talking. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_1a_2b_1"
+notes ""
+{
+NPCText "I don't go giving my name to no-one before they give me theirs. What do they call you, stranger?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "All this travelling has worn my manners down. Sorry, friend, my name's <PC>. Pleasure to meet you." linkto "Jedrek_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>. How about you?" linkto "Jedrek_1a_2b_2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "If both of us had that attitude, we'd never get introduced, would we? Nevermind. My name's <PC>" linkto "Jedrek_1a_2b_2"  notes "Increment Jedrek_Temper by 1."
+          int=4 Reaction=REACTION_BAD playertext "I don't have to take this shit from a nobody like you. It's about time someone showed you some manners!" linkto "Jedrek_7_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, look, I can't stand around talking all day. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_1a_2b_2"
+notes ""
+{
+NPCText "And I'm Jedrek. Well, then, <PC>, are we going to stand around all day smooth-talking each other, or do you want to trade?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, let's have a look at what you've got." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come to think of it, I've got other things to do. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_1b"
+notes "This node begins the conversation when Jedrek and the player already know each other by name. (ie: Jedrek_2a OR Jedrek_2b_2 have been run in previous conversation)"
+{
+NPCText "Hello, again, <PC>. What can I do you for?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Jedrek. Can I take a look at your wares?" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Jedrek. I need to ask you about something." linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, Jedrek. I've been speaking to Alexander and he's told me you've been overcharging Sandover for your goods. By a long way." linkto "Jedrek_8a_1"  notes "This option only appears once the player has spoken to Alexander about Jedrek's exorbitant prices. If the PC has already tried to convince Jedrek to ply another trade route and failed, go to Jedrek 8b_1 instead."
+          int=4 Reaction=REACTION_BAD playertext "Piss off, idiot." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, Jedrek. Just saying hello. See you around." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_1D_1"
+notes ""
+{
+NPCText "I'm sorry?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tee hee!" linkto "Jedrek_1D_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Leave*" linkto "done"  notes ""
+              }
+}
+Node "Jedrek_1D_2"
+notes ""
+{
+NPCText "Ah, for crying out loud. Don't these people have someone to look after you? *He looks around desperately at the Scab population*"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Will you look after me?" linkto "Jedrek_1D_3"  notes ""
+              }
+}
+Node "Jedrek_1D_3"
+notes ""
+{
+NPCText "*He shakes his head at you and talks far too loudly* I not help you! You must go away now!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Sob*" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Blow raspberry*" linkto "done"  notes ""
+              }
+}
+Node "Jedrek_2_1a"
+notes "VARIABLE = 2 * [Jedrek_Temper+1] * [1/PC Barter skill]. Divide the final sum by half IF the PC is female AND Jedrek has spoken node Jedrek_1_2a. Set a minimum value of 1 in case the PC has a very high barter skill. Maybe set a maximum price of 50 caps, in case Jedrek_Temper gets very high.\nThe barter skill, as mentioned above, is expressed as a percentage, so a skill of 75% would equal a value of 0.75."
+{
+NPCText "Talk in the wastes ain't cheap. *VARIABLE CAPS* and I'll tell you what you need."
+ NPCFemaleText "Talk in the wastes ain't cheap, lady. *VARIABLE CAPS* and I'll tell you what you need."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's your money." linkto "Jedrek_2_2a"  notes "Subtract the appropriate amount from the PC's caps.\n\nIF the PC cannot pay, go instead to Jedrek_2_2d."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll pay you half that." linkto "Jedrek_2_2a"  notes "Barter check.\nIf the PC succeeds, subtract the appropriate amount from the PC's caps. Round up the halving of the amount of caps.\nIF the PC succeeds but cannot pay, go instead to Jedrek_2_2d.\nIf the PC fails, go to Jedrek_2_2b instead.\n"
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I could just ask someone else for free!" linkto "Jedrek_2_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to sell something to you to make the money. Let's trade." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No deal. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_2_1b"
+notes ""
+{
+NPCText "Have one on the house! *He gives a wry grin*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I have a look at your wares?" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about your companions?" linkto "Jedrek_3_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where does your caravan route run?" linkto "Jedrek_4_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, Jedrek. I've been speaking to Alexander and he's told me you've been overcharging Sandover for your goods. By a long way." linkto "Jedrek_8a_1"  notes "This option only appears once the player has spoken to Alexander about Jedrek's exorbitant prices. If the PC has already tried to convince Jedrek to ply another trade route and failed, go to Jedrek 8b_1 instead."
+          int=4 Reaction=REACTION_BAD playertext "Do you want to tell me why you're such an asshole?" linkto "Jedrek_7_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come to think of it, I think we've covered everything. 'Bye for now." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_2_2a"
+notes ""
+{
+NPCText "Done. What do you need to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I have a look at your wares?" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about your companions?" linkto "Jedrek_3_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where does your caravan route run?" linkto "Jedrek_4_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, Jedrek. I've been speaking to Alexander and he's told me you've been overcharging Sandover for your goods. By a long way." linkto "Jedrek_8a_1"  notes "This option only appears once the player has spoken to Alexander about Jedrek's exorbitant prices. If the PC has already tried to convince Jedrek to ply another trade route and failed, go to Jedrek 8b_1 instead."
+          int=4 Reaction=REACTION_BAD playertext "Do you want to tell me why you're such an asshole?" linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come to think of it, I think we've covered everything. 'Bye for now." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_2_2b"
+notes "*VARIABLE* is the sum quoted previously, in Jedrek_2_1. Increment Jedrek_Temper by 1."
+{
+NPCText "I could be selling my wares instead of talking to you. *VARIABLE* caps, or no deal."
+ NPCFemaleText "No offence, lady, but I could be selling my wares instead of talking. *VARIABLE* caps, or no deal."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Here's your money." linkto "Jedrek_2_2a"  notes "Subtract the appropriate amount, as quoted in quoted previously in I could be selling my wares instead of talking to you. *VARIABLE* caps, or no deal, from the PC's caps."
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I could just talk to someone else for free!" linkto "Jedrek_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to sell something to you to make the money. Let's trade." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not interested if I have to pay that much. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_2_2c"
+notes ""
+{
+NPCText "*Jedrek looks unconcerned* Help yourself. I'm a busy man. Come back when you've got something to sell, or you want to buy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Now you come to mention it, let's see if we can do business." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come on, don't be such a miserly asshole. It's important you tell me what I need to know." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I'll be off, then." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_2_2d"
+notes "Increment Jedrek_Temper by 1"
+{
+NPCText "*Jedrek turns away* If you want talk, you better go find some work until you can afford it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me sell you some of my gear." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about I beat it out of you?" linkto "Jedrek_7_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_3_0"
+notes ""
+{
+NPCText "These two? Huh. If you think it'll do you any good."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't sound too fond of them." linkto "Jedrek_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I ought to ask you something else, then." linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose not. Be seeing you, then." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_3a_1"
+notes ""
+{
+NPCText "Them? Don't you believe it. Check Kelly out. Pretty easy on the eye, wouldn't you say, buddy?"
+ NPCFemaleText "Them? Don't you believe it. Check Kelly out. Pretty girl, but her head's fulla crazy ideas about how I shout be runnin' the show. I reckon she sees herself in my shoes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Yeah, not bad." linkto "Jedrek_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about the other one, that guy over there?" linkto "Jedrek_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So that's Kelly. Can I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, I've got to be going. I'll see you around, Jedrek. Take it easy." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_3a_2"
+notes ""
+{
+NPCText "Well, that's what I thought until I worked with her a few weeks. She's one of them broads that fancies herself as kinda smart, you know? Gives them ideas. I reckon she sees herself in my shoes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about the other one, that guy over there?" linkto "Jedrek_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Could I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, I've got to be going. I'll see you around, Jedrek. Take it easy." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_3b_1"
+notes ""
+{
+NPCText "Him? I don't even know his real name. We kinda call him Brute. You can see why."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's his story?" linkto "Jedrek_3b_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, no. Why's that?" linkto "Jedrek_3b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess so. Can I ask you about another thing?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I ought to be going. 'Bye for now." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_3b_2a"
+notes ""
+{
+NPCText "What the...? Because he's a muscle-bound lug is why!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see what you mean, now. So what's his story?" linkto "Jedrek_3b_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, right. Can I ask you about another thing?" linkto "Jedrek_2_1a"  notes ""
+              }
+}
+Node "Jedrek_3b_2b"
+notes ""
+{
+NPCText "'Fore I met him, folks say he was a regular kinda guy. One night in Crossroads, though, he had one beer too many. When he went to stand up he keeled over and hit his head something terrible on the floor."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on..." linkto "Jedrek_3b_3"  notes ""
+              }
+}
+Node "Jedrek_3b_3"
+notes ""
+{
+NPCText "He woke up the next morning and was never the same since. He's bin this surly brute to this day. Can't get a word, a joke, a smile or nothin' out of the dumb ox."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It affected him that badly?" linkto "Jedrek_3b_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So that's Brute. Can I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "As much as I love a good story, I've got to be moving on. 'Bye for now." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_3b_4"
+notes ""
+{
+NPCText "Oh, sure. And that's why I don't allow him to touch a drop o' booze whilst he's working for me. I reckon one beer could be enough for the same to happen again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So that's your crew. Mind if I ask you another question?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "If you can't stand your own crew, you're an idiot for hiring them." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nice to meet you all. I ought to be going. 'Bye for now." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_4_0"
+notes ""
+{
+NPCText "This here's the Crossroads-Sandover caravan. *He frowns.* Didn't I mention that before?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Crossroads?" linkto "Jedrek_4a_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "What do you think of Sandover?" linkto "Jedrek_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose not. See you around." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_4a_1"
+notes ""
+{
+NPCText "You don't know Crossroads? *He laughs* I suppose I'm almost envious of you. It's a trading town. Run by Jack and his family. Whatever you might need, you can usually find there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you please tell me how to find Crossroads?" linkto "Jedrek_4a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, is that the time? I ought to make a move. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_4a_2"
+notes "VARIABLE = 5 * [Jedrek_Temper+1] * [PC Barter skill]. Divide the final sum by half IF the PC is female AND Jedrek has spoken node Jedrek_1_2a. Round up the final value to avoid a value of 0 caps. Maybe set a maximum price of 50 caps, in case Jedrek_Temper gets very high.\nThe barter skill, as mentioned above, is expressed as a percentage, so a skill of 75% would equal a multiplier of 0.75."
+{
+NPCText "Now that's going to cost you. *VARIABLE* caps."
+ NPCFemaleText "Now that's going to cost you. Sorry, lady. *VARIABLE* caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's your money." linkto "Jedrek_4a_3a_1"  notes "Subtract the appropriate amount from the PC's caps.\n\nIF the PC cannot pay, go instead to BLAGH"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll pay you half that and not a cap more." linkto "Jedrek_4a_3a_1"  notes "Barter check.\nIf the PC succeeds, subtract the appropriate amount from the PC's caps.\nIF the PC succeeds but cannot pay, go instead to BLAGH.\nIf the PC fails, go to Jedrek_4a_3b instead.\n"
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I could just ask someone else for free!" linkto "Jedrek_4a_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Talk to me about Sandover instead." linkto "Jedrek_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to sell something to you to make the money. Let's trade." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Let me ask you something else instead." linkto "Jedrek_2_2a"  notes ""
+              }
+}
+Node "Jedrek_4a_3a_1"
+notes ""
+{
+NPCText "Done. Now, take a look at this. *He uses a stick to draw a map in the sand at his feet*. Now this here's Sandover, see? That's where we are. That's north that way, by the way..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, with you so far." linkto "Jedrek_4a_3a_2"  notes ""
+              }
+}
+Node "Jedrek_4a_3a_2"
+notes ""
+{
+NPCText "...Now this down here is Crossroads. Heh - and this here in between the two is the same goddamn route I been runnin' for as long as I can remember."
+ NPCFemaleText "...Now this down here is Crossroads. Heh - and this here in between the two is the same goddamn route I been runnin' for as long as I can remember. Sorry, lady. I gotta stop my cussin'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're not happy on this route? What's wrong with it?" linkto "Jedrek_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jedrek, could I tag along with your caravan, next time you make the run?" linkto "Jedrek_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Very useful, thanks. Can I ask you a question about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I ought to make a move. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_4a_3b"
+notes "*VARIABLE* is the sum quoted previously, in Jedrek_4a_2. Increment Jedrek_Temper by 1."
+{
+NPCText "Nice try. *VARIABLE* caps, or no deal."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, OK, here's your money." linkto "Jedrek_4a_3a_1"  notes "Subtract the appropriate amount, as quoted in quoted previously in Jedrek_4a_2, from the PC's caps."
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I could just ask someone else for free!" linkto "Jedrek_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to sell something to you to make the money. Let's trade." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Let me ask you something else instead." linkto "Jedrek_2_2a"  notes ""
+              }
+}
+Node "Jedrek_4a_3c"
+notes ""
+{
+NPCText "*Jedrek shrugs* Go ask them, then. I'm not a public information service."
+ NPCFemaleText "*Jedrek shrugs* Go ask them, then. I'm not a public information service, lady."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "At least let me ask you about something else!" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a cunt, Jedrek." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3 go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'll do that. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_4a_3d"
+notes "Increment Jedrek_temper by 1"
+{
+NPCText "The hell? You don't even have enough money! Get outta here, you bum!"
+ NPCFemaleText "The hell? You don't even have enough money! Get outta here!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, I've got something I could sell to you. Let's trade." linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Leave*" linkto "done"  notes ""
+              }
+}
+Node "Jedrek_4b_1"
+notes ""
+{
+NPCText "Sandover? *Jedrek makes a sour face* Sooner we're done here and gone, the better."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Why don't you like it here?" linkto "Jedrek_4b_2"  notes ""
+              }
+}
+Node "Jedrek_4b_2"
+notes ""
+{
+NPCText "Place is so radioactive it practically hums. Takes it's toll on the populace, in case you hadn't noticed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I can't say I had noticed." linkto "Jedrek_4b_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If it's so radioactive, why do you come here?" linkto "Jedrek_4b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Radioactive? No one told me! Sell me some Rad-X, quickly!" linkto "Jedrek_Trade"  notes ""
+              }
+}
+Node "Jedrek_4b_3a"
+notes ""
+{
+NPCText "Let's just say you better not make any ee-motional attachments to anyone here. They tend not to last long."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "If it's so radioactive, why do you come here?" linkto "Jedrek_4b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's that live here? I need to buy some anti-rad drugs from you now!" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Crossroads?" linkto "Jedrek_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jedrek_2_2a"  notes ""
+              }
+}
+Node "Jedrek_4b_3b"
+notes ""
+{
+NPCText "Don't worry about me, buddy. I make sure me 'n' Kelly have plenty enough Rad-X. Brute don't like the medicine, so I crumble it up and put it in his food when he ain't lookin'."
+ NPCFemaleText "Don't worry about me, lady. I make sure me 'n' Kelly have plenty enough Rad-X. Brute don't like the medicine, so I crumble it up and put it in his food when he ain't lookin'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What effect does the radiation have on local people?" linkto "Jedrek_4b_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better have some off you, too. And quickly!" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's Crossroads like?" linkto "Jedrek_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I talk to you about something else?" linkto "Jedrek_2_2a"  notes ""
+              }
+}
+Node "Jedrek_5_1"
+notes ""
+{
+NPCText "Sure I ain't cheap. Why the hell should I be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aren't you worried someone else will undercut you?" linkto "Jedrek_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know. Can I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+              }
+}
+Node "Jedrek_5_2"
+notes ""
+{
+NPCText "No other caravans come by this way. I got me a monopoly on this run because no-one else is dumb enough to make it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why? What's wrong with it?" linkto "Jedrek_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "At least business is good. Can I ask you another question?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, OK. See you around, Jedrek." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_5_3"
+notes ""
+{
+NPCText "What's wrong with it? What's right with it is more like it. The money ain't bad, but hell, son, this is the boringest, dullest stretch of wasteland you ever did see."
+ NPCFemaleText "What's wrong with it? What's right with it is more like it. The money ain't bad, but - and pardon my lingo, lady - hell, this is the boringest, dullest stretch of wasteland you ever did see."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It doesn't sound so bad if it's making you decent money." linkto "Jedrek_5_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear it. Mind if I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I've got my problems too. See you around, Jedrek." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_5_4"
+notes ""
+{
+NPCText "...and Sandover is dangerously radioactive."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've got plenty of Rad-X; what's the problem?" linkto "Jedrek_5_5"  notes "Only display this node if Jedrek has spoken node Jedrek_4b_3b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, I can imagine how that would put other people off." linkto "Jedrek_5_5"  notes ""
+              }
+}
+Node "Jedrek_5_5"
+notes ""
+{
+NPCText "That ain't the half of it. *Jedrek leans closer and whispers conspiratorially* Between you an' me? My travelling companions leave a lot to be desired, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why not fire them and get another crew?" linkto "Jedrek_5_6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So why don't you join another caravan run? There must be more, surely?" linkto "Jedrek_5_6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your travelling companions? Not the greatest conversationalists, then?" linkto "Jedrek_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going. See you around, Jedrek." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_5_6a"
+notes ""
+{
+NPCText "Haven't you been listening? For a start, no-one else will come near Sandover on account of its radiation."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you join a caravan crew running another route?" linkto "Jedrek_5_6b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me about your current crew?" linkto "Jedrek_3_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Jedrek_2_1a"  notes ""
+              }
+}
+Node "Jedrek_5_6b"
+notes ""
+{
+NPCText "Sure, there's other runs. But none of them pay so well, see? I'm a businessman before I'm a glory seeker, and this set up here at Sandover is plenty sweet enough to justify the boredom of coming here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And your travelling companions don't liven up the journey?" linkto "Jedrek_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Have you got time for another question?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That makes sense. I must be going now, though." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_6_1"
+notes ""
+{
+NPCText "You want to come along for the ride, too? *He looks you up and down again*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Jedrek_6_2a"  notes "Subtract Jedrek_Temper from Charisma and make a 1-to-10 'roll'. If failed, go to Jedrek_6_2b instead."
+              }
+}
+Node "Jedrek_6_2a"
+notes ""
+{
+NPCText "Sure, I reckon we could handle you if you tried any smart stuff."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey! I just want passage. I'm not going to give you any trouble." linkto "Jedrek_6_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come to think of it, this might not be a good idea. I'll see you later." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_6_2b"
+notes ""
+{
+NPCText "No, sorry. You can't be too careful in the wastes, as I'm sure you appreciate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Can I ask you about something else, though?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Be like that then, you asshole." linkto "Jedrek_7_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_6_3"
+notes ""
+{
+NPCText "Just as well. Besides which, if some assholes show up and try to rob us, it's always good to have another ready pair of hands."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem. I can take care of myself in a fight." linkto "Jedrek_6_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds dangerous. I think I'll give it a miss. Although I still need to talk to you about something else." linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've changed my mind, come to think of it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_6_4"
+notes ""
+{
+NPCText "One other thing. Don't get no ideas about asking for pay. You look after the caravan and the caravan looks after you. That's the offer, that's the deal."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds fair enough. It's a deal, Jedrek." linkto "Jedrek_6_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm... I'll think about it. Can I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Dangerous and unpaid? I think I'll leave it. Speak to you another time." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_6_5"
+notes ""
+{
+NPCText "Great! Be here on ***DATE OF CARAVAN DEPARTURE***."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK. See you then, Jedrek." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be here. I've got another question, if you don't mind." linkto "Jedrek_2_1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I've changed my mind. See you later anyway." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_7_1"
+notes "Increment Jedrek_Temper by 1"
+{
+NPCText "You want to re-think your words, buddy? Don't think I won't kill you if you mess with me."
+ NPCFemaleText "You want to re-think your words, lady? Don't think I won't kill you if you mess with me."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Sorry, I don't know what came over me. How about I look over your goods and buy something by way of apology?" linkto "Jedrek_Trade"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Fuck you!" linkto "Jedrek_7_2"  notes ""
+              }
+}
+Node "Jedrek_7_2"
+notes ""
+{
+NPCText "Brute, kill this asshole."
+ NPCFemaleText "Brute, kill this bitch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's go!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*gulp!*" linkto "combat"  notes ""
+              }
+}
+Node "Jedrek_8a_1"
+notes ""
+{
+NPCText "Alexander thinks he knows the market better than me, does he?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't believe that he thinks he knows better, as such." linkto "Jedrek_8a_2b"  notes "Easy speech check. If failed, go to Jedrek_9 instead.\nWrong choice. (Defensive and weak). Punishment is another node with a speech check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come on, Jedrek, you know your prices are exorbitant." linkto "Jedrek_8a_2a"  notes "Easy speech check. If failed, go to Jedrek_9 instead.\nThis is the correct choice (forthright, no-nonsense). Reward is bypassing another node with a speech check. "
+              }
+}
+Node "Jedrek_8a_2a"
+notes ""
+{
+NPCText "So I'm charging over the odds? I don't see any competition 'round here. What's it to you, anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, I know you're only charging so highly because you hate this trade route..." linkto "Jedrek_8a_3"  notes "Easy speech check. If failed, go to Jedrek_9 instead.\nCorrect response. (Sympathetic to Jedrek's plight)."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's just say I've a vested interest." linkto "Jedrek_8a_3"  notes "Wrong response. (Smug, ambivalent). Moderate speech test. If the PC fails, route Jedrek's response to Jedrek_9 instead."
+              }
+}
+Node "Jedrek_8a_2b"
+notes ""
+{
+NPCText "Well, what then?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "He said that your prices were far too high for Sandover to afford." linkto "Jedrek_8a_2a"  notes "Easy speech check. If failed, go to Jedrek_9 instead."
+              }
+}
+Node "Jedrek_8a_3"
+notes ""
+{
+NPCText "Go on, I'm listening..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look at the bigger picture. Your prices are killing the market in Sandover." linkto "Jedrek_8a_4"  notes "Easy speech test. If the PC fails, route Jedrek's response to Jedrek_9 instead."
+              }
+}
+Node "Jedrek_8a_4"
+notes ""
+{
+NPCText "You think so?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I admit that I'm no expert, but yes, I do." linkto "Jedrek_8a_5b"  notes "Wrong choice. (Shows lack of experience). Punishment is another node with a speech test.\nEasy speech test. If failed, go to Jedrek_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "The other routes are open to all sorts of opportunities for expanding your operation." linkto "Jedrek_8a_5a"  notes "Correct choice (to the point and decisive) \nEasy speech test. If the PC fails, route Jedrek's response to Jedrek_9 instead."
+              }
+}
+Node "Jedrek_8a_5a"
+notes ""
+{
+NPCText "Mm-hmm."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "All you've got to look forward to here is an early funeral where the only mourners will be your dissatisfied customers." linkto "Jedrek_8a_6"  notes "Easy speech test at this point. If the PC fails, route Jedrek's response to Jedrek_9 instead."
+              }
+}
+Node "Jedrek_8a_5b"
+notes ""
+{
+NPCText "So what do I do about it, if you know all the answers?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look to the other routes. They're not so stale and worn-out." linkto "Jedrek_8a_5a"  notes "Easy speech test. If the PC fails, route Jedrek's response to Jedrek_9 instead."
+              }
+}
+Node "Jedrek_8a_6"
+notes ""
+{
+NPCText "Hell, when you put it like that... I guess you're right."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm glad you agree. What do you say?" linkto "Jedrek_8a_7"  notes ""
+              }
+}
+Node "Jedrek_8a_7"
+notes ""
+{
+NPCText "OK, I need to get out of this rut... but I can't just up and leave like that to go searching for new work. It could take months, and I ain't THAT rich."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about if I go looking for you? I've got a lot of travelling to do and could ask around as I go." linkto "Jedrek_8a_8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I suppose you're stuck here, then. See you around." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_8a_8"
+notes "The PC gains the mission where he must go to Crossroads to find a new route for Jedrek. Decrement Jedrek_Temper by 1."
+{
+NPCText "Shucks, would you do that for me? That'd be great."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could tag along with you next time you go to Crossroads, maybe. Then I'd ask around whilst you were working." linkto "Jedrek_6_1"  notes "If the player clicks this option, he gets the mission to find a new trade route for Jedrek."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem, Jedrek. I'll ask around at my next port of call. Can I ask you about something else?" linkto "Jedrek_2_1b"  notes "If the player clicks this option, he gets the mission to find a new trade route for Jedrek."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, forget it. I'm going to be too busy. See you later." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_8b_1"
+notes "Increment Jedrek_Temper by 1."
+{
+NPCText "You already talked to me about that. Don't bother me with it again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, listen, Jedrek, you really need to hear me out." linkto "Jedrek_8a_1"  notes "Hard speech check. If failed, go to Jedrek_8b_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. Well, can I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Cantankerous asshole." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Shrug* Not my loss. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_8b_2"
+notes "Increment Jedrek_Temper by 1"
+{
+NPCText "I SAID don't bother me with that crap!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jedrek, if you'll just give me a chance..." linkto "Jedrek_8a_1"  notes "Hard speech check. If the PC fails, go to Jedrek_7_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "OK, sorry. It was worth a try. Can I still ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Don't raise your voice with me, dick-head." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Shrug* Not my loss. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_9"
+notes "Increment Jedrek_Temper by 1."
+{
+NPCText "You're in over your head, boy. Go tell it to someone who cares a damn."
+ NPCFemaleText "You're in over your head, lady. Go tell it to someone who cares a damn."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh... OK. Well, can I ask you about something else?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've got a smart mouth, Jedrek, and I've a good mind to shut it up." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Shrug* Not my loss. Be seeing you." linkto "done"  notes ""
+              }
+}
+Node "Jedrek_Trade"
+notes ""
+{
+NPCText "*** NOTE: The trade dialogue window comes up and the player can trade. Once the player closes the window he has the following options. ***"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, you certainly aren't cheap, Jedrek." linkto "Jedrek_5_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander told me you were overcharging on your wares. He wasn't joking!" linkto "Jedrek_8a_1"  notes "This option only appears once the player has spoken to Alexander about Jedrek's exorbitant prices. If the PC has already tried to convince Jedrek to ply another trade route and failed, go to Jedrek 8b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Have you got time to answer a few questions?" linkto "Jedrek_2_1a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "I suppose you think it's funny to charge those sorts of prices, asshole." linkto "Jedrek_7_1"  notes "If Jedrek_Temper>3, go to Jedrek_7_2 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That did it for me, Jedrek. See you around." linkto "done"  notes ""
+              }
+}

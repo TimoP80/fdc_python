@@ -1,0 +1,1389 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Saman"
+Location "Sandover (Surface)"
+Description ""
+Unknown_Desc "You see a heavy-set guard with scars on his face."
+Known_Desc "You see Saman"
+Detailed_Desc "You see a large man in faded leathers. His skin is rough after years in the sun, and his face and neck are matted with scars. Despite his healthy build, he stands awkwardly, favouring his left leg."
+/* Float message nodes */
+
+Floatnode "Idle"
+notes "Random floats while Saman idles."
+{
+"*Cough*",
+"My bones ache.",
+"Another sunny day in paradise.",
+"Eurgh. I feel like shit."
+}
+Floatnode "Unhappy"
+notes "Floats when Dialogue ends with grumpy Saman (Node -1)"
+{
+"Why do I always get the idiots?"
+}
+
+/* Regular nodes */
+
+Node "switcher"
+notes ""
+{
+NPCText "Does exactly what it says on the tin."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good reaction intro." linkto "Node_Intro1Good"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bad reaction intro" linkto "Node_Intro1Bad"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Dumb intro" linkto "Node_Dumb"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Standard (Not Paid)" linkto "Node_Noentry"  notes "If the PC leaves the initial dialogue with Saman before paying the fee/reaching an agreement."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Standard (Paid)" linkto "Node_Intro2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hero (All Saman-related quests complete)" linkto "0a"  notes ""
+              }
+}
+Node "Node_Intro2"
+notes ""
+{
+NPCText "You again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions to ask." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had a question about the Vultures." linkto "Node_Vultures1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get inside again?" linkto "Node_012"  notes "If paid fee/earned scabs' trust"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get inside again?" linkto "73"  notes "Available after making a mess of things inside"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any work for me?" linkto "Node_WorkSplit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Keep up the good work." linkto "done"  notes ""
+              }
+}
+Node "Node_Intro1Bad"
+notes "When PC approaches the cave entrance Saman is guarding, dialogue auto-initiates, and begins at node 1."
+{
+NPCText "Slow down, buddy, you ain't getting in there. Scabs only."
+ NPCFemaleText "Slow down, missy, you ain't getting in there. Scabs only."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What’s a scab?" linkto "Node_Scab"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am a scab." linkto "2a"  notes "[Bluff]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s important that I speak to whoever’s in charge here." linkto "4"  notes "[Int/ Speech]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just taking a look around." linkto "done"  notes "(done + floater)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<If dumb PC>" linkto "Node_Dumb"  notes ""
+              }
+}
+Node "Node_Dumb"
+notes "dumb version of 1"
+{
+NPCText "Hey you. Yeah, you with the face. Get over here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ya?" linkto "Node_Dumb1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Ignore him, continue towards the caves]" linkto "Node_Dumb2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Ignore him, walk away]" linkto "done"  notes ""
+              }
+}
+Node "2a"
+notes ""
+{
+NPCText "No, you're not."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How can you be so sure?" linkto "41"  notes "[Int>7]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, you got me." linkto "done"  notes ""
+              }
+}
+Node "2b"
+notes ""
+{
+NPCText "Sure, right, yeah, that sounds likely."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's true!" linkto "41"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why won’t you believe me?" linkto "33"  notes "[int>7]"
+              }
+}
+Node "3a"
+notes ""
+{
+NPCText "You don't."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I really do have to get in there." linkto "4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is this going to cost me?" linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine." linkto "done"  notes ""
+              }
+}
+Node "3b"
+notes ""
+{
+NPCText "No."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "4"
+notes ""
+{
+NPCText "Oh yeah? Why’s that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard you were having some problems, I might be able to help." linkto "Node_5"  notes "Quest seed from Jonathan"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I… uh… Raiders! Yeah, I saw a whole bunch of them coming this way. I have to warn your leader." linkto "2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My home and its people are in terrible danger. I must find what’s left of the GAI headquarters, and I think someone here might know where it is." linkto "2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just do. What’s this going to cost me?" linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+              }
+}
+Node "5"
+notes ""
+{
+NPCText "You heard what? Oh, you mean the AutoDoc. Yeah, that’s been broken for a while now. Damn thing won’t even switch on properly, it just click-click-clicks like a rat with a stutter."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I know the problem. If it’s a simple servomotor disjunction, it won’t take much to fix." linkto "11"  notes "[Sci/Repair]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm… sounds like the flanking ring-valves are out of synch." linkto "7"  notes "[Bluff]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s probably just a faulty lip on the mainboard unit casing." linkto "7"  notes "[Bluff]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Clicks? Have you checked for beetles?" linkto "6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wouldn't know how to fix that." linkto "56"  notes ""
+              }
+}
+Node "6"
+notes ""
+{
+NPCText "Beetles? Are you stupid?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I’m serious! Certain beetle species have been known to colonize electromechanical environments, with devastating results." linkto "7a"  notes "[Tuff bluff]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m only trying to help." linkto "-1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+              }
+}
+Node "7"
+notes ""
+{
+NPCText "Sounds serious."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, it is. I wouldn’t trust anybody without the proper knowledge and experience to repair it." linkto "8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s easily fixed if you know what you’re doing." linkto "8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s out of my depth, that’s for sure. I’ll be leaving." linkto "done"  notes ""
+              }
+}
+Node "8"
+notes ""
+{
+NPCText "And I suppose you’re just the man we’re looking for, turned up out of nowhere just like that."
+ NPCFemaleText "And I suppose you’re just the sweet thing we’re looking for, turned up out of nowhere just like that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Exactly. You should consider yourselves lucky I showed up when I did." linkto "10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m just someone that happens to have the right tools for the job." linkto "11b"  notes "Medium speech check"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I was making that up. I have no idea how to fix it." linkto "done"  notes ""
+              }
+}
+Node "Node_FullofShit"
+notes ""
+{
+NPCText "Oh yeah? Well I’ll make a deal with you. I’ll stop being negative when you stop being full of shit."
+ NPCFemaleText "Oh yeah? Well I’ll make a deal with you, missy. I’ll stop being negative when you stop being full of shit."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[END]" linkto "done"  notes ""
+              }
+}
+Node "10"
+notes ""
+{
+NPCText "I guess we should."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So, are you going to let me through?" linkto "3b"  notes "[int<7]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "And yet you’re still in my way." linkto "33"  notes "[int>7]"
+              }
+}
+Node "11"
+notes ""
+{
+NPCText "Yeah, that’s what the Doc said, something like that. You know about that kind of stuff?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, we used to get this sort of thing all the time back home. Just give me half an hour with it." linkto "13"  notes "[Bluff/Repair]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a little. I couldn’t make any promises without a closer look." linkto "12"  notes "Repair skill check here"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why can’t the Doc fix it? He knows what the problem is. " linkto "14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever I know, I’m keeping it to myself. Goodbye. " linkto "done"  notes ""
+              }
+}
+Node "11b"
+notes ""
+{
+NPCText "The Doc said something about servo-disfunction or something. Disjunction, disfunction, something like that. You know anything about that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, we used to get this sort of thing all the time back home. Just give me half an hour with it." linkto "13"  notes "[Bluff/Repair]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a little. I couldn’t make any promises without a closer look." linkto "12"  notes "Repair skill check here"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing at all. I had some other questions." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever I know, I’m keeping it to myself. Goodbye. " linkto "done"  notes ""
+              }
+}
+Node "12"
+notes ""
+{
+NPCText "Hmm… [he eyes you up and down] You can go in, but don’t try anything stupid. Head down and see the Doc."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. " linkto "done"  notes " "
+              }
+}
+Node "13"
+notes ""
+{
+NPCText "Big words… you got your half-hour, but that’s it. You take one wrong step down there, I'll be the one kicking your ass."
+ NPCFemaleText "Tall talk, missy... you got your half-hour. But you make one wrong move, don't think I won't be there to kick your ass."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be good, I promise." linkto "done"  notes " After exiting dialogue -> npc floats ‘Take over, Barney, I’m going down to see Doc’ "
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’ve changed my mind. I’ll come back later." linkto "done"  notes ""
+              }
+}
+Node "Node_SandoverRads"
+notes ""
+{
+NPCText "What the hell do you think? This is poisoned earth we’re living on – not just us, everybody. It’ll get you too, in the end."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No point in worrying about it then, I guess. " linkto "Node_Sandover5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If this is a radiation hotspot, why live here?" linkto "Node_Sandover10"  notes "[Science]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had another question about Sandover." linkto "Node_Sandover"  notes ""
+              }
+}
+Node "Node_Sandover5"
+notes ""
+{
+NPCText "I guess not. Anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_Sandover10"
+notes ""
+{
+NPCText "Where the fuck else are we going to live? It’s not like you can get away from it. Might as well stay where the scrap pays the highest."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But there are better places than this!" linkto "Node_Sandover11"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess… where do you all come from, originally?" linkto "Node_Sandover12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You’ve got a point, but I still think you’re better off somewhere else." linkto "Node_Notalk"  notes ""
+              }
+}
+Node "Node_Sandover11"
+notes ""
+{
+NPCText "That’s right – and when you get thrown out of all those places, you come here. Welcome to Sandover. Now, are you going to ask another stupid question, or are you going to move the fuck along?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m going to ask another stupid question." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your attitude is really starting to get to me. " linkto "Node_FullofShit"  notes " *BB"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’ll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "20"
+notes ""
+{
+NPCText "You really want to get in there? You gotta pay the toll. 100 caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Deal. [hand over the caps]" linkto "done"  notes "triggers ‘Knock yourself out’ floater"
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about 50?" linkto "-3"  notes "(result depends on barter skill) Needs a procedure to check barter and call the appropriate node."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait a minute – you just told me there was no way I was getting in. Now there’s a ‘standard price’?" linkto "21"  notes "*BB [NIEE] "
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I could pay another way." linkto "Node_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something first." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "21"
+notes ""
+{
+NPCText "Maybe I was trying to save you the disappointment. Maybe I just don’t like the way you look. You want in or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. [hand over the caps]" linkto "done"  notes "done + ‘Knock yourself out’ floater"
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about 50?" linkto "-3"  notes "[Hard Barter]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to ask something first." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I can pay another way..." linkto "Node_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "Node_Scab"
+notes ""
+{
+NPCText "A Scab is a person I let down these caves. You don't get to go down there, so you're not a Scab. Get it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your logic is circular." linkto "Node_Noentry2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What if I pay you?" linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess I'll be leaving." linkto "done"  notes ""
+              }
+}
+Node "Node_Funee"
+notes ""
+{
+NPCText "Hah! Good one. And here I was thinking you were an asshole."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks… I think. Can I ask you something else?" linkto "Node_Questions"  notes ""
+              }
+}
+Node "24"
+notes ""
+{
+NPCText "That’s one way of putting it. Most of us didn’t have a choice."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean you were thrown out? Out of where?" linkto "Node_Sandover12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, beggars can’t be choosers." linkto "Node_Sandover5"  notes ""
+              }
+}
+Node "Node_Sandover12"
+notes ""
+{
+NPCText "Nowhere in particular. Few from here, few from there. Ain’t a settlement in the world doesn’t have its undesirables, even fewer that don’t jump at the first chance to get rid of them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm… You know, I think I can relate to that." linkto "Node_Goodforyou"  notes "[>int]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Great, a town populated by the dregs of the dregs. I can’t wait." linkto "Node_Sandover6"  notes " *BB"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about you? Where did you come from?" linkto "Node_SamHistory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds about right. I had some other questions" linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_Sandover6"
+notes ""
+{
+NPCText "Keep talking, kid. You might never leave."
+ NPCFemaleText "Keep it up, lady. Might be the last place you ever see."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a few more questions." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't take well to idle threats." linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Goodforyou"
+notes ""
+{
+NPCText "Good for you. Now, what do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have another question." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. I’ll have a look around for myself. " linkto "done"  notes ""
+              }
+}
+Node "Node_Questions"
+notes "'Good' version of this node; 'Ask away.'"
+{
+NPCText "Make it quick."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Sandover." linkto "Node_Sandover"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me a little about yourself." linkto "Node_SamHistory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. I’ll have a look around for myself. " linkto "-1"  notes ""
+              }
+}
+Node "Node_Oswald"
+notes ""
+{
+NPCText "He’s the best doctor I ever met, whatever that’s worth. Works like a dog, but every day there’s more coming down sick, and we ain’t exactly well-stocked. I wouldn’t be surprised if he drops dead from the effort one of these days."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Maybe I can help." linkto "Node_Work_Doc"  notes "optionally go to 15 (???) What the? -dju"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask about someone else?" linkto "Node_SandoverWho"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well that’s tragic. I’m leaving." linkto "done"  notes ""
+              }
+}
+Node "Node_SamHistory"
+notes ""
+{
+NPCText "Me? Not much to tell. Born on the edge of the Star, kicked out on my ass, worked the trail for a while, settled down in this dump. Met an annoying asshole. That just about brings us up to right now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The Star? Where's that?" linkto "Node_SamHistory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to settle here?" linkto "Node_SamHistory6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened to your face?" linkto "Node_SamFace"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some other questions." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_SamHistory3"
+notes ""
+{
+NPCText "They wanted to give me shit. I wouldn’t take none. That simple."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing's ever that simple. What exactly happened?" linkto "Node_Notalk"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you show me how to get to the Star?" linkto "Node_SamHistory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you joined the caravan trail? " linkto "Node_SamHistory5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you end up here in Sandover?" linkto "Node_SamHistory6"  notes ""
+              }
+}
+Node "33"
+notes ""
+{
+NPCText "I’m like that. Anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That’s a pretty poor attitude you have." linkto "Node_FullofShit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you answer some questions for me?" linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to get inside. Name a price." linkto "20"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it for now. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node_SamHistory7"
+notes ""
+{
+NPCText "Crooks, sadists, lunatics - and that’s just the people, don’t get me started on the animals. Only thing that hates a man as much as his neighbour is this planet."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s a cruel world. Let me ask you about something else." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s a hard existence. Is that why you settled down here?" linkto "Node_SamHistory6"  notes ""
+              }
+}
+Node "Node_SamHistory6"
+notes ""
+{
+NPCText "This place is a dump, always has been; I never intended to stay. But I guess you could say I found something worth hanging around for."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "What was her name?" linkto "Node_SamHistory8"  notes " *GB\n[Int/Per]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you find?" linkto "Node_Notalk"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about life on the trail, before you settled here." linkto "Node_SamHistory7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your home town." linkto "Node_SamHistory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have to end up somewhere, I guess. Back to my questions." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_SamHistory8"
+notes ""
+{
+NPCText "Not much gets past you, does it? Jezebel. She was my diamond in the rough. I met her when my caravan pulled in here to trade. After five minutes of talking I’d already agreed to stay. Caravan master didn’t like it, but I said I’d take a half of what we’d agreed on and meet up with them on the return journey."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you ended up staying?" linkto "Node_SamHistory9"  notes ""
+              }
+}
+Node "Node_SamHistory9"
+notes ""
+{
+NPCText "Well, that was seven years ago; now Jezie’s dead, I’m an old man and I never did see that caravan again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m sorry to hear about that." linkto "Node_SamHistory10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don’t seem too cut up about it." linkto "Node_SamHistory10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good for you. Let me ask something else." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_SamHistory10"
+notes ""
+{
+NPCText "Time moves on. I’ll be joining her before too long."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why? Is something wrong with you?" linkto "Node_Notalk"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m sorry you think that way. Let me change the subject." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That’s the spirit! Now tell me something else." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You’re a really fun guy to be around. I’m going." linkto "done"  notes ""
+              }
+}
+Node "Node_Notalk"
+notes ""
+{
+NPCText "[He sighs plaintively.] Look… don’t think I’m standing here because I want to talk to you. It’s a job."
+ NPCFemaleText "Lady... I don't do small talk. I don't do banter. I just do my job, and that don't involve listening to you yap."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Touchy subject. Let me ask something else." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your tone is beginning to annoy me." linkto "Node_FullofShit"  notes "*BB"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought you might appreciate the company. I guess I was wrong." linkto "-1"  notes "(done + floater)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, asshole, I’ll leave you to your ‘job’" linkto "-1"  notes "(done + floater) *BB"
+              }
+}
+Node "Node_SamFace"
+notes ""
+{
+NPCText "Think it suits me? I can give you one just like it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That’s okay, I like mine as it is. I just wanted to know what you’ve been through." linkto "Node_Notalk"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m guessing you had a series of very bad shaving accidents." linkto "Node_Funee"  notes " *GB"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’d like to see you try!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That’s alright… I’ll be leaving now." linkto "-1"  notes ""
+              }
+}
+Node "41"
+notes ""
+{
+NPCText "Don't fuck me about sonny, I'm not in the mood."
+ NPCFemaleText "Don't fuck me about missy, I'm not in the mood."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How can I get inside?" linkto "3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’ll be leaving now." linkto "done"  notes ""
+              }
+}
+Node "Node_Sandover"
+notes ""
+{
+NPCText "You can see the place, can’t you? What’s to tell?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you all come from?" linkto "Node_Sandover12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do you people feed yourselves?" linkto "Node_Sandover2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are there any people around here I should know about?" linkto "Node_SandoverWho"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What’s making people sick?" linkto "Node_SandoverRads"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll level with you - this place is a dump." linkto "Node_Sandover6"  notes "*BB"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had other questions." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_Sandover2"
+notes ""
+{
+NPCText "Trade, mostly. Most scabs are scavengers, and there’s a lot of good salvage around here. All that electro-gizmo shit that never works, but some idiot somewhere pays for it. We spend most of the money on medical supplies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is it that you trade with?" linkto "Node_Sandover3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Medical supplies are expensive. Do you make that much from scavenging?" linkto "Node_Sandover9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you think is causing the illness here?" linkto "Node_SandoverRads"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. I had other questions." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_SandoverWho"
+notes ""
+{
+NPCText "Sorry bud - I don’t know what you’re used to, but Sandover ain’t too big on dignitaries. There’s Alexander, he’s in charge, and of course there’s Doc Oswald. Aside from that? We’re all just scabs."
+ NPCFemaleText "Sorry missy - I don’t know what you’re used to, but Sandover ain’t too big on dignitaries. There’s Alexander, he’s in charge, and of course there’s Doc Oswald. Aside from that? We’re all just scabs."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Alexander." linkto "60"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Doctor Oswald." linkto "Node_Oswald"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "Node_SamHistory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Something else…" linkto "Node_Questions"  notes ""
+              }
+}
+Node "45"
+notes ""
+{
+NPCText "You need it spelled out? Alright then. All scabs are rejects from the other settlements around here. For one reason or another, people get discarded, and some of ‘em end up here. That’s really all there is to it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You’re all exiles? From where?" linkto "Node_Sandover12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose that’s how most new societies emerge. If you think about it… " linkto "Node_Notalk"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That’s all? I’ll ask another question then." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’ll be leaving now." linkto "done"  notes ""
+              }
+}
+Node "Node_Sandover9"
+notes ""
+{
+NPCText "We get by, just about. When it gets bad they cut the rations of the no-hopers. Course if they did that now, they’d leave almost half the camp starving. We’ve seen better times."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. And who do you buy your food off?" linkto "Node_Sandover3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, that bad? I’m glad I’m just passing through." linkto "Node_Sandover6"  notes "(done+floater)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Half the camp terminally ill? How long do you think this place can possibly last?" linkto "Node_Sandover7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Haven’t we all. Back to my questions… " linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_Sandover7"
+notes ""
+{
+NPCText "Like I said, we’ve seen better times. Are you done?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have one or two more questions." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All done." linkto "done"  notes ""
+              }
+}
+Node "7a"
+notes ""
+{
+NPCText "No shit… That sounds serious."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, it is. I wouldn’t trust anybody without the proper knowledge and experience to repair it." linkto "8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s easily fixed if you know what you’re doing." linkto "8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It’s out of my depth, that’s for sure. I’ll be leaving." linkto "done"  notes ""
+              }
+}
+Node "48"
+notes ""
+{
+NPCText "What does it sound like? It's a town, long way from here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you show me how to get there?" linkto "Node_SamHistory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were you forced to leave?" linkto "Node_SamHistory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So how did you end up all the way down here?" linkto "Node_SamHistory5"  notes ""
+              }
+}
+Node "Node_SamHistory2"
+notes ""
+{
+NPCText "Lone Star. [He points vaguely north] It's that way. You'll know it when you see it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did you have to leave there?" linkto "Node_SamHistory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you end up here in Sandover?" linkto "Node_SamHistory6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a great help. Let me ask something else." linkto "Node_Questions"  notes ""
+              }
+}
+Node "-1"
+notes "floater"
+{
+NPCText "Why do I always have to deal with the idiots?\nOther floaters"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node_SamHistory5"
+notes ""
+{
+NPCText "I joined a caravan crew headed south. Caravaners don't give a damn who you are, as long as you can point a gun and take a beating. Spent most of my life doing just that, getting my ass beat to protect other people's shit. I saw the world. Or what's left of it, anyway."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you thought this would be a good place to settle down?" linkto "Node_SamHistory6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you show me where the Star is?" linkto "Node_SamHistory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What a sad story. Tell me another." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_Sandover3"
+notes "Traders actual name is 'Tech Supplies'"
+{
+NPCText "Not many traders'll risk coming all the way out here - recent months it's been just one lot, 'Tex Suppliers' or whatever. Bullshit name, bullshit act. Just because they're the only ones coming out here means they think they can charge whatever the hell they like."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might be able to help. Where can I find these 'Tex Suppliers'?" linkto "53"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, you can't blame them for having good business sense." linkto "Node_Sandover4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll think on that. I have another question about Sandover." linkto "Node_Sandover"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving now." linkto "done"  notes ""
+              }
+}
+Node "53"
+notes ""
+{
+NPCText "They swing up every few months, on <date>. They're based up north, at the Crossroads. Before you ask, I ain't drawing you a map."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have another question about Sandover." linkto "Node_Sandover"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask about something else, then." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "Node_Sandover4"
+notes ""
+{
+NPCText "And you can't blame us for wishing we got to eat every day. You got anything else you want to add?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me something else about Sandover" linkto "Node_Sandover"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you tell me a bit about yourself?" linkto "Node_SamHistory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it, I'm leaving." linkto "-1"  notes ""
+              }
+}
+Node "55"
+notes ""
+{
+NPCText "Fine, seventy caps. That's as cheap as it gets."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Hand over the caps]" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have that much." linkto "56"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've changed my mind. Goodbye." linkto "-2"  notes ""
+              }
+}
+Node "56"
+notes ""
+{
+NPCText "What a sad story. Anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now." linkto "done"  notes ""
+              }
+}
+Node "57"
+notes ""
+{
+NPCText "This isn't a negotiation. Take it or leave it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine [Hand over the caps]" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll leave it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "-3"
+notes ""
+{
+NPCText "[Barter Check]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Success" linkto "55"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Failure" linkto "57"  notes ""
+              }
+}
+Node "58"
+notes "Random response"
+{
+NPCText "Like it walked in on me diddling its sister./\nLike a red-headed stepchild. /\nI was doing alright before you showed up./\netc"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[END]" linkto "done"  notes ""
+              }
+}
+Node "60"
+notes ""
+{
+NPCText "Well... let's just say him and me don't exactly see eye to eye. But like I said, he's in charge, ain't my place to argue. His son died a few weeks back, doesn't make him any easier to deal with."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I go in to see him?" linkto "Node_TollAlex"  notes ""
+              }
+}
+Node "59"
+notes ""
+{
+NPCText "Same way everybody else does. Kid was a good scav, and good scavs never live long. Spend too much time out there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Out where? Could you show me?" linkto "61a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about someone else." linkto "Node_SandoverWho"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about something else." linkto "Node_Questions"  notes ""
+              }
+}
+Node "61a"
+notes ""
+{
+NPCText "Hah! Now ain't that a stupid question?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Tell me about something else." linkto "Node_Questions"  notes ""
+              }
+}
+Node "73"
+notes ""
+{
+NPCText "After what you did? Unlikely."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I said I was sorry for that. What more can I do?" linkto "74"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll pay whatever it costs." linkto "74"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Will you at least answer a few questions for me?" linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. I'll go." linkto "-1"  notes ""
+              }
+}
+Node "74"
+notes ""
+{
+NPCText "You really like it in there? Prove it. 300 caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What? That's extortion!" linkto "57"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about 100?" linkto "57"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't afford that." linkto "56"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not paying that." linkto "done"  notes ""
+              }
+}
+Node "75"
+notes ""
+{
+NPCText "Fuck should I know? They give us food, we give them broken junk. You should talk to Alexander about that. I don't do the bargaining, I just do what I'm told. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Alexander?" linkto "76"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I had other questions." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I go in to see him?" linkto "Node_SeeAlex"  notes ""
+              }
+}
+Node "76"
+notes ""
+{
+NPCText "Alexander? He's-- well, he's in charge is what he is. You'll find him inside, lower level."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What were you going to say?" linkto "60"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will you let me through to see him?" linkto "Node_SeeAlex"  notes "If *GB, use node 25 instead of 20."
+              }
+}
+Node "Node_Dumb1"
+notes ""
+{
+NPCText "You can't go in there, Bubba. Have to pay. 50 caps."
+ NPCFemaleText "Sorry babe, but you gotta pay if you want to get in there. 50 caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh... Okay! [Hand over the money]" linkto "Node_Dumb4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't have that much. Go in anyway?" linkto "Node_Dumb5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC> didn't want to go in smelly caves anyway!" linkto "done"  notes ""
+              }
+}
+Node "0a"
+notes "(copy questions from node 0)"
+{
+NPCText "Well if ain't He, come to save the world from its problems."
+ NPCFemaleText "Well if it ain't She, come to save the world from its problems."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions to ask." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Keep up the good work." linkto "done"  notes ""
+              }
+}
+Node "Node_Dumb2"
+notes ""
+{
+NPCText "[He levels a submachine gun at you] Get over here, asshole."
+ NPCFemaleText "Lady, get yourself over here. I ain't gunna ask again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ya?" linkto "Node_Dumb1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Ignore him, continue towards the caves]" linkto "Node_Dumb3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Shriek and run away]" linkto "done"  notes ""
+              }
+}
+Node "Node_Dumb3"
+notes ""
+{
+NPCText "I don't believe this guy... Barney, will you kill this poor fucker before I have to do something terrible?"
+ NPCFemaleText "What the fuck is this? Barney, kill this bitch before I'm forced to do something terrible."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "combat"  notes ""
+              }
+}
+Node "Node_Dumb4"
+notes ""
+{
+NPCText "Alright man, knock yourself out."
+ NPCFemaleText "Knock yourself out, babe."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye-bye!" linkto "done"  notes ""
+              }
+}
+Node "Node_Dumb5"
+notes ""
+{
+NPCText "No can do, Bubba. Gotta make a living, you know what I'm saying?"
+ NPCFemaleText "No can do, missy. Gotta make a living, you know what I mean?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Understand. I have money. [Hand it over]" linkto "Node_Dumb4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Start to cry]" linkto "Node_Dumb6"  notes "female only?"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, I know. <PC> go now." linkto "done"  notes ""
+              }
+}
+Node "Node_Dumb6"
+notes ""
+{
+NPCText "Woah, woah! Now listen missy, there ain't no need to go... aww hell, just get in there. Go on, I can't stand the sight of it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_5"
+notes ""
+{
+NPCText "Yeah? How's that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard you were having mechanical difficulties." linkto "5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard you were having trouble with the traders." linkto "Node_05c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm a Doctor, and I heard you had a lot of sick people here." linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "If you come a little closer, maybe I'll show you..." linkto "Node_Sexbribe"  notes ""
+              }
+}
+Node "Node_05c"
+notes ""
+{
+NPCText "Sure. The 'trouble' is instead of traders, we get two greedy sacks of shit and their pet gorilla pulling up every other week to fuck us in the ass."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of deal do you have with them?" linkto "75"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds painful." linkto "Node_trader"  notes ""
+              }
+}
+Node "Node_Noentry"
+notes ""
+{
+NPCText "You again. What do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll pay your toll, if it'll get me inside." linkto "Node_Fee"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to get inside." linkto "4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a few questions?" linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing." linkto "done"  notes ""
+              }
+}
+Node "Node_Noentry2"
+notes ""
+{
+NPCText "And my patience is thin. Fuck off."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_6"
+notes ""
+{
+NPCText "Nuh-uh, not now. I'm busy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't look busy." linkto "Node_07"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please? It won't take long." linkto "Node_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll pay the toll." linkto "Node_Toll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Node_07"
+notes ""
+{
+NPCText "And you don't look like a idiot who doesn't know when to shut his mouth. So much for first impressions."
+ NPCFemaleText "And you don't look like a dumb bitch that doesn't know when to shut her yap. So much for first impressions."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Watch it. I've killed for less than that." linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_09"
+notes ""
+{
+NPCText "Ask me later. Right now I'm busy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't look busy." linkto "Node_07"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "Go ahead. Make my day."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "Hell, why didn't you say earlier? Go on through. Talk to Oswald, he's on the lower level."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_012"
+notes ""
+{
+NPCText "Do what you want. You're not my problem any more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Intro1Good"
+notes ""
+{
+NPCText "Hold it there. If you want to shelter in the caves, you gotta pay the toll."
+ NPCFemaleText "Hold it there, lady. If you want to shelter in the caves, you gotta pay the toll."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is the toll?" linkto "Node_Toll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you charge a toll?" linkto "Node_TollWhy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "Node_Fee"
+notes ""
+{
+NPCText "100 caps, one-time fee."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "" linkto "switcher"  notes ""
+              }
+}
+Node "Node_Fee25"
+notes ""
+{
+NPCText "100 caps, standard fare."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. [hand over the caps]" linkto "done"  notes "(done + Knock yourself out’ floater)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Barter] How about 50?" linkto "-3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have that much." linkto "56"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I could pay another way…" linkto "Node_5"  notes "[SIEE]"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "Node_Work"
+notes ""
+{
+NPCText "No, you don't look like the violent type. What are you good at?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm a qualified medic." linkto "Node_Work_Doc"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm good at fixing things" linkto "Node_Repair"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm good with people." linkto "Node_Diplo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm a scout." linkto "Node_Scout"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing, really." linkto "Node_Nowt"  notes ""
+              }
+}
+Node "Node_Work_Doc"
+notes ""
+{
+NPCText "You should talk to Oswald, our doctor. He can always use another pair of hands."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Repair"
+notes ""
+{
+NPCText "Well, we've got an Autodoc that has a habit of crapping out on us. You should talk to Oswald about that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Diplo"
+notes ""
+{
+NPCText "Maybe you should talk to Alexander, he deals with your sort."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Nowt"
+notes ""
+{
+NPCText "Well you're in luck. We've got a whole lot of nothing you can get started on right away."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does that mean?" linkto "Node_Work_Nowt2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_WetWork"
+notes ""
+{
+NPCText "You look like you can handle yourself. I've got a pest problem you can take care of."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of pests are we talking about?" linkto "Node_Wetwork2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm interested. What's the pay?" linkto "Node_Wetwork_Pay"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, that's not really my thing." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork2"
+notes ""
+{
+NPCText "The human kind. You got a problem with that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to know more about the job first." linkto "Node_Wetwork11"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm interested. What's the pay?" linkto "Node_Wetwork_Pay"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not interested." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork3"
+notes ""
+{
+NPCText "Great. They call themselves the Vultures, their leader's a guy named Seville."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you want me to kill them all?" linkto "Node_Wetwork7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where are these Vultures?" linkto "Node_Wetwork5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you get rid of them yourself?" linkto "Node_Wetwork6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll take care of them." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork4"
+notes ""
+{
+NPCText "I want you to kill them. They've had all the chances we're willing to give."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure there's a way to resolve this peacefully." linkto "Node_Wetwork7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find these Vultures?" linkto "Node_Wetwork5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why haven't you taken care of them yourself?" linkto "Node_Wetwork6"  notes ""
+              }
+}
+Node "Node_Wetwork5"
+notes ""
+{
+NPCText "They camp in our scavenging grounds, but they move around a lot. It's hard to keep track of them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you show me where the scavenging grounds are?" linkto "Node_ScavGround"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why haven't you taken care of them yourself?" linkto "Node_Wetwork6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you want me to kill them all?" linkto "Node_Wetwork7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll take care of them." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork6"
+notes ""
+{
+NPCText "You think I haven't tried? They just run off as soon as they see me coming."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes you think I'll have better luck?" linkto "Node_Wetwork9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find the Vultures?" linkto "Node_Wetwork5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you want me to kill them all?" linkto "Node_Wetwork7"  notes ""
+              }
+}
+Node "Node_Wetwork7"
+notes ""
+{
+NPCText "Every one of them. They've had all the chances we're willing to give. If you're not up to it, just say so."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm still interested. Tell me more about the Vultures." linkto "Node_Wetwork5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't worry, I'll do it." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't believe violence is the answer." linkto "Node_Wetwork10"  notes ""
+              }
+}
+Node "Node_ScavGround"
+notes ""
+{
+NPCText "Sure. [He marks a location on your map]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why haven't you done anything yourself?" linkto "Node_Wetwork6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and take care of them." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork9"
+notes ""
+{
+NPCText "Simple, they don't know your face. You might be able to keep them still long enough to fill them with holes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find the Vultures?" linkto "Node_Wetwork5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You want me to kill all of them?" linkto "Node_Wetwork7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and take care of it." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork10"
+notes ""
+{
+NPCText "Then you didn't hear the question properly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork_Pay"
+notes ""
+{
+NPCText "<x> caps, non-negotiable."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kind of pests are we talking about?" linkto "Node_Wetwork2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<x> caps? That's it?" linkto "Node_Wetwork_Pay2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it." linkto "Node_Wetwork3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have to think about it." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork11"
+notes ""
+{
+NPCText "Sure. We threw a gang of troublemakers out of the caves a while back, but they didn't go far. Now they're making life hard for us, so we want rid of them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did you throw them out?" linkto "Node_Wetwork_Why"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm interested. What's the pay?" linkto "Node_Wetwork_Pay"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll have to think about it." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork_Pay2"
+notes ""
+{
+NPCText "That's it. We'd have more to pay you with if they hadn't stolen it from us. Now, are you interested?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Node_Wetwork3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll think about it." linkto "done"  notes ""
+              }
+}
+Node "Node_Wetwork_Why"
+notes ""
+{
+NPCText "What the fuck do you care? They're no-good drunken junkie assholes, that's why we threw them out. People here just want to live and die in peace."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does the job pay?" linkto "Node_Wetwork_Pay"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to get involved." linkto "done"  notes ""
+              }
+}
+Node "Node_Work_Nowt2"
+notes ""
+{
+NPCText "It means you're useless. Now get lost."
+      options {
+              }
+}
+Node "Node_trader"
+notes ""
+{
+NPCText "You don't know the half of it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of deal do you have with the traders?" linkto "75"  notes ""
+              }
+}
+Node "Node_VultureDone"
+notes ""
+{
+NPCText "Is that so? I suppose I oughta thank you."
+      options {
+              }
+}
+Node "Node_Vultures1"
+notes ""
+{
+NPCText "Unless it's 'What do I do with their corpses?', I don't think I'm interested."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do I do with their corpses?" linkto "Node_Vulture14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you know they're getting aid from people here in Sandover?" linkto "Node_Vultures2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did you throw them out again?" linkto "Node_Vultures4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you give them a second chance?" linkto "Node_Vultures3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind." linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures2"
+notes ""
+{
+NPCText "I figured they must be. But whoever's helping them isn't leaving us any clues."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll try to find out more." linkto "Node_Vultures5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I talked to Douglas. He admitted to it." linkto "Node_Vultures6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just thought you should know." linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures3"
+notes ""
+{
+NPCText "We've given them more second chances than I can count. Are you going to do the job or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think violence is necessarily the answer." linkto "Node_Vultures8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, I'll go and get them." linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures4"
+notes ""
+{
+NPCText "I thought I was paying you to kill them, not write a damn book about them. We threw them out because they're no good punks, that's all you need to know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you give them another chance?" linkto "Node_Vultures3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get on with the job." linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures5"
+notes ""
+{
+NPCText "Sure, you could do that. Or you could do what I'm paying you for and just kill them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If their supplies are cut, they'll probably leave on their own." linkto "Node_Vultures7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. I'll get to it." linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures6"
+notes ""
+{
+NPCText "Douglas, eh? He's the obvious choice, but I honestly didn't think he had the balls."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What will happen to him?" linkto "Node_Vulture12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you still want me to kill the Vultures?" linkto "Node_Vulture13"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Glad to help." linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures7"
+notes ""
+{
+NPCText "If you're that scared by a few junkies, why don't you just say so?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not scared, I just don't think violence is the answer." linkto "Node_Vultures8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "They'll be easier to catch once they've starved for a few days." linkto "Node_Vultures10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't you want to know who the traitor is?" linkto "Node_Vultures11"  notes ""
+              }
+}
+Node "Node_Vultures8"
+notes ""
+{
+NPCText "Then I'll get someone who can add up properly. Get lost."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures10"
+notes ""
+{
+NPCText "Just come back to me when it's done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Vultures11"
+notes ""
+{
+NPCText "If you'd do your job, I wouldn't have to worry about anybody. Now get out there and kill those fuckers."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Vulture12"
+notes ""
+{
+NPCText "We'll throw him out on his ass, just like his brother. Fitting, ain't it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you still want me to take care of the Vultures?" linkto "Node_Vulture13"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Glad to help." linkto "done"  notes ""
+              }
+}
+Node "Node_Vulture13"
+notes ""
+{
+NPCText "Your choice, kid. They'll probably move on by themselves eventually, now that their well's dried up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll let them live." linkto "Node_VultureLive"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "A job's a job. I'll go and take care of them." linkto "Node_VultureDie"  notes ""
+              }
+}
+Node "Node_Vulture14"
+notes ""
+{
+NPCText "Leave them were they fell, funnyman, the rats will take care of them. Here, take this. You've earned it."
+ NPCFemaleText "Just leave them were they fell, the rats will take care of them. Here, take this. You've earned it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aren't you even going to say thank you?" linkto "Node_Thanks"  notes ""
+              }
+}
+Node "Node_VultureLive"
+notes ""
+{
+NPCText "Well ain't you the angel of mercy. Here, take this. It ain't much, but then again you didn't do what I asked you to."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks." linkto "done"  notes ""
+              }
+}
+Node "Node_VultureDie"
+notes ""
+{
+NPCText "Mighty sporting of you. Come back when you're done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_Thanks"
+notes ""
+{
+NPCText "This reward says thank you. I say get out of my face."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Toll"
+notes ""
+{
+NPCText "An even hundred. One-time payment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. [hand over the caps]" linkto "done"  notes "triggers ‘Knock yourself out’ floater"
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about 50?" linkto "-3"  notes "(result depends on barter skill) Needs a procedure to check barter and call the appropriate node."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I could pay another way." linkto "Node_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something first." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "Node_WorkSplit"
+notes ""
+{
+NPCText "Sure, I'm betting we can find some use for you. It might get a little messy, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The messier the better." linkto "Node_WetWork"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not a thug, if that's where this is going." linkto "Node_Work"  notes ""
+              }
+}
+Node "Node_Scout"
+notes ""
+{
+NPCText "There's a search-and-rescue you can get on with, if you're crazy enough to go out there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's the job?" linkto "Node_Scout2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not interested." linkto "done"  notes ""
+              }
+}
+Node "Node_Scout2"
+notes ""
+{
+NPCText "One of the scavengers hasn't been seen in a while. Silly bitch probably fell down a well somewhere, but there's some of us still trying to find her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your concern for her is touching." linkto "Node_Scout4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you give me the details?" linkto "Node_Scout3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not interested." linkto "done"  notes ""
+              }
+}
+Node "Node_Scout3"
+notes ""
+{
+NPCText "See that guy right next to me? That's Dakin. He'll fill you in."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Scout4"
+notes ""
+{
+NPCText "Listen up kid, here comes the lesson. Everybody gets what they deserve. You want the job or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you give me the details?" linkto "Node_Scout3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not interested." linkto "done"  notes ""
+              }
+}
+Node "Node_TollWhy"
+notes ""
+{
+NPCText "Why does anyone charge a toll? Shit ain't free, that's why."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much?" linkto "Node_Toll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "Node_TollAlex"
+notes ""
+{
+NPCText "You pay the toll, you can see whoever you like."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. [hand over the caps]" linkto "done"  notes "triggers ‘Knock yourself out’ floater"
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about 50?" linkto "-3"  notes "(result depends on barter skill) Needs a procedure to check barter and call the appropriate node."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I could pay another way." linkto "Node_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something first." linkto "Node_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it." linkto "done"  notes ""
+              }
+}
+Node "Node_Sexbribe"
+notes ""
+{
+NPCText "Ho-oh, you're one of those. Listen Lady, I don't go around sticking my dick into any dirty little thing that crawls up here. Either pay up, or fuck off."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aren't you even tempted?" linkto "Node_SexBribe2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right. How much is the toll again?" linkto "Node_Toll"  notes ""
+              }
+}
+Node "Node_SexBribe2"
+notes ""
+{
+NPCText "Sure I'm tempted. But I could spend all night eating you up, and I'd only be hungry again tomorrow. Real money lasts longer."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much is the toll again?" linkto "Node_Toll"  notes ""
+              }
+}

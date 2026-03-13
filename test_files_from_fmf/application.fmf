@@ -1,0 +1,448 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.1-stable
+
+*/
+
+NPCName "Colonel Sanders"
+Location "K.F.C."
+Description "Colonel of the Kentucky Fighting Chickens.  A Lawful, Dignified man.  Very haughty, he has a tendency to overreact to certain small misdemeanors.  Any crime reults in capital punishment undr his command.  His goal is to lead his chickens into eliminating gangs and raiders in the wastes."
+Unknown_Desc "You see a mid-sized, alt-and-pepper haired man standing in your midst.  He has black-framed glasses and a white beard. "
+Known_Desc "You see Colonel Sanders, Head of the Kentucky Fighting Chickens."
+Detailed_Desc "He looks very familiar.  You recall seeing this man in your Vault's records, but you can't remember what he did."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "TownInt"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link -1
+},
+cond target_node "Introduction"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link -1
+}
+};
+
+/* Timed events */
+
+// Intervals are entered in seconds (converted to game ticks by the script)
+// default_event points to an index from the timed event list
+// starting from zero
+Default_Event = 0
+TimeEvent fixed_param_name="Desperado Attack", enum=0
+IsRandomInterval = True
+IntervalMin=8
+IntervalMax=12
+   code = {
+    "call Stranger, you best get to shelter, Here come the Desperados!;",
+    "flush_add_timer_event_sec(self_obj, random(8, 8),Desperado Attack);"
+  }
+
+/* Regular nodes */
+
+Node "Original_Intro_"
+notes "(Original Introduction; One-time)"
+is_wtg = true
+{
+NPCText "(The man looks you up and down, scrutinizing every part of your body.  His gaze is very penetrating)  The name's Colonel Sanders, leader of the Kentucky Fighting Chickens.  Who might you be, stranger?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>." linkto "What_You_Want"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>, and I'm here to kill you and your troops, you crazy bastard." linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just a traveler." linkto "Hmph"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You bad man.  You die." linkto "Idiot"  notes "You bad man.  You die."
+              }
+}
+Node "What_You_Want"
+notes ""
+is_wtg = false
+/* Skill checks for node What_You_Want */
+
+      define_skill_check Skill_Check_000_Speech {
+      skill_num = 15;
+      difficulty_modifier = -40;
+      onsuccess => Test;
+      onfailure => Spy;
+      }
+
+{
+NPCText "You will address me as 'sir'.  Well, <PC>, what brings you to the KFC camp?  Are you looking to join?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Uh, Yes...sir!" linkto "Skill_Check_000_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah, there.  Slow down.  What are you guys all about?" linkto "Info"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm going to have to pass this time.  Sorry." linkto "Hmph"  notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "\"Kentucky\" Fighting Chickens?  aren't you guys a bit far south to be in Kentucky?  And why \"Chickens\"?" linkto "History" conditions { CHECK_SKILL outdoorsman >= 25 link_next NONE } notes ""
+              }
+}
+Node "Test"
+notes ""
+is_wtg = false
+/* Skill checks for node Test */
+
+      define_skill_check Skill_Check_001_Speech {
+      skill_num = 15;
+      difficulty_modifier = -30;
+      onsuccess => Test2;
+      onfailure => Doubt_It;
+      }
+      define_skill_check Skill_Check_002_Speech {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Great_Purge;
+      onfailure => Spy;
+      }
+
+{
+NPCText "Good to see a person so interested in doing something in the name of righteousness.  To get in, you need to pass a test to show your loyalty to righteousness and the Great Purge.  Are you still interested?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Yes, sir!" linkto "Skill_Check_001_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hell no!" linkto "Hmph"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a test for you.  What's what's black and blue and red all over?  The answer?  Your dead body.  Die, you sick son of a bitch." linkto "combat"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Great Purge?" linkto "Skill_Check_002_Speech"  notes ""
+              }
+}
+Node "Info"
+notes ""
+is_wtg = false
+{
+NPCText "The Sanders have run this fine regiment for generations, ever since my Great-grandfather founded it years ago.  the orginal idea of KFC was thought of by my Great-Great-Great-Grandafather, the original Colonel sanders.  Our goal is to rid the wastes of Bandits, thieves, and all manner of ne'er-do-wells.  And once the Great Purge is complete, The Wasteland will be a paradise.  Now are you going to join or not?   "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you call yourselves the \"Kentucky Fighting Chickens\" because...?" linkto "History"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thanks." linkto "Hmph"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but I think I'll \"join\" my foot to your ass.  How's that?" linkto "combat"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Great Purge?" linkto "Skill_Check_002_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do you fund your \"little\" operation, here?" linkto "Shades_Of_Gray"  notes ""
+              }
+}
+Node "History"
+notes ""
+is_wtg = false
+/* Skill checks for node History */
+
+      define_skill_check Skill_Check_003_Speech {
+      skill_num = 15;
+      difficulty_modifier = -20;
+      onsuccess => Good;
+      onfailure => Doubt_It;
+      }
+      define_skill_check Skill_Check_004_Speech {
+      skill_num = 15;
+      difficulty_modifier = -20;
+      onsuccess => Shades_Of_Gray;
+      onfailure => Spy;
+      }
+
+{
+NPCText "Kentucky is added in our name for two reasons.  First, it confuses our enemies of our location.  Second, it is in honor of my Great-Great-Great-grandfather, Colonel Sanders.  \"Chickens\" is added because my Great-Great-Great Grandpappy took a liking to Chickens. (he leans in toward you)  You don't have a problem with that, do you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(You stare him right in the eye)  No, just your chickens, old man." linkto "Combat"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "No...sir." linkto "Skill_Check_003_Speech"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "No, but I am curious about how this place is funded." linkto "Skill_Check_004_Speech"  notes ""
+              }
+}
+Node "Hmph"
+notes ""
+is_wtg = false
+{
+NPCText "It appears you don't know who you're fucking with.  Allright boys, target practice!!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(looks like you have to fight)" linkto "combat"  notes ""
+              }
+}
+Node "Test2"
+notes ""
+is_wtg = false
+{
+NPCText "You're eager!  Good, then here is the test.  Travel to the nearby city of Ghetto.  It is wretched, vile town full of scum and vialliny.  there you will find a family named McArthur.  Kill them all, every last man, woman, and child named McArthur.  Only then will you be allowed to fight in the name of Good."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Maybe I'm not seeing the big picture, but it seems to me that killing children is not a good thing." linkto "Kiddies"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've seen the McArthurs.  They seem like decent farm folk." linkto "McArthur"  notes "Only available if the PC has talked to the McArthurs in the past."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Consider it done." linkto "Excellent"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Um, I think I'll have to pass for now.  Bye!" linkto "Death"  notes ""
+              }
+}
+Node "Combat"
+notes ""
+is_wtg = false
+{
+NPCText "Here that, Boys?  This boy has a problem with our righteous crusade.  Let's see if we can persuade him otherwise."
+ NPCFemaleText "Here that, Boys?  This little lady has a problem with our righteous crusade.  Let's see if we can persuade her otherwise."
+      options {
+              }
+}
+Node "Good"
+notes ""
+is_wtg = false
+/* Skill checks for node Good. */
+
+      define_skill_check Skill_Check_005_Speech {
+      skill_num = 15;
+      difficulty_modifier = -20;
+      onsuccess => Test;
+      onfailure => Doubt_It;
+      }
+
+{
+NPCText "Good.  Now, are you going to join or not?"
+ NPCFemaleText "Good.  Now, are you going to join or not?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Yes...sir." linkto "Skill_Check_005_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I think I'll just kick your ass and walk away.  How's that sound?\n" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not right now, thanks.  Bye!" linkto "Death"  notes ""
+              }
+}
+Node "Shades_Of_Gray"
+notes ""
+is_wtg = false
+/* Skill checks for node Shades_Of_Gray */
+
+      define_skill_check Skill_Check_006_Speech {
+      skill_num = 15;
+      difficulty_modifier = -15;
+      onsuccess => Great_Purge;
+      onfailure => Spy;
+      }
+
+{
+NPCText "What the Thieves do is plunder and kill for no reason.  They are lawless, bloodthristy, and cruel.  We only take what we need from local settlements for our noble cause.  If people get in our way, then we have no choice but to put them down.  Chances are, they were working with the Villians of the wastes anyway.  That is the point of the Great Purge."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Great Purge?" linkto "Skill_Check_006_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you better than the \"viallins of the wastes\" then?  What seperates the \"Good\" form the \"Evil\" here?" linkto "Purging"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you'll kill millions just to \"spread righteousness\"?  You're crazy if you think that you can get anywhere near your goal.  You don't have the manpower." linkto "Numbers"  notes ""
+              }
+}
+Node "Exactly"
+notes ""
+is_wtg = false
+/* Skill checks for node Exactly */
+
+      define_skill_check Skill_Check_007_Speech {
+      skill_num = 15;
+      difficulty_modifier = -15;
+      onsuccess => Great_Purge;
+      onfailure => Spy;
+      }
+
+{
+NPCText "I'm glad to find another person so supportive of out cause.  Would you like to know more of the Great Purge?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Oh, yes, please tell me, oh holy one." linkto "Skill_Check_007_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but I would like to ask you something." linkto "Yes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I really should be leaving...." linkto "Death"  notes ""
+              }
+}
+Node "Kiddies"
+notes ""
+is_wtg = false
+/* Skill checks for node Kiddies */
+
+      define_skill_check Skill_Check_008_Speech {
+      skill_num = 15;
+      difficulty_modifier = -15;
+      onsuccess => Numbers_CLONE;
+      onfailure => Doubt_It;
+      }
+
+{
+NPCText "Even children are corrupted by the seeds of evil sown in the Wastes.  They too must be eliminated to prevent the spreading of evil."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought that you guys were only fighting the \"villains of the wastes\"?  How does this make you any better than them?" linkto "Purging"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I see clearly now, Colonel!  But how will we purge the wastes?  We are so few..." linkto "Skill_Check_008_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn your sick. Nothing a good blast to the face won't cure.  Time for your medicine, old man!" linkto "Crazy"  notes ""
+              }
+}
+Node "McArthur"
+notes ""
+is_wtg = false
+{
+NPCText "Some evil seems good, just as some good seems evil.  You must not be deceived, <PC>.  The McArthurs must be killed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What crime have they comitted?" linkto "Crime2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So killing children justifies the causes of righteousness?  If that's the way you think, then you're no better than any of the \"villians of the wastes\"." linkto "Purging"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see now!  Yes, they must die!  But before I go, can I ask you something?" linkto "Yes"  notes ""
+              }
+}
+Node "Excellent"
+notes ""
+is_wtg = false
+{
+NPCText "Great!  Go, and shed the evil blood in the name of righteousness!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just one last question." linkto "Yes"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, I'll shed blood allright. I hope you lived a good life, old man, because it's about to end." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are one sick puppy.  Time to put you down." linkto "Crazy"  notes ""
+              }
+}
+Node "Purging"
+notes ""
+is_wtg = false
+/* Skill checks for node Purging */
+
+      define_skill_check Skill_Check_009_Speech {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Numbers_CLONE;
+      onfailure => Spy;
+      }
+
+{
+NPCText "But you don't see!  All of the Wasteland is corrupted!  All that are not fighting for the cause of the KFC must be purged, incuding the children!  The seed must not be corrupted by the wickedness of their parents!  Only in death is their purity.  Once the wasteland is cleansed, there will be peace for the righteous!"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Yes, I see now!  ...So, how will we bring about this Purge?" linkto "Skill_Check_009_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right...has anyone told you that you are completely insane?" linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm.  I have a better idea.  I kick your ass and walk away.  How's that \"Purge\" sound?" linkto "combat"  notes ""
+              }
+}
+Node "Crime2"
+notes ""
+is_wtg = false
+/* Skill checks for node Crime2 */
+
+      define_skill_check Skill_Check_010_Speech {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Numbers_CLONE;
+      onfailure => Spy;
+      }
+
+{
+NPCText "It's not about comitting crime, it's about preventing it.  Wickedness is in all the hearts of people.  Only those who fight for our cause are truly pure and righteous. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh-Huh.  Well, I think I've heard enough. Time for you to meet your maker." linkto "combat"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Oh yes, how could I not have seen before!  Tell me, though, how will we stop this evil from spreading?  Show me, oh holy one." linkto "Skill_Check_010_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I..uh..I think I had better be...uh..leaving." linkto "Death"  notes ""
+              }
+}
+Node "Numbers"
+notes ""
+is_wtg = false
+{
+NPCText "That's where you're wrong, Son.  You see, my Great-Grandfather started the KFC's true crusade against evil.  He and the rest of the majority of the members of his Vault staged a revolt agaisnt the Vault overseer.  Using the wepaons and technology salvaged from the Vault, he established a stronghold of righteousness in the Wasteland.  We have been slowly growing ever since.  Our biggest set of luck came when the Powers of Righteousness themselves showed us an old military base, all but decimated in the Great War.  Or so it looked.  My Grandfather lead an expedition into the ruins of the base to discover a tresure trove of wepons, ammunition, more powerful than anything he had ever seen.  He also found several robots, which were non-functioning at the time.  After looking at some Vault-manuals on Programming and Repair, a team of our Scientists re-activated the robots and began constructing more at the Vault.  Our numbers are bolstered every day in Humans and in Machines. soon, the Great Purge will be ready to begin.  We have hundreds of troops, all armed and trained with the best equipment and most deadly weapons.  Our name, the \"Kentucky\" fighting chickens is only used to throw the wicked into thinking that we are based in the north, and to honor my Great-Great-Great-Grandfather, who came up with the idea of our crusade.  I can't tell you where our base is exactly until I trust you more, but i can tell you that it is close, like a sheperd watching it's wayward flock. "
+ NPCFemaleText "That's where you're wrong, little lady.  You see, my Great-Grandfather started the KFC's true crusade against evil.  He and the rest of the majority of the members of his Vault staged a revolt agaisnt the Vault overseer.  Using the wepaons and technology salvaged from the Vault, he established a stronghold of righteousness in the Wasteland.  We have been slowly growing ever since.  Our biggest set of luck came when the Powers of Righteousness themselves showed us an old military base, all but decimated in the Great War.  Or so it looked.  My Grandfather lead an expedition into the ruins of the base to discover a tresure trove of wepons, ammunition, more powerful than anything he had ever seen.  He also found several robots, which were non-functioning at the time.  After looking at some Vault-manuals on Programming and Repair, a team of our Scientists re-activated the robots and began constructing more at the Vault.  Our numbers are bolstered every day in Humans and in Machines. soon, the Great Purge will be ready to begin.  We have hundreds of troops, all armed and trained with the best equipment and most deadly weapons.  Our name, the \"Kentucky\" fighting chickens is only used to throw the wicked into thinking that we are based in the north, and to honor my Great-Great-Great-Grandfather, who came up with the idea of our crusade.  I can't tell you where our base is exactly until I trust you more, but i can tell you that it is close, like a sheperd watching it's wayward flock. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow.  I need to kill you, you sick bastard." linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn.  You're nuts.  Thanks for telling me about your secret base, now I can end your sick crusade.  Time to put you down, old man." linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard all I needed to hear.  Now die." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You forgot one thing, oh holy one." linkto "What"  notes ""
+              }
+}
+Node "Yes"
+notes ""
+is_wtg = false
+{
+NPCText "Yes?  What is it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you want on your tombstone?" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How will we continue our quest to Purge the wastes of evil?  We are so few." linkto "Numbers"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been insane, you sick bastard?" linkto "Crazy"  notes ""
+              }
+}
+Node "Crazy"
+notes ""
+is_wtg = false
+{
+NPCText "So, you think I'm crazy, eh?  The great Purge is the last hope of life in the world!!  Well, even if you do kill me and my troops here, there are hundreds more of us around the wastes!  You will never beat us!"
+      options {
+              }
+}
+Node "Great_Purge"
+notes ""
+is_wtg = false
+/* Skill checks for node Great_Purge */
+
+      define_skill_check Skill_Check_011_Speech {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Excellent;
+      onfailure => Believe;
+      }
+
+{
+NPCText "Yes.  Every Man, Woman, and Child in the wastes must be purged to prevent the spread of evil.  Once all of the people of the Wastes are dead or recruited in this area, we will spread our reach nationwide, consuming all wickedness and envelopping the righteous into our fold.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Isn't that a little extreme?" linkto "Purging"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Amen, Colonel.  Let us decimate all that stand in our way." linkto "Skill_Check_011_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How will we purge the wastes with so little numbers?" linkto "Numbers"  notes ""
+              }
+}
+Node "Death"
+notes ""
+is_wtg = false
+{
+NPCText "I'm afraid you know a little too much for you to just up-and-leave.  May their be mercy upon your eternal soul."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hope you said your prayers, old man." linkto "combat"  notes ""
+              }
+}
+Node "What"
+notes ""
+is_wtg = false
+{
+NPCText "What is it, my brother?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You forgot about me.  I'm not just going to let you kill millions of people for you're \"holy\" vendetta against the world.  I will stop you." linkto "Fail"  notes ""
+              }
+}
+Node "Fail"
+notes ""
+is_wtg = false
+{
+NPCText "I fail to see how, <PC>.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's easy.  Like this." linkto "combat"  notes ""
+              }
+}
+Node "Numbers_CLONE"
+notes ""
+is_wtg = false
+{
+NPCText "Well, most of our plan is already completed.  You see,  my Great-Grandfather started the KFC's true crusade against evil.  He and the majority of the members of his Vault staged a revolt against the Vault overseer.  Using the weapons and technology salvaged from the Vault, he established a stronghold of righteousness in the Wasteland.  We have been slowly growing ever since.  Our biggest set of luck came when the Powers of Righteousness themselves showed us an old military base, all but decimated in the Great War.  Or so it looked.  My Grandfather lead an expedition into the ruins of the base to discover a stockpile, ammunition, weapons, and armor deep within the irradiated base.  More powerful than anything he had ever seen.  He also found several robots, which were non-functioning at the time.  After looking at some Vault-manuals on Programming and Repair, a team of our Scientists brought the robots back to the Vault for study and eventaul replication.  Our numbers are bolstered every day in Human Newborns, Comers-of-age, and in Machines.  Soon, the Great Purge will be ready to begin.  We have hundreds of troops, all armed and trained with the best equipment and most deadly weapons.  Our name, the \"Kentucky\" fighting chickens is only used to throw the wicked into thinking that we are based in the north, and to honor my Great-Great-Great-Grandfather, who came up with the idea of our crusade.  I can't tell you where our base is exactly until I trust you more, but I can tell you that it is close, like a sheperd watching it's wayward flock. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow.  I need to kill you, you sick bastard." linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn.  You're nuts.  Thanks for telling me about your secret base, now I can end your sick crusade.  Time to put you down, old man." linkto "Crazy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard all I needed to hear.  Now die." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You forgot one thing, oh holy one." linkto "What"  notes ""
+              }
+}
+Node "Idiot"
+notes ""
+is_wtg = false
+{
+NPCText "Ha!  Looky here, boys, we have a moron in our midst!  You want a fight, stranger?  We'll be much obliged to kick your ass!! "
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "(end)" linkto "combat"  notes ""
+              }
+}
+Node "Spy"
+notes ""
+is_wtg = false
+{
+NPCText "You know what.  I think you're a spy.  And if you're not, then your spirit shall be at peace faster.  it's a win-win.  Now it's time for you to die, stranger."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You first." linkto "combat"  notes ""
+              }
+}
+Node "Doubt_It"
+notes ""
+is_wtg = false
+{
+NPCText "I doubt it.  Guards!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Time for plan \"A\"ss kicking." linkto "combat"  notes ""
+              }
+}
+Node "Believe"
+notes ""
+is_wtg = false
+{
+NPCText "I doubt you really mean that.  Guards!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Big mistake." linkto "combat"  notes ""
+              }
+}

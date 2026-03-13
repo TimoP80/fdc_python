@@ -9,20 +9,66 @@ Architecture:
 - PluginInterface: Base class for all plugins
 - Hook system: Event-driven plugin activation
 - Sandboxed execution: Isolated plugin environments
+
+⚠️ SECURITY WARNING: This plugin system uses Python's importlib to dynamically
+load and execute plugin code. Plugins have full access to the Python interpreter
+and can execute arbitrary code. Only install plugins from trusted sources.
+
+Security considerations:
+- Plugins are loaded from the plugins/ directory (bundled) or ~/.fallout_dialogue_creator/plugins/ (user)
+- No code signing or sandboxing is implemented
+- Malicious plugins can read/write files, execute commands, and access system resources
+- Only enable plugins from trusted authors
+- Review plugin source code before installation
+
+For production use, consider implementing:
+- Code signing for plugins
+- Sandboxed execution (e.g., using RestrictedPython)
+- Plugin manifest with permissions
 """
 
 import importlib
 import inspect
 import logging
+import os
+import sys
 from typing import Dict, List, Optional, Any, Type, Callable
 from pathlib import Path
 from dataclasses import dataclass, field
 from enum import Enum
-import sys
 
 from PyQt6.QtCore import QObject, pyqtSignal
 
 logger = logging.getLogger(__name__)
+
+
+def get_app_bundle_path() -> Optional[Path]:
+    """
+    Get the path to the application bundle (frozen executable) or None if running in development.
+    
+    This function detects if the application is running as a PyInstaller bundled executable
+    and returns the correct path for bundled resources.
+    """
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        # Running as a PyInstaller bundled executable
+        # _MEIPASS is the path to the temporary extracted bundle
+        return Path(sys._MEIPASS)
+    return None
+
+
+def get_app_base_path() -> Path:
+    """
+    Get the base path of the application.
+    
+    In development: returns the directory containing the source files.
+    In frozen executable: returns the directory containing the executable or the _MEIPASS path.
+    """
+    bundle_path = get_app_bundle_path()
+    if bundle_path:
+        return bundle_path
+    
+    # Development mode: use the directory containing this file (core/) and go up to project root
+    return Path(__file__).parent.parent
 
 class PluginType(Enum):
     """Types of plugins supported by the system"""
@@ -124,17 +170,34 @@ class PluginManager(QObject):
 
     def __init__(self, plugin_dirs: List[Path] = None):
         super().__init__()
-        self.plugin_dirs = plugin_dirs or [
-            Path("plugins"),
-            Path.home() / ".fallout_dialogue_creator" / "plugins"
-        ]
+        
+        # Determine the correct base path for the application
+        app_base_path = get_app_base_path()
+        
+        if plugin_dirs is None:
+            # Use default plugin directories - look in the bundled plugins folder
+            # In frozen mode: _MEIPASS/plugins, in dev mode: ./plugins
+            bundled_plugins_dir = app_base_path / "plugins"
+            
+            # Also check user plugins directory
+            user_plugins_dir = Path.home() / ".fallout_dialogue_creator" / "plugins"
+            
+            self.plugin_dirs = [bundled_plugins_dir, user_plugins_dir]
+        else:
+            self.plugin_dirs = plugin_dirs
+            
         self.plugins: Dict[str, PluginInstance] = {}
         self.active_plugins: Dict[str, PluginInstance] = {}
         self.hooks: Dict[str, List[Callable]] = {}
+        
+        logger.info(f"PluginManager initialized. Base path: {app_base_path}")
+        logger.info(f"Plugin directories: {self.plugin_dirs}")
 
-        # Create plugin directories if they don't exist
+        # Create plugin directories if they don't exist (only for user plugins)
         for plugin_dir in self.plugin_dirs:
-            plugin_dir.mkdir(parents=True, exist_ok=True)
+            # Only create user plugins directory automatically
+            if plugin_dir == Path.home() / ".fallout_dialogue_creator" / "plugins":
+                plugin_dir.mkdir(parents=True, exist_ok=True)
 
     def discover_plugins(self) -> List[PluginInfo]:
         """Discover available plugins in plugin directories"""

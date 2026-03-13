@@ -1,0 +1,107 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.2-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Timed events */
+
+// Intervals are entered in seconds (converted to game ticks by the script)
+// default_event points to an index from the timed event list
+// starting from zero
+Default_Event = 0
+TimeEvent fixed_param_name="TheFloats", enum=1
+IsRandomInterval = True
+IntervalMin=2
+IntervalMax=7
+   code = {
+    "call Floats;",
+    "flush_add_timer_event_sec(self_obj, random(2, 7), TheFloats);",
+    "animate_move_to_tile(tile_num_in_direction(self_tile,random(0,5),random(6,8)));"
+  }
+
+/* Float message nodes */
+
+Floatnode "Floats"
+notes "basic floats"
+{
+"Tumdedumdedum, trallalallala",
+"I am mr. shithead",
+"Yaa yaa yayayaya",
+"Fuckin maessiv",
+"Hey party people on the floor",
+"Stupid wankers yeah yeah",
+"All the bitches come to me I'll show you a good time yo!",
+"Wicked wicked wicked"
+}
+
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "Hello there, <PC>, whazzaa?"
+ NPCFemaleText "Hi <PC, you sexy girl! How is your day?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My day is fucking crap!" linkto "Node002"  notes ""
+              }
+}
+Node "Node002"
+notes ""
+is_wtg = true
+/* Skill checks for node Node002 */
+
+      define_skill_check Skill_Check_000_Intelligence {
+      skill_num = 23;
+      difficulty_modifier = 0;
+      onsuccess => NodeIntTrue;
+      onfailure => NodeIntFalse;
+      }
+
+{
+NPCText "Oh, that's too bad! I was hoping you could point me to some shit."
+ NPCFemaleText "Oh, that's too bad! I was hoping you could point me to some shit."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "okay, fucker, let's test some fucking skill checks! I am very intelligent!" linkto "Skill_Check_000_Intelligence"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's fucking refer to a global variable! GVAR_HOLODISK_ENCLAVE_SECURITY BABY!" linkto "Node004" conditions { GLOBAL_VARIABLE GVAR_HOLODISK_ENCLAVE_SECURITY == 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh my god, there's a charisma check in ths option! WE ARE FUCKING DOOMED!" linkto "done" conditions { CHECK_STAT charisma > 4 link_next NONE } notes ""
+              }
+}
+Node "NodeIntTrue"
+notes ""
+is_wtg = true
+{
+NPCText "Yes, you are!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Bye!" linkto "done"  notes ""
+              }
+}
+Node "NodeIntFalse"
+notes ""
+is_wtg = true
+{
+NPCText "No you are not! Ha ha!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fucking hell. I thought I would be!" linkto "done"  notes ""
+              }
+}
+Node "Node004"
+notes ""
+is_wtg = true
+{
+NPCText "LOL! Yeah! Let's hope this shit fucking works yo."
+      options {
+              }
+}

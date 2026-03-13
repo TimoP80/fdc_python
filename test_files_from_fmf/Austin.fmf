@@ -1,0 +1,718 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.24.4-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Brahmin1"
+notes ""
+{
+NPCText "What do you mean \"odd symptoms\"?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Abnormal symptoms. Such as the shakes or trouble standing up." linkto "Brahmin1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually nevermind that. Can I ask you some other questions?" linkto "1"  notes ""
+              }
+}
+Node "Brahmin1a"
+notes ""
+{
+NPCText "Well there were a few like that. I didn't know what to do for them so I sent them to the hospital in Salvation."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. How long ago was this?" linkto "Brahmin1a1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ok Thanks. Can I ask you about some other things now." linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do I get to Salvation?" linkto "Brahmin1a2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I could use some medical attention now." linkto "2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll leave you to your work now." linkto "done"  notes ""
+              }
+}
+Node "Brahmin1a1"
+notes ""
+{
+NPCText "Hmm.... about 3 weeks ago I think. There were 4 of them. Why are you asking?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well I'm investigating a disease carried by brahmin and fatal to anyone who eats from an infected brahmin." linkto "Brahmin1a1a"  notes ""
+              }
+}
+Node "Brahmin1a1a"
+notes ""
+{
+NPCText "Oh my! And you think these patients of mine have that disease?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not entirely sure, but I highly suspect it." linkto "Brahmin1a1a1"  notes ""
+              }
+}
+Node "Brahmin1a1a1"
+notes ""
+{
+NPCText "Oh. Well if I can help at all, please let me know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will, but for now could I ask you some other questions." linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will, but for now I am in need of your services." linkto "2"  notes "this option should only be visible if the PC is injured, poisoned, or radiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will, and thank you for offering. Now I'll leave you to your work." linkto "done"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Ha! I'm not sharing my glory with anyone, especially not some backwater hicktown doctor. I'm outta here." linkto "done"  notes ""
+              }
+}
+Node "Brahmin1a2"
+notes "As of this node, Salvation should be marked on the players map if it has not already been found or marked."
+{
+NPCText "Okay, when you leave Crossroads.... You know, I'll just mark it on your map for you. That will be a lot easier, and you'll be sure to get there. Now just check your map and you'll see it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, but while I'm here, I could usesome medical attention." linkto "2"  notes "This option should only be visible if the pC is wounded, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Now I have a friend here who needs some help." linkto "4"  notes "This option should only be visible if the pC has a companion in tow who is wounded, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Now can I ask you some questions about yourself?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin. I'm going to Salvation right now." linkto "done"  notes ""
+              }
+}
+Node "initial"
+notes ""
+{
+NPCText "Hello there. I'm Austin, the town doctor. I don't remember seeing you around Crossroads before. What's your name?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello there. My name is <PC>. It's a pleasure to meet you Austin." linkto "1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh I'm glad I found you. My name is <PC> and I need some medical attention." linkto "2"  notes "This option should only be visible if the PC is slightly injured, slightly poisoned, or has taken a small dose of radiation."
+          int=4 Reaction=REACTION_NEUTRAL playertext "The name's <PC>. I ... need help." linkto "3"  notes "This option should only be visible if the PC is heavily injured, heavily poisoned, or has taken a large dose of radiation."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm glad I found you Austin. I'm <PC> and I have a friend here who needs your help." linkto "4"  notes "This option should only be visible if the PC has any wounded, poisoned, or radiated party members present."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, I'm sorry to have disturbed you. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "subsequant"
+notes "This should be the starting node for any subsequant conversations that Austin and the PC may have after the PC has talked to Austin once."
+{
+NPCText "Welcome back. How can I help you now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need some help." linkto "2"  notes "This option should only be visible if the PC is injured, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just wanting to ask you some questions again." linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me about how you left your vault again?" linkto "RedoHistory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "One of my friends needs help." linkto "4"  notes "This option should only be visible if the PC has a companion NPC who is wounded, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just stopped in to say hi. I'll leave you alone now." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you had any patients in here with had odd symptoms?" linkto "Brahmin1"  notes "This option should only be visible if the PC has been informed of the brahmin quest by Ol' man Rich."
+              }
+}
+Node "1"
+notes ""
+{
+NPCText "Well how can I help you <PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you some questions about yourself?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you had any patients come in with odd symptoms?" linkto "Brahmin1"  notes "This option should only be visible if the PC has been informed of the brahmin quest by Ol' man Rich."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just looking around. I'll come back if I need your help." linkto "done"  notes ""
+              }
+}
+Node "2"
+notes ""
+{
+NPCText "Oh. What seems to be the trouble then?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm hurt. It's not real bad, but it needs to be treated before it gets infected." linkto "3a"  notes "This option should only be visible if the PC has more than 80% of his max hp."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[You show Austin your wound] That's what's wrong. It's hurting, and burning." linkto "3a"  notes "This option should only be visible if the PC has less than 80% of his max hp."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've taken a bit of poison." linkto "3b"  notes "This option should only be visible if the PC is poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've soaked up some rads. I feel really sick." linkto "3c"  notes "This option should only be visible if the PC is radiated."
+              }
+}
+Node "3"
+notes ""
+{
+NPCText "You sound horrible. What's wrong?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[You show Austin your wound] That's what's wrong. It's hurting, and burning." linkto "3a"  notes "This option should only be visible if the PC is injured."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm poisoned. It's making me sick." linkto "3b"  notes "this option should only be visible if the PC is poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've been radiated." linkto "3c"  notes "this option should only be visible if the PC is radiated."
+              }
+}
+Node "3a"
+notes ""
+{
+NPCText "Oh I'm so sorry I didn't see that. Here. Let's go over to the table and I'll get to work on that. This will cost (xx) caps. You do have that much don't you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah sure. Just heal me." linkto "3a1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I don't. Will you take (xx) caps?" linkto "3a2" conditions { CHECK_SKILL barter >= 60 } notes "This option should only be visible if the PC doesn't have as many caps as Austin asked for.\n(xx) should be 80% of the PC's total caps\nThis option should check the PC's barter skill to be 60%"
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I don't. Will you take (xx) caps?" linkto "3a3" conditions { CHECK_SKILL barter < 60 } notes "This option should only be visible if the PC doesn't have as many caps as Austin asked for.\n(xx) should be 80% of the PC's total caps\nThis option should check the PC's barter skill to be 60%"
+              }
+}
+Node "3a1"
+notes ""
+{
+NPCText "[Austin begins to sew up your wounds and apply healing ointments]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[wait for him to finish]" linkto "3a1a"  notes ""
+              }
+}
+Node "3a1a"
+notes ""
+{
+NPCText "[2 hours later] There, all done. Just keep those wounds clean and dry for a few days and you'll be fine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin. Now can I ask you some questions?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I still need some help." linkto "3"  notes "this option should only be visible if the PC is poisoned or radiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin. I'll come back if I need your help again." linkto "done"  notes ""
+              }
+}
+Node "3a2"
+notes ""
+{
+NPCText "All right. I guess that will do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin." linkto "3a2a"  notes ""
+              }
+}
+Node "3a2a"
+notes ""
+{
+NPCText "Okay then. Go to the procedure room and wait for me, I'll be there in a little bit. I have to log this into my account books."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[go to table]" linkto "3a2a1"  notes ""
+              }
+}
+Node "3a2a1"
+notes ""
+{
+NPCText "[you wait for what seems like hours and then finally, Austin comes over to you.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Finally! Let's get started." linkto "3a1"  notes "This option should only be visible if the player got to this node through barganing to have his hit points restored."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Finally! Let's get started." linkto "3b1"  notes "This option should only be visible if the player got to this node through barganing to have his poison levels removed."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Finally! Let's get started." linkto "3c1a"  notes "This option should only be visible if the player got to this node through barganing to have his radiation levels removed."
+              }
+}
+Node "3a3"
+notes ""
+{
+NPCText "No I'm sorry. I already charge a base rate. I'll lose money if I charge any less."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I honestly don't have enough money. [looking at Austin with big, sad eyes] Can't you please help me?" linkto "3a3a" conditions { CHECK_SKILL speech > 50, CHECK_STAT charisma > 5 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "But I honestly don't have enough money. [looking at Austin with big, sad eyes] Can't you please help me?" linkto "3a3b" conditions { CHECK_SKILL speech < 51, CHECK_STAT charisma < 6 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright. I understand. Can I ask you some questions then?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "You call yourself a doctor!? I would be ashamed of myself if i were a doctor and refused to help someone in need, simply over a few caps. I am leaving, and I may not ever return." linkto "done"  notes ""
+              }
+}
+Node "3a3a"
+notes ""
+{
+NPCText "Oh all right. But don't be telling averyone about this. If everyone uses that trick on me I'll be flat broke in less than a month."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you so much. And don't worry, I won't tell anyone about this. I'll keep it between you and me." linkto "3a1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. I appreciate you helping me." linkto "3a1"  notes ""
+              }
+}
+Node "3a3b"
+notes ""
+{
+NPCText "No, I'm sorry. I honestly can't. I would really like to help you, but I just can't afford it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, here's the money." linkto "3a1"  notes "This option should remove the amount of caps specified by Austin."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well can I ask you something then?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn! I'll have to come back when I get more money." linkto "done"  notes ""
+              }
+}
+Node "3b"
+notes ""
+{
+NPCText "Oh ok. Well come over to the table and I'll get an anti-venom started. This is going to cost (xx) caps. Do you have that much on you? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here's the money." linkto "3b1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I don't. Will you take (xx) caps? That's all I have." linkto "3a2" conditions { CHECK_SKILL barter >= 60 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I don't. Will you take (xx) caps? That's all I have." linkto "3a3" conditions { CHECK_SKILL gambling < 60 } notes ""
+              }
+}
+Node "3b1"
+notes ""
+{
+NPCText "[Austin inserts a rather large needle into your arm and a thick, yellow liquid starts to enter your veins. Soon afterwards, you pass out.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[sleep it off]" linkto "3b1a"  notes ""
+              }
+}
+Node "3b1a"
+notes ""
+{
+NPCText "[16 hours later, you begin to wake up]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn! ...... It feels like someone was playing the drums on my head .... with sledgehammers." linkto "3b1a1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Damn, my head is pounding. What the fuck did you do to me? I've got to get out of here." linkto "done"  notes ""
+              }
+}
+Node "3b1a1"
+notes ""
+{
+NPCText "Yeah.. I'm sorry about that. The band and I got a little carried away while we were practicing. [he chuckles lightly]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's funny Austin. But really, why does my head hurt so damn much?" linkto "3b1a1a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Very funny smartass. I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "3b1a1a"
+notes ""
+{
+NPCText "It's just a temporary side effect of the anti-venom. The pain could wear off in a few hours, or it could take up to a day."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh ok. Well thanks for helping me out. Could I ask you some questions?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for getting rid of the poison for me, but I need some more help." linkto "2"  notes "This option should only be visible if the PC is injured or radiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the help Austin but I need to be going now. I'll come back if I get into trouble again." linkto "done"  notes ""
+              }
+}
+Node "3c"
+notes ""
+{
+NPCText "Oh I see. Well head over to the table there and I'll start testing to see exactly how much rads you've taken."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Austin begins to scan your body with a geiger counter]" linkto "3c1"  notes "[continue]"
+              }
+}
+Node "3c1"
+notes ""
+{
+NPCText "Well it appears you have a radiation level of (xx). This will require (xx) time in bed here in my officed and will cost (xx) caps. Do you still want me to heal you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "3c1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. I have to be somewhere soon. Can you give me anything to help though?" linkto "3c1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, but I can't afford that price. Will you take (xx) caps?" linkto "3a2" conditions { CHECK_SKILL barter >= 60 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, but I can't afford that price. Will you take (xx) caps?" linkto "3a3" conditions { CHECK_SKILL barter < 60 } notes ""
+              }
+}
+Node "3c1a"
+notes ""
+{
+NPCText "[Austin inserts a rather large needle into your arm and a thick, orange liquid starts to enter your veins. Soon afterwards, you pass out.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[sleep it off]" linkto "3c1a1"  notes ""
+              }
+}
+Node "3c1a1"
+notes ""
+{
+NPCText "[12 hours later, you begin to wake up.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn! ...... It feels like someone was playing the drums on my head .... with sledgehammers." linkto "3c1a1a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Damn, my head is pounding. What the fuck did you do to me? I've got to get out of here." linkto "done"  notes ""
+              }
+}
+Node "3c1a1a"
+notes ""
+{
+NPCText "Yeah.. I'm sorry about that. The band and I got a little carried away while we were practicing. [he chuckles lightly]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's funny Austin. But really, why does my head hurt so damn much?" linkto "3c1a1a1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Very funny smartass. I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "3c1a1a1"
+notes ""
+{
+NPCText "It's just a temporary side effect of the anti-radiation serum. The pain could wear off in a few hours, or it could take up to a couple of days."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh ok. Well thanks for helping me out. Could I ask you some questions?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for getting rid of the poison for me, but I need some more help." linkto "2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the help Austin but I need to be going now. I'll come back if I get into trouble again." linkto "done"  notes ""
+              }
+}
+Node "3c1b"
+notes "(xx) will be the amount of caps that Austin would barter a pack of Rad-away for."
+{
+NPCText "Well I have something here that will help. This stuff works instantly but it takes a lot so it's going to be expensive. (xx) caps to be precise."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ok. Here's the caps. Thanks Austin." linkto "3c1b1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn.. I don't have enough." linkto "3c1b2"  notes ""
+              }
+}
+Node "3c1b1"
+notes ""
+{
+NPCText "You're very welcome. Is there anything else I can help you with?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. Can I ask you some questions." linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I still need some help." linkto "2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I'm good now, thanks. I'll be going. I'll come back if I get into trouble again." linkto "done"  notes ""
+              }
+}
+Node "3c1b2"
+notes ""
+{
+NPCText "Well are you sure you can't stay here. It would be a lot cheaper if you stay."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well alright. That other stuff will have to wait." linkto "3c1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I really can't afford to stay in one place for long. Thanks for the offer though." linkto "3c1b1"  notes ""
+              }
+}
+Node "4"
+notes ""
+{
+NPCText "Really? Well let's have a look then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's <NPC#> over there." linkto "4a"  notes "<NPC#> represents the order in which the NPC joined the PC on his quest. For example; If Sulik was the first NPC to join the PC then the player option would actually read as \"It's Sulik over there.\"\n\nThis option needs to be automatically generated for each NPC that the PC has with him but only visible for the NPC's that need healing."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much to get all of them healed up?" linkto "4b"  notes "This option should only be visible if the PC has more than one NPC with him who is wounded, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually nevermind. I'll deal with that later. Can I ask you some questions." linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually nevermind. They'll be ok. I need to get going." linkto "done"  notes ""
+              }
+}
+Node "4a"
+notes ""
+{
+NPCText "All right let's have a look. Hmm.... That'll be (xx) caps to fix <NPC#> up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Here you go." linkto "4a1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I don't. Will you take (xx)? That's all I have." linkto "4a1" conditions { CHECK_SKILL barter >= 60 } notes "This option should only be visible if the PC has a barter skill of 60 or more\n(xx) should be 70% of what Austin charged, or all of the PC's current caps, whichever is more."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No I don't. Will you take (xx)? That's all I have." linkto "4a2" conditions { CHECK_SKILL barter < 60 } notes ""
+              }
+}
+Node "4a1"
+notes ""
+{
+NPCText "Okay then. [Austin takes <NPC#> back into the examination room. 5 hours later...] There, <NPC#> is all fixed up now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin. I have another friend who needs help too." linkto "4"  notes "This option should only be visible if the PC has another companion NPC who is injured, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks a lot Austin. Can I ask you some questions." linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin, but we have to go now." linkto "done"  notes ""
+              }
+}
+Node "4a2"
+notes ""
+{
+NPCText "No, I couldn't. I can't afford to give anyone a discount. If I do it for one person, I have to do it for everyone. My price stands at (xx) caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh alright, I think I have enough." linkto "4a1"  notes "This option should remove the specified amount of caps from the PC's inventory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, <NPC#> will just have to wait then. Can I ask you some questions?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well fine. I'll come back when I have more money." linkto "done"  notes ""
+              }
+}
+Node "4b"
+notes "This node should calculate the poison levels, radiation levels, and current hp damage of each NPC and show an appropriate price."
+{
+NPCText "Hmm.... [he looks over your companions] (xx) caps will get all of them completely healed up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here you go." linkto "4b1"  notes "This option should remove the amount of caps specified by Austin."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have that much. Will you take (xx)? That's all I have." linkto "4b1" conditions { CHECK_SKILL barter >= 60 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have that much. Will you take (xx)? That's all I have." linkto "4b2" conditions { CHECK_SKILL barter < 60 } notes ""
+              }
+}
+Node "4b1"
+notes ""
+{
+NPCText "All right then. Let's all go back to the procedure room and I'll get started on getting you all fixed up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[wait]" linkto "4b1a"  notes ""
+              }
+}
+Node "4b1a"
+notes ""
+{
+NPCText "[12 hours later Austin and your companions emerge from the procedure room] Whew. That was quite the job, but they're all good to go now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin. Now I need some help myself" linkto "2"  notes "This option should only be visible if the PC is injured, radiated, or poisoned."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks a lot. Can I ask you some questions?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks Austin. We'll come back if we need help again?" linkto "done"  notes ""
+              }
+}
+Node "4b2"
+notes ""
+{
+NPCText "No, I'm sorry. I can't afford to cut you a deal on this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh fine, here. " linkto "Brahmin1"  notes "this option should remove the amount of caps specified by Austin."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damnit!! They'll just have to wait then. Can I ask you some questions?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn! I'll have to come back if I get the money." linkto "done"  notes ""
+              }
+}
+Node "A-Q"
+notes ""
+{
+NPCText "I suppose. I am a little busy so please make it quick."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where are you from? You seem different than most people I've met since I left home." linkto "A-Q1" conditions { CHECK_STAT perception > 6 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you lived in Crossroads your whole life?" linkto "A-Q1" conditions { CHECK_STAT strength < 7 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where did you get your medical training?" linkto "A-Q2"  notes ""
+              }
+}
+Node "A-Q1"
+notes ""
+{
+NPCText "I'm actually from a vault north of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really? So am I. What number is your vault?" linkto "A-Q1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Interesting. I've heard about those vaults. Why did you leave?" linkto "Vaultdeath3"  notes ""
+              }
+}
+Node "A-Q1a"
+notes ""
+{
+NPCText "Really? That's amazing. My vault was Vault 27. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was Vault 27? As in it no longer exists?" linkto "A-Q1a1" conditions { CHECK_STAT perception > 5 } notes "this option should only be visible if the PC has a perception of 6 or higher"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where is your Vault? I want to go there." linkto "Vaultdeath2" conditions { CHECK_STAT perception < 6 } notes "This option should only be visible if the PC has a perception of less than 6."
+              }
+}
+Node "A-Q1a1"
+notes ""
+{
+NPCText "That's right. It was destroyed a few years ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How?" linkto "Vaultdeath1"  notes ""
+              }
+}
+Node "A-Q2"
+notes ""
+{
+NPCText "I got my medical training back home."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And where is that?" linkto "A-Q2a"  notes ""
+              }
+}
+Node "A-Q2a"
+notes ""
+{
+NPCText "A vault, about 6 weeks north from here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "A vault!? I come from a vault. Vault 31." linkto "A-Q1a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "A vault? That's interesting, but I really need something else right now." linkto "A-Q2a1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Yeah right. A vault my ass! I'm outta here." linkto "done"  notes ""
+              }
+}
+Node "A-Q2a1"
+notes ""
+{
+NPCText "Oh. Well then, what do you need?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need some medical attention." linkto "2"  notes "this option should only be visible if the PC is injured, poisoned, or radiated."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually nevermind. I need to get going." linkto "done"  notes ""
+              }
+}
+Node "Vaultdeath1"
+notes ""
+{
+NPCText "Well it happened like this...."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[listen to his story]" linkto "Vaultdeath3"  notes ""
+              }
+}
+Node "Vaultdeath2"
+notes ""
+{
+NPCText "It was about a 6 week walk north of here. But it was destroyed a few years ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What? How was it destroyed?" linkto "Vaultdeath1"  notes ""
+              }
+}
+Node "Vaultdeath3"
+notes ""
+{
+NPCText "I don't know how or why, but the self destruct sequence kept activating on it's own. The techs always got it stopped, but never could figure out why it kept activating."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really? That's strange." linkto "Vaultdeath4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fascinating, but can I ask you some other questions." linkto "A-Q"  notes ""
+              }
+}
+Node "Vaultdeath4"
+notes ""
+{
+NPCText "Every time that the self destruct started, we normal citizens were supposed to evacuate, but over the years, most people stopped because it always got cancelled. The last time the self destruct went off, only about 50 of us actually evacuated the vault like we were told."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened next?" linkto "Vaultdeath5"  notes ""
+              }
+}
+Node "Vaultdeath5"
+notes ""
+{
+NPCText "So those of us who actually did evacuate waited for the all clear signal about a mile from the vault. We waited beyond the usual time it took and started to get worried. The leader of our evacuation group, Johnathan, he called the vault on the radio to ask what the problem was."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did he get through to anyone?" linkto "Vaultdeath6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This is looking to be a long story. Can I ask you something else first?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Actually, I'm going to leave now. I have better things to do than listen to you tell a sob story." linkto "done"  notes ""
+              }
+}
+Node "Vaultdeath6"
+notes ""
+{
+NPCText "Yeah, he got through to the overseer. He said that they couldn't get the self destruct to abort and there was only a few minutes left. He said the people who had stayed were in a panic and all hell had broken loose as they tried to evacuate the vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh goodness. Did they make it out?" linkto "Vaultdeath7"  notes ""
+              }
+}
+Node "Vaultdeath7"
+notes ""
+{
+NPCText "Not a one, they couldn't get far enough away. A couple of guys from my group went back to check on the vault, but when they came back, the looks on their faces said it all. Our home was destroyed, burried under 1000 tons of dirt and rock. [Austin sighs heavily]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh Austin, I'm so sorry. What did you and the other survivors do?" linkto "migrate1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait a minute, explain about the self destruct again." linkto "Vaultdeath1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. Can I ask you something else?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. I need to get going." linkto "done"  notes ""
+              }
+}
+Node "migrate1"
+notes ""
+{
+NPCText "Well, after the truth about the vault had sank in, we started thinking about starting a town. But we realized that we didn't have anything to form a town upon. After a lengthy, tearfull debate, we decided that the best thing to do would be split up into small groups and head in different directions."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why?" linkto "migrate2"  notes ""
+              }
+}
+Node "migrate2"
+notes ""
+{
+NPCText "Well we realized the chance of any one town being able to fully support so many refugees was very slim at best. We decided that small groups of 10-20 would be best. So we devided up as best we could and started walking in different directions."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many were in your group?" linkto "feud1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold on, I missed part of that. Could you go over that last part again?" linkto "migrate1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. Can I ask you something else?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. I need to get going." linkto "done"  notes ""
+              }
+}
+Node "feud1"
+notes ""
+{
+NPCText "There were fifteen of us in my group. We started out on our journey with hope and optimism, but after the first week, the mood had quickly turned to hopelessness and despair. After another week a feud broke out between two of the members. Jonathan wanted to try and settle down near a stream that we found, but Robert thought it best to keep moving."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what happened?" linkto "feud2"  notes ""
+              }
+}
+Node "feud2"
+notes ""
+{
+NPCText "Well the rest of us were forced to choose sides. 5 of us chose to keep moving, but the others stayed and started a settlement. They named it New Hope."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So those that stayed, could they still be alive?" linkto "feud3"  notes ""
+              }
+}
+Node "feud3"
+notes ""
+{
+NPCText "No. A few months after I got here I heard that some explorers came across the site and found nothing but bones and a couple of collapsed sheds. It seems that they had water, but no way to grow or catch any food. The explorers reported that teeth marks found on a lot of the bones appeared to be human. It seems that they turned into cannibals."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh my... That's horrible. So what happened with the other 5 people?" linkto "starve1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did the feud start again?" linkto "feud1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. Can I ask you something else?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. I need to get going." linkto "done"  notes ""
+              }
+}
+Node "starve1"
+notes ""
+{
+NPCText "Well obviously, I was one of the five that decided to keep moving. It's a good thing too.... [he shivers] So anyway, we traveled for another couple of weeks, by that time our rations were pretty much gone. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really?" linkto "starve2"  notes ""
+              }
+}
+Node "starve2"
+notes ""
+{
+NPCText "Well yeah. The survival packs that we brought from the vaults weren't meant to keep us fed forever. Lucky for us, the overseer had enough foresight to make us take them whenever we evacuated, otherwise none of us would have survived more than a week."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah thank goodness for that overseer. So what happened next? I'd say you guys were getting pretty hungry." linkto "starve3"  notes ""
+              }
+}
+Node "starve3"
+notes ""
+{
+NPCText "We sure were, but that wasn't really a problem for long."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why's that?" linkto "attack1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait, I must have missed something. Can you go over that last part again?" linkto "starve2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. Can I ask you something else?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's enough for now. I need to get going." linkto "done"  notes ""
+              }
+}
+Node "attack1"
+notes ""
+{
+NPCText "Well one day while we were traveling I noticed a group of men walking nearby. We yelled for help, assuming that they knew where a town would be. But as they came closer to us, we realized that they were odd men. They were huge, and green. They all had massive muscles and were at least 9 feet tall. Most of them seemed stupid though and just did what one of the smart ones told them to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Giant green men!?" linkto "attack2"  notes ""
+              }
+}
+Node "attack2"
+notes ""
+{
+NPCText "Yeah. And that's not the worst part. After they got ot us, they attacked us. I ran as fast as I could and managed to get away, but the others, I'm not sure, but I think that Richard, Adriana, and Alexia were captured and I know that Jim was killed. After a couple of days I went back to the spot where they had attacked us. I found Jim's body, but there was no trace of the others."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So they were taken then?" linkto "attack3"  notes ""
+              }
+}
+Node "attack3"
+notes ""
+{
+NPCText "I can only assume. The last I saw, those giant men had all four of my friends surrounded. I don't think any of them could have gotten away. I wish I could have helped them... [tears start to roll down his cheek but he quickly gets them under control]... but there was nothing I could do for them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you ever look for your friends?" linkto "attack4"  notes ""
+              }
+}
+Node "attack4"
+notes ""
+{
+NPCText "For a long time I was too scared to even go back out into the wastes. By the time I worked up the nerve to search, there was no trace of them. I asked around, but aside from the odd caravan reporting an attack, there was no trace of those giant men. After a while, people stopped seeing them all together. It's like they went into hiding, or died maybe......"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm.... Well if I see them I'll be sure and kick the dogshit out of them for you." linkto "attack4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well I hope I never see them. Those guys sound like monsters." linkto "attack4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm a bit confused. Can you go over the attack again?" linkto "attack1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to hear that. Can I ask you something else now?" linkto "A-Q"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's bad. Butyou know, I need to go now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "attack4a"
+notes ""
+{
+NPCText "Ha! I would appreciate that. But seriously, if you ever come across those guys, run. Run for your life and don't look back."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I could handle it, but let's drop that. How did you get to Crossroads?" linkto "home1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I can take 'em. But look, I have to go. I'll come back if I need anything." linkto "done"  notes ""
+              }
+}
+Node "attack4b"
+notes ""
+{
+NPCText "They are. If you ever see any, run. Run for your life and don't look back."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh I will. Now tell me, how did you get to Crossroads?" linkto "home1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will, don't worry. But we've talked enough. I need to get going now. I'll stop by if I need anything." linkto "done"  notes ""
+              }
+}
+Node "home1"
+notes ""
+{
+NPCText "Well while I was checking out the area where we were attacked, I picked up the remaining rations that the others had dropped and started traveling again. After about four or five days I came upon Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So then you asked to stay here, right?" linkto "home2"  notes ""
+              }
+}
+Node "home2"
+notes ""
+{
+NPCText "Wrong. When I first walked into town I noticed a man lying in the fetal position in a pool of his own vomit. He was holding his stomach and screaming in pain. I imediately knew that he had been poisoned and ran over to give him some anti-venom that I had in my vault survival kit. After a few hours he started to feel better and within a day, he was fine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really? It's good you came when you did." linkto "home3"  notes ""
+              }
+}
+Node "home3"
+notes ""
+{
+NPCText "Yeah, for both of us really. After the town found out I was a doctor they all asked me to stay here. I even get paid 40 caps a week. And I was just looking for a place to take me in. [he laughs] Well that's how I ended up here. I hope that satisfies your curiosity. Now I really must be getting back to work. I've spent far too much time talking about the past."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait a second. How did you get to Crossroads again?" linkto "home1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you go over some of that again?" linkto "RedoHistory"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, thanks for telling me your story but I'll leave you alone now." linkto "done"  notes ""
+              }
+}
+Node "RedoHistory"
+notes "Only the parts that the PC has heard should be visible."
+{
+NPCText "I guess. Which part?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me how the vault blew?" linkto "Vaultdeath1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me of your migration." linkto "migrate1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What started that feud again?" linkto "feud1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about your rations? When did they run out again?" linkto "starve1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the attack on your group again." linkto "attack1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry, one more time. When did you find Crossroads?" linkto "home1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, nevermind. Let me ask you something else." linkto "1"  notes ""
+              }
+}

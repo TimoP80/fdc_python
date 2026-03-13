@@ -1,0 +1,1030 @@
+/*
+
+       Fallout Dialogue Creator
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.29.0-beta
+
+*/
+
+NPCName "Lacey"
+Location "Top floor, Club Seven Deadly"
+Description "Lacey’s role in the game is to make Club Seven Deadly feel more impactful. She was/is the madame of the club’s brothel, although, before the war, she still entertained some of Seven Deadly’s most prestigious clients personally. See expanded Circle Junction design document for details."
+Unknown_Desc "a ghoulified woman in fine clothes."
+Known_Desc "Lacey, the pre-war madame of Club Seven Deadly's brothel."
+Detailed_Desc "She seems alert but occupied by her thoughts."
+
+/* Float message nodes */
+
+Floatnode "Lacey_float01"
+notes "Lacey's default floats."
+{
+"Any day now... the big payday.",
+"Willow would've liked this setup.",
+"They think they’re untouchable. Not for long.",
+"The signal’s still broadcasting. Good.",
+"Damn rich boys. Always dirty under the polish.",
+"Vault-Tec’s sins, neatly packaged. Just waiting.",
+"My girls deserved better. They still do.",
+"Who says a madame can't be a queen?",
+"Bastards always slip up. Always.",
+"The fat cats fall, and I rise. Soon enough."
+}
+Floatnode "Lacey_float02"
+notes "Lacey's combat floats."
+{
+"Should’ve stayed outta my house, sugar.",
+"This ain’t my first fight, sweetheart.",
+"I’ve buried better than you.",
+"Get out, or get dead!",
+"You want my secrets? Pay in blood!",
+"Another dead fool in my club."
+}
+
+/* Regular nodes */
+
+Node "Lacey00"
+notes ""
+is_wtg = false
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has not met Lacey before." linkto "Lacey01"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has met Lacey before." linkto ""  notes "PC has spoken to Lacey aboout the machine reading Chinese numbers in the surveilance room, AND NOT completed the conversation in branch Lacey05, where she reveals her plans to sell Vault-Tec secrets."
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has met Lacey before." linkto "Lacey01"  notes "PC has spoken to Lacey aboout the machine reading Chinese numbers in the surveilance room, AND completed the conversation in branch Lacey05, where she reveals her plans to sell Vault-Tec secrets."
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC is a mutant OR ghoul and has met Lacey before." linkto "Lacey02_mutant"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lacey is in Circle Junction." linkto "Lacey01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lacey is in Hoover Dam." linkto "Lacey01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lacey is in Dusty's Desires, Hoover Dam." linkto "Lacey01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lacey is in the Reservation." linkto "Lacey01"  notes ""
+              }
+}
+Node "Lacey01"
+notes ""
+is_wtg = false
+{
+NPCText "[This dark-haired female ghoul was probably strikingly attractive around the time her clothes were still in fashion, which by the looks of them was before the Great War. She looks you up and down with sharp, intelligent eyes]."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL Gender=MALE playertext "[More]" linkto "Lacey01_MALE_a"  notes "PC = human. Time of day = day."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "[More]" linkto "Lacey01_MALE_b"  notes "PC = human. Time of day = night."
+          int=1 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "[More]" linkto "Lacey01_FEM"  notes "PC = human."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey00"  notes "The PC is a ghoul."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey00"  notes "The PC is a super mutant."
+              }
+}
+Node "Lacey01_FEM"
+notes ""
+is_wtg = false
+{
+NPCText "You lookin' for work, sugar, or you interested in sampling the girls yourself?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the strange language coming from the room with all the machines in it?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next NONE } notes "Condition: low to moderate intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is there a machine speaking Chinese in the room with all the surveillance equipment?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes "Condition: moderate to high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is one of the machines in the surveillance suite counting in Chinese?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 8 link_next NONE } notes "Condition: very high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kind of work?" linkto "Lacey01_FEM2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma > 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wot dat machine do funny talkie in other room?" linkto "Lacey00"  notes "The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hoo you?" linkto "Lacey03"  notes ""
+              }
+}
+Node "Lacey01_FEM2"
+notes ""
+is_wtg = false
+{
+NPCText "The kind of work where you lay on yer back tryin' not to think about what's happening and who's doing it to ya, like all the other girls."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the strange language coming from the room with all the machines in it?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next NONE } notes "Condition: low to moderate intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is there a machine speaking Chinese in the room with all the surveillance equipment?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes "Condition: moderate to high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is one of the machines in the surveillance suite counting in Chinese?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 8 link_next NONE } notes "Condition: very high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma > 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wot dat machine do funny talkie in other room?" linkto "Lacey00"  notes "The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hoo you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "If all your 'girls' look like you, I'll keep it in my pants." linkto "Lacey01_MALE_aBAD"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, until evening. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey01_ghoulPC"
+notes ""
+is_wtg = false
+{
+NPCText "No offense, but it looks like you got a bad case of what's goin' on with me an' the girls."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the strange language coming from the room with all the machines in it?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next NONE } notes "Condition: low to moderate intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is there a machine speaking Chinese in the room with all the surveillance equipment?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes "Condition: moderate to high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is one of the machines in the surveillance suite counting in Chinese?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 8 link_next NONE } notes "Condition: very high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kind of work?" linkto "Lacey01_FEM2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma > 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wot dat machine do funny talkie in other room?" linkto "Lacey00"  notes "The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hoo you?" linkto "Lacey03"  notes ""
+              }
+}
+Node "Lacey01_MALE_a"
+notes ""
+is_wtg = false
+{
+NPCText "Not now honey. The club's closed for the day. If you want a girl, you'll jst have to wait 'til the evening."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the strange language coming from the room with all the machines in it?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next NONE } notes "Condition: low to moderate intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is there a machine speaking Chinese in the room with all the surveillance equipment?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes "Condition: moderate to high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is one of the machines in the surveillance suite counting in Chinese?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 8 link_next NONE } notes "Condition: very high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma > 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wot dat machine do funny talkie in other room?" linkto "Lacey00"  notes "The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hoo you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "If all your 'girls' look like you, I'll keep it in my pants." linkto "Lacey01_MALE_aBAD"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, until evening. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey01_MALE_aBAD"
+notes ""
+is_wtg = false
+/* Skill checks for node Lacey01_MALE_aBAD */
+
+      define_skill_check Skill_Check_000_Speech {
+      skill_num = 15;
+      difficulty_modifier = -20;
+      onsuccess => Lacey01_MALE_aBAD_2a;
+      onfailure => Lacey01_MALE_aBAD_2b;
+      }
+
+{
+NPCText "That works for both of us, buster. Now get the fuck out of my room."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Smell ya later, corpse-face." linkto "done"  notes "Lacey won't communicate with the PC from now on beyond float fext."
+          int=4 Reaction=REACTION_BAD playertext "I'm not taking shit from a ghoul. [Combat]" linkto "combat"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Wait, I'm sorry. I'm having a bad day. Can we try again?" linkto "Skill_Check_000_Speech"  notes ""
+              }
+}
+Node "Lacey01_MALE_aBAD_2a"
+notes ""
+is_wtg = true
+{
+NPCText "You need to think before you speak, mister. But apology accepted. What brings you here anyway?"
+      options {
+              }
+}
+Node "Lacey01_MALE_aBAD_2b"
+notes ""
+is_wtg = true
+{
+NPCText "No, we cannot 'try again'. I repeat: get the fuck out!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "I'm not taking shit from a ghoul. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Whatever. [Leave]" linkto "done"  notes "Lacey won't communicate with the PC from now on beyond float fext."
+              }
+}
+Node "Lacey01_MALE_b"
+notes ""
+is_wtg = false
+{
+NPCText "Hello there, handsome. This about one of my girls, or have you tried the rest and you want the best?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the strange language coming from the room with all the machines in it?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next NONE } notes "Condition: low to moderate intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is there a machine speaking Chinese in the room with all the surveillance equipment?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes "Condition: moderate to high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is one of the machines in the surveillance suite counting in Chinese?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 8 link_next NONE } notes "Condition: very high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma > 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wot dat machine do funny talkie in other room?" linkto "Lacey00"  notes "The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hoo you?" linkto "Lacey03"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "If all your 'girls' look like you, I'll keep it in my pants." linkto "Lacey01_MALE_aBAD"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, until evening. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey01_mutantPC"
+notes ""
+is_wtg = false
+{
+NPCText "Ah shit, no! What in all the hells are you?!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Relax, lady. Speaking one mutant to another, I'm not going to harm you." linkto "Lacey01_mutantPC_2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Your worst and last nightmare. [Combat]" linkto "combat"  notes ""
+              }
+}
+Node "Lacey01_mutantPC_2"
+notes ""
+is_wtg = false
+{
+NPCText "Who... you're calling *me* a mutant?!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ask any normal human and, yes, we're both freaks alright." linkto "Lacey01_mutantPC_3"  notes ""
+              }
+}
+Node "Lacey01_mutantPC_3"
+notes ""
+is_wtg = true
+{
+NPCText "What on earth are you talking about, you great, green lump?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you taken a look in the mirror recently?" linkto "Lacey01_mutantPC_4"  notes ""
+              }
+}
+Node "Lacey01_mutantPC_4"
+notes ""
+is_wtg = false
+{
+NPCText "Sure I have... I look a little peaky some days, but you are just the next level of ugly. Anyway, what are you trying to get at, here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's forget it. Can I ask you something else, instead?" linkto "Lacey09"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "You're going to regret calling me ugly, ghoul witch. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey02_b"
+notes ""
+is_wtg = false
+{
+NPCText "You again. I hope you haven't been snooping around my machines again."
+ NPCFemaleText "Hello again, honey. I hope you haven't been snooping around my machines again."
+      options {
+              }
+}
+Node "Lacey02_mutant"
+notes ""
+is_wtg = false
+{
+NPCText "Sheesh. You ain't got any prettier since last time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have time for a question?" linkto "Lacey09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you haven't gotten any less ignorant. Eat *this*. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't promise I'll look much better next time. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey03"
+notes "Branch 3 is where Lacey can talk a bit about herself."
+is_wtg = false
+{
+NPCText "Well, now, you may call me Lacey. I look after the girls who work at this establishment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kind of work do the girls do?" linkto "Lacey03_a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "How much to hire one of your girls?" linkto "Lacey03_bMALE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "How much to hire one of your girls?" linkto "Lacey03_bFEM"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma > 7 link_next NONE } notes ""
+              }
+}
+Node "Lacey03_a"
+notes "Branch 3 is where Lacey can talk a bit about herself."
+is_wtg = false
+{
+NPCText "[She gives a sharp, bitter laugh]. Ha! You ain't been out much sugar. My girls? They make your fantasies come true, that's their 'work'. Only question is, can you pay?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "How much to hire one of your girls?" linkto "Lacey03_bMALE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "How much to hire one of your girls?" linkto "Lacey03_bFEM"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT strength > 7 link_next NONE } notes ""
+              }
+}
+Node "Lacey03_aFEM"
+notes ""
+is_wtg = false
+{
+NPCText "[She gives a sharp, bitter laugh]. Ha! You ain't been out much sugar. My girls? They make a man's fantasies come true, sometime's a woman's, too. That's their 'work'"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "How much to hire one of your girls?" linkto "Lacey03_bFEM"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Girls? Do you mean the ghouls crawling around up here?" linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+              }
+}
+Node "Lacey03_bFEM"
+notes "Branch 3 is where Lacey can talk a bit about herself."
+is_wtg = false
+{
+NPCText "A gal who fancies the sweeter sex, hmm? Don't worry honey. You're not the first. Price-wise, it depends on the girl. Have you seen one who takes your fancy?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There aren't any girls up here, but I've seen plenty of ghouls." linkto "Lacey03_c1_MID_CHR" conditions { CHECK_STAT charisma <= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "There aren't any girls up here, but I've seen plenty of ghouls." linkto "Lacey03_c1_HIGH_CHR" conditions { CHECK_STAT strength > 7 link_next NONE } notes ""
+              }
+}
+Node "Lacey03_bMALE"
+notes "Branch 3 is where Lacey can talk a bit about herself."
+is_wtg = false
+{
+NPCText "Price-wise, it depends on the girl. Have you seen one who takes your fancy?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There aren't any girls up here, but I've seen plenty of ghouls." linkto "Lacey00"  notes ""
+              }
+}
+Node "Lacey03_c1_HIGH_CHR"
+notes ""
+is_wtg = false
+{
+NPCText "Now, you just look here, that's just plain rude. Not all of us are born looking like a million dollars, like you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not saying your girls are ugly. I'm saying this floor is crawling with literal ghouls." linkto "Lacey03_c2"  notes ""
+              }
+}
+Node "Lacey03_c1_MID_CHR"
+notes ""
+is_wtg = false
+{
+NPCText "Now, you just look here, that's just plain rude. Maybe you better thake a look in the mirror yerself, sweetheart. You ain't no oil painting either."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not saying your girls are ugly. I'm saying this floor is crawling with literal ghouls." linkto "Lacey03_c2"  notes ""
+              }
+}
+Node "Lacey03_c2"
+notes ""
+is_wtg = false
+{
+NPCText "What on earth are you talking about? There ain't no ghouls, ghosts, goblins or other such comic book clap-trap in this establishment. You been on the electro-caine or summin?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Talking of mirrors, have you taken a look in one recently?" linkto "Lacey03_c3_a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How would you describe the flesh-eating zombies wandering around the wreck of this building?" linkto "Lacey03_c3_b"  notes ""
+              }
+}
+Node "Lacey03_c3_a"
+notes ""
+is_wtg = true
+{
+NPCText "Of course I have! Lady in my line of work needs to look her best at all times."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And?" linkto "Lacey03_c3_a2"  notes ""
+              }
+}
+Node "Lacey03_c3_a2"
+notes ""
+is_wtg = false
+{
+NPCText "I'll admit I look a little peaky, sure... look, what you trying to get at here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If that's the way you want to see it, maybe it's for the best." linkto "Lacey03_c3_b2_a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to inform you, but prolonged radiation exposure has resulted in irreversible cellular necrosis. You’re now a ghoul—along with everyone else on this floor." linkto "Lacey03_c3_b2_c" conditions { CHECK_SKILL doctor >= 50 link_next NONE } notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I'm sorry, but you've been changed by radiation: you're a ghoul and so is everyone else on this floor of the building." linkto "Skill_Check_004a_Speech"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_BAD playertext "No! You're a ghoul and the \"girls\" outside are all ghouls!" linkto "Skill_Check_002a_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's forget it. Can I ask you something else, instead?" linkto "Lacey09"  notes ""
+              }
+}
+Node "Lacey03_c3_b"
+notes ""
+is_wtg = true
+/* Skill checks for node Lacey03_c3_b */
+
+      define_skill_check Skill_Check_002a_Speech {
+      skill_num = 15;
+      difficulty_modifier = -20;
+      onsuccess => Lacey03_c3_b2_c;
+      onfailure => Lacey03_c3_b2_b;
+      }
+      define_skill_check Skill_Check_004a_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Lacey03_c3_b2_c;
+      onfailure => Lacey03_c3_b2_b;
+      }
+
+{
+NPCText "[She blinks a couple of times and looks around in confusion]. I... don't know what you're talking about. There's just me and my girls."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If that's the way you want to see it, maybe it's for the best." linkto "Lacey03_c3_b2_a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to inform you, but prolonged radiation exposure has resulted in irreversible cellular necrosis. You’re now a ghoul—along with everyone else on this floor." linkto "Lacey03_c3_b2_c" conditions { CHECK_SKILL doctor >= 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm a ghoul. You're a ghoul. All your 'girls' are ghouls" linkto "Lacey03_c3_b2_c"  notes "Condition: PC is a ghoul."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I'm sorry, but you've been changed by radiation: you're a ghoul and so is everyone else on this floor of the building." linkto "Skill_Check_004_Speech"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_BAD playertext "No! You're a ghoul and the \"girls\" outside are all ghouls!" linkto "Skill_Check_002_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's forget it. Can I ask you something else, instead?" linkto "Lacey09"  notes ""
+              }
+}
+Node "Lacey03_c3_b2_a"
+notes ""
+is_wtg = false
+{
+NPCText "[She squints, shakes her head, and then the sharp, clear look is back in her eyes]. So - you lookin' for a good time here? What's it to be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's forget it. Can I ask you something else, instead?" linkto "Lacey09"  notes ""
+              }
+}
+Node "Lacey03_c3_b2_b"
+notes ""
+is_wtg = true
+{
+NPCText "The hell I am! The hell we are!"
+      options {
+              }
+}
+Node "Lacey03_c3_b2_c"
+notes ""
+is_wtg = true
+{
+NPCText "[If her tear ducts still worked, she would be crying]. Oh my god, no... but it explains everything... the darkness... the dreams... the faces..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long have you been here?" linkto ""  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What will you do now?" linkto ""  notes ""
+              }
+}
+Node "Lacey04"
+notes "Branch 4 is where the player can find out about the receiver playing audio from the Chinese numbers station, in Lacey's surveillance suite."
+is_wtg = false
+{
+NPCText "Now, what in tarnation makes you think you can go snooping round my place of business like you own it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense. I was just looking around and found it." linkto "Lacey04_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I left something in the club last night and I was looking for it." linkto "Lacey04_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was checking to see if anyone was using it to get in touch with Caesar's Legion." linkto "Lacey04_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm a technician and picked it up. It's a pretty archaic signal path. Still using a superhet architecture? No wonder you’re getting so much local oscillator bleed." linkto "Lacey04_2d" conditions { CHECK_SKILL repair >= 75 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "A big gun and a bad attitude, that's what." linkto "Lacey04_BAD"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I speak a little Chinese. Ni hao! Wo jiào <PC>, hen gaoxìng rènshì ni! Ni jintian hao ma? Wo xiwàng ni guò de yúkuài!" linkto "Lacey04_2e" conditions { CHECK_STAT intelligence > 8 link_next NONE } notes ""
+              }
+}
+Node "Lacey04_2a"
+notes ""
+is_wtg = true
+{
+NPCText "Is that right? Scram and look elsewhere!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, first?" linkto "Lacey04_2a_2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "No ghoul gets to tell *me* to scram. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes "If possible: Lacey won't speak to the player via the dialogue window until he leaves the map and returns later."
+              }
+}
+Node "Lacey04_2a_2"
+notes ""
+is_wtg = true
+{
+NPCText "Not unless it's about how to use the door. Get out!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "No ghoul gets to tell *me* to get out. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes "If possible: Lacey won't speak to the player via the dialogue window until he leaves the map and returns later."
+              }
+}
+Node "Lacey04_2b"
+notes ""
+is_wtg = true
+/* Skill checks for node Lacey04_2b */
+
+      define_skill_check Skill_Check_002b_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Lacey04_2b_2b_a;
+      onfailure => Lacey04_2b_2b_b;
+      }
+      define_skill_check Skill_Check_003b_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Lacey04_2b_2b_a;
+      onfailure => Lacey04_2b_2b_b;
+      }
+
+{
+NPCText "Is that a fact? What d'you leave here?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "A silver pocket watch. It has an engraving of 'To my sweetheart' on it." linkto "Lacey04_2b_2a"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "An autographed picture of a radio star. It's really valuable." linkto "Skill_Check_003_Speech"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "A money clip. It had my lucky $10 bill in it." linkto "Lacey04_2b_c"  notes ""
+              }
+}
+Node "Lacey04_2b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "You got a sweetheart and you're trawling around a place like this? Your type make me sick. Take a hike, buster!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, first?" linkto "Lacey04_2a_2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "You've got some nerve saying *I* make *you* sick, you rotting birch. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes "If possible: Lacey won't speak to the player via the dialogue window until he leaves the map and returns later."
+              }
+}
+Node "Lacey04_2b_2b_a"
+notes ""
+is_wtg = true
+{
+NPCText "That is the dumbest thing to be schlepping around this place, but whatever. I hope you find it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd still like to ask you about the machine I found." linkto "Lacey04_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Lacey09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_2b_2b_b"
+notes ""
+is_wtg = false
+{
+NPCText "That is the dumbest thing to be schlepping around this place and I don't believe you. Get the fuck outta my place of business."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Don't you sass me, ghoul-woman." linkto "Lacey04_2b_2b_bBAD"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Fuck you. [Combat]" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_2b_2b_bBAD"
+notes ""
+is_wtg = true
+{
+NPCText "The fuck?! I'll 'sass' who the hell I like, asshole. Now, fuck off!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Sass *this*. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_2b_c"
+notes ""
+is_wtg = true
+{
+NPCText "[She laughs. It sounds genuine]. Well, ain't that sweet? Listen, I hope you find it an' it brings you luck, sugar. God knows we could all use it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd still like to ask you about the machine I found." linkto "Lacey04_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Lacey09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's the truth! See you around. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_2c"
+notes ""
+is_wtg = false
+{
+NPCText "Caesar's who? They summin to do with the casino in Vegas?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've seriously never heard of the Legion? They have slavers right here in Circle Junction." linkto "Lacey04_2c_2"  notes ""
+              }
+}
+Node "Lacey04_2c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Just my luck the first visitor I have in an age is crazy as they come. What nonsense are you speaking now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Caesar's Legion. They rove the wasteland pretending to be the Roman Empire, taking slaves wherever they go and crucifying anyone who disagrees with them." linkto "Lacey04_2c_3"  notes ""
+              }
+}
+Node "Lacey04_2c_3"
+notes ""
+is_wtg = true
+{
+NPCText "Riiigght. Sure they do, honey. Listen, I love crazy, so long as it's harmless. You gonna behave yourself around here, that right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just your average wasteland explorer. I don't want trouble and I don't look for it." linkto "Lacey04_2c_4"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "I'll behave myself just as I damn well like." linkto "Lacey04_BAD"  notes ""
+              }
+}
+Node "Lacey04_2c_4"
+notes ""
+is_wtg = true
+{
+NPCText "That works for me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd still like to ask you about the machine I found." linkto "Lacey04_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Lacey09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See you later. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_2d"
+notes ""
+is_wtg = true
+{
+NPCText "Ah'm not even gonna pretend I understood that. You just go right on ahead and do what you need to do, sugar."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about the machine before I do." linkto "Lacey04_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, first?" linkto "Lacey09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Off to work I go. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_2e"
+notes ""
+is_wtg = true
+{
+NPCText "Sweet Jaysus in a pimped-out haycart... it's you! You've finally come!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "Lacey04_2e_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that what you usually say to your clients when you finish?" linkto "Lacey04_2e_2b"  notes ""
+              }
+}
+Node "Lacey04_2e_2a"
+notes ""
+is_wtg = true
+{
+NPCText "What I mean is: I got a butt-load of data that Vault-Tec don't want you seeing now or ever. It's all right here, on holotape. You got the money?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Err... money?" linkto "Lacey04_2e_2a_a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No thanks. You can keep those holotapes." linkto "Lacey04_2e_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just remind me how much was agreed upon." linkto "Lacey04_2e_2c"  notes ""
+              }
+}
+Node "Lacey04_2e_2a_a"
+notes ""
+is_wtg = true
+{
+NPCText "C'mon now, ain't no time for kidding around. The money your people sent you with for the material I have right here. Just don't tell me you done and spent it all on girls an' liquor!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I honestly have no idea what you are talking about." linkto "Lacey04_2e_3"  notes ""
+              }
+}
+Node "Lacey04_2e_2b"
+notes ""
+is_wtg = false
+{
+NPCText "What? Oh. Ha! Good one. A comedian to boot. Anyhow, you took your damn, sweet time getting here!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "Lacey04_2e_2a"  notes ""
+              }
+}
+Node "Lacey04_2e_2c"
+notes ""
+is_wtg = true
+{
+NPCText "One-point-two million dollars U.S. Ah, I can smell 'em already."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have nowhere near that kind of cash, not that I'd spend it on dirty holotapes even if I did." linkto "Lacey04_2e_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I love seedy holotapes as much as the next man, but that's too rich for my blood." linkto "Lacey04_2e_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I love seedy holotapes as much as the next gal, but that's too rich for my blood." linkto "Lacey04_2e_3"  notes ""
+              }
+}
+Node "Lacey04_2e_3"
+notes ""
+is_wtg = true
+{
+NPCText "[She blinks a few times, then slumps in defeat]. It ain't you, is it? He ain't comin', or she or whatever. Not now, not ever."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're going to have to help me out, here." linkto "Lacey05"  notes ""
+              }
+}
+Node "Lacey04_3"
+notes "Lacey will freely discuss the machine the with PC from now on."
+is_wtg = false
+{
+NPCText "What about it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why was there the sound of a foreign voice coming out of it?" linkto "Lacey04_3a" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why was there the sound of a Chinese voice coming out of it?" linkto "Lacey04_3b" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why was there the sound of a Chinese person speaking numbers coming out of it?" linkto "Lacey04_3c" conditions { CHECK_STAT intelligence >= 8 link_next NONE } notes ""
+              }
+}
+Node "Lacey04_3a"
+notes ""
+is_wtg = true
+{
+NPCText "Since you found it, ain't much use bein' coy about it. Them's Chinese words. Chinese numbers, to be exact."
+      options {
+              }
+}
+Node "Lacey04_3b"
+notes ""
+is_wtg = false
+{
+NPCText "Since you found it, ain't much use bein' coy about it. You're right, that is Chinese. It's a whole bunch of numbers, to be exact."
+ NPCFemaleText "Since you found it, ain't much use bein' coy about it. You're right, that is Chinese. It's a whole bunch of numbers, to be exact."
+      options {
+              }
+}
+Node "Lacey04_3c"
+notes ""
+is_wtg = false
+{
+NPCText "Wait, you speak Chinese?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just enough to understand that the voice was repeating a string of numbers." linkto "Lacey04_3c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just a little. Ni hao! Wo jiào <PC>, hen gaoxìng rènshì ni! Ni jintian hao ma? Wo xiwàng ni guò de yúkuài!" linkto "Lacey04_2e" conditions { CHECK_STAT intelligence > 8 link_next NONE } notes ""
+              }
+}
+Node "Lacey04_3c_2"
+notes ""
+is_wtg = true
+{
+NPCText "Since you found the machine and you know what it was saying, don't suppose there's much point hiding the truth from you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05"  notes ""
+              }
+}
+Node "Lacey04_BAD"
+notes ""
+is_wtg = false
+{
+NPCText "Well, you can take your bad attitude and swan right the fuck out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can't you take a joke?" linkto "Lacey04_BAD2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Time to die, ghoulie. [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey04_BAD2"
+notes ""
+is_wtg = true
+{
+NPCText "If it was funny, I'd-a laughed. Now fuck off!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Fuck off yourself! [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Lacey05"
+notes "Branch 5 is where the PC can find out about Lacey's plans to sell extremely valuable Vault-Tec pillow-talk secrets to the Chinese."
+is_wtg = false
+{
+NPCText "It started out innocent enough. Well, innocent for us. One of the girls I was responsible for got roughed up by one of our \"clients\"."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_02a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What has this got to do with the machine and the Chinese numbers?" linkto "Lacey05_02b"  notes ""
+              }
+}
+Node "Lacey05_02a"
+notes ""
+is_wtg = true
+{
+NPCText "It wasn't the first time this sort of thing had happened, but it was the last straw. Let a man get steamin' drunk then let him loose on a pretty girl... you see the worst of the other half of humanity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_03a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of things would these men do?" linkto "Lacey05_03b"  notes ""
+              }
+}
+Node "Lacey05_02b"
+notes ""
+is_wtg = true
+{
+NPCText "Just shut yer trap an' listen. I'm getting to it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, sorry." linkto "Lacey05_02a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do that." linkto "Lacey05_02a"  notes ""
+              }
+}
+Node "Lacey05_03a"
+notes ""
+is_wtg = true
+{
+NPCText "I decided enough was enough. I was... involved with a security guard at the time. Willow, her name was. Worked here, at the club. She set up cameras in the girls' rooms and, to go with it, the surveillance suite you found."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Involved? How?" linkto "Lacey05_04b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_04a"  notes ""
+              }
+}
+Node "Lacey05_03b"
+notes ""
+is_wtg = true
+{
+NPCText "[She sighs]. There's a veil up here, [she taps the side of her head], separates sex from violence. Turns out it's pretty damn thin. Booze pretty much dissolves it outright."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_03a"  notes ""
+              }
+}
+Node "Lacey05_04a"
+notes ""
+is_wtg = true
+{
+NPCText "Another \"john\" got nasty with one of my girls. This time, it was real bad. No way she was gonna earn money as a hooker, after that. Sweet thing. Funny. I can see her face clear as yours, but I can't remember her name."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_05a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why can't you remember her name?" linkto "Lacey05_05b"  notes ""
+              }
+}
+Node "Lacey05_04b"
+notes ""
+is_wtg = false
+{
+NPCText "That ain't none of your business, mister. Just involved enough that we trusted each other."
+ NPCFemaleText "Night after night, you get tired of men in this job. But you still need to feel love, see? It ain't rare for girls like us to look for that with each other. So, Willow and me? It wasn't nothin' unusual."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_04a"  notes ""
+              }
+}
+Node "Lacey05_05a"
+notes ""
+is_wtg = true
+{
+NPCText "This time, we got the asshole on camera. Audio and everything. Willow, she tells me to take it to the police. But the girl, she hears about it and begs me not to."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_06a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did the girl not want you to take the recording to the police?" linkto "Lacey05_06b"  notes ""
+              }
+}
+Node "Lacey05_05b"
+notes ""
+is_wtg = true
+{
+NPCText "I don't know... somehow it seems like so long ago... but at the same time, just like yesterday. [She looks around as if confused or troubled]."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anyway, you were saying about the machine." linkto "Lacey05_06a"  notes ""
+              }
+}
+Node "Lacey05_06a"
+notes ""
+is_wtg = true
+{
+NPCText "So we corner this john. He ain't so big and tough when he's sobered up. We let him know we've got him on holotape and we blackmail him good."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_07a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Isn't blackmail against the law?" linkto "Lacey05_07b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_06b"
+notes ""
+is_wtg = true
+{
+NPCText "She came from a good family. You'd be surprised how many do. She'd managed to keep what she did to earn money a secret from her folks and wanted to keep it that way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_07a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_07a"
+notes ""
+is_wtg = true
+{
+NPCText "By the time Willow 'n' me are done wringing him dry, we got enough money to make sure the girl who got hurt don't have to worry about cash for the rest of her days. There's even enough left over for me and Willow to get a taste of the action, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_08a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much was left over after you'd paid the girl?" linkto "Lacey05_08b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_07b"
+notes ""
+is_wtg = false
+{
+NPCText "What's this asshole going to do - go running to the cops? Nah, he's only got one choice to make. Pay up and he gets the holo. Don't pay up and his wife gets it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_07a"  notes ""
+              }
+}
+Node "Lacey05_08a"
+notes "Branch 5 is where the PC can find out about Lacey's plans to sell extremely valuable Vault-Tec pillow-talk secrets to the Chinese."
+is_wtg = false
+{
+NPCText "Then I start thinking bigger. When you screw a man in my line of work, he can leave himself open in a couple of ways. He can get you to do nasty shit he'd never tell anyone else about, or he opens up and starts talking, once the deed is done. Maybe both."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_09a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is this \"screw\" as in con or have sex?" linkto "Lacey05_09b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_08b"
+notes ""
+is_wtg = false
+{
+NPCText "Enough for the two of us to see the nicer side of life for a couple of months before having to come back to... well... this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_08a"  notes ""
+              }
+}
+Node "Lacey05_09a"
+notes ""
+is_wtg = false
+{
+NPCText "Willow and me, we get more daring. Pretty soon, we're blackmailing all sorts of greaseballs. The money's good. One day, we get a Vault-Tec exec who likes to do bathroom stuff whilst he's doing bedroom stuff, if you catch my drift."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_10a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't catch your drift." linkto "Lacey05_10b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_09b"
+notes ""
+is_wtg = false
+{
+NPCText "[She gives you a look that can only be described as \"ripe\"]. Sex, honey. I'm talking about sex."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_09a"  notes ""
+              }
+}
+Node "Lacey05_10a"
+notes ""
+is_wtg = false
+{
+NPCText "We press him for cash. He buckles, but offers something juicier: dirt on people at the very top of the company."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_11a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The CEO, you mean?" linkto "Lacey05_11b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_10b"
+notes ""
+is_wtg = false
+{
+NPCText "You don't... If I use the term \"golden shower\" does that... uh... make it any clearer?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Stare blankly at her]" linkto "Lacey05_11a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Gross. I wish I hadn't asked." linkto "Lacey05_11a"  notes ""
+              }
+}
+Node "Lacey05_11a"
+notes ""
+is_wtg = false
+{
+NPCText "Turns out he's as good as his word. He delivers a holo with details of contract fraud, money laundering, hell, even experiments on human subjects, if you can believe that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_12a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tests on human subjects?" linkto "Lacey05_12b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just skip to the end and tell me what the machine does." linkto "Lacey05_tldr"  notes ""
+              }
+}
+Node "Lacey05_11b"
+notes ""
+is_wtg = false
+{
+NPCText "That like the chief exec? Yup. The stink follows all the way to the top."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_11a"  notes ""
+              }
+}
+Node "Lacey05_12a"
+notes ""
+is_wtg = false
+{
+NPCText "It's gold dust. Toilet boy tells us the Chinese would pay out-of-this world bucks for a scoop like this and tells us how to get in touch with them. Turns out he was thinking of turning stool pigeon himself. Too bad he had to sell us his golden egg."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_13a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're prepared to sell out your own country?" linkto "Lacey05_13b"  notes ""
+              }
+}
+Node "Lacey05_12b"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah, crazy stuff, like out of a comic. They even had plans to do experiments on people in those fallout shelters they're building."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_12a"  notes ""
+              }
+}
+Node "Lacey05_13a"
+notes "A variable needs to mark that the conversation in branch Lacey05 has been completed."
+is_wtg = false
+{
+NPCText "The machine you found? It's tuned into a numbers machine, or somesuch. When the time comes, a message'll come through, telling us when and where to meet their people. When that day comes, I'll be the richest woman in town."
+      options {
+              }
+}
+Node "Lacey05_13b"
+notes ""
+is_wtg = false
+{
+NPCText "Don't start waving the stars and bars here. Once you know how high the rot goes, you ain't so much of a yankee-doodle diehard any more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_13a"  notes ""
+              }
+}
+Node "Lacey05_tldr"
+notes ""
+is_wtg = false
+{
+NPCText "Alright. Fine. A little patience wouldn't-a gone amiss but here's the jist: I got dirt on top Vault Tec executives on holotape. Worth a fortune. That machine? It's listening to a numbers station or something. Willow knows... knew... more about it all works."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Lacey05_tldr2"  notes ""
+              }
+}
+Node "Lacey05_tldr2"
+notes "A variable needs to mark that the conversation in branch Lacey05 has been completed."
+is_wtg = false
+{
+NPCText "Any day now it's gonna tell me where to meet one of their agents. I take the tape, they gimme the cash. See ya later, suckers. I'm outta here."
+      options {
+              }
+}
+Node "Lacey06"
+notes "Branch Lacey06 is where the PC can convince Lacey to abandon Club Seven Deadly and try her luck in other settlements."
+is_wtg = false
+{
+NPCText ""
+      options {
+              }
+}
+Node "Lacey07_Circle"
+notes "The Lacey07_Reserv branch is available if the PC has convinced Lacey she's a ghoul AND she's survived the journey to Circle Junction"
+is_wtg = false
+{
+NPCText ""
+      options {
+              }
+}
+Node "Lacey07_Hoov"
+notes "The Lacey07_Hoov branch is available if the PC has convinced Lacey she's a ghoul AND she's survived the journey to Hoover Dam AND is NOT in Dusty's Desires."
+is_wtg = false
+{
+NPCText ""
+      options {
+              }
+}
+Node "Lacey07_HoovDusty"
+notes "The Lacey07_HoovDusty branch is available if the PC has convinced Lacey she's a ghoul AND she's survived the journey to Hoover Dam AND is in Dusty's Desires."
+is_wtg = false
+{
+NPCText ""
+      options {
+              }
+}
+Node "Lacey07_Reserv"
+notes "The Lacey07_Reserv branch is available if the PC has convinced Lacey she's a ghoul AND she's survived the journey to The Reservation"
+is_wtg = false
+{
+NPCText ""
+      options {
+              }
+}
+Node "Lacey09"
+notes "The general \"can I ask you a question\" node."
+is_wtg = false
+{
+NPCText "Since you asked so nice and all, be my guest."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Lacey03"  notes "Condition: only available if the PC has not yet convoinved Lacey she is a ghoul."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is the strange language coming from the room with all the machines in it?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 4 link_next AND, CHECK_STAT intelligence < 6 link_next AND } notes "Condition: low to moderate intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station. AND NOT reached branch Lacey05."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is there a machine speaking Chinese in the room with all the surveillance equipment?" linkto "Lacey04" conditions { CHECK_STAT intelligence >= 6 link_next AND, CHECK_STAT intelligence < 8 link_next NONE } notes "Condition: moderate to high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station. AND NOT reached branch Lacey05."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is one of the machines in the surveillance suite counting in Chinese?" linkto "Lacey04" conditions { CHECK_STAT strength >= 8 link_next NONE } notes "Condition: very high intelligence. The player has discovered Lacey’s surveillance suite in Brothel / Lacey’s Lounge on the top floor of Circle Junction, where a machine is playing audio from a Chinese listening station. AND NOT reached branch Lacey05."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, that's all for now. [Leave]" linkto "done"  notes ""
+              }
+}

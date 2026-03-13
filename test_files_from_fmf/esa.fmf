@@ -1,0 +1,55 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.1-stable
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = true
+{
+NPCText "This is a test of the US emergency broadcast system."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "test1 " linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "test2 " linkto "Node003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "test3 " linkto "Node004"  notes ""
+              }
+}
+Node "Node002"
+notes ""
+is_wtg = true
+{
+NPCText "Massiv."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jasa." linkto "" conditions { CHECK_STAT intelligence > 5 link_next AND, CHECK_SKILL unarmed_combat   link_next NONE } notes ""
+              }
+}
+Node "Node003"
+notes ""
+is_wtg = true
+{
+NPCText "Badboy."
+      options {
+              }
+}
+Node "Node004"
+notes ""
+is_wtg = true
+{
+NPCText "Rastaman."
+      options {
+              }
+}

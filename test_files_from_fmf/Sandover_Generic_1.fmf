@@ -1,0 +1,126 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Generic NPC"
+Location "The NPC marked 't' on http://www.fanmadefallout.com/project/maps/sandover/Sand_Level2.jpg"
+Description "A generic character to break the lower levels of the caves up a bit."
+Unknown_Desc "a man."
+Known_Desc "the man by the well."
+Detailed_Desc "he seems to be unoccupied."
+/* Float message nodes */
+
+Floatnode "SOGen1"
+notes "Basic float node."
+{
+"*Whistles*",
+"*Burp* par' me.",
+"Only a few hours, then I can knock off.",
+"This beats scavenging, I guess."
+}
+
+/* Regular nodes */
+
+Node "SOGen1_0"
+notes ""
+is_wtg = false
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has not spoken to this NPC before." linkto "SOGen1_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to this NPC before" linkto "SOGen1_1b_1"  notes ""
+              }
+}
+Node "SOGen1_1a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hi."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, I'm <PC>. What are you doing?" linkto "SOGen1_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's going on?" linkto "SOGen1_1a_2"  notes ""
+              }
+}
+Node "SOGen1_1a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Not a great deal. I'm just looking after the well, making sure everything's running okay."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it?" linkto "SOGen1_1a_3"  notes ""
+              }
+}
+Node "SOGen1_1a_3"
+notes ""
+is_wtg = false
+{
+NPCText "Is it what?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The well, is it running okay?" linkto "SOGen1_1a_4"  notes ""
+              }
+}
+Node "SOGen1_1a_4"
+notes ""
+is_wtg = false
+{
+NPCText "Sure."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you certain? It doesn't need repairs or anything?" linkto "SOGen1_1a_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's good to hear. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "SOGen1_1a_5"
+notes ""
+is_wtg = false
+{
+NPCText "Err... no. Should it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was half expecting that it would." linkto "SOGen1_1a_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "SOGen1_1a_6"
+notes ""
+is_wtg = false
+{
+NPCText "Why?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a habit of meeting people who need my help." linkto "SOGen1_1a_7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "SOGen1_1a_7"
+notes ""
+is_wtg = false
+{
+NPCText "Really? That must be a pain in the ass. I'll remember to let you know if anything ever comes up, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "SOGen1_1b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hello, again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you thought of anything you need doing since I last spoke to you?" linkto "SOGen1_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "SOGen1_1b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Nope."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh. Goodbye." linkto "done"  notes ""
+              }
+}

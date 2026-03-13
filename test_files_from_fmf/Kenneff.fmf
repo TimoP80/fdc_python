@@ -1,0 +1,712 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Ken Neff"
+Location "Bottom Floor of Vault 31, Board Room"
+Description "Ken Neff is the one that gives the PC the quest to go grab the Mr. Handy OS. However, nothing the PC says gets passed on to the CEO, in true corporate fashion. Also, when the PC returns, Ken Neff just gives him a floater saying \"Go see Mr. Bergandi.\""
+Unknown_Desc "A older man, possibly in his early 50's."
+Known_Desc "Ken Neff, Vice President of Customer Solutions."
+Detailed_Desc "Although he is older, this man is in excellent shape. He looks well fed and rested, much like the other Board members."
+/* Regular nodes */
+
+Node "Start"
+notes ""
+is_wtg = false
+{
+NPCText "[He looks up from the stack of papers he is reading.] This had better be important. I'm a VERY busy man."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you Ken Neff?" linkto "A1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was told to report to the Board." linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to bother you. I'll be going now" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me <PC>. You Ken?" linkto "A1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Sorry Mr. Busy. I let you work." linkto "done"  notes ""
+              }
+}
+Node "a"
+notes ""
+is_wtg = false
+{
+NPCText "Is this some kind of joke?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "(Stare at him silently)" linkto "b"  notes ""
+              }
+}
+Node "A1"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, yes. Now what do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>. I was told to report to you." linkto "A2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me <PC>. You want talk?" linkto "a"  notes ""
+              }
+}
+Node "A2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, so you're <PC>. Please, have a seat."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd prefer to stand, thanks." linkto "B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I will." linkto "B2"  notes ""
+          int=5 Reaction=REACTION_NEUTRAL playertext "Sir, with all due respect, cut the bullshit. Why am I here?" linkto "B3" conditions { CHECK_SKILL speech > 19 link_next NONE } notes ""
+              }
+}
+Node "B1"
+notes ""
+is_wtg = false
+{
+NPCText "[He looks slightly taken aback] Very well. Do you know why we summoned you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was under the impression that you would explain it to me." linkto "C1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not yet, sir." linkto "C2"  notes ""
+              }
+}
+Node "B2"
+notes ""
+is_wtg = false
+{
+NPCText "[He sets aside the stack of papers] I understand you've been a technician for quite a while now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, yes..." linkto "C3"  notes ""
+              }
+}
+Node "B3"
+notes ""
+is_wtg = false
+{
+NPCText "[He chuckles] How very... uncouth of you. Very well, I'll explain why we summoned you. What do you know about the reactor?"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "Wattz special model 1372-E, specially modified by the Wattz corporation to meet the power requirements of this Vault. It uses weapons-grade fuel for increased efficiency, and is currently being maintained by the MR. \nHandies." linkto "E1"  notes ""
+          int=5 Reaction=REACTION_NEUTRAL playertext "I know that it's been maintained by Mr. Handy Robots for several years now. I also know that Mr. Handy was not designed to maintain fusion reactors." linkto "E2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just the basics - its a fusion reactor and it powers this Vault." linkto "E3"  notes ""
+              }
+}
+Node "C2"
+notes ""
+is_wtg = false
+{
+NPCText "Sir? [He smiles] What a pleasant surprise. It's nice to see that at least some of the technicians demonstrate proper respect. You'll have to excuse me but quite a few of you have decidedly... distasteful vocabularies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "With all due respect, that seems beside the point." linkto "C4"  notes ""
+              }
+}
+Node "C3"
+notes ""
+is_wtg = false
+{
+NPCText "Have you ever done any reactor maintenance?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, sir. If I remember correctly, that is now handled by the Mr. Handies." linkto "C4"  notes ""
+              }
+}
+Node "C1"
+notes ""
+is_wtg = false
+{
+NPCText "All in due time. What do you know about the reactor that powers this Vault?"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "Wattz special model 1372-E, specially modified by the Wattz corporation to meet the power requirements of this Vault. It uses weapons-grade fuel for increased efficiency, and is currently being maintained by the Mr. \nHandies." linkto "E1-1" conditions { CHECK_SKILL science >= 30 link_next NONE } notes ""
+          int=5 Reaction=REACTION_NEUTRAL playertext "Well, you had the Mr. Handies reprogrammed to run the coolant system. Is there something wrong with them?" linkto "E2-1" conditions { CHECK_SKILL science >= 20 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It powers the Vault, but that's all I know." linkto "E3"  notes ""
+              }
+}
+Node "C4"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, yes it is. That brings me to the point. What do know about the reactor powering this Vault?"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "Wattz special model 1372-E, specially modified by the Wattz corporation to meet the power requirements of this Vault. It uses weapons-grade fuel for increased efficiency, and is currently being maintained by the Mr. \nHandies." linkto "E1-2" conditions { CHECK_SKILL science >= 30 link_next NONE } notes ""
+          int=5 Reaction=REACTION_NEUTRAL playertext "Well, you had the Mr. Handies reprogrammed to run the coolant system. Is there something wrong with them?" linkto "E2-1" conditions { CHECK_SKILL science >= 20 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Um, it powers the Vault..." linkto "E3"  notes ""
+              }
+}
+Node "E1"
+notes ""
+is_wtg = false
+{
+NPCText "Hmph. Your file doesn't lie, <PC>. You are every bit as bright as I expected."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "So, why do you need me?" linkto "F1"  notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "File? You mean you've been keeping records on me?" linkto "F2"  notes ""
+              }
+}
+Node "E1-1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, at least I know your file is accurate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait a second. What file?" linkto "F2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So, what is all this about?" linkto "F1-2"  notes ""
+              }
+}
+Node "E1-2"
+notes ""
+is_wtg = false
+{
+NPCText "I must say I am impressed. You are living up to my expectations - usually you Techs aren't quite as... quick as your file suggests."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "File? Since when do I have a file?" linkto "F2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So, why did you want to see me?" linkto "F1-2"  notes ""
+              }
+}
+Node "E2"
+notes ""
+is_wtg = false
+{
+NPCText "That's very astute of you, <PC>. The Mr. Handy robots ARE a part of the problem. There is more, however."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please, explain." linkto "Handy3-1"  notes ""
+              }
+}
+Node "E2-1"
+notes ""
+is_wtg = false
+{
+NPCText "Actually, the Mr. Handies are at the root of the problem."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Handy3-1"  notes ""
+              }
+}
+Node "E3"
+notes ""
+is_wtg = false
+{
+NPCText "Well, in that case, let me fill you in on the situation. I assume you know that it is being maintained by the Mr. Handy Robots?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I do now..." linkto "Handy1"  notes ""
+              }
+}
+Node "F1"
+notes ""
+is_wtg = false
+{
+NPCText "As you've already taken the liberty to point out, the reactor is currently being maintained by Mr. Handy robots. Several years ago, their logic cricuits were re-coded to allow for the maintenance of the coolant systems. However, the models that we received were the Mr. Handy Home Helpers, which are obviously not designed for reactor maintenance. Also, they came equipped with the standard Mr. Handy operating system."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]." linkto "Handy3"  notes ""
+              }
+}
+Node "F1-2"
+notes ""
+is_wtg = false
+{
+NPCText "As you've already pointed out, the reactor is currently being maintained by Mr. Handy robots. Several years ago, their logic cricuits were re-coded to allow for the maintenance of the coolant systems. However, the models that we received were the Mr. Handy Home Helpers with the standard Mr. Handy OS. Obviously, they are poorly suited for reactor maintenance."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]." linkto "Handy3"  notes ""
+              }
+}
+Node "F2"
+notes ""
+is_wtg = false
+{
+NPCText "There's no need to be alarmed. Our files are simply used to track your performance and to determine whether or not you are eligible for promotion. Everybody has one, even the Board members."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Would you mind if I take a look?" linkto "G1" conditions { CHECK_STAT perception < 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to take a look what you've got, if that's ok." linkto "G2" conditions { CHECK_STAT perception > 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, I see. Lets get back to the matter at hand, shall we?" linkto "F1"  notes ""
+              }
+}
+Node "G1"
+notes ""
+is_wtg = false
+{
+NPCText "Sure. [Reading through the file, you see that he was telling the truth. Most of the stuff in here is pretty mundane: birth record, medical information, the works. All in all, your file is everything that you would expect a corporate file to be.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Give him back the file.] Let's get back to why you need me." linkto "F1"  notes ""
+              }
+}
+Node "G2"
+notes ""
+is_wtg = false
+{
+NPCText "Sure. [You take the file and skim through it. Most of the documents are pretty standard: birth certificate, medical records, and performance reports. However, towards the end you come across what seems to be a psychiatric evaluation. Most of it is complete gibberish to you - whoever wrote this used obscure technical terms that you aren't familiar with. However, you do notice several references to your \"tractable\" and \"uskeptical\" nature. Also, there seems to have been a memo or something attached to this sheet of paper; there is a scrap of paper stapled to the top of the page. Although most of it is missing, you can read the words \"Ideal\" and \"unassuming\".]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Give him back the file.] Lets get back to business, shall we?" linkto "F1"  notes ""
+              }
+}
+Node "Handy1"
+notes ""
+is_wtg = false
+{
+NPCText "As I am sure you are aware, there was a falling out between the Technicians and the Board several years ago. When the CEO died the ensuing power struggle nearly led to violence. In fact, bloodshed was only averted because the upper floors were locked down and the Armory put under constant surveillance. A deal was struck between some of the more reasonable Technicians and the Board: the Technicians would remain in the Vault and run it's primary systems in return for a safe haven. However, the Board was leery of giving Technicians access to the reactor. They didn't want to jeopardize their grip on the Vault."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue.]" linkto "Handy2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't want a history lesson, Ken. What do you want?" linkto "Handy4"  notes ""
+              }
+}
+Node "Handy2"
+notes ""
+is_wtg = false
+{
+NPCText "This left the Board in a difficult position. The reactor had been customized for increased power output through the use of high-grade fuel. In order to speed the installation and conserve space, the reactor didn't have complete radiation shielding when it was installed. Up until the incident, the Techs had been using special suits to enter the reactor room and perform maintenance. Unfortunately, all the suits were destroyed by the Board during the revolution, who feared the Techs would use them to sabotage the reactor."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I see where this is headed..." linkto "Handy3"  notes ""
+              }
+}
+Node "Handy3"
+notes ""
+is_wtg = false
+{
+NPCText "Since there were no suits left, human maintenance was impossible. The Board turned to the only other resource available: the robots. They seemed like the ideal choice, being immune to radiation and not the least bit inclined towards revolting. Using the manual that came with them the programming technician, Duane, added a new function to their logic circuits. The robots are now responsible for the maintenance of the coolant systems."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh god. Don't tell me that..." linkto "Handy4"  notes ""
+              }
+}
+Node "Handy3-1"
+notes ""
+is_wtg = false
+{
+NPCText "As you may or may not know, the reactor room is fatal to living beings. The reactor has been leaking radiation for many years now, and anyone who enters will receive a terminal dose in less than 15 minutes. The Mr. Handies do not suffer from the same shortcomings, which is why we use them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what is wrong with the Mr. Handies?" linkto "Handy4"  notes ""
+              }
+}
+Node "Handy4"
+notes ""
+is_wtg = false
+{
+NPCText "The Mr. Handies were fine until just recently. According to Duane, the reprogramming of their logic circuits resulted in a slow memory leak, which will eventually overload them and cause an irreversible shutdown. At the same time, the leak is impairing their ability to regulate the coolant systems. Every day, the reactor temperature rises a fraction of a degree. At this point, we project 60 days until the reactor reaches critical temperature and there is a meltdown."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]." linkto "Handy5"  notes ""
+              }
+}
+Node "Handy5"
+notes ""
+is_wtg = false
+{
+NPCText "We have a solution, however. We discovered that there is a way to undo the damage that the memory leak has caused - reinstall the Mr. Handy OS. Unfortunately, we didn't receive a copy of the software. In fact, the only place we know of that had copies on hand was the local General Atomics International office. That, <PC>, is where you come in."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me guess..." linkto "Want1"  notes ""
+              }
+}
+Node "Refusal1"
+notes ""
+is_wtg = false
+{
+NPCText "[He is obviously shocked] Well, I... You mean you don't care about the lives of the people in this Vault? You don't want to save your friends, your family, or anybody else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't create the problem. You did." linkto "Refusal2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not that. I just don't feel like I can handle the responsibilty." linkto "Refusal3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well... Since you put it that way -" linkto "Team1"  notes ""
+              }
+}
+Node "Refusal2"
+notes ""
+is_wtg = false
+{
+NPCText "True, but nobody could have foreseen this situation. Everything was running normally until just recently."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are the ones who reprogrammed the Mr. Handies, not me." linkto "Refusal4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you think you can just manipulate me and get whatever you want? I'm not going to be your pawn." linkto "H1" conditions { CHECK_STAT perception > 5 link_next NONE } notes ""
+              }
+}
+Node "Refusal3"
+notes ""
+is_wtg = false
+{
+NPCText "[He looks disappointed] I see... In that case, you are dismissed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(End.)" linkto "done"  notes "This should lead to the cutscene."
+              }
+}
+Node "Refusal4"
+notes ""
+is_wtg = false
+{
+NPCText "But -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But nothing, Ken. You got yourselves into this mess, you get yourselves out." linkto "done"  notes "This leads to the cutscene."
+              }
+}
+Node "Team1"
+notes ""
+is_wtg = false
+{
+NPCText "However, this is too important to rest entirely in the hands of one person. For that reason, we have selected a team of qualified staff that will accompany you. You will rendezvous with your team at the Vault door."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Anything else I should know?" linkto "Team2"  notes "This option should spawn the NPC teammates by the door."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's on the team?" linkto "Team3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ken, you've seen my file. I can do this on my own." linkto "Solo1" conditions { CHECK_SKILL speech > 34 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was GOING to say that you've got the wrong man." linkto "Refusal3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can count on me!" linkto "End1"  notes "This option should spawn the NPC teammates by the door."
+              }
+}
+Node "Team2"
+notes "PC should receive equipment withdrawal forms here."
+is_wtg = false
+{
+NPCText "You should report to Quartermaster Pachini to get your equipment. [He hands you several sheets of paper] These are the forms you will need to give her. Oh, and <PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes?" linkto "End2"  notes ""
+              }
+}
+Node "Team3"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, I almost forgot. Let's see here... Jason Decker will be your medical technician. We've got Dave Pollock, the demolitions expert... Oh, and of course, Frank Longwood. He's got the Bozar, you know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like we'll be a great team!" linkto "Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pollock? Are you trying to get me killed?" linkto "Solo3" conditions { CHECK_SKILL speech > 34 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Decker? You can't be serious..." linkto "Solo4" conditions { CHECK_SKILL speech > 34 link_next NONE } notes ""
+              }
+}
+Node "Team3-1"
+notes ""
+is_wtg = false
+{
+NPCText "[He picks up yet another file] Let's see here... Jason Decker will be your medical technician. We've got Dave Pollock, the demolitions expert... Oh, and of course, Frank Longwood. He's got the Bozar, you know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You put Dave on MY team? Are you insane?" linkto "Solo3" conditions { CHECK_SKILL speech > 34 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Decker? He faints at the sight of blood!" linkto "Solo4" conditions { CHECK_SKILL speech > 34 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right. Where do I meet them?" linkto "Team4"  notes ""
+              }
+}
+Node "Team4"
+notes "PC should receive equipment withdrawal forms here."
+is_wtg = false
+{
+NPCText "They'll be waiting by the vault door. [He hands you several forms] Take these to Pachini to receive your equipment. Good Luck, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be on my way, then. See you when I get back!" linkto "done"  notes ""
+              }
+}
+Node "Want1"
+notes ""
+is_wtg = false
+{
+NPCText "Although we have no way of knowing what state the G.A.I. building is in, we need someone to go out and search for it. The Mr. Handy OS is vital to the survival of this Vault. You are the candidate best suited for this job. You have demonstrated initiative, critical thinking skills, and leadership potential."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you sir, I -" linkto "Team1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait. Stop right there. I'm not going." linkto "Refusal1"  notes "This option should appear if the player notices the notes in node G2."
+              }
+}
+Node "End1"
+notes "PC should receive equipment withdrawal forms here."
+is_wtg = false
+{
+NPCText "I'm glad to see you're confident about this. Take these forms to the Quartermaster, she will give you supplies for the voyage. Don't forget - the fate of this Vault rests in your hands. Whether we live or die is up to you. Godspeed, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[End.]" linkto "done"  notes "Quest accepted. Add the Vault quest to the Pipboy."
+              }
+}
+Node "End2"
+notes ""
+is_wtg = false
+{
+NPCText "Good luck."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you, sir." linkto "done"  notes "Quest accepted. Add the Vault quest to the Pipboy."
+              }
+}
+Node "H1"
+notes ""
+is_wtg = false
+{
+NPCText "Manipula-? What ever gave you that idea?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I saw the notes in my file, Ken, and I don't appreciate being used." linkto "H2"  notes ""
+              }
+}
+Node "H2"
+notes ""
+is_wtg = false
+{
+NPCText "No, no. Those were just some observa -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't need your bullshit. I'm not going to be your pawn, so find someone else to do your dirty work." linkto "done"  notes "This should lead to the cut scene."
+              }
+}
+Node "Solo1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, your file is impressive, but I don't think we can afford to depend on one person. No matter how skilled you are alone, the projected success rate increases significantly with the addition of team members."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's not always true. Who's on my team anyway?" linkto "Team3-1"  notes ""
+              }
+}
+Node "Solo2"
+notes ""
+is_wtg = false
+{
+NPCText "[He sighs]  I suppose you know best. In that case, you'll be needing some extra supplies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you, Ken. I promise not to let you down." linkto "End3"  notes ""
+              }
+}
+Node "End3"
+notes "PC should receive equipment withdrawal forms here."
+is_wtg = false
+{
+NPCText "[He hands you a thick stack of forms] Go see Quarter Master Pachini for your supplies. We're counting on you, <PC>. Failure is not an option."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Failure never WAS an option. Goodbye, Ken." linkto "done"  notes "Quest accepted. Add the Vault quest to the Pipboy, and reward 1000 XP to PC."
+              }
+}
+Node "Solo3"
+notes ""
+is_wtg = false
+{
+NPCText "Well, he seemed to be the most qualified out of -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You know what happened at his son's birthday! And now you're giving him explosives?" linkto "Solo5"  notes ""
+              }
+}
+Node "Solo4"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, don't be silly. Besides, Jason is the only one who volunteered. We don't have a limitless pool of candidates, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And Pollock! Are you trying to get me killed?" linkto "Solo8"  notes ""
+              }
+}
+Node "Solo5"
+notes ""
+is_wtg = false
+{
+NPCText "Well, unless I am mistaken, the incident involving the pinata was pure coincidence. Besides, the fire didn't do any long-term damage, and -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Matches! He did that with matches!" linkto "Solo6"  notes ""
+              }
+}
+Node "Solo6"
+notes ""
+is_wtg = false
+{
+NPCText "I see your point, <PC>, but Decker will surely offset Pollock's... incompetence."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ha! Decker can't even stand the sight of blood!" linkto "Solo7"  notes ""
+              }
+}
+Node "Solo7"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, don't be silly. Besides, Jason is the only one who volunteered. We don't have a limitless pool of candidates, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen Ken. Either I do this alone, or not at all." linkto "Solo0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ok, ok. I'll take the team, dammit." linkto "Team2"  notes ""
+              }
+}
+Node "Solo8"
+notes ""
+is_wtg = false
+{
+NPCText "Well, he seemed to be the most qualified out of -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You know what happened at his son's birthday! And now you're giving him explosives?" linkto "Solo9"  notes ""
+              }
+}
+Node "Solo9"
+notes ""
+is_wtg = false
+{
+NPCText "Well, unless I am mistaken, the incident involving the pinata was pure coincidence. Besides, the fire didn't do any long-term damage, and -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Matches! He did that with matches!" linkto "Solo0"  notes ""
+              }
+}
+Node "Solo0"
+notes ""
+is_wtg = false
+{
+NPCText "I can tell you are determined to do this alone. I just don't feel comfortable sending you off alone. The whole Vault is a stake, for god's sake. I think you should take the team along - you'll be better off in the end."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll be better off WITHOUT that team of lunatics!" linkto "Solo2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bitch and moan, bitch and moan. God, if it shuts you up, I'll take the damn team." linkto "Team2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You know what? I don't think I'll go, team or no team." linkto "Refusal1"  notes ""
+              }
+}
+Node "b"
+notes ""
+is_wtg = false
+{
+NPCText "[He sighs] Sit down. [You sit down in the closest chair] Do you know why you are here?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh uh. I in trouble?" linkto "c"  notes ""
+              }
+}
+Node "c"
+notes ""
+is_wtg = false
+{
+NPCText "No, we need you to do something for us. Understand?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Big smile] Yup!" linkto "d"  notes ""
+              }
+}
+Node "d"
+notes ""
+is_wtg = false
+{
+NPCText "Let me explain the situation to you..."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I listen good!" linkto "e"  notes ""
+              }
+}
+Node "e"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, I'm sure you do. That brings me to the point. What do know about the reactor powering this Vault?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uhhhh [That pen on the desk is so shiny!]" linkto "f"  notes ""
+              }
+}
+Node "f"
+notes ""
+is_wtg = false
+{
+NPCText "I... see. In that case, let me fill you in on the situation. I assume you know that it is being maintained by the Mr. Handy Robots?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. I listen good! [So... shiny!]" linkto "g"  notes ""
+              }
+}
+Node "g"
+notes ""
+is_wtg = false
+{
+NPCText "Ok. [He starts pacing the room] You see, the robots..."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[You can't seem to take your eyes off that shiny, shiny pen]" linkto "h"  notes ""
+              }
+}
+Node "h"
+notes ""
+is_wtg = false
+{
+NPCText "[He's been talking for a while now, mostly about a \"reactor\". You wonder if it is shiny, too]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[You give in to your urge to touch the shiny pen. Wow, it sure is neat!]" linkto "j-1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[You try and focus on the conversation, but that pen is so shiny...]" linkto "j-2"  notes ""
+              }
+}
+Node "j-1"
+notes ""
+is_wtg = false
+{
+NPCText "[Now he's talking about some kind of robots, and his back is turned to you]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Bet shiny tastes good...]" linkto "j-3"  notes ""
+              }
+}
+Node "j-2"
+notes ""
+is_wtg = false
+{
+NPCText "[He is talking about how the robots that fix the \"reactor\" are broken]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[This all seems rather funny to you] Hahahahahahaha!" linkto "j-4"  notes ""
+              }
+}
+Node "j-3"
+notes ""
+is_wtg = false
+{
+NPCText "And that is where - What the hell are you doing?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Mmmff? [This shiny pen tastes like bad!]" linkto "j-5"  notes ""
+              }
+}
+Node "j-4"
+notes ""
+is_wtg = false
+{
+NPCText "[He jerks his head around very fast] Why are you laughing?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You make funny!" linkto "k"  notes ""
+              }
+}
+Node "j-5"
+notes ""
+is_wtg = false
+{
+NPCText "Give me that! [He yanks the shiny out of your mouth and puts it back on the desk]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Shiny tastes bad..." linkto "j-6"  notes ""
+              }
+}
+Node "j-6"
+notes ""
+is_wtg = false
+{
+NPCText "Of course it does, you moron. Now look here -"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[You try and see where he wants you to look] Look where?" linkto "k"  notes ""
+              }
+}
+Node "k"
+notes ""
+is_wtg = false
+{
+NPCText "This is not some kind of joke! If you screw this up, we all die!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Beuh?" linkto "l"  notes ""
+              }
+}
+Node "l"
+notes ""
+is_wtg = false
+{
+NPCText "Argh! Ok, here's what you need to do. You need to go find this [he gives you a picture of a building]."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Oooo. Pretty." linkto "m"  notes ""
+              }
+}
+Node "m"
+notes ""
+is_wtg = false
+{
+NPCText "We are sending some nice people with you to help, okay?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I like friends!" linkto "n"  notes ""
+              }
+}
+Node "n"
+notes ""
+is_wtg = false
+{
+NPCText "I'm sure you do. Now, once you get there you need to make sure and get the Mr. Handy OS."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Messter Handeee? " linkto "o"  notes ""
+              }
+}
+Node "o"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, Messter Handee. One of your friends will remind you when you get there, okay?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay!" linkto "o-2"  notes ""
+              }
+}
+Node "o-2"
+notes "The PC should receive the equipment withdrawal forms here."
+is_wtg = false
+{
+NPCText "Give these forms to Pachini before you leave. [He hands you a stack of forms]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Miss Pachini pretty. We all done now?" linkto "p"  notes ""
+              }
+}
+Node "p"
+notes ""
+is_wtg = false
+{
+NPCText "Yup. All done. [He shudders] Good luck, <PC>."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End]" linkto "done"  notes ""
+              }
+}

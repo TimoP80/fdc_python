@@ -1,0 +1,1181 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.24-beta
+
+*/
+
+vars {
+}
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Bruce_0"
+notes "This dialogue needs a variable or flag which montiors whether or not Bruce has had the PC thrown out of his tent before. For now, I will call it Bruce_Throw. The default value is 0."
+{
+NPCText "*STARTING CONDITIONS*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The player has never spoken to Bruce before -" linkto "Bruce_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The player has spoken to Bruce before -" linkto "Bruce_1b_1"  notes ""
+              }
+}
+Node "Bruce_1a_1"
+notes ""
+{
+NPCText "*The energetic-seeming man looks up* Hey there, friend! Bruce is the name. What can I do for you?"
+ NPCFemaleText "*The energetic-seeming man looks up* Hey there, sister! Bruce is the name. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Bruce. I just came in to see what goes on in here." linkto "Bruce_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can start by handing over your valuables, asshole." linkto "Bruce_1a_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I'm in the wrong tent, I think. 'Bye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello, Bruce! You look like friendly man!" linkto "Bruce_2D_a1"  notes ""
+              }
+}
+Node "Bruce_1a_2B_1"
+notes ""
+{
+NPCText "*Bruce's amiable expression does not change.* I'm sorry? I don't think I heard you correctly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, sorry. I should have spoken more clearly when I said 'hand your valuables over'." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 go instead to Bruce_1a_2B_2b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget I said anything. I'm going." linkto "done"  notes ""
+              }
+}
+Node "Bruce_1a_2B_2a"
+notes "Set Bruce_Throw to 1."
+{
+NPCText "*Bruce turns to his companions* Guys, be so good to escort this gentleman to the door, would you?"
+ NPCFemaleText "*Bruce turns to his companions* Guys, be so good to escort this lady to the door, would you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Allow yourself to be 'escorted' without a struggle*" linkto "done"  notes "The screen fades to black. When it fades back, the player finds himself face down on the ground, but otherwise unharmed, outside the Explorers' tent, having been roughly thrown out."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not going anywhere, Bruce... *reach for your weapon*" linkto "combat"  notes ""
+              }
+}
+Node "Bruce_1a_2B_2b"
+notes ""
+{
+NPCText "*Bruce sighs* Why do people have to be so damn uncivilised these days? *He waves towards his companions towards you* Guys, kill him."
+ NPCFemaleText "*Bruce sighs* Why do people have to be so damn uncivilised these days? *He waves towards his companions towards you* Guys, kill her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You over-estimate yourself, Bruce." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, wait..." linkto "combat"  notes ""
+              }
+}
+Node "Bruce_1b_1"
+notes ""
+{
+NPCText "Hello, again, friend. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's about the bodies of your friends you told me were near Sandover..." linkto "Bruce_8_1"  notes "This node only appears if Bruce has spoken node Bruce_7_5a, where he gives the PC the mission to find the bodies of his former team-mates in the major rad hot-spot near Sandover."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Bruce. I came because I need to ask you a question." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What I WANT, Bruce, is to call you an asshole, kill you and rob you. Not necessarily in that order." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 then go to Bruce_1a_2B_2b instead."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello, Mister Bruce! What you doing today?" linkto "Bruce_2D_b1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Bruce, I thought you were someone else. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_2_1"
+notes ""
+{
+NPCText "*He sweeps an arm around in a grandiose fashion, indicating the other men and women in the tent* We're the Wasteland Explorers."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. What do you Wasteland Explorers do?" linkto "Bruce_2_2"  notes ""
+              }
+}
+Node "Bruce_2_2"
+notes ""
+{
+NPCText "Well, sir, we explore the wastes. *There's laughter in the tent, but Bruce's smile shows that the joke is good-natured*"
+ NPCFemaleText "Well, ma'am, we explore the wastes. *There's laughter in the tent, but Bruce's smile shows that the joke is good-natured*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you look for?" linkto "Bruce_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you laughing at me, dick-head?" linkto "Bruce_2_3B_1"  notes "IF Bruce_Throw=0 AND IF the PC's strength is less than 8, go instead to Bruce_1a_2B_2a.\nIF Bruce_Throw>0 AND IF the PC's strength is less than 8, go instead to Bruce_1a_2B_2b."
+              }
+}
+Node "Bruce_2_3"
+notes ""
+{
+NPCText "We search the wastes for pre-war tech for the most part. Anything that was left around after the bombs fell and is still usable. That's where the big money is."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. You've made big finds in the past?" linkto "Bruce_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where are you looking at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you answer another question I have?" linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_2_3B_1"
+notes ""
+{
+NPCText "It was just my little joke. Take it easy. I didn't mean any offence."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So tell me what your little gang does, comedian." linkto "Bruce_2_3B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "None taken. So what does wasteland exploring actually involve?" linkto "Bruce_2_3"  notes ""
+              }
+}
+Node "Bruce_2_3B_2"
+notes ""
+{
+NPCText "'Comedian'? Look, take it easy, pal. I like to think of myself as a friendly guy, but that doesn't give you license to give me any crap."
+ NPCFemaleText "'Comedian'? Look, take it easy, lady. I like to think of myself as a friendly guy, but that doesn't give you license to give me any crap."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That was just my little joke. Smile!" linkto "Bruce_2_3B_3"  notes "IF Bruce_Throw=0 AND IF the PC's charisma is less than 8, go instead to Bruce_1a_2B_2a.\nIF Bruce_Throw>0 AND IF the PC's charisma is less than 8, go instead to Bruce_1a_2B_2b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll give you whatever I feel like, punk. And you'll sit up and beg for seconds like a good boy." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 go instead to Bruce_1a_2B_2b."
+              }
+}
+Node "Bruce_2_3B_3"
+notes ""
+{
+NPCText "Oh, right. Sorry, I don't mean to be so touchy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget about it. So how does your exploring group spend its days?" linkto "Bruce_2_3"  notes ""
+              }
+}
+Node "Bruce_2D_a1"
+notes ""
+{
+NPCText "*Bruce grins and speaks to the members of his group around him* See? Now that's what I call a good judge of character. *He turns back to you, still smiling.* What can I do for you, son?"
+ NPCFemaleText "*Bruce grins and speaks to the members of his group around him* See? Now that's what I call a good judge of character. *He turns back to you, still smiling.* What can I do for you, girl?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What your job, Mister Bruce?" linkto "Bruce_2D_a2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I have to go." linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_a2"
+notes ""
+{
+NPCText "We're Wasteland Explorers. That's our name and that's what we do."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What Wasteland Explorers do?" linkto "Bruce_2D_a3_a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I know what that mean. I'm clever! It mean you look for things in wasteland." linkto "Bruce_2D_a3_b"  notes ""
+              }
+}
+Node "Bruce_2D_a3_a"
+notes ""
+{
+NPCText "We look for valuable things in the wasteland that we can sell."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Like treasure? Wow, you're treasure hunters?" linkto "Bruce_2D_a4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I'm going now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_a3_b"
+notes ""
+{
+NPCText "Well, you look like a smart guy! *He even looks like he means it.*"
+ NPCFemaleText "Well, you look like a smart gal! *He even looks like he means it.*"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I bet you finds lot of buried treasures." linkto "Bruce_2D_a4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want to go now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_a4"
+notes ""
+{
+NPCText "Sure, we find lots and lots of treasure. Great big piles of it!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want to be treasure hunter like you. Let me join your gang, Mister Bruce." linkto "Bruce_2D_a5"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Exciting! Goodbye, Mister Bruce." linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_a5"
+notes ""
+{
+NPCText "I'd love to take you on, kid, but I don't have any more room for people who want to join. But, hey. *He reaches forward.* What's this behind your ear?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Let Bruce put his hand behind your ear.*" linkto "Bruce_2D_a6"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Get away from me!" linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_a6"
+notes ""
+{
+NPCText "*He takes his hand back and there's a stone resting in his palm* Hey, look at that! A magic stone! I can tell you're going to have good luck, kid. Keep this with you at all times and it'll look after you."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Thanks! *Take the stone*" linkto "Bruce_2D_a7"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not want your crappy stone! Go away!" linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_a7"
+notes "Add a rock to the player's inventory."
+{
+NPCText "*He ruffles your hair.* You're a good kid. Come back and visit any time you like, you hear me?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay, Mister Bruce! Goodbye!" linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_b1"
+notes ""
+{
+NPCText "Hey, it's my favourite treasure-hunting buddy! I didn't see that it was you when you first walked in. Since you ask about what we've been doing, we've been looking for more buried treasure."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "How much you found?" linkto "Bruce_2D_b2_a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Want another magic stone!" linkto "Bruce_2D_b2_b"  notes "This option only appears if Bruce has spoken node Bruce_2D_a7, where he gives the player a 'magic' (ie: normal) rock."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye-bye Mister Bruce!" linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_b2_a"
+notes ""
+{
+NPCText "Not as much as we'd like, little buddy, but we keep looking."
+ NPCFemaleText "Not as much as we'd like, little darlin', but we keep looking."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want another magic stone!" linkto "Bruce_2D_b3"  notes "This option only appears if Bruce has spoken node Bruce_2D_a7, where he gives the player a 'magic' (ie: normal) rock."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye-bye Mister Bruce!" linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_b2_b"
+notes ""
+{
+NPCText "That was a special magic stone. I hope you haven't lost it! *He frowns as if genuinely disappointed.*"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I did lost it, Mister Bruce! Sorry. Want another one." linkto "Bruce_2D_b3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not lost it, just want another one." linkto "Bruce_2D_b3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Run away*" linkto "done"  notes ""
+              }
+}
+Node "Bruce_2D_b3"
+notes ""
+{
+NPCText "That was the only magic stone of its kind. I don't have any more. Go on, run along now. Your Uncle Bruce has a lot of work to do."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Leave*" linkto "done"  notes ""
+              }
+}
+Node "Bruce_3_1"
+notes ""
+{
+NPCText "Yeah. *His smile fades* We made a particularly large find down near Sandover once. It made us enough money that we were able to forget about running the caravans and make exploring our main source of income."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you find near Sandover?" linkto "Bruce_3_2a"  notes "This node only appears if the PC has NOT accepted OR completed the bones quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Bruce_3_2b"  notes "This node only appears if the PC has NOT accepted OR completed the bones quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could I ask you a question about something else?" linkto "Bruce_9"  notes "This node only appears if the PC has NOT accepted OR completed the bones quest."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a shame that expedition cost the lives of so many of your crew. Let me ask you about something else." linkto "Bruce_9"  notes "This node only appears IF the PC has accepted OR completed the bones quest."
+              }
+}
+Node "Bruce_3_2a"
+notes ""
+{
+NPCText "*Suddenly he is clearly upset* I don't want to talk about it, okay? Can we talk about something else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm curious to know why you don't want to talk about it." linkto "Bruce_3_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure. Let me ask you an unrelated question." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please yourself. I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Bruce_3_2b"
+notes ""
+{
+NPCText "Not much. We didn't get to the settlement itself and have never been since. The area we explored was near Sandover, but not in it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So tell me about the find you made there." linkto "Bruce_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not to worry. Let me ask you about something entirely different." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_3_1"
+notes ""
+{
+NPCText "It was a long time ago. Twelve? Thirteen years? It feels like yesterday. Some bad things happened."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't mean to intrude, but I'd like to know what happened. I want to know how to avoid the same danger if I'm ever in Sandover." linkto "Bruce_3_3_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't mean to open old wounds. Let me ask you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better leave." linkto "done"  notes ""
+              }
+}
+Node "Bruce_3_3_2"
+notes ""
+{
+NPCText "I can understand that. I don't mean to be rude, it's just that I lost six members of my crew whilst I was down there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're saying six members of your team died whilst your group was at Sandover?" linkto "Bruce_3_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't mean to open old wounds. Let me ask you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better leave." linkto "done"  notes ""
+              }
+}
+Node "Bruce_3_4"
+notes ""
+{
+NPCText "Yeah... it was a terrible business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What happened?" linkto "Bruce_3_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What was a terrible business?" linkto "Bruce_3_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask about something else." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_5"
+notes ""
+{
+NPCText "We thought we had come across the find of a lifetime. It WAS the find of a lifetime. Pre-war tech that was worth a fortune, lying around, barely buried, waiting for someone to pick it up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What went wrong?" linkto "Bruce_3_6a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why had no-one else picked it up for themselves?" linkto "Bruce_3_6b"  notes ""
+              }
+}
+Node "Bruce_3_6a"
+notes ""
+{
+NPCText "It was only after we'd been there several hours that we realised the place was radioactive as hell."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Weren't you equipped to deal with radiation?" linkto "Bruce_3_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. And I suppose it was the rads that caused the casualties." linkto "Bruce_3_7b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Didn't you know the site was that hot?" linkto "Bruce_3_7c_1"  notes ""
+              }
+}
+Node "Bruce_3_6b"
+notes ""
+{
+NPCText "The reason no-one else had been there was because the site was lethally radioactive. Not even the Sandover Scabs would go near it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was the rads that killed your Explorers?" linkto "Bruce_3_7b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why didn't you know the site was so radioactive?" linkto "Bruce_3_7c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you not have the right gear to cope with those rads?" linkto "Bruce_3_7a"  notes ""
+              }
+}
+Node "Bruce_3_7a"
+notes ""
+{
+NPCText "We had Rad-X, sure, but nothing like the amount needed to survive at that hell-hole. Some of us had more rad drugs than the rest, which is why I'm still alive. *He screws up his eyes and shakes his head in guilt*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What long-term effects did the rads have on you?" linkto "Bruce_3_7d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why was it that you didn't know the site was so dangerous?" linkto "Bruce_3_7c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was it the rads and the lack of Rad-X that killed those Explorers who died?" linkto "Bruce_3_7b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can see this is difficult for you. Let me ask you about something else." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_7b"
+notes ""
+{
+NPCText "That's right. The rads were so intense that those of us who had Rad-X were almost killed, too, but those poor bastards didn't stand a chance."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you bring them back with you before they died?" linkto "Bruce_3_8a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you not have the right gear to cope with the increased radiation?" linkto "Bruce_3_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How was it possible you didn't know the site was so dangerous in advance?" linkto "Bruce_3_7c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What effects did the rads have on the survivors?" linkto "Bruce_3_7d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could I ask you about something entirely different?" linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_7c_1"
+notes ""
+{
+NPCText "We knew that Sandover was slightly more radioactive, but this site was off the scale. No-one warned us about it before we got there, and we learned since that no-one we had spoken to before we left even knew about it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce_3_7c_2"  notes ""
+              }
+}
+Node "Bruce_3_7c_2"
+notes ""
+{
+NPCText "We did have a geiger counter, but we got careless and lost it. That was our only way of knowing how radioactive the area was. Without it, we were blind to the danger."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How far did the six who died get away from the Sandover site before they passed away?" linkto "Bruce_3_8a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you not have supplies that allowed you to cope with the radiation?" linkto "Bruce_3_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose it was the rads that killed your Explorers." linkto "Bruce_3_7b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Has the radiation had any long-term effects on you or the others in the group?" linkto "Bruce_3_7d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you an entirely different question." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_7d"
+notes ""
+{
+NPCText "It took us months to recover fully, once we got back to Crossroads. We puked, lost hair and teeth, even messed ourselves. I seem to be okay these days, but I don't know if I'll ever have kids."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why didn't you know the site was so dangerous in advance?" linkto "Bruce_3_7c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was the rads that killed those of you who didn't make it?" linkto "Bruce_3_7b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How is it that you weren't equipped to deal with the rads?" linkto "Bruce_3_7a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can see this is difficult for you. Let me ask you about something else." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_8a_1"
+notes ""
+{
+NPCText "*Bruce takes a deep breath* I feel partly responsible, yeah. I don't let it drive me nuts, though; everyone who joins the Explorers knows it's a dangerous life."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Those are just excuses. You're as guilty as if you pointed a gun at them and pulled the trigger." linkto "Bruce_3_8a_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you do when people started dying?" linkto "Bruce_3_8a_2"  notes ""
+              }
+}
+Node "Bruce_3_8a_2"
+notes ""
+{
+NPCText "There was nothing we could do for them; we had to leave them behind at the Sandover site. Those of us who could still walk gathered up our gear and finds and made back for Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait a minute, so you left your team-mates to die, but came back with arm-loads of pre-war tech?" linkto "Bruce_3_8a_3B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So the dead are still back at Sandover?" linkto "Bruce_3_8a_3"  notes ""
+              }
+}
+Node "Bruce_3_8a_2B_1"
+notes ""
+{
+NPCText "*Bruce recoils as if struck* Shit, mister, that's a cruel thing to say."
+ NPCFemaleText "*Bruce recoils as if struck* Shit, lady, that's a cruel thing to say."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me what you did once members of your team started dying." linkto "Bruce_3_8a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's the truth. For your crimes, I hereby sentence you to death. *Reach for your weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's change the subject. I've got a question about something completely different." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to stew in your own juice." linkto "done"  notes ""
+              }
+}
+Node "Bruce_3_8a_3"
+notes ""
+{
+NPCText "That's right. We didn't even have enough time to give them a proper burial. It sickens me to think of the way we left them there to the carrion beasts and all, but there was nothing we could do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds to me like you were too busy loading yourselves down with booty when you should have been saving your friends." linkto "Bruce_3_8a_3B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you wish they had been given a proper burial?" linkto "Bruce_7_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've thought of something completely different I need to ask you." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_3_8a_3B_1"
+notes ""
+{
+NPCText "Don't give me that! Anyone who knows anything about rad-poisoning would have known that those guys were as good as dead. What should I have done - thrown away a fortune just so we could carry back a heap of bodies instead?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce_3_8a_3B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I'm not the guilty party here. Take it easy." linkto "Bruce_3_8a_3B_3"  notes ""
+              }
+}
+Node "Bruce_3_8a_3B_2"
+notes ""
+{
+NPCText "The Explorers who survived deserved better than walking away empty-handed. They'd risked everything and I owed it to them to make it worth their while."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How convenient. You're all heart, Bruce." linkto "Bruce_3_8a_3B_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So presumably, your fallen colleagues are still back at Sandover." linkto "Bruce_3_8a_3"  notes ""
+              }
+}
+Node "Bruce_3_8a_3B_3"
+notes ""
+{
+NPCText "Listen, you're using up your welcome pretty quickly, pal."
+ NPCFemaleText "Listen, you're using up your welcome pretty quickly, lady."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your justifications for your friends' deaths are pathetic." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 go instead to Bruce_1a_2B_2b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "So the bodies of your friends are still at Sandover?" linkto "Bruce_3_8a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll change the subject by asking you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be leaving, then." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_1"
+notes ""
+{
+NPCText "*Bruce grins wolfishly* Nice try, buddy. Do you really think we'd go letting strangers know where the action is?"
+ NPCFemaleText "*Bruce grins wolfishly* Nice try, sister. Do you really think we'd go letting strangers know where the action is?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me try that another way. Tell me and I won't kill you all." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 go instead to Bruce_1a_2B_2b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where are you looking roughly, then?" linkto "Bruce_4_2"  notes "Mild speech check. If failed, go to Bruce_4_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. Let me ask you something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better be going." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_2"
+notes ""
+{
+NPCText "At the moment, we're concentrating on an area to the north and slightly to the east."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't have to worry about being more specific than that." linkto "Bruce_4_3b_1"  notes "Wrong response (non-committal, forces Bruce to drag an explanation out of the PC). Punishment is an extra node with a speech check.\n\nModerate speech check. If failed, go to Bruce_4_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come on, you can tell me a bit more than that." linkto "Bruce_4_3a"  notes "Correct response (the PC's direct style appeals to Bruce). Reward is avoiding one node with a speech check.\n\nModerate speech check. If failed, go to Bruce_4_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What a coincidence; my home is that way, too." linkto "Bruce_4_7a_1"  notes ""
+              }
+}
+Node "Bruce_4_3a"
+notes ""
+{
+NPCText "No, I can't. You have to understand that information like that is where our livelihood lies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look at me. I can't mount the sort of exploring operation you can. What threat can I be to you?" linkto "Bruce_4_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. I've still got another question for you, though." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_4_3b_1"
+notes ""
+{
+NPCText "Why not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Because I don't pose a threat to your operation." linkto "Bruce_4_3b_2"  notes "Moderate speech check. If failed, go to Bruce_4_9 instead."
+              }
+}
+Node "Bruce_4_3b_2"
+notes ""
+{
+NPCText "Explain."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not an explorer. I don't have your gear or a large team to work with." linkto "Bruce_4_4"  notes "Moderate speech check. If failed, go to Bruce_4_9 instead."
+              }
+}
+Node "Bruce_4_4"
+notes ""
+{
+NPCText "That's true. But you could still sell the information to another explorer crew or something."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are there any rival gangs around here?" linkto "Bruce_4_5"  notes "Wrong response. (Displays a lack of knowledge of explorer trade) Punishment is a harder speech check.\n\nDifficult speech check. If failed, go to Bruce_4_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "There aren't any other explorer crews. How many rivals can you name off-hand?" linkto "Bruce_4_5"  notes "Correct response. (It's a good arguement. There aren't any other groups of note in the area). Reward is an easier speech check.\n\nModerate speech check. If failed, go to Bruce_4_9 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, do you have time for another question?" linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_4_5"
+notes ""
+{
+NPCText "No, you're right. There aren't any. But hold on, what's in it for me to give you the information anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about money?" linkto "Bruce_4_6a_1"  notes "If the PC cannot afford to pay, go to Bruce_4_6b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Call it a favour. If I know where your explorer groups are looking, I'll know to avoid them and the risk of getting into trouble with them." linkto "Bruce_4_6b"  notes "If the PC's charisma<8, go instead to Bruce_4_9"
+              }
+}
+Node "Bruce_4_6a_1"
+notes "*VALUE* = 150 - [PC's barter skill]. *VALUE* cannot drop below 25. Double the resulting number if Bruce_Throw>0."
+{
+NPCText "Okay. I'll sell you the location of our current site for *VALUE*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. Here's your money." linkto "Bruce_4_6a_2"  notes "Deduct *VALUE* from the PC's inventory.\n\nThis node only appears if the PC has equal to or more than *VALUE* caps in his inventory. \n"
+          int=4 Reaction=REACTION_NEUTRAL playertext "No deal. Let me ask you something else instead." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't have that sort of money. I'll be back when I have." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_6a_2"
+notes "The Mineshaft (west)/V31 entrance caves green dot is added to the player's map."
+{
+NPCText "Fair enough.  *He takes the caps, digs a map out of his pocket and taps an area very close to the site of Vault 31 with his finger.* There. This is where we're working at the moment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, that's where I come from!" linkto "Bruce_4_7b"  notes "IF the PC's perception<7, go instead to Bruce_4_7c"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Let me ask you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better be going." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_6b"
+notes "The Mineshaft/new V31 entrance green dot is added to the player's map."
+{
+NPCText "That makes sense. Okay, take a look at this. *He digs a map out of his pocket and taps an area with his finger.* There. This is where we're working at the moment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, that's where I come from!" linkto "Bruce_4_7b"  notes "IF the PC's perception<7, go instead to Bruce_4_7c"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Let me ask you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better be going." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_7a_1"
+notes ""
+{
+NPCText "Oh, really?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. I come from one of the Vaults." linkto "Bruce_4_7a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. Anyway, tell me a bit more about that area you were exploring." linkto "Bruce_4_2"  notes ""
+              }
+}
+Node "Bruce_4_7a_2"
+notes "The condition is triggered where the PC will find Bruce and co. at Vault 31 when he returns."
+{
+NPCText "No kidding! A vault, you say! I tell you what, let me know where this vault of yours is on my map, here. *He unfolds a large, well-used map*. Then, since you asked, I'll tell you where we're exploring at the moment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds fair. Let me see your map and I'll show you where our vault is." linkto "Bruce_4_7a_3a"  notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "How about you show me where you're exploring on your map first and I'll use that as a point of reference to show you where my vault is?" linkto "Bruce_4_7a_3b_1"  notes "Note intelligence check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "No deal. Let me ask you a question about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't like where this is going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_7a_3a"
+notes "Add the location of the Mineshaft (west) caves containing the Vault 31 entrance to the PC's map."
+{
+NPCText "*Bruce waits as you point out the location of Vault 31* The hell? That's pretty much exactly where we're exploring, which is right here. *He indicates a spot very close to the site of Vault 31* I can't believe we passed right over you!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce_4_8"  notes ""
+              }
+}
+Node "Bruce_4_7a_3b_1"
+notes "Add the location of the Mineshaft (west) caves containing the Vault 31 entrance to the PC's map."
+{
+NPCText "Okay. Look here, see? *He points to his map and indicates an area within a few hundred yards of Vault 31*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's odd. Vault 31 is here. *Point to the location of Vault 31*. The two must only be a few hundred yards away from one another." linkto "Bruce_4_8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you about something else." linkto "Bruce_4_7a_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had better be leaving." linkto "Bruce_4_7a_3b_2"  notes ""
+              }
+}
+Node "Bruce_4_7a_3b_2"
+notes ""
+{
+NPCText "Hold on one second, mister. We had a deal. Tell me where your vault is."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, my mistake. As it happens it's here, right where you put your finger. The two sites must be only a few hundred yards apart." linkto "Bruce_4_8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I'm not going to." linkto "Bruce_1a_2B_2a"  notes "IF Bruce_Throw>0, go instead to Bruce_1a_2B_2b"
+              }
+}
+Node "Bruce_4_7b"
+notes ""
+{
+NPCText "*Bruce tries to hide it but you notice his eyes light up with surprised and greedy interest* Is that so? We didn't know there were any settlements where we were exploring. Tell me a bit about where you come from."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not surprised you didn't find my home. It's a vault." linkto "Bruce_4_8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I would rather not. Let me ask you something else instead." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. I have to go." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_7c"
+notes ""
+{
+NPCText "Is that so? We didn't know there were any settlements where we were exploring. Tell me a bit about where you come from."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not surprised you didn't find my home. It's a vault." linkto "Bruce_4_8"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I would rather not. Let me ask you something else instead." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. I have to go." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_8"
+notes "The condition is triggered where the PC will find Bruce and co. at Vault 31 when he returns."
+{
+NPCText "Well, well, well. A vault, of all things. We were in spitting distance and we never knew it was there. *He shakes his head and grins*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I need to ask you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had better be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_4_9"
+notes ""
+{
+NPCText "*Bruce laughs* Hey, I admire your curiosity! You remind me of me. But seriously, I'm not going to give this information up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, then, I'll have to beat it out of you." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 go instead to Bruce_1a_2B_2b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can appreciate that. Let me ask you something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_5_1"
+notes ""
+{
+NPCText "Those of us in the gang who were in the group from the very beginning came from Rusty Springs."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long ago did your group form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you in the group when it first formed?" linkto "Bruce_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Bruce_5_2c_1"  notes ""
+              }
+}
+Node "Bruce_5_2a"
+notes ""
+{
+NPCText "We teamed up about fourteen years ago. When we first came to Crossroads, it was little more than a bunch of half-ruined sheds."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What was in Crossroads that made you come here first?" linkto "Bruce_5_3d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you in the group when it first formed?" linkto "Bruce_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Bruce_5_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the history lesson. I'll see you around." linkto "done"  notes ""
+              }
+}
+Node "Bruce_5_2b"
+notes ""
+{
+NPCText "Yep. I was born and grew up in Rusty Springs. A few of us who wanted to see more of the world decided to run the Rusty Springs to Crossroads caravan route."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long ago did your group form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Bruce_5_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you didn't go straight into exploring?" linkto "Bruce_5_3d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have time for a question about something different?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got to go. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_5_2c_1"
+notes ""
+{
+NPCText "It's a good place to grow up in. I haven't been back there since we stopped running the caravan route between Rusty Springs and Crossroads and took up exploring. It takes its name from the high quality spring water it sources and sells to places like Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce_5_2c_2"  notes ""
+              }
+}
+Node "Bruce_5_2c_2"
+notes ""
+{
+NPCText "Up until about fifty years ago Rusty Springs was a small, quiet town called Clearwater. There wasn't much to say about it other than that it was there. Then Clearwater agreed to take in a large group of people who had emerged from a nearby vault that had recently opened."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did Rusty Springs change its name from Clearwater?" linkto "Bruce_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did the people of Clearwater know the vault was there before it opened?" linkto "Bruce_5_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me how to find Rusty Springs?" linkto "Bruce_5_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When did your explorer group first form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you a member of the explorer group when it first formed?" linkto "Bruce_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something entirely different." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_5_3a_1"
+notes ""
+{
+NPCText "The name change came about because of the introduction of water pumping works to the town. They were built shortly after the vault dwellers settled in Clearwater. Although they improved the stability of the supply, the pumps added a slightly rusty tinge to the water."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- MORE -" linkto "Bruce_5_3a_2"  notes ""
+              }
+}
+Node "Bruce_5_3a_2"
+notes ""
+{
+NPCText "It was outsiders - traders, mostly - who started calling the place Rusty Springs because of the change in the water. The name just stuck and nowadays pretty much everyone uses it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me how to find Rusty Springs?" linkto "Bruce_5_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When did your explorer group first form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you a member of the explorer group when it first formed?" linkto "Bruce_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "May I ask you a question about something else?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_5_3b"
+notes ""
+{
+NPCText "As I remember, no, no-one knew about it. This is before I was born, mind you. It must have come as a shock to see all those blue-suited folks turning up one day."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did Rusty Springs change its name from Clearwater?" linkto "Bruce_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you tell me how to find Rusty Springs?" linkto "Bruce_5_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When did your explorer group first form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you a member of the explorer group when it first formed?" linkto "Bruce_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something entirely different." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be leaving now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_5_3c"
+notes "Add the location of Rusty Springs to the PC's map."
+{
+NPCText "Sure, why not? *He describes the location of the town, which lies to the west, extremely well*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did Rusty Springs change its name from Clearwater?" linkto "Bruce_5_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When did your explorer group first form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you a member of the explorer group when it first formed?" linkto "Bruce_5_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question for you about something entirely different." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I have to be going now, though." linkto "done"  notes ""
+              }
+}
+Node "Bruce_5_3d"
+notes ""
+{
+NPCText "We worked the caravan route between Rusty Springs and Crossroads for two years. We made enough money to pay our way and live reasonably well. That was until we heard a rumour that there were large amounts of pre-war tech to be found near Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you do much exploring at Sandover?" linkto "Bruce_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How long ago did your group form?" linkto "Bruce_5_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Rusty Springs?" linkto "Bruce_5_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have time for a question about something different?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got to go. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_6_1"
+notes ""
+{
+NPCText "We're based at Crossroads because this is where it makes the most sense to be."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes it the best place for you?" linkto "Bruce_6_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you about something else, then." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_6_2"
+notes ""
+{
+NPCText "Jack rents us this pitch at a very low rent, for a start. Also, the pickings around here for a group of explorers are good enough to make it worth our while. Besides that, it's generally a much less dangerous part of the world to work in, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Jack?" linkto "Bruce_6_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does Jack rent this space to you for such low rent?" linkto "Bruce_6_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which area is your group exploring at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it more dangerous to do your exploring in areas further away than those near Crossroads?" linkto "Bruce_6_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question based on something else for you." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_6_3a_1"
+notes ""
+{
+NPCText "*Bruce gives a wry half-smile* You've obviously not been here very long. Jack and his family own the main Crossroads ranch and lease the land around it that everyone else is based on."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Jack an honest landlord?" linkto "Bruce_6_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does Jack rent this space to you for such low rent?" linkto "Bruce_6_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which area is your group exploring at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it more dangerous to explore in different parts of the wasteland to those near Crossroads?" linkto "Bruce_6_3c"  notes ""
+              }
+}
+Node "Bruce_6_3a_2"
+notes ""
+{
+NPCText "Yes. He's a good man. I trust him and we've been good for each other's business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does Jack rent the space to you for such low rent?" linkto "Bruce_6_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which area is your group exploring at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it more dangerous to explore areas further away from those near Crossroads?" linkto "Bruce_6_3c"  notes ""
+              }
+}
+Node "Bruce_6_3b_1"
+notes ""
+{
+NPCText "We and Jack have an agreement where he leases our plot in Crossroads to us very cheaply in order for first refusal and lower than usual prices on any items we find when we're exploring."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Jack?" linkto "Bruce_6_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you sold many of your finds to Jack?" linkto "Bruce_6_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which area is your group exploring at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it more dangerous to explore in parts of the wastes further than those near Crossroads?" linkto "Bruce_6_3c"  notes ""
+              }
+}
+Node "Bruce_6_3b_2"
+notes ""
+{
+NPCText "Yeah, we sell most of our finds to Jack. It's just as well because most of the finds we make these days are fairly small and far between. Not like some we've found in the past."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you made large finds in the past, then?" linkto "Bruce_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Jack?" linkto "Bruce_6_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which area is your group exploring at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it more dangerous to explore parts of the wastes further than those near Crossroads?" linkto "Bruce_6_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you an unrelated question." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_6_3c"
+notes ""
+{
+NPCText "To the west, where we originally come from, the wastes are much more dangerous once you're away from any town or whatever. We've found that the wastes local to Crossroads are much safer. We don't see any point trying our luck elsewhere."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Jack?" linkto "Bruce_6_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does Jack rent the space here to you for such low rent?" linkto "Bruce_6_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which area is your group exploring at the moment?" linkto "Bruce_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could I ask you about something else entirely?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. Well, goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_7_1"
+notes ""
+{
+NPCText "It would have meant a lot to us. The guys and girls who died, they were more than co-workers to us; they were our friends, too. I grew up with some of them in Rusty Springs."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you go back for their bodies yourself?" linkto "Bruce_7_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could look for the bodies of your friends next time I'm near Sandover." linkto "Bruce_7_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Rusty Springs." linkto "Bruce_5_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to ask you about something else altogether." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_7_2a"
+notes ""
+{
+NPCText "*Bruce frowns and looks at you oddly* I did mention how radioactive it was down there, didn't I? As much as I want to honour my old friends, I'm not condemning myself to certain death for them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could look for the bodies of your friends next time I'm near Sandover." linkto "Bruce_7_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_7_2b"
+notes ""
+{
+NPCText "Are you nuts? You wouldn't last half a day at that site."
+ NPCFemaleText "No offence, lady, but are you nuts? You wouldn't last half a day at that site."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can handle high-level radiation. I could do it." linkto "Bruce_7_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose you're right. Let's talk about something else, in that case." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. I have to be going. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_7_3"
+notes ""
+{
+NPCText "Well, if you're crazy enough to risk it, I'm not going to try to stop you. Like I say, if you were able to bring those bodies back to Crossroads, it would mean a lot to us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It would be a pleasure for me to help you. I'll do it." linkto "Bruce_7_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not going to do it for no reward, though. Let's talk payment." linkto "Bruce_7_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I've changed my mind. I still have another question for you, though." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_7_4"
+notes ""
+{
+NPCText "Fair enough. Give me a second to see what I've got. *Bruce rummages around in some storage units nearby* How about this? A scoped hunting rifle if you come back with all six bodies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have a deal, Bruce. I'll bring back the bodies in exchange for that rifle. " linkto "Bruce_7_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not good enough. You'll have to do better than that." linkto "Bruce_7_5b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No deal. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_7_5a_1"
+notes "The PC gets the bones quest where he has to go to Sandover and find the five sets of bones and tell Bruce about Michael the priest. Reset the variable Bruce_Throw to 0"
+{
+NPCText "I think you're out of your mind, but good luck. I'll be here if you need anything."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any spare Rad-X that you could sell me?" linkto "Bruce_7_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whilst I'm still here, have you got time for another question?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll be off, then." linkto "done"  notes ""
+              }
+}
+Node "Bruce_7_5a_2"
+notes ""
+{
+NPCText "Good thinking. You'll need some. I don't have any that I can spare. Try one of the merchants around here. You're bound to find someone selling anti-rad drugs."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whilst I'm still here, have you got time for another question?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll be off, then." linkto "done"  notes ""
+              }
+}
+Node "Bruce_7_5b"
+notes ""
+{
+NPCText "I can't do better than that, sorry. Either take the rifle or we have no deal."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose that will have to do. I'll bring back the bodies in exchange for that rifle. " linkto "Bruce_7_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't do it for just that rifle. Let me ask you something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, the deal's off. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_1"
+notes ""
+{
+NPCText "Yes? Have you found the bodies yet?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a letter for you, from the Scab's leader, Alexander." linkto "Bruce_8_2d_1"  notes "This node only appears if the PC has the letter to Bruce from Alexander"
+          int=4 Reaction=REACTION_NEUTRAL playertext "About that letter Alexander wrote to you..." linkto "Bruce_8_2d_2b"  notes "This node only appears IF the PC has given the letter to Bruce from Alexander AND Bruce has not given the PC the reparations money to pass onto Alexander."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was a man named Michael one of the six whom you think died at the site?" linkto "Bruce_8_2a_1"  notes "This node only appears IF the player has not spoken to Bruce about Michael before AND the PC has NOT already convinced Michael to come back to Crossroads."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to find a shovel so I can dig up the two explorers whom Michael buried. Do you have a spare one?" linkto "Bruce_8_2b_a"  notes "This node only appears IF Michael has told the PC that he, the PC, will need to dig up the bodies Michael buried, and will need a shovel to do so. IF Bruce has already given the PC a shovel, go instead to Bruce_8_2b_b"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here are all the bodies of your fallen friends. May they rest in peace." linkto "Bruce_8_2c_1G"  notes "This node only appears IF the player has all five sets of bones from Sandover in his inventory AND the PC has told Bruce about Michael still being alive. IF the PC has NOT convinced Michael to come to Crossroads, go instead to Bruce_8_2c_1N"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I haven't made any progress yet. Let me ask you about something else." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but you'll be the first to know when I do. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2a_1"
+notes ""
+{
+NPCText "Michael? Yeah, we had a Michael on our team, except we called him Mikey at the time. What about him?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's still alive and he's living at Sandover." linkto "Bruce_8_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, nothing. I have made some other finds at the radioactive site, though." linkto "Bruce_8_1"  notes ""
+              }
+}
+Node "Bruce_8_2a_2"
+notes ""
+{
+NPCText "You're kidding me. He's still alive? *He pauses to take this news in.* What's the deal, why didn't he come back to Crossroads?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He stayed back at Sandover to care for the dying after the rest of your explorer group left." linkto "Bruce_8_2a_3"  notes "This node only appears if Michael has told the PC about his involvement in the Explorers' expedition to Sandover."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not sure, but I still need to talk to you about what I found out in Sandover." linkto "Bruce_8_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know. Let me ask you about something else altogether." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_8_2a_3"
+notes ""
+{
+NPCText "*Bruce acknowledges Michael's sacrifice with a guilty nod* How did he survive?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He had enough anti-rad drugs to cope with the radiation." linkto "Bruce_8_2a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know. He just did." linkto "Bruce_8_2a_4"  notes ""
+              }
+}
+Node "Bruce_8_2a_4"
+notes ""
+{
+NPCText "So what's he doing now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's become a kind of priest-like figure for Sandover." linkto "Bruce_8_2a_5a"  notes ""
+          int=7 Reaction=REACTION_NEUTRAL playertext "He seems to have had a pseudo-religious experience of sorts and has set himself up as a priest-like figure for the Scabs of Sandover." linkto "Bruce_8_2a_5b_1"  notes "Note higher intelligence check. This will open up a path that allows Bruce to give a clue to the PC which will prompt him to bring Michael to Crossroads for the best possible quest resoultion conditions."
+              }
+}
+Node "Bruce_8_2a_5a"
+notes ""
+{
+NPCText "That's great to hear. Pass my regards onto him next time you see him. Oh, and that means you'll only need to find five sets of bones, not six. *He smiles and it looks like a weight has been lifted from his shoulders*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have time for a question about something?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hear you. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2a_5b_1"
+notes ""
+{
+NPCText "*His eyes narrow in genuine interest* I'm listening."
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "The sense of guilt he feels personally because of the accident drove him to spend his life caring for the sick and dying of Sandover." linkto "Bruce_8_2a_5b_2"  notes ""
+              }
+}
+Node "Bruce_8_2a_5b_2"
+notes ""
+{
+NPCText "Mmm-hmm."
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "He is also the informal authority on burial matters in Sandover. Because of these two character traits, the people of Sandover have bestowed upon him the unofficial monicker of 'priest'." linkto "Bruce_8_2a_5b_3"  notes ""
+              }
+}
+Node "Bruce_8_2a_5b_3"
+notes ""
+{
+NPCText "Well, friend, it sounds to me like a priest is just what we'll need once you bring back the bodies of the five dead. See what you can do to convince Mikey - or Michael, if that's what he prefers now - to come back to Crossroads to perform a ceremony for them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will. Although I still need to talk to you about something else to do with my search for those bodies." linkto "Bruce_8_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Let me change the subject with a completely unrelated question." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2b_a"
+notes ""
+{
+NPCText "You want a shovel? Sure, have one of ours. *He offers you a sturdy-looking shovel from the Explorers' supplies.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Before I go, can I ask a question?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. *Take the shovel.* I had better go." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2b_b"
+notes ""
+{
+NPCText "No, I've already given you one shovel. They don't grow on trees, you know. If you broke the last one, you'll need to get a replacement from somewhere else."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. But before I go, answer me something." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't be such a tight asshole! Just give me another shovel; I know you've got heaps of them." linkto "Bruce_8_2b_bB"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better go and do that now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2b_bB"
+notes ""
+{
+NPCText "Watch your tone, friend. I appreciate what you're doing and all, but if you can't look after your equipment, you've only got yourself to blame."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. Please let me ask you a question about something else, though." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you want these fucking bones dug up or not? Just give me a damn shovel." linkto "Bruce_1a_2B_2a"  notes "If Bruce_Throw>0 go instead to Bruce_1a_2B_2b."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get a new one, then. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2c_1G"
+notes "Deduct the five bones sets from the PC's inventory. Give the PC the XP, Karma and reputation bonuses for the condition where the player completes the quest AND has convinced Michael to attend the ceremony."
+{
+NPCText "You've found them! Bless you, friend. We even have Michael here, to give the five of them a proper send-off. We'll bury them straight away; I would be honoured if you would attend the ceremony."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like that. Let's go." linkto "Bruce_8_2c_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold on, about that scoped hunting rifle you mentioned..." linkto "Bruce_8_2c_2a"  notes "This node only appears if Bruce has spoken node Bruce_7_4, where he offers the scoped hunting rifle as a reward for finding the bones."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I appreciate the offer, but I have to leave." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2c_1N"
+notes "Deduct the five bones sets from the PC's inventory. Give the PC the XP, Karma and reputation bonuses for the condition where the player completes the quest AND has NOT convinced Michael to attend the ceremony."
+{
+NPCText "You've found them! Bless you, friend. We'll bury them straight away; I would be honoured if you would attend the ceremony."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like that. Let's go." linkto "Bruce_8_2c_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold on, about that scoped hunting rifle you mentioned..." linkto "Bruce_8_2c_2a"  notes "This node only appears if Bruce has spoken node Bruce_7_4, where he offers the scoped hunting rifle as a reward for finding the bones."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I appreciate the offer, but I have to leave." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2c_2a"
+notes "Add a scoped hunting rifle to the PC's inventory."
+{
+NPCText "Here, take it. You've earned it. So will you be coming to the funeral?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like that. Let's go." linkto "Bruce_8_2c_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I appreciate the offer, but I have to leave." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2c_2b"
+notes ""
+{
+NPCText "Good for you, I thought you would."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- DONE -" linkto "done"  notes "Play the cut-scene where the Explorers bury the bones of their friends. If the ceremony is overseen by Michael, he will return to Sandover once the ceremony is over."
+              }
+}
+Node "Bruce_8_2d_1"
+notes "Deduct Alexander's letter to Bruce from the PC's inventory."
+{
+NPCText "*Bruce looks at the letter cautiously before taking it* What does this Alexander want? Let's have a look. *He takes and reads the letter*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- WAIT -" linkto "Bruce_8_2d_2a"  notes ""
+              }
+}
+Node "Bruce_8_2d_2a"
+notes "*VALUE* is the amount of money Alexander quoted to the player as the reparations required to make peace between the Scabs of Sandover and the Explorers."
+{
+NPCText "*Bruce finishes reading the letter and carefully folds it away* I didn't know that our trip to the Sandover site caused such a ruckus. Alexander wants me to send *VALUE* bottle caps as reparations to him - and he wants you to be the courier."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it. You can trust me with the money." linkto "Bruce_8_2d_3_1"  notes "IF Bruce has ever spoken node Bruce_1a_2B_2a, regardless of the value of the variable Bruce_Throw, then go instead to Bruce_8_2d_4_1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's come back to that later. I have a question for you." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll find the bodies of your friends somehow, but I want no part in a feud between you and Alexander. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2d_2b"
+notes "*VALUE* is the amount of money Alexander quoted to the player as the reparations required to make peace between the Scabs of Sandover and the Explorers."
+{
+NPCText "You were here when I read the letter. Alexander wants *VALUE* bottle caps to smooth things over and for you to take my money to him. *Bruce's eyes narrow shrewdly.* What do you think?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it. You can trust me with the money." linkto "Bruce_8_2d_3_1"  notes "IF Bruce has ever spoken node Bruce_1a_2B_2a, regardless of the value of the variable Bruce_Throw, then go instead to Bruce_8_2d_4_1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's come back to that later. I have a question for you." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll find the bodies of your friends somehow, but I want no part in a feud between you and Alexander. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2d_3_1"
+notes ""
+{
+NPCText "Wait a minute. I want things to be all peachy with Alexander so we can get the bodies of our friends back, but this is a lot of money we're talking about."
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "Consider the symbolic significance of the payment. Not only would you be atoning for the trespass on the Scabs' land, you would also demonstrate a tangible willingness to face the demons of the Sandover disaster." linkto "Bruce_8_2d_3_2a"  notes "Note high intelligence check. Reward is milder speech check.\n\nMild speech check. IF failed, go instead to Bruce_8_2d_4_1"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I agree, but it would be worth it. I would do the same in your shoes." linkto "Bruce_8_2d_3_2b"  notes "Moderate speech check. IF failed, go instead to Bruce_8_2d_4_1"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll give you time to think about it. Before that, though, I have a question for you." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll try to find another way of getting your friends' bodies back, then. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2d_3_2a"
+notes ""
+{
+NPCText "Yes... yes, when you put it like that, I see what you mean."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The site of the disaster is only one of many near Sandover. If you were to make your peace with Alexander, he might let you have access to one of the lower-rad sites. You could end up making a profit from this." linkto "Bruce_8_2d_3_3"  notes "Mild speech check.  IF failed, go instead to Bruce_8_2d_4_1"
+              }
+}
+Node "Bruce_8_2d_3_2b"
+notes ""
+{
+NPCText "Would you? It is an awful lot of money."
+      options {
+          int=7 Reaction=REACTION_NEUTRAL playertext "If you pay Alexander, there will be no risk of any conflict between the Explorers and the Scabs in the future." linkto "Bruce_8_2d_3_3"  notes "This is a crap arguement - the Scabs are too far away and too weak to present a serious threat. Punishment is a hard speech check.\nDifficult speech check.  IF failed, go instead to Bruce_8_2d_4_1"
+          int=7 Reaction=REACTION_NEUTRAL playertext "I don't know of any other way to get the bodies of your friends back." linkto "Bruce_8_2d_3_3"  notes "Bit of a gamble. Which is more important to Bruce, the money or paying proper respects to his friends? \nModerate speech check. IF failed, go instead to Bruce_8_2d_4_1"
+          int=7 Reaction=REACTION_NEUTRAL playertext "No, perhaps you're right. I still have a question I need to ask you, though." linkto "Bruce_9"  notes ""
+              }
+}
+Node "Bruce_8_2d_3_3"
+notes ""
+{
+NPCText "Looks like you've already thought this through. *He sighs.* I hope I don't live to regret this. Here, take the money; this is all of it. *He hands you a large sack of bottle caps.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait. Aren't you worried I'll just steal the money?" linkto "Bruce_8_2d_3_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Take the money.*" linkto "Bruce_8_2d_3_4b"  notes ""
+              }
+}
+Node "Bruce_8_2d_3_4a"
+notes ""
+{
+NPCText "I'm not worried, no, because I know you're smart enough not to make the mistake of messing with us like that. Come on, take it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "*Take the money.*" linkto "Bruce_8_2d_3_4b"  notes ""
+              }
+}
+Node "Bruce_8_2d_3_4b"
+notes "Give the PC the amount of money quoted to the PC by Alexander for the reparations. Set Bruce_Throw to 1 (Bruce would automatically have the PC killed if he messed with the Explorers now)"
+{
+NPCText "I guess I owe you another thanks. Make sure all of it gets there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Before I go, can I ask you another question?" linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2d_4_1"
+notes ""
+{
+NPCText "No, it's too much of a risk. I don't trust you with an amount of my money that large. You'll just have to find another way of getting those bones."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you sure you won't even consider it?" linkto "Bruce_8_2d_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, you miserable asshole." linkto "Bruce_1a_2B_2a"  notes "IF Bruce_Throw>0 go to Bruce_1a_2B_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question in the meantime." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_8_2d_4_2"
+notes ""
+{
+NPCText "Quite sure. Seriously, my mind is made up. I won't want to discuss the matter again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, you miserable asshole." linkto "Bruce_1a_2B_2a"  notes "IF Bruce_Throw>0 go to Bruce_1a_2B_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question in the meantime." linkto "Bruce_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Bruce_9"
+notes ""
+{
+NPCText "What do you want to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "About the bodies of your six friends at the radioactive site near Sandover..." linkto "Bruce_8_1"  notes "This node only appears IF Bruce has spoken node Bruce_7_5a, where the PC accepts the bones quest, AND IF the conversation has been ended once since then, AND the quest has NOT been completed."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What does your group do?" linkto "Bruce_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where have you been exploring recently?" linkto "Bruce_4_1"  notes "IF the PC has completed the bones quest, go instead to Bruce_4_2."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did your group start out?" linkto "Bruce_5_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is your group based in Crossroads?" linkto "Bruce_6_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't think of anything I need to ask, actually. Goodbye." linkto "done"  notes ""
+              }
+}

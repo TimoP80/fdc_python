@@ -1,0 +1,1014 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+vars {
+local var Cath_Alex_Daught notes "This variable keeps track of whether or not the PC knows that Catherine is Alexander's daughter." = 0;
+local var Cath_Euth_Anti_Conv notes "This variable keeps track of how many, and which, of the PC's anti-euthansia arguments Catherine has accepted. If it reaches 5, the PC has successfully given Catherine all the anti-euthanasia arguments, and she will convince Alexander to ban the practice outright." = 0;
+local var Cath_Euth_Attempts notes "This variable keeps track of how many times the PC has tried to persuade Catherine his way of thinking re: euthanasia, but failed. After the PC fails three times, Catherine will not let him talk to her about the subject again." = 0;
+local var Cath_Euth_Pro_Conv notes "This variable keeps track of how many, and which, of the PC's pro-euthansia arguments Catherine has accepted. If it reaches 5, the PC has successfully given Catherine all the pro-euthanasia arguments, and she will convince Alexander to legalize the practice outright." = 0;
+local var Cath_Influence notes "This variable keeps track of whether or not the PC knows that Catherine has influence over Alexander's policy making. It allows the PC to give Catherine either side of the euthanasia debate." = 0;
+local var Cath_Mood notes "This variable keeps track of Catherine's overall mood. The higher it is, the greater chance the PC has of persuading her to his viewpoint, when he gives his side of the euthanasia debate." = 0;
+local var Cath_PC_Euth_Camp notes "This variable keeps track of which side of the euthanasia argument the PC has told Catherine he subscribes to. If it = 0, then he hasn' t said he takes either view; if it = 1, then he's pro-euth; if it = 2, then he's anti-euth." = 0;
+}
+NPCName "Catherine"
+Location "Lower level of the Sandover caves, near Alexander"
+Description "Only one quest involvement, 'Resolve the euthanasia debate'. The PC can use her as leverage on her father and in doing so, can determine whether Sandover legalizes, or bans, euthanasia."
+Unknown_Desc "a young woman."
+Known_Desc "Catherine."
+Detailed_Desc "she has fewer blemishes and seems in better health than most Scabs."
+/* Regular nodes */
+
+Node "Cath_0"
+notes "If the local variable Cath_Mood < -40, she will not speak to the PC at all, but will float as normal."
+is_wtg = false
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has not spoken to Catherine before -" linkto "Cath_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Catherine before; Catherine likes the PC -" linkto "Cath_1b_G" conditions { LOCAL_VARIABLE Cath_Mood >= 0 link_next NONE } notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Catherine before; Catherine dislikes the PC -" linkto "Cath_1b_B" conditions { LOCAL_VARIABLE Cath_Mood < 0 link_next NONE } notes ""
+              }
+}
+Node "Cath_1a_1"
+notes ""
+is_wtg = true
+{
+NPCText "Hi, I don't remember seeing you around here before. You are?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Nice to meet you, my name is <PC>." linkto "Cath_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC>." linkto "Cath_1a_2b"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Never you mind what my name is. What's your story?" linkto "Cath_1a_2c_1"  notes ""
+          int=-3 Reaction=REACTION_GOOD playertext "Me <PC>. You pretty girl." linkto "Cath_1a_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC>." linkto "Cath_1a_2b"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Huh. Why I tell you?" linkto "Cath_1a_2c_1"  notes ""
+              }
+}
+Node "Cath_1a_2a"
+notes "First impressions count.\nIncrement the local variable Cath_Mood by 5."
+is_wtg = false
+{
+NPCText "[She smiles at you. She seems a lot more healthy than the other people in Sandover.] I'm Catherine. Say, what brings you to our neck of the woods?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "I come from a vault from the north." linkto "Cath_1a_3"  notes "If the PC chooses this option, it counts towards the number of people he has told about V31. This increases the chance that he will encounter Bruce, the Wastelend Explorer, when he returns to V31."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for the General Atomics International base. Do you know where I can find it?" linkto "Cath_2a_1"  notes "This option only appears if the PC has accepted the 'Find the GAI base' quest from whomever gives it out at V31.\nIf Alexander has died from depression (see the wiki for details) go to Cath_2b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't mean to be rude, but you don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just getting to know the place. See you around." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> live in vault. [Point to the north.]" linkto "Cath_1a_3"  notes "If the PC chooses this option, it counts towards the number of people he has told about V31. This increases the chance that he will encounter Bruce, the Wastelend Explorer, when he returns to V31."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Uh huh. And I'm Catherine. So, what brings you to Sandover?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "I come from a vault from the north." linkto "Cath_1a_3"  notes "If the PC chooses this option, it counts towards the number of people he has told about V31. This increases the chance that he will encounter Bruce, the Wastelend Explorer, when he returns to V31."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for the General Atomics International base. Do you know where I can find it?" linkto "Cath_2a_1"  notes "This option only appears if the PC has accepted the 'Find the GAI base' quest from whomever gives it out at V31.\nIf Alexander has died from depression (see the wiki for details) go to Cath_2b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't mean to be rude, but you don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just getting to know the place. See you around." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> live in vault. [Point to the north.]" linkto "Cath_1a_3"  notes "If the PC chooses this option, it counts towards the number of people he has told about V31. This increases the chance that he will encounter Bruce, the Wastelend Explorer, when he returns to V31."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1a_2c_1"
+notes "First impressions count.\nDecrement the local variable Cath_Mood by 5.\nIncrement the local variable Cath_Alex_Daught by 1."
+is_wtg = false
+{
+NPCText "I see. Like that, is it? Well, I'm Catherine, and in case you get any funny ideas, that makes me Alexander's daughter. The same Alexander that runs Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for the General Atomics International base. Do you know where I can find it?" linkto "Cath_2a_1"  notes "This option only appears if the PC has accepted the 'Find the GAI base' quest from whomever gives it out at V31.\nIf Alexander has died from depression (see the wiki for details) go to Cath_2b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to Alexander. Where can I find him?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Cath_1a_2c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell me where find Alexrunder-run-Sunduvver." linkto "Cath_2a_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1a_2c_2"
+notes ""
+is_wtg = false
+{
+NPCText "If you haven't spoken to him yet, he's just over there. [She points to the smartly robed figure on the southern side of the room.] You might want to watch that mouth of yours when you talk to him, though."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "How about you keep your opinions to yourself, bitch?" linkto "Cath_1a_2c_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for the General Atomics International base. Do you know where I can find it?" linkto "Cath_2a_1"  notes "This option only appears if the PC has accepted the 'Find the GAI base' quest from whomever gives it out at V31.\nIf Alexander has died from depression (see the wiki for details) go to Cath_2b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1a_2c_3"
+notes "Decrement the local variable Cath_Mood by 20."
+is_wtg = false
+{
+NPCText "[She snorts derisively and gives you a do-you-know-who-I-am expression.] I'm sorry?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "You will be. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1a_3"
+notes "Everyone likes hearing about the famous vaults. Also, because the PC's come from a privelidged background, this impresses Catherine.\nIncrement the local variable Cath_Mood by 5."
+is_wtg = false
+{
+NPCText "A vault? Wow! I'd only ever heard stories about them. So, hey, what can Sandover do for your vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for the General Atomics International base. Do you know where I can find it?" linkto "Cath_2a_1"  notes "This option only appears if the PC has accepted the 'Find the GAI base' quest from whomever gives it out at V31.\nIf Alexander has died from depression (see the wiki for details) go to Cath_2b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't mean to be rude, but you don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just getting to know the place. See you around." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1b_B"
+notes ""
+is_wtg = true
+{
+NPCText "Oh, it's you again. So what's up?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Cath_2a_1"  notes "This node does not appear if the PC has found one of the entrances to the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "Cath_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your father doesn't want to talk to me about the euthanasia problem in Sandover. Could you speak to him for me?" linkto "Cath_5_1a_1" notes "This option will not appear if Alexander has died from depression."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your father doesn't want to talk to me about the euthanasia problem in Sandover. Could you speak to him for me?" linkto "Cath_5_1b_1" notes "This option will not appear if Alexander has died from depression."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_1b_G"
+notes ""
+is_wtg = true
+{
+NPCText "Hey, <PC>! Good to see you again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello again, Catherine. Do you have time to answer a question?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just saying hello, Catherine. See you later." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got thing what I want ask." linkto "Cath_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_2a_1"
+notes "The Cath_2a_* path is where the PC finds out what Catherine knows about the GAI base. (Precious little). She directs the PC to Alexander."
+is_wtg = false
+{
+NPCText "[She screws her eyes in thought and silently repeats the name to herself.] Nope. Name doesn't ring a bell. Oh, my father might know where you might find it, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2a" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll go and ask him. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Where I find him?" linkto "Cath_2a_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got thing I want ask." linkto "Cath_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_2a_2a"
+notes "Increment the local variable Cath_Alex_Daught by 1."
+is_wtg = false
+{
+NPCText "My father is Alexander. Reason I think he'll know where to look for your base is because he's in charge of Sandover. Not much gets past him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll go and ask him. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_2a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "He's just over there. [She points south to the smartly robed figure on the other side of the room.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2a" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll go and ask him. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I want ask." linkto "Cath_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_2b_1"
+notes "The Cath_2b_* path is where the PC finds out what Catherine knows about the GAI base. (Precious little). It is used in place of Cath_2a_* if Alexander is dead."
+is_wtg = false
+{
+NPCText "[She screws her eyes in thought and silently repeats the name to herself.] Nope. Name doesn't ring a bell. [She sighs.] My father might have known... but..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. I'll go and ask him. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_3_1"
+notes "The Cath_3_* path is where the PC can find out why Catherine appears to be more healthy than other people in Sandover."
+is_wtg = false
+{
+NPCText "Well, let's just say that my father does what he can to take care of me and he does a good job."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is he able to do for you that other people in Sandover can't do for themselves?" linkto "Cath_3_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Answer me other thing I want ask." linkto "Cath_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Cath_3_2"
+notes ""
+is_wtg = false
+{
+NPCText "He makes sure I have a constant supply of anti-rad drugs for a start. That helps a lot when you're living in a town like Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you need a constant supply of anti-rad drugs?" linkto "Cath_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So the other people in Sandover are more ill because they cannot get enough anti-rads?" linkto "Cath_3_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your father." linkto "Cath_3_3c_1" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "So his daughter gets enough medicine whilst the rest of the town goes without. Very convenient." linkto "Cath_3_3c_2" conditions { LOCAL_VARIABLE Cath_Alex_Daught > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+              }
+}
+Node "Cath_3_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, come on. Don't tell me you don't know about the problem Sandover has with background rad levels, yet."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, how dangerous is it here?" linkto "Cath_3_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So the other people in Sandover are more ill because they cannot get enough anti-rads?" linkto "Cath_3_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your father." linkto "Cath_3_3c_1" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "So his daughter gets enough medicine whilst the rest of the town goes without. Very convenient." linkto "Cath_3_3c_2" conditions { LOCAL_VARIABLE Cath_Alex_Daught > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+              }
+}
+Node "Cath_3_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Folks like you who are just passing through have nothing to worry about. There is higher level of rads buzzing in Sandover than you'd find in other nearby towns, though. It's a problem for people who live their whole lives here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So the other people in Sandover are more ill because they cannot get enough anti-rads?" linkto "Cath_3_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your father." linkto "Cath_3_3c_1" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "So his daughter gets enough medicine whilst the rest of the town goes without. Very convenient." linkto "Cath_3_3c_2" conditions { LOCAL_VARIABLE Cath_Alex_Daught > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+              }
+}
+Node "Cath_3_3b"
+notes ""
+is_wtg = false
+{
+NPCText "It's sad, but that's about the size of it, yeah."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your father." linkto "Cath_3_3c_1" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "So his daughter gets enough medicine whilst the rest of the town goes without. Very convenient." linkto "Cath_3_3c_2" conditions { LOCAL_VARIABLE Cath_Alex_Daught > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+              }
+}
+Node "Cath_3_3c_1"
+notes "Increment the local variable Cath_Alex_Daught by 1."
+is_wtg = false
+{
+NPCText "He's the leader of Sandover. If you haven't spoken to him yourself, yet, go and introduce yourself. He's just over there. [She points to the smartly robed figure on the southern side of the room.]"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "So his daughter gets enough medicine whilst the rest of the town goes without. Very convenient." linkto "Cath_3_3c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that now. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_3_3c_2"
+notes "She didn't like that!\nDecrement the local variable Cath_Mood by 5."
+is_wtg = false
+{
+NPCText "Listen, pal, it's not an abuse of his position. He pays for our meds out of his own pocket, okay? Same as everyone else in Sandover."
+ NPCFemaleText "Listen, lady, it's not an abuse of his position. He pays for our meds out of his own pocket, okay? Same as everyone else in Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever helps you sleep at night. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_1"
+notes "The Cath_4_* path is where the PC can find out what Catherine does around Sandover, and that she helps Alexander with decision-making."
+is_wtg = false
+{
+NPCText "Being the town leader's daughter isn't all plain sailing. It means I have - ugh - responsibilities."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sorts of responsibilities are those?" linkto "Cath_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2a" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+              }
+}
+Node "Cath_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "Well, of course, I'm never allowed to have any fun. \"We're in a position of authority, Catherine, we have to be seen to be respectable.\" [She rolls her eyes.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aside from having to act the part, what does being the leader's daughter mean you have to do?" linkto "Cath_4_3a_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "You've got it easy compared to everyone else in these caves, believe me." linkto "Cath_4_3b"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "Sounds like it could get tiresome." linkto "Cath_4_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+              }
+}
+Node "Cath_4_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, there's usually errands to be run, or whatever. You know, \"take this piece of paper to so-and-so, Catherine. Find out when such-and-such is happening from what's-his-name, Catherine.\""
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_4_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "But sometimes Dad will want someone he can trust to talk to about the big things Sandover has to deal with. Things he has trouble making decisions about."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Can he trust you?" linkto "Cath_4_3a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kinds of big decisions are those?" linkto "Cath_4_3a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_3a_3a"
+notes "She does not like her trustworthiness being brought into question!\nDecrement the local variable Cath_Mood by 5."
+is_wtg = false
+{
+NPCText "Of course he can trust me! I might not love being the leader's daughter all the time, but he's still my Dad."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kinds of big decisions have you helped your father with?" linkto "Cath_4_3a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_3a_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, one example. There was this gang that used to live in the caves that called themselves The Vultures. They kind of made a real nuisance of themselves - partying all night long, the occasional fight, never doing any work, that sort of thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_4_3a_3b_2"  notes ""
+              }
+}
+Node "Cath_4_3a_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "So, Dad asked Saman to get rid of them - you know, throw them out of the caves. But Saman was all like, \"No problem, I can have them dead by tomorrow morning.\" He thought the best way of getting rid of them was to kill them all, so they wouldn't come back to cause trouble."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_4_3a_3b_3"  notes ""
+              }
+}
+Node "Cath_4_3a_3b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Dad didn't know which was best, though. Throw them out of the caves and risk them coming back angrier than ever, or kill them outright? So he asked me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What did you say?" linkto "Cath_4_3a_3b_4"  notes ""
+              }
+}
+Node "Cath_4_3a_3b_4"
+notes ""
+is_wtg = false
+{
+NPCText "Hell, there was no way I wanted a bloodbath in Sandover! I told him to make sure Saman cooled his heels and *only* evict the Vultures from the caves. Good thing I did, because that's exactly what happened."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You obviously have a lot of influence upon your father, then." linkto "Cath_4_3a_3b_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2a" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_3a_3b_5"
+notes "Increment the local variable Cath_Influence by 1."
+is_wtg = false
+{
+NPCText "[She gives you an angelic smile.] What, little me? If Dad ever gets a bit grouchy with you, just come and speak to me. I can usually find a way to win him round."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_3b"
+notes "She does not like being patronised!\nDecrement the local variable Cath_Mood by 5."
+is_wtg = false
+{
+NPCText "[She snorts.] I know that! Look, I'm not pretending life is easy for anyone in Sandover is easy, okay? So what if I get bored now and then?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aside from having to act the part, what does being the leader's daughter mean you have to do?" linkto "Cath_4_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better change the subject. Let me ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better leave. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_4_3c"
+notes "PC empathises with Catherine's situation.\nUnless the local variable Cath_Mood >= 10, increment Cath_Mood by 2."
+is_wtg = false
+{
+NPCText "[She laughs.] It does, it sure does! But, y' know, compared to what everyone else here has to put up with, I guess I've got it easy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aside from having to act the part, what does being the leader's daughter mean you have to do?" linkto "Cath_4_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find your father?" linkto "Cath_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is your father?" linkto "Cath_2a_2b" conditions { LOCAL_VARIABLE Cath_Alex_Daught == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1a_1"
+notes "The Cath_5_* path is where the PC can try to persuade Catherine to either side of the euthanasia debate."
+is_wtg = false
+{
+NPCText "*That* tired old subject? No wonder Dad didn't want you talking about it; he's had people bothering him about banning or legalizing euthanasia since forever."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is your opinion on the matter?" linkto "Cath_5_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else, then." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was worth a try. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1a_2"
+notes ""
+is_wtg = false
+{
+NPCText "The 'assisted suicide' thing gets talked about so much that I got sick of thinking about it. One day, someone on the anti-euth team will convince you to their way of thinking; next day, a pro-euther will swing you back again. I guess you could say I'm somewhere in the middle."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've heard the best arguments on the subject. If I can convince you which is the best viewpoint too, would you talk to your father and try to persuade him to change the law?" linkto "Cath_5_1a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else, then." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was worth a try. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1a_3"
+notes ""
+is_wtg = false
+{
+NPCText "You really think you've got something I haven't heard before, huh? What the hell, I'll listen. So, which camp are you in - pro-euth or anti-euth?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I support the legalization of euthanasia." linkto "Cath_5_4a_01a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am in favor of an outright ban on euthanasia." linkto "Cath_5_4b_01a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1b_1"
+notes "The Cath_5_* path is where the PC can try to persuade Catherine to either side of the euthanasia debate. It opens with the Cath_5_1b_* path if the PC has attempted to convince Catherine to his way of thinking before, but failed."
+is_wtg = false
+{
+NPCText "You've already tried convincing me about that. I wasn't interested, remember?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe, but I've been thinking about it and would like to give it another try." linkto "Cath_5_1b_2" conditions { LOCAL_VARIABLE Cath_Mood > -30 link_next AND, LOCAL_VARIABLE Cath_Euth_Attempts < 3 link_next NONE } notes ""
+          int=4 Reaction=REACTION_BAD playertext "Maybe, but I've been thinking about it and would like to give it another try." linkto "Cath_5_9" conditions { LOCAL_VARIABLE Cath_Mood <= -30 link_next OR, LOCAL_VARIABLE Cath_Euth_Attempts >= 3 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else, then." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was worth a try. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[Sigh.] I suppose it can't hurt. So which side were you on, again?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I support the legalization of euthanasia." linkto "Cath_5_1b_3a" conditions { LOCAL_VARIABLE Cath_PC_Euth_Camp == 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am in favor of an outright ban on euthanasia." linkto "Cath_5_1b_3b" conditions { LOCAL_VARIABLE Cath_PC_Euth_Camp == 2 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else, then." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was worth a try. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1b_3a"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, yeah, that's right. Go on, then - convince me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the first of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_02" conditions { LOCAL_VARIABLE Cath_Euth_Pro_Conv == 0 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_1 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the first of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_04" conditions { LOCAL_VARIABLE LOCAL_VARIABLE == 1 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_2 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the second of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_06" conditions { LOCAL_VARIABLE LOCAL_VARIABLE == 2 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_3 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the third of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_08" conditions { LOCAL_VARIABLE LOCAL_VARIABLE == 3 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_4 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the fourth of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_10" conditions { LOCAL_VARIABLE LOCAL_VARIABLE == 4 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_5 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the fifth and final pro-euthanasia argument."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_1b_3b"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, yeah, that's right. Go on, then - convince me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the first of David's anti-euthansia arguments.]" linkto "Cath_5_4b_02" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 0 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_1 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the first of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_04" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 1 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_2 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the second of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_06" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 2 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_3 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the third of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_08" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 3 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_4 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the fourth of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_10" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 4 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_5 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the fifth and final anti-euthanasia argument."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_01a"
+notes "The Cath_5_4a_* path is where the PC gives the pro-euthanasia argument.\nMake the local variable Cath_PC_Euth_Camp = 1."
+is_wtg = false
+{
+NPCText "So let's hear it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the first argument in favor of euthanasia that Dr. Oswald gave you.]" linkto "Cath_5_4a_02"  notes "This option will not appear unless the variable Osw_Euth_Arg_1 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the first of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_01b"
+notes ""
+is_wtg = false
+{
+NPCText "You haven't convinced me, yet. What else do you have to say about it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_04" conditions { LOCAL_VARIABLE Cath_Euth_Pro_Conv == 1 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_2 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the second of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_06" conditions { LOCAL_VARIABLE Cath_Euth_Pro_Conv == 2 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_3 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the third of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_08" conditions { LOCAL_VARIABLE Cath_Euth_Pro_Conv == 3 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_4 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the fourth of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of Dr. Oswald's pro-euthansia arguments.]" linkto "Cath_5_4a_10" conditions { LOCAL_VARIABLE Cath_Euth_Pro_Conv == 4 link_next NONE } notes "This option will not appear unless the variable Osw_Euth_Arg_5 > 0. This variable is mentioned in Oswald's dialogue, and allows the PC to give the fifth and final pro-euthanasia argument."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_02"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4a_02 */
+
+      define_skill_check Pro_Euth_Speech_1b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4a_03;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Pro_Euth_Speech_1a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4a_03;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[Dr Oswald said, \"Let's start by clarifying what I mean when I talk about euthanasia. It's not as if I want free rein to kill people the minute they walk into my hospital. Naturally, the practice needs to be very tightly regulated. I would never administer euthanasia to anyone who was not conscious and lucid enough to reliably make the decision to end their own lives for themselves.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Put the same argument to Catherine; emphasize that Dr. Oswald accepts the need for regulation.]" linkto "Pro_Euth_Speech_1a"  notes "Slightly harder Speech skill check.\nCatherine is young and not impressed by the stuffy world of laws and regulations.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_GOOD playertext "[Put the same argument to Catherine; emphasize that patients will need be concious and lucid to make the decision for themselves.]" linkto "Pro_Euth_Speech_1b"  notes "Normal Speech skill check.\nThis is a more compassionate and human view.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_03"
+notes "Make the local variable Cath_Euth_Pro_Conv = 1."
+is_wtg = false
+{
+NPCText "Uh huh. That explains what Doc Oswald wants, but it's not really an argument in favor of actually legalizing euthanasia, if you ask me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's what I thought, but I agreed with him when he said it was important to make clear." linkto "Cath_5_4a_01b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_04"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4a_04 */
+
+      define_skill_check Pro_Euth_Speech_2a {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4a_05;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Pro_Euth_Speech_2b {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4a_05;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[Dr. Oswald said, \"This isn't a vault. We don't have a team of skilled health-workers and our supply of med-drugs is pitiful. If a patient doesn't stand much chance of survival, we should concentrate resources that would be used on them to help other poor souls who probably would survive. Sandover is no place for the sick to hang around waiting, either.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_GOOD playertext "[Repeat this to Catherine; emphasize the importance of concentrating resources on healthier Scabs.]" linkto "Pro_Euth_Speech_2a"  notes "Normal Speech skill check.\nCatherine revealed earlier that Alexander already makes sure that she is well dosed-up on meds he buys for her.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize that Sandover is a bad place for the sick to be made to wait for treatment.]" linkto "Pro_Euth_Speech_2b"  notes "Slightly harder Speech skill check.\nNo-one likes to be reminded their home is a shit-hole.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_05"
+notes "Make the local variable Cath_Euth_Pro_Conv = 2."
+is_wtg = false
+{
+NPCText "[She nods.] Yeah... it's true we can't get half the things we need to make this town work properly, I guess."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_5_4a_01b"  notes ""
+              }
+}
+Node "Cath_5_4a_06"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4a_06 */
+
+      define_skill_check Pro_Euth_Speech_3a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4a_07;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Pro_Euth_Speech_3b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4a_07;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[Dr. Oswald said, \"of the patients coming into my hospital, a much greater proportion have illnesses that are radiation-related and terminal than you'd find in hospitals in other towns in the wastes. That means that I have to offer a higher number of beds and resources per capita to patients who aren't going to make it. Sandover is the last place on earth which can afford this.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize how overstretched Sandover's resources are.]" linkto "Pro_Euth_Speech_3a"  notes "Slightly harder Speech skill check.\nAgain, Catherine mentioned that she relies on meds her father buys her. The subliminal implication in the PC's argument is that she gets these at the expense of other Scabs.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_GOOD playertext "[Repeat this to Catherine; emphasize the greater proportion of terminal radiation-related illnesses.]" linkto "Pro_Euth_Speech_3b"  notes "Normal Speech skill check.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_07"
+notes "Make the local variable Cath_Euth_Pro_Conv = 3."
+is_wtg = false
+{
+NPCText "Hmm... I don't think I heard that one before. I suppose it makes sense that rad illnesses are gonna kill more people than a broken arm, or something."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_5_4a_01b"  notes ""
+              }
+}
+Node "Cath_5_4a_08"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4a_08 */
+
+      define_skill_check Pro_Euth_Speech_4b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4a_09;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Pro_Euth_Speech_4a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4a_09;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[Dr. Oswald said, \"if a terminally ill patient were to die tomorrow, there would be nothing tying the relatives to Sandover and they could leave whenever they wished. However, if those relatives were to stay in Sandover, would they be in the same shape in twelve months' time?\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_GOOD playertext "[Repeat this to Catherine; emphasize the ties that bond people to terminally ill family members.]" linkto "Pro_Euth_Speech_4b"  notes "Normal Speech skill check.\nCatherine implied in earlier dialogue how she disliked the responsibilites that came with her family life. This option is a nice way to play on that.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize the vicious circle effect of Sandover's radiation on terminal patients' relatives.]" linkto "Pro_Euth_Speech_4a"  notes "Slightly harder Speech skill check.\nAgain with the Sandover-is-a-dump line! She doesn't like that.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4a_09"
+notes "Make the local variable Cath_Euth_Pro_Conv =4."
+is_wtg = false
+{
+NPCText "I've seen that happen before. A friend of mine once spent days sitting next to her boyfriend as he lay dying. A few weeks after he died, she was in that same bed. [She sighs.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_5_4a_01b"  notes ""
+              }
+}
+Node "Cath_5_4a_10"
+notes ""
+is_wtg = false
+{
+NPCText "[Dr. Oswald said, \"until Alexander makes the practice legal, there's always going to be a sense that euthanasia is somehow wrong. Contrary to what people in other towns in the wastes may think, the majority of Sandover's inhabitants are decent, moral people.\"]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[There's more to remember.]" linkto "Cath_5_4a_11"  notes ""
+              }
+}
+Node "Cath_5_4a_11"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4a_11 */
+
+      define_skill_check Pro_Euth_Speech_5a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_5;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Pro_Euth_Speech_5b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_5;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[Dr. Oswald said, \"For years, many of my terminal patients, in spite of how much pain they were in, or that they had no hope of surviving, denied themselves a merciful end simply because they saw euthanasia as a grubby and immoral practice.\"]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Recall the previous half of this argument.]" linkto "Cath_5_4a_10"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize the contempt other towns feel for Sandover, and that this affects the way the Scabs act.]" linkto "Pro_Euth_Speech_5a"  notes "Slightly harder Speech skill check.\nShe thinks, \"great, so the PC thinks the whole world hates us?\"\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_GOOD playertext "[Repeat this to Catherine; appeal to her sense that the people of Sandover are fundamentally moral.]" linkto "Pro_Euth_Speech_5b"  notes "Normal Speech skill check.\nBeing the town's leader's daughter, she's going to want to believe this more.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_01a"
+notes "The Cath_5_4b_* path is where the PC gives the anti-euthanasia argument.\nMake the local variable Cath_PC_Euth_Camp = 2."
+is_wtg = false
+{
+NPCText "So let's hear it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the first argument against euthanasia that David gave you.]" linkto "Cath_5_4b_02"  notes "This option will not appear unless the variable David_Euth_Arg_1 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the first of the pro-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_01b"
+notes ""
+is_wtg = false
+{
+NPCText "You haven't convinced me, yet. What else do you have to say about it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_04" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 1 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_2 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the second of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_06" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 2 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_3 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the third of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_08" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 3 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_4 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the fourth of the anti-euthanasia arguments."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Search your memory for the next of David's anti-euthansia arguments.]" linkto "Cath_5_4b_10" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv == 4 link_next NONE } notes "This option will not appear unless the variable David_Euth_Arg_5 > 0. This variable is mentioned in David's dialogue, and allows the PC to give the fifth and final anti-euthanasia argument."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_02"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4b_02 */
+
+      define_skill_check Anti_Euth_Speech_1b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4b_03;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Anti_Euth_Speech_1a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4b_03;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[David said, \"a lot of people think that there are only two alternatives open to patients with a terminal illness. On the one hand, they die slowly in painful, unrelieved suffering; on the other hand, they receive euthanasia. There is, however, a third way - compassionate medical care. You can use drugs to alleviate the pain of, if not to cure, a terminal illness.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Put the same argument to Catherine; emphasize that drugs exist which can ease the suffering of terminally ill people.]" linkto "Anti_Euth_Speech_1a"  notes "Slightly harder Speech skill check.\nCatherine revealed earlier that she uses anti-rad drugs herself. She won't like to be reminded that these could be used on people much worse off than she is.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Put the same argument to Catherine; emphasize the difference between compassion and killing in medicine.]" linkto "Anti_Euth_Speech_1b"  notes "Normal Speech skill check.\nCatherine revealed earlier that she played a part in making sure that the Vultures weren't killed when they were thrown out of the caves. This showed that she can put the sanctity of life above practicality.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_03"
+notes ""
+is_wtg = false
+{
+NPCText "That's true, but in case you hadn't noticed, Sandover can't afford the drugs it needs for most things, let alone helping people who don't stand a chance feel more comfortable."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That might not always be the case, though." linkto "Cath_5_4b_01b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_04"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4b_04 */
+
+      define_skill_check Anti_Euth_Speech_2a {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4b_05;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Anti_Euth_Speech_2b {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4b_05;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[David said, \"If we ask our doctors to kill their own patients, that's going to put them off learning medicine in the first place. Who actually wants that kind of ethical burden? Mark my words: if you legalize euthanasia, you say goodbye to dedicated health-workers.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize the extra ethical burden euthanasia puts upon health workers.]" linkto "Anti_Euth_Speech_2a"  notes "Normal Speech skill check.\nCatherine revealed earlier that she resents the burden of responsibility put upon her being Sandover's leader's daughter. This will help her empathise with other people's ethical load.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize the risk that Sandover could stand to lose some of its health workers.]" linkto "Anti_Euth_Speech_2b"  notes "Slightly harder Speech skill check.\nSandover could lose some of its health workers? It's not like anyone is in the caves by choice. Even morally difficult health work is better than being a scavenger.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_05"
+notes ""
+is_wtg = false
+{
+NPCText "That's a new one on me. I can't say I ever thought of what mercy-killing would do to the people who have to... do the job."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_5_4b_01b"  notes ""
+              }
+}
+Node "Cath_5_4b_06"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4b_06 */
+
+      define_skill_check Anti_Euth_Speech_3a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4b_07;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Anti_Euth_Speech_3b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4b_07;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[David said, \"When considerate people are dying, the last thing they want is to be a burden to anybody. Some very ill people feel that assisted suicide is something they ought to request, as a matter of duty, for the sake of their families and the overstretched healthcare facilities in Sandover.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize the risk that a sick Scab could request euthanasia to avoid being a burden to his family.]" linkto "Anti_Euth_Speech_3a"  notes "Slightly harder Speech skill check.\nAgain, this plays on Catherine's resentment of her family duties/burdens. She sees herself as someone who is put upon by others, not the other way around. She does not empathise with the self-sacrifice mentality.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize the risk that a sick Scab could request euthanasia to avoid putting extra strain on Sandover's healthcare resources.]" linkto "Anti_Euth_Speech_3b"  notes "Normal Speech skill check.\nNo personal bias as far as Catherine is concerned.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_07"
+notes ""
+is_wtg = false
+{
+NPCText "[Catherine shivers.] I hate to think that someone ever killed themselves just because they didn't want to inconvenience other people. Sheesh."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Cath_5_4b_01b"  notes ""
+              }
+}
+Node "Cath_5_4b_08"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4b_08 */
+
+      define_skill_check Anti_Euth_Speech_4b {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_4b_09;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Anti_Euth_Speech_4a {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_4b_09;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[David said, \"Doctors make mistakes. What if Dr. Oswald is wrong when he says a patient has no chances of survival, and that patient then asks to be euthanased as a result? He or she dies unnecessarily.\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize that any healthcare worker can make mistakes.]" linkto "Anti_Euth_Speech_4a"  notes "Normal Speech skill check.\nAvoids criticising Sandover's healthcare team directly.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize doubts regarding Dr. Oswald's personal qualifications.]" linkto "Anti_Euth_Speech_4b"  notes "Slightly harder Speech skill check.\nBeing a Sandover girl, she won't like the PC casting aspertions against Doc. Oswald. The good doctor has probably treated her in his time, too.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_4b_09"
+notes ""
+is_wtg = false
+{
+NPCText "Hmm. I like to think Doc Oswald and the people that help him know what they're doing, but no-one's perfect, right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right." linkto "Cath_5_4b_01b"  notes ""
+              }
+}
+Node "Cath_5_4b_10"
+notes ""
+is_wtg = false
+/* Skill checks for node Cath_5_4b_10 */
+
+      define_skill_check Anti_Euth_Speech_5b {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Cath_5_5;
+      onfailure => Cath_5_9;
+      }
+      define_skill_check Anti_Euth_Speech_5a {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Cath_5_5;
+      onfailure => Cath_5_9;
+      }
+
+{
+NPCText "[David said, \"when we give people the freedom to ask, or even demand, to die, where does it end? Today, euthanasia for those with terminal cancer; what comes tomorrow - euthanasia for those with depression?\"]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize that any illness is bad. Who's to say which makes a life worth ending?]" linkto "Anti_Euth_Speech_5a"  notes "Slightly harder Speech skill check.\nCatherine has mentioned that she helps her father with law-making decisions. She'll be able to prevent the euthanasia laws spiralling out of control at the source.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Repeat this to Catherine; emphasize that not all freedoms are necessarily a good thing. Some should not be granted.]" linkto "Anti_Euth_Speech_5b"  notes "Normal Speech skill check.\nCatherine has mentioned that she helps her father with law-making decisions. This means she'll understand that total pluralism has its drawbacks.\nNote: for the Speech check, add/subtract the local variable Cath_Mood to the difficulty modifier."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_5"
+notes ""
+is_wtg = false
+{
+NPCText "Damn it. Okay, so I'd heard some of those points before, but I've never heard them put so well."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So will you talk to your father about it for me?" linkto "Cath_5_6a_1" conditions { LOCAL_VARIABLE Cath_Euth_Pro_Conv > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So will you talk to your father about it for me?" linkto "Cath_5_6b_1" conditions { LOCAL_VARIABLE Cath_Euth_Anti_Conv > 0 link_next NONE } notes ""
+              }
+}
+Node "Cath_5_6a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hell, yeah. I had no idea how important it was to recognize euthanasia as legal. Just give me a while to speak to my Dad."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure." linkto "Cath_5_6a_2"  notes "Fade to black and back. An hour passes."
+              }
+}
+Node "Cath_5_6a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Good news! I told Dad exactly what you told me, and he bought it! He said he's going to start working on the new laws with Doc Oswald as soon as he gets some spare time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You did the right thing, Catherine. Can I ask you about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've been a big help. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_6b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hell, yeah. I had no idea how important it was to ban this euthanasia business. Just give me a while to speak to my Dad."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure." linkto "Cath_5_6b_2"  notes "Fade to black and back. An hour passes."
+              }
+}
+Node "Cath_5_6b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Good news! I told Dad exactly what you told me, and he bought it! He said he's going to start working on the new laws with David as soon as he gets some spare time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You did the right thing, Catherine. Can I ask you about something else?" linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've been a big help. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Cath_5_9"
+notes "Increment the local variable Cath_Euth_Attempts by 1."
+is_wtg = false
+{
+NPCText "[Catherine's eyes glaze over as you talk.] Listen, I'm sure you mean well, but I've heard these arguments, like, a million times already. Believe me, you've got nothing new."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I'd better ask you about something else." linkto "Cath_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cath_9"
+notes ""
+is_wtg = false
+{
+NPCText "Go nuts."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Cath_2a_1"  notes "This node does not appear if the PC has found one of the entrances to the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't seem as sick as the other people in Sandover. Why is that?" linkto "Cath_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "Cath_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your father doesn't want to talk to me about the euthanasia problem in Sandover. Could you speak to him for me?" linkto "Cath_5_1a_1" conditions { LOCAL_VARIABLE Cath_Euth_Attempts == 0 link_next AND } notes "This option will not appear if Alexander has died from depression."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your father doesn't want to talk to me about the euthanasia problem in Sandover. Could you speak to him for me?" linkto "Cath_5_1b_1" conditions { LOCAL_VARIABLE Cath_Euth_Attempts > 0 link_next AND } notes "This option will not appear if Alexander has died from depression."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I think I've asked everything I need to know for now. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I look for find Gen'rul Tomacks Nun-nash-nall base. You know?" linkto "Cath_2a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not ill like rest of cave people?" linkto "Cath_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}

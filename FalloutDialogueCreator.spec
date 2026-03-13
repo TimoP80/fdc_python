@@ -13,18 +13,7 @@ import glob
 src_dir = os.path.abspath(SPECPATH)
 
 # Collect data files - include all necessary directories
-# Dynamic plugin discovery: include all subdirectories in plugins folder
-
-def get_plugin_files():
-    """Get all Python files from plugins directory for bundling"""
-    plugin_files = []
-    plugins_src = os.path.join(src_dir, 'plugins')
-    if os.path.exists(plugins_src):
-        for py_file in glob.glob(os.path.join(plugins_src, '*.py')):
-            if not os.path.basename(py_file).startswith('__'):
-                plugin_files.append((py_file, 'plugins'))
-    return plugin_files
-
+# The plugins directory is included as a data folder so plugins can be loaded at runtime
 datas = [
     (os.path.join(src_dir, 'plugins'), 'plugins'),
     (os.path.join(src_dir, 'ui'), 'ui'),
@@ -57,13 +46,17 @@ additional_hiddenimports = [
     'os',
     'sys',
     'pathlib',
-    # Plugin dependencies
+    # Core modules
     'core.ssl_exporter',
     'core.msg_exporter',
     'core.script_compiler',
     'core.settings',
     'core.plugin_system',
     'models.dialogue',
+    # Plugin modules - ensure these are included in the bundle
+    'plugins.example_plugin',
+    'plugins.export_plugin',
+    'plugins.ssl_msg_export_plugin',
 ]
 
 a = Analysis(

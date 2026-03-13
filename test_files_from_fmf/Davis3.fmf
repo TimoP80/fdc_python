@@ -1,0 +1,132 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+Node "1"
+notes ""
+{
+NPCText "Salutations <PC>. I’ve nearly completed my examination of the autodoc. Just a moment. *time-lapse* How may I be of service to you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello Davis. I have been chosen to leave the vault and look for a way to fix the reactor. " linkto "A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh sorry, wrong turn." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go fix metal men." linkto "2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Where I?" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is the OS on the autodoc malfunctioning as well?" linkto "1sci" conditions { CHECK_SKILL science >= 50 } notes ""
+              }
+}
+Node "A"
+notes ""
+{
+NPCText "You have been confirmed as the one to go outside the vault?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. In fact I probably should get going." linkto "B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. Though I am a little nervous about it." linkto "C"  notes ""
+              }
+}
+Node "B"
+notes ""
+{
+NPCText "Before you go, <PC>, while on the surface could you obtain for me some examples of the outside’s Flora and Fauna? Just to placate my curiosity."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Of course I could do that, Davis" linkto "D"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to focus on my objective and return as quickly as I can. " linkto "E"  notes ""
+              }
+}
+Node "C"
+notes ""
+{
+NPCText "There is no reason for apprehension. The radiation depleted a half-century ago, if not before that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really?" linkto "F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. I guess you are right. " linkto "F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m still not sure it’s safe. " linkto "F"  notes ""
+              }
+}
+Node "D"
+notes ""
+{
+NPCText "Thank you <PC>. I’ll be awaiting your return."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "[End]" linkto "done"  notes "new quest added"
+              }
+}
+Node "E"
+notes ""
+{
+NPCText "Do no fret about it then."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "[End]" linkto "done"  notes ""
+              }
+}
+Node "F"
+notes ""
+{
+NPCText "Trust me <PC> the danger has long past."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. You're always right about this sort of thing. I need to go now. " linkto "B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You smart. I need go now." linkto "B"  notes ""
+              }
+}
+Node ""
+notes ""
+{
+NPCText ""
+      options {
+              }
+}
+Node "1sci"
+notes ""
+{
+NPCText "The system wasn't originally intended for the vault inhabitants to remain inside for so long so the time in the bios needed to be reset. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wouldn’t resetting the clocks make the date inaccurate?" linkto "2sci"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That makes sense. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "2sci"
+notes ""
+{
+NPCText "Actually the calendars repeat every 27 years so as long as everyone keeps that year in mind the dates will be exact."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well at least their was an easy solution. " linkto "3sci"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That is fortunate, but I need to be going now." linkto "done"  notes ""
+              }
+}
+Node "2"
+notes ""
+{
+NPCText "Oh i see. You must be special to have been chosen out of all the residents."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me Special?" linkto "3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I need go now." linkto "done"  notes ""
+              }
+}
+Node "3sci"
+notes ""
+{
+NPCText "Speaking of solutions, I hear you were chosen to go look for a way to fix the Mr. Handy robots.  I was curious if while you were out you could retrieve some examples of the flora and fauna that survived the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I can find something for you, Davis." linkto "done"  notes "new quest"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will probably be a little busy for that." linkto "done"  notes ""
+              }
+}
+Node "3"
+notes ""
+{
+NPCText "Yes. In fact I have a special assignment for you. Do you think while you are outside you can get an animal or a plant and bring it back to me?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I do for you" linkto "done"  notes "new quest"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I don't think I can." linkto "done"  notes ""
+              }
+}

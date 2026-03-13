@@ -1,0 +1,912 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Eduardo"
+Location "Sandover"
+Description ""
+Unknown_Desc "You see an old man with a dog."
+Known_Desc "It's Eduardo, the retired scavenger."
+Detailed_Desc "This is Eduardo, the retired scavenger. Next to him is his trusty dog Starkey."
+
+/* Regular nodes */
+
+Node "START"
+notes ""
+{
+NPCText "Use teh logic sk1llz to f1nd 0ut where si teh start!"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Default starting node. (All cases not covered below will start with this node)" linkto "A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If PC has meat jerky in inventory, and this is the first time the PC talks to Eduardo, and PC is not stupid." linkto "B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If PC is not stupid, has talked to Eduardo before and PC is not currently followed by Starkey." linkto "C"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If PC is stupid, has talked to Eduardo before and is not followed by Starkey." linkto "IS"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If PC has threatened to kill Starkey (reached node B_A_A) (note: this can't happen for stupid PC)." linkto "D"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If PC has borrowed Starkey and finished the quest to find the missing scavenger, and Starkey is not dead." linkto "E"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If PC has borrowed Starkey and finished the quest to find the missing scavenger, and Starkey is dead." linkto "G"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If PC has borrowed Starkey and not finished the quest to find the missing scavenger, and Starkey is not dead." linkto "H"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If PC has borrowed Starkey and not finished the quest to find the missing scavenger, and Starkey is dead." linkto "F"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "If Starkey is dead, and PC has talked to Eduardo about that before." linkto "F_A_A_A_A_B"  notes ""
+              }
+}
+Node "A"
+notes ""
+{
+NPCText "Hi, I don't believe we've met. I'm Eduardo, and this is my trusty servant Starkey."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do here, Eduardo?" linkto "A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Servant? Looks more like a dog to me." linkto "A_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nice to meet you, Eduardo." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Woof, woof [point at the dog]!" linkto "A_SA"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ewwa doo?" linkto "A_SB"  notes ""
+              }
+}
+Node "A_A"
+notes ""
+{
+NPCText "Oh, not much. I used to be a scavenger, but I'm retired now. I mostly just help the younger scavengers with advice."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you something else?" linkto "A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I doubt anyone could learn anything from you. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Nice talking to you, goodbye." linkto "done"  notes ""
+              }
+}
+Node "A_A_A"
+notes ""
+{
+NPCText "Sure, what would you like to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your dog." linkto "A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a scavenger that's gone missing. Would you mind if I borrowed Starkey to help me find her?" linkto "A_B_B"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't happen to be associated with The Hounds?" linkto "A_A_A_B"  notes "Only if PC has been to the Hounds"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, nothing. Bye." linkto "done"  notes ""
+              }
+}
+Node "A_A_A_B"
+notes ""
+{
+NPCText "The who?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Another question please." linkto "A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nevermind." linkto "done"  notes ""
+              }
+}
+Node "A_B"
+notes ""
+{
+NPCText "He used to be a tracker dog, but we've both grown too old to work. At least I have - Starkey's senses are still keen. They always were..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tracking dog, eh? Tell me more." linkto "A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a scavenger that's gone missing. Would you mind if I borrowed Starkey to help me find her?" linkto "A_B_B"  notes "Only if PC have taken the quest to find the lost scavenger"
+              }
+}
+Node "A_B_A"
+notes ""
+{
+NPCText "Well, there's not much to tell. He used to assist me while scavenging. Once he got me into a lot of trouble just to find an ancient can of dried brahmin meat, but more often he showed me to some really nice scavenges. Now he's just a good friend, since I'm too old to work. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a scavenger that's gone missing. Would you mind if I borrowed Starkey to help me find her?" linkto "A_B_B"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. See you around." linkto "done"  notes ""
+              }
+}
+Node "A_B_B"
+notes ""
+{
+NPCText "Oh yes, Eleanor, right? Yes, of course. I'm sure Starkey will find her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Come on Starkey, let's go." linkto "done"  notes "Starkey the dog will now follow the PC."
+              }
+}
+Node "A_SA"
+notes ""
+{
+NPCText "Yes, Starkey is a dog. A tracker dog. You can pat him if you like."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me take buhr-ow... dog? For... Uhhh... Find Elli-nor ladie!" linkto "A_SA_A"  notes "Only if PC has the quest to find Eleanor."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Giggle.]" linkto "A_SA_B"  notes ""
+              }
+}
+Node "A_SA_A"
+notes ""
+{
+NPCText "You want to borrow Starkey?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh-huh!" linkto "A_SA_A_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Nuh-uh!" linkto "A_SA_A_B"  notes ""
+              }
+}
+Node "A_SA_A_A"
+notes ""
+{
+NPCText "Oh, I see, you're trying to find Eleanor, right? Yes, of course you can have Starkey. He is a very good tracking dog, I'm sure you two will find her."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "????" linkto "A_SA_A_A_A"  notes ""
+              }
+}
+Node "A_SA_A_A_A"
+notes ""
+{
+NPCText "[He gesticulate with his arms, trying to explain.] You find E-le-a-nor. Star-key help you."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, okay." linkto "done"  notes "Starkey will now follow the PC until he finds Eleanor."
+              }
+}
+Node "A_SA_A_B"
+notes ""
+{
+NPCText "All right then. Is there anything I can help you with, friend? You want help?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uhh... Bye, bye!" linkto "A_SA_A_B_A"  notes ""
+              }
+}
+Node "A_SA_A_B_A"
+notes ""
+{
+NPCText "Take care, my friend, take care."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "A_SA_B"
+notes ""
+{
+NPCText "Is there anything I can do for you, friend? You want help?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me take buhr-ow... dog? For... Uhhh... Find Elli-nor lady!" linkto "A_SA_A"  notes "Only if PC has the quest to find Eleanor."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uhh... Bye, bye!" linkto "A_SA_A_B_A"  notes ""
+              }
+}
+Node "A_SB"
+notes ""
+{
+NPCText "Very good, Eduardo, that's my name. What is your name? [He points at you.]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Staaa kiiii (heh heh)" linkto "A_SB_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ohhh..." linkto "A_SB_A_A"  notes ""
+              }
+}
+Node "A_SB_A"
+notes ""
+{
+NPCText "No, no, Starkey is the dog. [He points at the dog.] Starkey dog."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No? Do...?" linkto "A_SB_A_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me take buhr-ow... dog? For... Uhhh... Find Elli-nor lady!" linkto "A_SA_A"  notes "Only if PC has the quest to find Eleanor."
+              }
+}
+Node "A_SB_A_A"
+notes ""
+{
+NPCText "Ahh, why do even bother?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "B"
+notes "If PC has meat jerky in his inventory"
+{
+NPCText "[The dog runs up to you and waves its tail hysterically. It barks.] Sit Starkey. Sit! [The dog stops barking and sit down.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whoah, keep that thing away from me!" linkto "B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's a well trained dog you've got there." linkto "B_B"  notes ""
+              }
+}
+Node "B_A"
+notes ""
+{
+NPCText "I'm terribly sorry, sir. I've never seen him behave like this before."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, I'm sure. I've never killed a dog either, but I might have to make an exception now." linkto "B_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's alright. " linkto "B_A_B"  notes ""
+              }
+}
+Node "B_A_A"
+notes ""
+{
+NPCText "W-what? You don't have to kill Starkey! He's everything I've got! He's my only friend!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, my life is the only one I've got, and I'm not going to let that crazy dog of yours take it away from me!" linkto "B_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See? Not so fun being scared like that. The next time I see you that dog better be in a collar, or you might as well dig his grave already. Goodbye." linkto "done"  notes "If PC talks to Eduardo again, he will start at node 4."
+              }
+}
+Node "B_A_A_A"
+notes ""
+{
+NPCText "Please, don't hurt Starkey! He's a tracker dog, see? I think he smelled something..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What? Are you saying that I smell bad? Step aside, old man! That dog is going down!" linkto "combat"  notes "Eduardo runs away, and combat is ended if the PC does nothing. If PC tries to talk to him again, he will run away."
+          int=4 Reaction=REACTION_NEUTRAL playertext "... and?" linkto "B_A_A_A_A"  notes ""
+              }
+}
+Node "B_A_A_A_A"
+notes ""
+{
+NPCText "[He sounds very nervous.] I - I think he smelled some meat jerky! He's mad about meat jerky, can't control himself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "First your dog attacks me, then you say I smell like meat jerky. You better think fast, before I lose my temper." linkto "B_A_A_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That meat jerky is mine, and you can't have it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "B_A_A_A_A_A"
+notes ""
+{
+NPCText "What? I didn't mean to... Look, I'm sorry, okay? Please, don't hurt me!"
+      options {
+          int=4 linkflags custom_proc Reaction=REACTION_NEUTRAL playertext "Too late, asshole! Step aside, that dog is going down." linkto "combat"  notes ""
+          int=4 linkflags custom_proc Reaction=REACTION_NEUTRAL playertext "All right, I'll let you go. For now. But the next time I see you that dog better be in a collar, or you might as well dig his grave already. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "B_A_B"
+notes ""
+{
+NPCText "[He looks relieved.] Say hello to this fine man Starkey. [The dog put forth its right paw in a \"shake hands\" motion.] I'm Eduardo. You're already introduced to Starkey. "
+ NPCFemaleText "[He looks relieved.] Say hello to this fine woman Starkey. [The dog put forth its right paw in a \"shake hands\" motion.] I'm Eduardo. You're already introduced to Starkey. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what are you doing here in Sandover, Eduardo?" linkto "A_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How cute. I've a train to catch, so I'll see you later Eduardo." linkto "done"  notes ""
+              }
+}
+Node "B_B"
+notes ""
+/* Skill checks for node B_B */
+
+      define_skill_check Skill_Check_000_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => A2_2_1a;
+      onfailure => A2_2_1b;
+      }
+      define_skill_check Skill_Check_001_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => B_B_Aa;
+      onfailure => B_B_Ab;
+      }
+
+{
+NPCText "Why, thank you. I think he smelled something. You don't happen to have some meat jerky in your pockets?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Lie] Uhh, nope. Sorry." linkto "Skill_Check_001_Speech"  notes "Skill check difficulty modifier need tweaking"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I do." linkto "B_B_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Of course. Here you go Starkey [give some meat jerky to the dog.]" linkto "B_B_B"  notes "Remove a piece of meat jerky from PCs inventory."
+              }
+}
+Node "B_B_Aa"
+notes ""
+{
+NPCText "Damn, I guess I'm getting a bit rusty. Starkey used to be able to smell meat jerky from miles away."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really?" linkto "B_B_Aa_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I do have some meat jerky. You can have it for 10 bucks." linkto "B_B_Aa_B"  notes "Removes one meat jerky from PC inventory, and adds 10 caps."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe he's not such a good dog after all?" linkto "B_B_Aa_C"  notes ""
+              }
+}
+Node "B_B_Aa_A"
+notes ""
+{
+NPCText "Yeah. He's a tracker dog, you know. Used to assist me while scavenging. Once he got me into a lot of trouble just to find an ancient can of dried brahmin meat, but more often he showed me to some really nice scavenges. Now he's just a good friend, since I'm too old to work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Let me ask you something else." linkto "B_B_Aa_B_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. See you around." linkto "done"  notes ""
+              }
+}
+Node "B_B_Aa_A_A"
+notes ""
+{
+NPCText "Sure, what would you like to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a scavenger that's gone missing. Would you mind if I borrowed Starkey to help me find her?" linkto "A_B_B"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't happen to be associated with The Hounds?" linkto "A_A_A_B"  notes "Only if PC has been to The Hounds"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, nothing. Bye." linkto "done"  notes ""
+              }
+}
+Node "B_B_Aa_B"
+notes ""
+{
+NPCText "Ten bucks, eh? What do you say Starkey, do we want some jerky today? Do we want some sweet brahmin jerky? [The dog waves its tail in ecstacy.] Here's ten. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue.]" linkto "B_B_Aa_B_A"  notes ""
+              }
+}
+Node "B_B_Aa_B_A"
+notes ""
+{
+NPCText "Now, is there anything I can do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, not really. Have a nice day." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question?" linkto "A_A_A"  notes ""
+              }
+}
+Node "B_B_Aa_B_A_A"
+notes ""
+{
+NPCText "Sure, what would you like to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your dog." linkto "A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a scavenger that's gone missing. Would you mind if I borrowed Starkey to help me find her?" linkto "A_B_B"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't happen to be associated with The Hounds?" linkto "A_A_A_B"  notes "Only if PC has been to the Hounds"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, nothing. Bye." linkto "done"  notes ""
+              }
+}
+Node "B_B_Aa_C"
+notes ""
+{
+NPCText "Young man, I've had just about enough of your attitude. Did you have anything important to say, or will you stop wasting my time?"
+ NPCFemaleText "Young woman, I've had just about enough of your attitude. Did you have anything important to say, or will you stop wasting my time?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I had some questions..." linkto "B_B_Aa_C_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't have to be grumpy just because you're old you know. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right, I'll leave." linkto "done"  notes ""
+              }
+}
+Node "B_B_Aa_C_A"
+notes ""
+{
+NPCText "Make it quick."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about your dog." linkto "A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a scavenger that's gone missing. Would you mind if I borrowed Starkey to help me find her?" linkto "A_B_B"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't happen to be associated with The Hounds?" linkto "A_A_A_B"  notes "Only if PC has been to the Hounds"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh, nothing. Bye." linkto "done"  notes ""
+              }
+}
+Node "B_B_Ab"
+notes ""
+{
+NPCText "[Eduardo looks at you suspiciously.] Are you sure?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Quite sure" linkto "B_B_Ab_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you calling me a liar?" linkto "B_B_Aa_C"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I'm just kidding." linkto "B_B_B"  notes ""
+              }
+}
+Node "B_B_Ab_A"
+notes ""
+{
+NPCText "[He doesn't quite seem to belive you.] Nevermind then. Is there anything I can help you with?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What, you don't believe me?" linkto "B_B_Ab_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I would like to ask some questions." linkto "B_B_Aa_B_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not really, no. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "B_B_Ab_A_A"
+notes ""
+{
+NPCText "No. Listen, I'm actually quite busy, so if there's nothing urgent you wanted to say, I'd rather you left me alone."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What the hell is that supposed to mean? I don't have any meat jerky, I told you!" linkto "B_B_Aa_C"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I had some questions..." linkto "B_B_Aa_C_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh well. See you around Eduardo." linkto "done"  notes ""
+              }
+}
+Node "B_B_B"
+notes ""
+{
+NPCText "I knew it! Starkey's the best tracker dog I ever saw!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tracking dog, eh? Tell me more." linkto "B_B_B_A"  notes ""
+              }
+}
+Node "B_B_B_A"
+notes ""
+{
+NPCText "Not much to tell. He used to assist me while scavenging. Once he got me into a lot of trouble just to find an ancient can of dried brahmin meat, but more often he showed me to some really nice scavenges. Now he's just a good friend, since I'm too old to work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you something else?" linkto "B_B_Aa_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I understand. See you around." linkto "done"  notes ""
+              }
+}
+Node "C"
+notes ""
+{
+NPCText "Oh, it's you again. How's it going?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Say, about that dog of yours... Could I borrow him for a while?" linkto "C_A"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm fine, just saying hi." linkto "done"  notes ""
+              }
+}
+Node "C_A"
+notes ""
+{
+NPCText "Ah, I heard you're looking for Eleanor. I'm sure Starkey can help you with that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Come on Starkey, let's go." linkto "done"  notes "Starkey the dog will now follow the PC."
+              }
+}
+Node "D"
+notes ""
+{
+NPCText "[There's a glimpse of fear in the old man's eyes.] Yes?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, I'm sorry I scared you before. I'm looking for a scavenger that's gone missing. Would you mind if I borrowed that dog of yours, to find her?" linkto "D_A"  notes "Only if PC have taken the quest to find the lost scavenger"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You better keep that dog away from me." linkto "D_B"  notes ""
+              }
+}
+Node "D_A"
+notes ""
+/* Skill checks for node D_A */
+
+      define_skill_check Skill_Check_003_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => D_A_B;
+      onfailure => D_A_A;
+      }
+
+{
+NPCText "I'm afraid I can't let you have him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aww, come on!" linkto "D_A_A"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Please, this is a matter of life and death! Starkey could save Eleanor's life!" linkto "Skill_Check_003_Speech"  notes "Must tinkle with the difficulty modifier here. Maybe the PC must have a good enough speech skill just to get this option?"
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right then." linkto "done"  notes ""
+              }
+}
+Node "D_A_A"
+notes ""
+{
+NPCText "[Starkey is growling deeply.] Calm down Starkey. [He looks up at you.] I don't think I can trust you enough."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well fuck you too, asshole! If I can't have that dog, I'm gonna make damn sure you can't have him either!" linkto "D_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right then." linkto "done"  notes ""
+              }
+}
+Node "D_A_B"
+notes ""
+{
+NPCText "I'm sorry, I guess I didn't quite realize the gravity of the situation. [To the dog] You behave now, Starkey. Go find Eleanor!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks." linkto "done"  notes "Starkey the dog will now follow PC"
+              }
+}
+Node "D_B"
+notes ""
+{
+NPCText "Yes sir. I'm sorry sir."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "D_A_A_A"
+notes ""
+{
+NPCText "[Starkey is now barking loudly at you.] Help! Guards!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "combat"  notes ""
+              }
+}
+Node "E"
+notes ""
+{
+NPCText "Hey, I heard you managed to find Eleanor! Congratulations!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I sure did. Thanks for letting me borrow Starkey, he proved to be quite helpful." linkto "E_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. No thanks to Starkey though." linkto "E_B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Clap hands]" linkto "E_SA"  notes ""
+              }
+}
+Node "E_A"
+notes ""
+{
+NPCText "Don't mention it. I'm glad an old scab like myself could still be useful."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You truly were. Thanks again." linkto "done"  notes ""
+              }
+}
+Node "E_B"
+notes ""
+{
+NPCText "What do you mean?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I mean he didn't do shit! He just followed me." linkto "E_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. I have to go now, bye." linkto "done"  notes ""
+              }
+}
+Node "E_B_A"
+notes ""
+{
+NPCText "That doesn't sound like Starkey. Are you sure you gave him a scent?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "A what?" linkto "E_B_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, of course I did!" linkto "E_B_A_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oops." linkto "E_B_A_A"  notes ""
+              }
+}
+Node "E_B_A_A"
+notes ""
+{
+NPCText "Well, that explains a lot."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh well, goodbye." linkto "done"  notes ""
+              }
+}
+Node "E_B_A_B"
+notes ""
+{
+NPCText "Strange. Well, you found her anyway, that's what matters!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. See you around Eduardo." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess. Thanks for nothing though." linkto "done"  notes ""
+              }
+}
+Node "E_SA"
+notes ""
+{
+NPCText "Yes, good job! [He give you an applause.]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes "Starkey no longer follow the PC."
+              }
+}
+Node "F"
+notes ""
+{
+NPCText "Where's Starkey?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to say this, but Starkey is no longer with us." linkto "F_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had to kill that dog." linkto "F_B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Boom, boom! (heh heh)" linkto "F_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Staa... Kii?" linkto "F_SA"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Sob] Staa-kii..." linkto "F_SB"  notes "Charisma check for this path?"
+              }
+}
+Node "F_A"
+notes ""
+/* Skill checks for node F_A */
+
+      define_skill_check Skill_Check_002_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => F_A_B;
+      onfailure => F_A_A;
+      }
+
+{
+NPCText "What? You mean he's dead?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, of course he's dead!" linkto "F_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "F_A_A"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "No, just kidding. He, uh... He fell in love with this female dog, and - well you know how it goes..." linkto "Skill_Check_002_Speech"  notes "Modify skill check difficulty."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh-huh!" linkto "F_A_A_A_A"  notes ""
+              }
+}
+Node "F_B"
+notes ""
+{
+NPCText "What do you mean you had to kill... You asshole!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, watch your tounge, old man! You don't want to end up like Starkey!" linkto "F_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You wouldn't believe how annoying he was! He kept barking all the time, I could barely hear myself think." linkto "F_A_A_A_A"  notes ""
+              }
+}
+Node "F_A_A"
+notes ""
+{
+NPCText "[Tears are building in the old man's eyes.] How did he die?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I killed him." linkto "F_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was really nasty, I don't think you should hear the details." linkto "F_A_A_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We were out searching for Eleanor, when all of a sudden a pack of big, mutated monsters ambushed us! We tried to run, but they were everywhere." linkto "F_A_A_C"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He was suffocated after trying to eat a Nixon doll. I'm sorry." linkto "F_A_A_D"  notes ""
+              }
+}
+Node "F_A_A_A"
+notes ""
+{
+NPCText "You what?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You heard me. I killed him, and now I've come to kill you too!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You won't belive how annoying that dog was! Kept barking at that pile of rocks." linkto "F_A_A_A_A"  notes ""
+              }
+}
+Node "F_A_A_A_A"
+notes ""
+{
+NPCText "You fool! You stupid, god damned idiot!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you done?" linkto "F_A_A_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take it easy, man!" linkto "F_A_A_A_A_B"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "???" linkto "F_A_A_A_A_B"  notes ""
+              }
+}
+Node "F_A_A_A_A_A"
+notes ""
+{
+NPCText "That does it! One more word from you, and I'm calling the guards!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just one?" linkto "F_A_A_A_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I dare you to!" linkto "F_A_A_A_A_A_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Sneak away, quietly.]" linkto "done"  notes ""
+              }
+}
+Node "F_A_A_A_A_A_A"
+notes ""
+{
+NPCText "Help! Guards!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "combat"  notes ""
+              }
+}
+Node "F_A_A_A_A_B"
+notes ""
+{
+NPCText "Please! Just leave me alone with my misery!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right, I'm leaving!" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, okay." linkto "done"  notes ""
+              }
+}
+Node "F_A_A_B"
+notes ""
+{
+NPCText "[He starts to cry.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There, there..." linkto "F_A_A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Quietly sneak away.]" linkto "done"  notes ""
+              }
+}
+Node "F_A_A_B_A"
+notes ""
+{
+NPCText "Oh, cut it out will you! Leave me alone!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry." linkto "done"  notes ""
+              }
+}
+Node "F_A_A_C"
+notes ""
+{
+NPCText "So what happened?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Starkey attacked so that I could get away. He delayed them just about enough for me to escape. I tried to stop him at first, but he wouldn't listen! There was nothing I could do to save him." linkto "F_A_A_C_A"  notes ""
+              }
+}
+Node "F_A_A_C_A"
+notes ""
+{
+NPCText "That's my Starkey all right. Oh, Starkey... [He starts to cry.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There, there..." linkto "F_A_A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Quietly sneak away.]" linkto "done"  notes ""
+              }
+}
+Node "F_A_A_D"
+notes ""
+{
+NPCText "Oh, Starkey, I told you Nixon was bad for you! Why, oh why didn't you listen to me? [He starts to cry.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There, there..." linkto "F_A_A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Quietly sneak away.]" linkto "done"  notes ""
+              }
+}
+Node "F_A_B"
+notes ""
+{
+NPCText "[He looks relieved.] So where is he now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know. He's probably making babies somewhere in the mountains." linkto "F_A_B_A"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The hell should I know?" linkto "F_A_B_A"  notes ""
+              }
+}
+Node "F_A_B_A"
+notes ""
+{
+NPCText "Oh, Starkey... I'm going to miss you, old friend."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uhm, right. Bye." linkto "done"  notes ""
+              }
+}
+Node "F_B_A"
+notes ""
+{
+NPCText "I'll do you for this..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not if I do you first!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, whatever you say." linkto "done"  notes ""
+              }
+}
+Node "F_SA"
+notes ""
+{
+NPCText "Yes, Starkey! The dog! Where is he?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, oh..." linkto "F_SA_A"  notes ""
+              }
+}
+Node "F_SA_A"
+notes ""
+{
+NPCText "Is... Is he dead?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Umm... Uh-huh!" linkto "F_A_A_A_A"  notes ""
+              }
+}
+Node "F_SB"
+notes ""
+{
+NPCText "What happened to him?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Hug Eduardo and cry on his shoulder.] Staa-kii!" linkto "F_SB_A"  notes ""
+              }
+}
+Node "F_SB_A"
+notes ""
+{
+NPCText "Poor child... It's okay, you didn't know better. I'm not angry with you."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "*Sniff*" linkto "done"  notes ""
+              }
+}
+Node "G"
+notes ""
+{
+NPCText "Hey, I heard you managed to find Eleanor! But... Where's Starkey?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had to kill that dog." linkto "F_B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, I found her. I'm sorry to say this, but Starkey is no longer with us" linkto "F_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Boom, boom! (heh heh)" linkto "F_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Staa... Kii?" linkto "F_SA"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Sob] Staa-kii..." linkto "F_SB"  notes "Charisma check for this path?"
+              }
+}
+Node "H"
+notes ""
+{
+NPCText "Hi again. How's the search going?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing yet, but I'll keep looking." linkto "H_A"  notes "If the PC hasn't failed/succeeded in the quest to find the lost scavenger yet."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I will find her soon." linkto "H_B"  notes "If the PC hasn't failed/succeeded in the quest to find the lost scavenger yet."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not good. I was told she was found dead." linkto "H_C"  notes "If PC has failed the quest to find the missing scavenger."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Gnnn?" linkto "H_SA"  notes "If the PC hasn't failed/succeeded in the quest to find the lost scavenger yet."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No find..." linkto "H_C"  notes "If PC has failed the quest to find the missing scavenger."
+              }
+}
+Node "H_A"
+notes ""
+{
+NPCText "I hope you find her soon. Be a good dog now Starkey."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "H_B"
+notes ""
+{
+NPCText "That's good."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "H_C"
+notes ""
+{
+NPCText "I'm sorry to hear that. I'll take care of Starkey now though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Noooooo!" linkto "H_C_SA"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, okay." linkto "done"  notes "Starkey no longer follow the PC"
+              }
+}
+Node "H_C_SA"
+notes ""
+{
+NPCText "I'm sorry. I know you like Starkey, but I like Starkey too. Do you understand?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Staa-kii no go!" linkto "H_C_SA_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, okay." linkto "done"  notes "Starkey no longer follow the PC."
+              }
+}
+Node "H_C_SA_A"
+notes ""
+{
+NPCText "Just give him to me now, please."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Noooooo!" linkto "H_C_SA_A_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ookie." linkto "done"  notes "Starkey no longer follow the PC."
+              }
+}
+Node "H_C_SA_A_A"
+notes ""
+{
+NPCText "[Eduardo sighs deeply.] Look, I know you're a retard and all, but you don't have to do this to me. I'm gonna count to three. If you don't give me Starkey, I'm gonna call the guards. One..."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "???" linkto "H_C_SA_A_A_A"  notes ""
+              }
+}
+Node "H_C_SA_A_A_A"
+notes ""
+{
+NPCText "Two..."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uhh... Three?" linkto "H_C_SA_A_A_A_A"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, oh..." linkto "H_C_SA_A_A_A_A"  notes ""
+              }
+}
+Node "H_C_SA_A_A_A_A"
+notes "The PC is moved away from Eduardo, and Starkey no longer follow the PC."
+{
+NPCText "Three. Guards!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "H_SA"
+notes ""
+{
+NPCText "All right. But you keep looking, okay?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, okay." linkto "done"  notes ""
+              }
+}
+Node "IS"
+notes ""
+{
+NPCText "Hello again, my friend."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Woof, woof [point at dog]!" linkto "A_SA"  notes "Only if the quest to find the lost scavenger is not finished."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Gnnn?" linkto "A_SA_B"  notes ""
+              }
+}
+/* Custom procedures */
+      custom_proc giveJerky associate_node 12 {
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_B;"
+      }
+      custom_proc sellJerky associate_node 13 {
+      "item_caps_adjust(self_obj,-10);",
+      "item_caps_adjust(dude_obj,10);",
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_Aa_B;"
+      }
+      custom_proc giveJerky associate_node 12 {
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_B;"
+      }
+      custom_proc sellJerky associate_node 13 {
+      "item_caps_adjust(self_obj,-10);",
+      "item_caps_adjust(dude_obj,10);",
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_Aa_B;"
+      }
+      custom_proc giveJerky associate_node 12 {
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_B;"
+      }
+      custom_proc sellJerky associate_node 13 {
+      "item_caps_adjust(self_obj,-10);",
+      "item_caps_adjust(dude_obj,10);",
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_Aa_B;"
+      }
+      custom_proc giveJerky associate_node 12 {
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_B;"
+      }
+      custom_proc sellJerky associate_node 13 {
+      "item_caps_adjust(self_obj,-10);",
+      "item_caps_adjust(dude_obj,10);",
+      "variable obj;",
+      "obj := obj_carrying_pid_obj(dude_obj, PID_MEAT_JERKY);",
+      "rm_obj_from_inven(dude_obj, obj);",
+      "call B_B_Aa_B;"
+      }

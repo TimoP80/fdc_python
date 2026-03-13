@@ -1,0 +1,258 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName "Lieutenant John Simmonds"
+Location "Red River"
+Description "Commands 3rd Guard Batallion."
+Unknown_Desc "A young officer. He looks troubled."
+Known_Desc "John."
+Detailed_Desc "A mid twenties officer. He looks worried about something, and isn't hiding his emotions well."
+Node "FirstStart"
+notes "This is where Dialogue starts for the first time. Set Flag \"Talkedto\" to 1"
+{
+NPCText "Hi there! You're new around here, aren't you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yup. I only just joined Red River." linkto "AFirstWelcome"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I was born here." linkto "BTrickOne"  notes ""
+              }
+}
+Node "AFirstWelcome"
+notes ""
+{
+NPCText "Well welcome aboard then! I'm Lieutenant John Simmonds, and I run 3rd Guard Platoon. What you here as? Grunt? Techie?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm [PCNAME]. I'm more of a merc. Red River's got me running off to a place called L-SAP to get a job. " linkto "CWKIDFY"  notes "[PCNAME] is _obviously_ the PC's name"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Umm I'm a soldier actually, not a growl..." linkto "DSlang" conditions { CHECK_STAT charisma < 5 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "3rd GUARD Platoon? Man, they sound brave! Whaddya do then? Make sure nobody nicks the bread?" linkto "EHostile"  notes ""
+              }
+}
+Node "BTrickOne"
+notes ""
+{
+NPCText "Oh, sorry! I'm sure I've never seen you before. Wait, you're messing with me, aren't you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. I'm a traveller just here for a job really. Name's [PCNAME]." linkto "FWKIDFY"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No! Really I was born here! I'm a lab tech, I run the computers down on level 2." linkto "HHostile" conditions { CHECK_STAT charisma < 6 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No! Really I was born here! I'm a lab tech, I run the computers down on level 2." linkto "GTech" conditions { CHECK_STAT charisma >= 6 } notes ""
+              }
+}
+Node "CWKIDFY"
+notes ""
+{
+NPCText "Oh right! I heard about a guy doing that. Well, introductions over, what can I do you for? *John smiles at his pun*"
+ NPCFemaleText "Oh right! I heard about a girl doing that. Well, introductions over, what can I do you for? *John smiles at his pun*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you fill me in on what's going on round here?" linkto "IInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get my hands on some Gauss guns anywhere round here?" linkto "JGauss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, nothing really, thanks John. I best get going." linkto "done"  notes ""
+              }
+}
+Node "DSlang"
+notes ""
+{
+NPCText "What? Oh, I'm sorry. I forget not everyone uses Military slang.  A grunt is a normal soldier, a techie is a technician. Yeah, anyway, can I help you with something?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you fill me in on what's going on round here?" linkto "IInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get my hands on some Gauss guns anywhere round here?" linkto "JGauss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you teach me more Military slang?" linkto "KSlang"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, nothing really, thanks John. I best get going." linkto "done"  notes ""
+              }
+}
+Node "EHostile"
+notes ""
+{
+NPCText " *John's eyes narrow.* 3rd Guards actually sees more action than most attack platoons. We stop morons like you invading our home."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Woah! Take a chill pill! I was just messing with you." linkto "FWKIDFY"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Didn't do a very good job this time, did ya?" linkto "LGTFO"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Really? Red River gets attacked a lot?" linkto "MAttacks"  notes ""
+              }
+}
+Node "FWKIDFY"
+notes ""
+{
+NPCText "Oh, right then. Anything I can do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you fill me in on what's going on round here?" linkto "IInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get my hands on some Gauss guns anywhere round here?" linkto "JGauss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, nothing really, thanks John. I best get going." linkto "done"  notes ""
+              }
+}
+Node "GTech"
+notes ""
+{
+NPCText "Weird. Normally I'm good with faces. Well, I'm Lieutenant John Simmonds of 3rd Guards, and you are..?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "...Just messing with ya! I'm really a traveller. Got a job with your boss." linkto "CWKIDFY"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "...[PCNAME]. If you're ever around the level 2 computers, look me up 'n' we'll get a drink or something." linkto "NDrink"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "...Obviously brighter than you. *Under breath* Moron." linkto "LGTFO"  notes ""
+              }
+}
+Node "HHostile"
+notes ""
+{
+NPCText "Whatever. I've known most lab techs for years. Who the hell are you really?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm [PCNAME], a traveller. Sorry, I love tricking people. I got a job from your boss." linkto "FWKIDFY"  notes ""
+              }
+}
+Node "IInfo"
+notes ""
+{
+NPCText "Things have got busy lately. Red River's Gauss manufacturing has attracted a lot of raiders. Me and the other Guard platoons, 1 and 2, stop them, but lately the attacks have got worse, especially on the caravans heading to the Lone Star auctions."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Red River gets attacked a lot?" linkto "MAttacks"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds fun for you. What about non-military stuff?" linkto "OInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get my hands on some Gauss guns anywhere round here?" linkto "JGauss"  notes ""
+              }
+}
+Node "JGauss"
+notes ""
+{
+NPCText "Well, I doubt you can from here. They don't just dish them out willy-nilly. If you're really interested in getting some, I'd head for the Lone Star auctions. They might auction some every now and again"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Righty. Another question..." linkto "PInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well that sucks cock. I'm outta here." linkto "done"  notes ""
+              }
+}
+Node "KSlang"
+notes ""
+{
+NPCText "Erm, well that's about as much as I know. *Smiles to himself* If you want to sample the best slang, go talk to one of the chefs, Sodex I think they call him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Righty. Another question..." linkto "PInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay! I'll go and find him!" linkto "done"  notes ""
+              }
+}
+Node "LGTFO"
+notes "Set Flag \"Dick\" to 1"
+{
+NPCText "Get the fuck out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done." linkto "done"  notes ""
+              }
+}
+Node "MAttacks"
+notes ""
+{
+NPCText "Oh yeah, all the fucking time. We have two guard patrols on at a time, with the other resting. It's a bitch for your R and R time after large battles. Our Gauss tech makes us a big target for large raider gangs. Recently they've got much worse though, and I'm sure some of the weapons we sell at auction are being used against us. That's probably why you got hired."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Righty. Another question..." linkto "PInfo"  notes ""
+              }
+}
+Node "NDrink"
+notes "Set Flag \"Tech\" to 1"
+{
+NPCText "Alright then! See ya around [PCNAME]."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done." linkto "done"  notes ""
+              }
+}
+Node "OInfo"
+notes ""
+{
+NPCText "Well, not much really. The men are men and the girls are girls. *Sigh*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Uh-oh. That was the sigh of a man who's having lady trouble." linkto "QWomen"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Righty. Another question..." linkto "PInfo"  notes ""
+              }
+}
+Node "PInfo"
+notes ""
+{
+NPCText "Sure, fire away."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you fill me in on what's going on round here?" linkto "IInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get my hands on some Gauss guns anywhere round here?" linkto "JGauss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, nothing really, thanks John. I best get going." linkto "done"  notes ""
+              }
+}
+Node "QWomen"
+notes ""
+{
+NPCText "Heh. Yeah. *John sighs again*. Why are women so poisonously attractive?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Open up to me, John! I know what I'm doing with the ladies. In my past life I was a horse!" linkto "RWomen"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "So what's up John? I'm all ears." linkto "RWomen"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oooh, sounds painful. Listen, I gotta know something else though..." linkto "PInfo"  notes ""
+              }
+}
+Node "RWomen"
+notes ""
+{
+NPCText "Well, what would you do if there was this girl you really liked, but you were scared that you would scare her off if you asked her out?"
+ NPCFemaleText "Well, what would you do if there was this guy you really liked, but you were scared that you would scare him off if you asked her out?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Ask her out. If she's worth having that much, then she'll say yes." linkto "SWomen"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Ask him out. If he's worth having that much, then he'd say yes. " linkto "SWomen"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm, I can tell you get that problem a lot." linkto "THostile"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get my best mate to ask them out for me!" linkto "UWomen"  notes ""
+              }
+}
+Node "SWomen"
+notes ""
+{
+NPCText "But what if she doesn't? I think I'd break down if Emm... she said no."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, you could get someone else to ask her out for you..." linkto "UWomen"  notes ""
+              }
+}
+Node "THostile"
+notes ""
+{
+NPCText "What?!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing." linkto "RWomen"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Your face problem. It's a real turn off for women. Have you tried men?" linkto "LGTFO"  notes ""
+              }
+}
+Node "UWomen"
+notes ""
+{
+NPCText "Yeah, but I don't really want any of my friends to know that I'm scared to ask her out though..."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Well, I could. I'm not gonna be here much to tell other people, and anyway, your secret's safe with me!" linkto "VEmma"  notes ""
+              }
+}
+Node "VEmma"
+notes ""
+{
+NPCText "Would you?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Sure. It'd be a  pleasure to help out." linkto "WEmma"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I'm a bit busy at the mo. I'll get back to you." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, maybe later. Hey, I've got to know something..." linkto "PInfo"  notes ""
+              }
+}
+Node "WEmma"
+notes "Set Flag \"GotQuest\" to 1 "
+{
+NPCText "Great! Thanks! Wow. Well, her name is Emma, and she's a medic. She works in the sick bay. She'll know who I am if you say John Simmonds. Thanks again!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I'm here to help." linkto "done"  notes ""
+              }
+}
+Node "SeenStart"
+notes "This where the dialogue starts if the PC has talked to John before (\"Talkedto\" = 1), but \"GotQuest\" = 0"
+{
+NPCText "Hi again! What can I do you for?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you fill me in on what's going on round here?" linkto "IInfo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get my hands on some Gauss guns anywhere round here?" linkto "JGauss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, nothing really, thanks John. I best get going." linkto "done"  notes ""
+              }
+}
+Node "QuestStart"
+notes "This is where the Dialogue starts if \"GotQuest\" = 1 and the quest HASN'T been completed."
+{
+NPCText "Hi again! What can I do you for You asked her out yet?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not yet. I need to ask you something first..." linkto "PInfo"  notes ""
+              }
+}

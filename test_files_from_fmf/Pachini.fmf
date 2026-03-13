@@ -1,0 +1,136 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName "QuarterMaster Pachini"
+Location "Vault 31, First floor supply room"
+Description "Pachini is the female vault dweller model standing in the room full of crates, to the east."
+Unknown_Desc "This woman has a stern look on her face."
+Known_Desc "Quartermaster Pachini looks pissed, as usual."
+Detailed_Desc "This woman holds herself with an air of confidence that implies she is used to being in charge. She looks at you with a hint of disdain."
+Node "Start"
+notes ""
+{
+NPCText "<PC>, how many times do I have to tell you? I can't give you anything unless you've got the right forms."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pretty please? All I need is a Hydroelectric Magnetosphere Regulator..." linkto "A"  notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "(Frantically search your pockets) I could've sworn it was right here..." linkto "B" conditions { CHECK_SKILL speech > 29 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've got them right here." linkto "X"  notes "This option should appear after the PC gets the Mr. Handy OS quest from Ken Neff."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Geez, do you always get wake up on the wrong side of the bed?" linkto "D"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You pretty." linkto "C"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got form! I got form!" linkto "X"  notes "This option should appear after the PC gets the Mr. Handy OS quest from Ken Neff."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh oh. I forget. I come back with forms. Bye Bye!" linkto "done"  notes ""
+              }
+}
+Node "A"
+notes ""
+{
+NPCText "What the hell are you talking about?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait. You mean you don't know what it is either?" linkto "G"  notes ""
+              }
+}
+Node "B"
+notes ""
+{
+NPCText "Hah! I can't believe this! You finally had the form, and you lost it?"
+      options {
+          int=6 Reaction=REACTION_NEUTRAL playertext "Ohgodohgodohgodohgod, Duane is going to kick my ass!" linkto "E" conditions { CHECK_SKILL speech > 34 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Shit! Please, you gotta help me out!" linkto "F"  notes ""
+              }
+}
+Node "C"
+notes ""
+{
+NPCText "(She smirks) That's very sweet of you, <PC>. Now do you have a form or not?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh Uh. But you still pretty. Like flower." linkto "K"  notes ""
+              }
+}
+Node "X"
+notes ""
+{
+NPCText "Wha? (Her eyes widen) You've even filled them out in triplicate!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bet you thought this day would never come, huh?" linkto "J"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got forms good, huh?" linkto "J"  notes ""
+              }
+}
+Node "D"
+notes ""
+{
+NPCText "Look, its nothing personal, okay? I just need the forms. Come back when you have them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}
+Node "E"
+notes ""
+{
+NPCText "Duane sent you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. He wanted me to pick up an electronics manual and some mentats." linkto "H"  notes ""
+              }
+}
+Node "F"
+notes ""
+{
+NPCText "Why the hell would I do that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aw, c'mon Pachino. I had it two seconds ago, I did!" linkto "D"  notes ""
+              }
+}
+Node "G"
+notes ""
+{
+NPCText "(She rolls her eyes) You moron. Come back when you've got the forms."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}
+Node "H"
+notes "Exp reward(?) for convincing her to give you the manua and mentats."
+{
+NPCText "Tell you what.I'll let you go this time, but when you see him, ask him where the fuck he was last night. I waited two hours for that asshole and he never even showed up!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whoa! Take it easy. I'm sure he had a good reason." linkto "I"  notes ""
+              }
+}
+Node "I"
+notes ""
+{
+NPCText "He better have the best reason in the whole goddamn universe! I swear, if he tries ANY more bullshit, I'm gonna castrate him with my bare hands..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}
+Node "J"
+notes "When we decide what the player gets to start off with, this is when it is received."
+{
+NPCText "Okay, well lets see here. I'm supposed to give you... (She hands over some supplies, a weapon, and armor). That should be all of it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, Pachino. See you later." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yay! (Give her a big hug)" linkto "L"  notes ""
+              }
+}
+Node "K"
+notes ""
+{
+NPCText "Cool it, Romeo. Come back when you have the forms, okay?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}
+Node "L"
+notes ""
+{
+NPCText "Wha...? I... guess I'll take that as a thank you."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye Bye!" linkto "done"  notes ""
+              }
+}

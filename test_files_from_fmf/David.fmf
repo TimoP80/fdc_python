@@ -1,0 +1,744 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+vars {
+export var David_Euth_Arg_1 notes "This variable determines if David has told the PC his first argument against euthanasia." = 0;
+export var David_Euth_Arg_2 notes "This variable determines if David has told the PC his second argument against euthanasia." = 0;
+export var David_Euth_Arg_3 notes "This variable determines if David has told the PC his third argument against euthanasia." = 0;
+export var David_Euth_Arg_4 notes "This variable determines if David has told the PC his fourth argument against euthanasia." = 0;
+export var David_Euth_Arg_5 notes "This variable determines if David has told the PC his fifth argument against euthanasia." = 0;
+local var David_Euth_Know notes "This variable determines if David has told the PC that he is opposed to euthanasia." = 0;
+local var David_Intro notes "This variable determines if David has told the PC that he is an assistant of Michael's." = 0;
+}
+NPCName "David"
+Location "Sandover caves, near Michael the Priest"
+Description "Is Michael's 'acolyte', or assistant. Is instrumental in the Euthanasia quest (see Wiki for details)."
+Unknown_Desc "You see a man in loose-fitting, dun-colored robes."
+Known_Desc "David, Michael's assistant."
+Detailed_Desc "He is humming merrily to himself."
+/* Float message nodes */
+
+Floatnode "Dav_Norm"
+notes "David's standard float node."
+{
+"These things are sent to try us.",
+"Other towns in the wastes get Sandover all wrong.",
+"I pray we don't suffer any deaths today.",
+"It's a hard life, but I'm thankful for it.",
+"Can you believe someone called me 'sanctimonious', the other day?",
+"You would have thought we'd have a decent supply of anti-rad drugs by now."
+}
+Floatnode "Dav_Anger"
+notes "An all-purpose node for use if the PC gets into combat with David and/or the PC manages to get euthanasia legalized in Sandover."
+{
+"These are grim times for Sandover.",
+"Outsiders bring nothing but woe.",
+"I pray for all of us.",
+"Why do these things happen?",
+"Has the world gone mad?",
+"Saman should do more to keep bad influences out."
+}
+
+/* Regular nodes */
+
+Node "David_0"
+notes ""
+is_wtg = true
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has not spoken to David before." linkto "David_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to David before." linkto "David_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has completed the euthanasia quest; Alexander has banned it." linkto "David_1c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has completed the euthanasia quest; Alexander has legalized it." linkto "David_1d_1"  notes ""
+              }
+}
+Node "David_1a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hi, there. I'm David. I haven't seen you around here before."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi. My name's <PC>." linkto "David_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't associate with scum like you, that's why." linkto "David_1a_B1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No see me?" linkto "David_1a_D1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go." linkto "done"  notes ""
+              }
+}
+Node "David_1a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Good to meet you, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "David_1a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1a_3"
+notes "Increment the local variable David_Intro by 1."
+is_wtg = false
+{
+NPCText "Have you met Michael? I suppose you'd say that I'm an assistant of his."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Michael?" linkto "David_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Michael?" linkto "David_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1a_B1"
+notes ""
+is_wtg = false
+{
+NPCText "[He raises an eyebrow.] What was that in aid of?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. Sorry, I'm just having a bad day." linkto "David_1a_B2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1a_B2"
+notes ""
+is_wtg = false
+{
+NPCText "You're lucky I'm an easy going sort of guy. Do yourself a favor and remember that the next person you meet in the wastes might kill you for less."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess you're right. My name's <PC>, by the way." linkto "David_1a_B3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1a_B3"
+notes ""
+is_wtg = false
+{
+NPCText "Hello, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "David_1a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1a_D1"
+notes ""
+is_wtg = false
+{
+NPCText "[He pauses for a moment in thought, then smiles and speaks slowly and clearly.] No, I have not met you before. Are you lost?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Not lost. I in cave Sanduvver." linkto "David_1a_D2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go." linkto "done"  notes ""
+              }
+}
+Node "David_1a_D2"
+notes ""
+is_wtg = false
+{
+NPCText "That's right! Well done! You're a very clever boy."
+ NPCFemaleText "That's right! Well done! You're a very clever girl."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go." linkto "done"  notes ""
+              }
+}
+Node "David_1b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hello, again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, David. Could I ask you a question?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I thought you were someone else. It's the robes. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "'lo, Davit." linkto "David_1b_D1"  notes ""
+              }
+}
+Node "David_1b_D1"
+notes ""
+is_wtg = false
+{
+NPCText "[When he speaks, he does so loudly and clearly, as if you are deaf. He also smiles enthusiastically and nods a lot.] What are you doing today? Anything fun?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I help vault." linkto "David_1b_D2_a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You scary." linkto "David_1b_D2_b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "David_1b_D2_a"
+notes ""
+is_wtg = false
+{
+NPCText "That sounds like a great game! I hope you win!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You scary." linkto "David_1b_D2_b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "David_1b_D2_b"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, hey, I just want to be friends. Don't be scared, little buddy."
+ NPCFemaleText "Oh, hey, I just want to be friends. Don't be scared, little lady."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "David_1c_1"
+notes ""
+is_wtg = false
+{
+NPCText "I want to thank you for helping to convince Alexander to ban euthanasia in Sandover. I wish I'd thought of trying to bring Catherine onside. I guess she's a lot more grown up than I'd assumed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mention it. I need to ask you a question, though." linkto "David_1c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, I thought you were someone else. It's the robes. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Naturally, it'd be my pleasure. What do you need to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "David_1a_3" conditions { LOCAL_VARIABLE  == 0 link_next  } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you and Michael do in Sandover?" linkto "David_2c_1" conditions { LOCAL_VARIABLE  > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1" conditions { LOCAL_VARIABLE  > 0 link_next  } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't think I need to ask you anything. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1d_1"
+notes ""
+is_wtg = false
+{
+NPCText "I hope you're happy with yourself. Now that Alexander has officially made euthanasia legal in Sandover, the flood-gates are open for mass slaughter. You've no idea what you've done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you'd look past your own prejudices, you'd see that it's for the best." linkto "David_1d_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry you feel that way." linkto "David_1d_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get over it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1d_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, what's done is done. I've never had my faith in human nature more sorely tested though, let me tell you that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question?" linkto "David_1d_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you'd look past your own prejudices, you'd see that it's for the best." linkto "David_1d_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get over it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1d_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "[He shrugs.] I guess it can't do any more harm. What do you need to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "David_1a_3" conditions { LOCAL_VARIABLE  == 0 link_next  } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you and Michael do in Sandover?" linkto "David_2c_1" conditions { LOCAL_VARIABLE  > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1" conditions { LOCAL_VARIABLE  > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't think I need to ask you anything. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_1d_2B_1"
+notes ""
+is_wtg = false
+{
+NPCText "'Prejudices?' I've been working with terminal patients since I started living here. Oh - pretty cheap trick using Alexander's daughter as leverage, by the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question?" linkto "David_1d_2B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've gotten sick of your snivelling. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Get over it. Goodbye." linkto "done"  notes "David will no longer speak to the PC after this, and will only float his hostile float node, Dav_Anger."
+              }
+}
+Node "David_1d_2B_2"
+notes ""
+is_wtg = false
+{
+NPCText "No, I've had enough. You know what? You damn well cannot ask me a question."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've gotten sick of your snivelling. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Screw you. Goodbye." linkto "done"  notes "David will no longer speak to the PC after this, and will only float his hostile float node, Dav_Anger."
+              }
+}
+Node "David_2a"
+notes "The David 2_* node is where the PC can ask David about Michael."
+is_wtg = false
+{
+NPCText "Oh, he's a great guy. Really is. Does a lot of good work here in Sandover, which is why I help him out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Michael?" linkto "David_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of work?" linkto "David_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_2b"
+notes "The David 2_* node is where the PC can ask David about Michael."
+is_wtg = false
+{
+NPCText "He's just over there. [He points to the other robed figure in the room.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you and Michael do in Sandover?" linkto "David_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_2c_1"
+notes ""
+is_wtg = false
+{
+NPCText "The people of Sandover call Michael their priest, mostly because he and I take care of the sort of roles and jobs that priests do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What religion do you follow?" linkto "David_2c_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What roles and jobs are those?" linkto "David_2c_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_2c_2a"
+notes ""
+is_wtg = false
+{
+NPCText "There's no single, major religion in Sandover. People just worship God, or whatever you want to call him, in their own way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what do you both actually do?" linkto "David_2c_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_2c_2b"
+notes ""
+is_wtg = false
+{
+NPCText "You should talk to Michael about that. He's been looking after the Sandover flock much longer than me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What religion do you follow?" linkto "David_2c_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_1"
+notes "The David_3_* path is where the PC can find out that David is strongly opposed to euthanasia."
+is_wtg = false
+{
+NPCText "I would have volunteered to take up a position like Michael's if he hadn't already been here. I like to be active helping people. I'm a pretty morally-guided sort of guy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does it make you jealous that people look to Michael as their priest, rather than you?" linkto "David_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You do-gooder types sicken me." linkto "David_3_2B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about the morals that guide you." linkto "David_3_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_2a"
+notes ""
+is_wtg = false
+{
+NPCText "I find it strange that you'd even ask. Absolutely not. I'm just glad there are two of us that are doing this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You do-gooder types sicken me." linkto "David_3_2B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about the morals that guide you." linkto "David_3_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_2B"
+notes ""
+is_wtg = false
+{
+NPCText "[He seems unfazed.] Funny how many people feel threatened by someone who just wants to make the world a better place."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does it make you jealous that people look to Michael as their priest, rather than you?" linkto "David_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me more about the morals that guide you." linkto "David_3_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's see if *you* feel threatened by *this*. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever. I'm out of here." linkto "done"  notes ""
+              }
+}
+Node "David_3_2c_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He shrugs.] I suppose everyone has a sort of in-built set of rules and principles that guide them through life. Maybe I feel more strongly about mine than other people."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What issues do you feel most strongly about?" linkto "David_3_3_1"  notes "This node also only appears if the Resolve the Euthanasia Debate quest has not been completed, one way or the other."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does it make you jealous that people look to Michael as their priest, rather than you?" linkto "David_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You do-gooder types sicken me." linkto "David_3_2B"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_3_1"
+notes "Increment the local variable David_Euth_Know by 1."
+is_wtg = false
+{
+NPCText "You want to know what really upsets me? Euthanasia."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why euthanasia in particular?" linkto "David_3_3_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_3_2"
+notes ""
+is_wtg = false
+{
+NPCText "Because it goes on right here, in Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does it upset you so much?" linkto "David_3_3_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who practises euthanasia?" linkto "David_3_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_3_3a"
+notes ""
+is_wtg = false
+{
+NPCText "It's wrong! It's killing people, which is murder. Simple as that. Who could not be upset by that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you know who practises euthanasia?" linkto "David_3_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Me. I couldn't give a damn who lives or dies." linkto "David_3_3_3a_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_3_3a_B1"
+notes ""
+is_wtg = false
+{
+NPCText "You'd feel differently if it were your friends' or family's lives at stake, believe me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you know who practises euthanasia?" linkto "David_3_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_3_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Oswald does. Don't get me wrong, he's helped a lot of people in Sandover, but someone has to put a stop to the mercy-killings he's responsible for."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Euthanasia isn't illegal in Sandover?" linkto "David_3_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Dr. Oswald?" linkto "David_3_3_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does it upset you so much?" linkto "David_3_3_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_3_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "You'll most likely find him in the hospital, which is in this level of the caves."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Euthanasia isn't illegal in Sandover?" linkto "David_3_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why does euthanasia upset you so much?" linkto "David_3_3_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_4_1"
+notes ""
+is_wtg = false
+{
+NPCText "No, but that doesn't mean it's exactly legal, either. Alexander, our leader, has stalled on which side to take since the matter was brought up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "David_3_4_2"  notes ""
+              }
+}
+Node "David_3_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "He just turns a blind eye whilst it goes on under our noses. It's plain wrong!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No offense, but I'm not convinced it's wrong myself." linkto "David_3_4_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. It's an appalling crime." linkto "David_3_4_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_4_3a"
+notes ""
+is_wtg = false
+{
+NPCText "You should realize it *is* wrong. Look, do you have time to hear my side of the argument? Once you have, you might find you'll change your mind."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's hear it." linkto "David_4_1_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_4_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hallelujah! I knew you were the compassionate sort. Listen, get out there and spread the word. Be active. *Tell* people that what's going on here, in our homes, is wrong."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How will I convince them?" linkto "David_3_4_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_3_4_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Let me give you some of the strongest arguments against euthanasia. The more people Sandover's residents hear them from, the more likely they are to pay attention to them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, I'm all ears." linkto "David_4_1_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else, instead?" linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_1_1"
+notes "The David 4_* path is where the PC can listen to David's anti-euthanasia arguments."
+is_wtg = false
+{
+NPCText "Okay, well, think about this: a lot of people think that there are only two alternatives open to patients with a terminal illness. On the one hand, they die slowly in painful, unrelieved suffering; on the other hand, they receive euthanasia. With me so far?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "With you." linkto "David_4_1_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_1_2"
+notes "Thus ends the first lesson. Increment the variable David_Euth_Arg_1 by 1."
+is_wtg = false
+{
+NPCText "There is, however, another, third way - compassionate medical care. You can use drugs to alleviate the pain of, if not to cure, a terminal illness. That's what medicine is supposed to be about, after all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is Sandover able to afford the sort of drugs regimens you're describing, though?" linkto "David_4_1_3a" conditions { CHECK_STAT perception > 5 link_next AND, CHECK_STAT intelligence > 5 link_next NONE } notes "Note mild INT and PER checks. INT to think of the counter-argument and PER to notice that Sandover is a poverty-stricken dump."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see." linkto "David_4_1_3b "  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_1_3a"
+notes ""
+is_wtg = false
+{
+NPCText "[You notice a slight flicker of irritation on his face.] Not at the moment, maybe. That doesn't mean there are plenty more reasons not to just go round slaughtering ill Sandover people, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's hear your next reason." linkto "David_4_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_1_3b "
+notes ""
+is_wtg = false
+{
+NPCText "That's the first reason and that's just for starters. Let me tell you a few of the others."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure." linkto "David_4_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_2_1"
+notes ""
+is_wtg = false
+{
+NPCText "Why do people become doctors in the first place? To help other people get better, am I right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right." linkto "David_4_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I always thought it was to impress chicks, but I guess so." linkto "David_4_2_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_2_2"
+notes "Thus ends the second lesson. Increment the variable David_Euth_Arg_2 by 1."
+is_wtg = false
+{
+NPCText "If we ask our doctors to kill their own patients, that's going to put them off learning medicine in the first place. Who actually *wants* that kind of ethical burden? Mark my words: you legalize euthanasia, you say goodbye to dedicated health-workers."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've never thought about that before." linkto "David_4_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've heard that line of reasoning before." linkto "David_4_2_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_2_3"
+notes ""
+is_wtg = false
+{
+NPCText "In that case, let me give you another line of reasoning."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Please do." linkto "David_4_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_3_1"
+notes ""
+is_wtg = false
+{
+NPCText "When considerate people are dying, the last thing they want is to be a burden to anybody. They have no desire to be selfish, or to even appear to be selfish."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "David_4_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I can see where you're going with this." linkto "David_4_3_2a_1" conditions { CHECK_STAT intelligence > 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The last person I saw die was more concerned with wanting me not to kill him." linkto "David_4_3_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_3_2a_1"
+notes "Thus ends the third lesson. Increment the variable David_Euth_Arg_3 by 1."
+is_wtg = false
+{
+NPCText "I know for a fact that some very ill people feel that assisted suicide is something they *ought* to request, as a matter of duty, for the sake of their families and the overstretched healthcare facilities in Sandover."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you spoken to any of these very ill people yourself?" linkto "David_4_3_2a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose you're right." linkto "David_4_3_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_3_2a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "'Spoken' to them? Some of them were friends of mine! That's why we have to make sure that Sandover pressures its leaders into banning the practise as soon as possible."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me hear the next reason against euthanasia." linkto "David_4_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_3_2a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "There's no 'suppose' about it. I've lost good friends of mine because they felt guilty just for living."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me hear the next reason against euthanasia." linkto "David_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_3_2b"
+notes ""
+is_wtg = false
+{
+NPCText "[His train of thought broken, David doesn't seem to have taken in what you said. He shakes his head.] I'm sorry?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. Go on." linkto "David_4_3_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_4_1"
+notes "Thus ends the fourth lesson. Increment the variable David_Euth_Arg_4 by 1."
+is_wtg = false
+{
+NPCText "The next one's fairly simple. Doctors make mistakes. What if Dr. Oswald is wrong when he says a patient has no chances of survival, and that patient then asks to be euthanased as a result? He or she dies unnecessarily."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you think Dr. Oswald makes many mistakes?" linkto "David_4_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "Well, I'm not a doctor, so who knows, other than he himself? One thing's for sure: I don't know of any great medical schools in the wastes, so it's not hard to imagine how limited his skills are."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you think Dr. Oswald should not be practising medicine at all?" linkto "David_4_4_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What other reasons do you have against the use of euthanasia?" linkto "David_4_4_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_4_3a"
+notes ""
+is_wtg = false
+{
+NPCText "Hey, don't get me wrong. He's the most skilled person in Sandover when it comes to medical matters. He shouldn't be in a position to take lives, though. Not that anyone should."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What other reasons do you have against the use of euthanasia?" linkto "David_4_4_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_4_3b"
+notes ""
+is_wtg = false
+{
+NPCText "Just one more. You're a good listener. [He smiles.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's hear it." linkto "David_4_5_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "David_9"  notes ""
+              }
+}
+Node "David_4_5_1"
+notes ""
+is_wtg = false
+{
+NPCText "Last but not least: most of the people I've spoken to who are in favor of euthanasia think it should only be used in cases where the patient has no hope of survival, and when they're suffering badly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like a reasonable view point." linkto "David_4_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "David_4_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_5_2"
+notes "Thus ends the fifth and final lesson. Increment the variable David_Euth_Arg_5 by 1."
+is_wtg = false
+{
+NPCText "But when we give people the freedom to ask, well, maybe even demand, to die, where does it end? Today, euthanasia for those with terminal cancer; what comes tomorrow - euthanasia for those with depression?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see what you mean." linkto "David_4_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_5_3"
+notes ""
+is_wtg = false
+{
+NPCText "Those are my five most powerful arguments I use to oppose euthanasia. There are more, but if those five don't do it, there's usually not much point going on."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry, you haven't convinced me euthanasia is wrong." linkto "David_4_5_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've completely altered my opinion about euthanasia. I can now see it's utterly wrong." linkto "David_4_5_4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I already agreed with you about euthanasia, but it was good to hear your arguments." linkto "David_4_5_4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_5_4a"
+notes ""
+is_wtg = false
+{
+NPCText "[He rolls his eyes.] Then I doubt there's anything more I can say to convince you otherwise."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_4_5_4b"
+notes ""
+is_wtg = false
+{
+NPCText "Great! Who knows - maybe you could convince more people to take up the cause, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "David_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "David_9"
+notes ""
+is_wtg = false
+{
+NPCText "Sure, go ahead."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "David_1a_3" conditions { LOCAL_VARIABLE David_Intro == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you and Michael do in Sandover?" linkto "David_2c_1" conditions { LOCAL_VARIABLE David_Intro > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What made you decide to become Michael's assistant?" linkto "David_3_1" conditions { LOCAL_VARIABLE David_Intro > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me the reasons why you're so strongly opposed to euthanasia?" linkto "David_3_4_3b_2" conditions { LOCAL_VARIABLE David_Euth_Know > 0 link_next NONE } notes "This node also only appears if the Resolve the Euthanasia Debate quest has not been completed, one way or the other."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't think I need to ask you anything. Goodbye." linkto "done"  notes ""
+              }
+}

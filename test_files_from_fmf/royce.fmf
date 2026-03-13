@@ -1,0 +1,2248 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Royce"
+Location "Royce's Warehouse, CotC"
+Description "Royce is the owner of a warehouse. A dwarf, a letch and a miser."
+Unknown_Desc "You see a greasy little man."
+Known_Desc "You see: Royce."
+Detailed_Desc "He looks like he's in charge."
+/* Float message nodes */
+
+Floatnode "Intimidated"
+notes "If the PC has intimidated royce to stay away from daisy"
+{
+"Leave me alone.",
+"I haven't been near her, I swear it.",
+"I ain't saying nothing.",
+"Just get out of here.",
+"What's your problem?",
+"I said I ain't been near her, now leave me be!"
+}
+Floatnode "RobCaught"
+notes "If the PC is caught robbing Royce (or admits it after)"
+{
+"Die, shithead!",
+"Die!",
+"Bitch! Bitch! Bitch! (fem only)",
+"You ain't getting away with this!",
+"I'm gunna cut out your eyes and piss in your skull!"
+}
+Floatnode "Sleeping"
+notes "While Royce is sleeping"
+{
+"Mmmn.... zzz....",
+"Zzz... mmm... right there...",
+"Zzz... precious...",
+"... Zzz...."
+}
+Floatnode "WakeAlarm"
+notes "When the PC nearly wakes up Royce (failed lockpick, first sneak fail)"
+{
+"Guh? Hngh...",
+"Uh? Hhmm... zzz...",
+"Ggh... bbgzzz...."
+}
+Floatnode "Waking"
+notes "When Royce is awoken by the PC"
+{
+"Wha? Who's there?",
+"Get out! Get out you piece of shit, get out!",
+"I'll kill you, you son of a bitch! Come here!",
+"I'll rip your eyes out and spit in the sockets!",
+"You're dead! You hear? Next time, you're a dead man!"
+}
+Floatnode "Idle"
+notes "Floats while idling in the day"
+{
+"Can't you idiots work any faster?",
+"Mmm... smells like success.",
+"You! Work harder!",
+"Are you trying to put me out of business?! Work!",
+"Good help is hard to find.",
+"Hogg better come up with the goods next time."
+}
+Floatnode "RobbedIdle"
+notes "idling after he's been robbed"
+{
+"When I catch that son of a bitch...",
+"Oh he'll pay alright. He'll pay. He'll pay with his blood.",
+"Thinks he can just steal from me? From ME?!",
+"... and then I'll cut him, and I'll slice him and I'll cut him some more..."
+}
+Floatnode "OffTime"
+notes "if the PC tries to talk to Royce outside of working hours"
+{
+"Come back tomorrow.",
+"We start work again in the morning.",
+"You can keep working if you want, but I ain't paying you for it.",
+"We're closed."
+}
+Floatnode "TooDumb"
+notes "If a dumb PC has infuriated Royce with his stupidity"
+{
+"There's no place for you here.",
+"You drag your knuckles somewhere else now, y'hear?",
+"Are you lost?",
+"The door's right over there.",
+"Someone should put this idiot in a circus."
+}
+Floatnode "Accused"
+notes "PC has accused Royce of the murder (or assisting murder) and Royce is locked up"
+{
+"This is bullshit. I never killed anyone.",
+"Why would I want to kill some dyke bitch anyway?",
+"How much is this going to cost me?",
+"Whose dick do I gotta suck to get someone to listen to me?",
+"You better make up for my losses when you figure this out."
+}
+
+/* Regular nodes */
+
+Node "switcher"
+notes ""
+is_wtg = false
+{
+NPCText "ding"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<default>" linkto "Node_DefaultIntro"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<First Meeting>" linkto "Node_FirstIntro"  notes "PC meets Royce for the first time (before 12.00 noon)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Subsequent Meeting>" linkto "Node_NextIntro"  notes "PC has already talked to Royce but not worked for him"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Post Noon>" linkto "Node_NoonIntro"  notes "If the PC talks to Royce after mid-day (but during working hours)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Post Job>" linkto "Node_JobIntro"  notes "if the pc has worked for royce (including quitting, shirking etc)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Post Robbed>" linkto "Node_RobIntro"  notes "if the PC has robbed Royce"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Post-Daisy Invite>" linkto "Node_DaisyIntro"  notes "If the PC has agreed to deliver Royce's message to Daisy"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Mid-shift Dialogue>" linkto "Node_MidShift"  notes "If the PC talks to Royce while working in the warehouse, or if the PC attempts to leave the warehouse during that time"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<End of Shift Dialogue>" linkto "Node_JobEnd"  notes "When the pc scoops up the last piece of guts or uses the gutting table (ie finishes the job)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Sleeping Royce>" linkto "Node_Sleeping"  notes "When the pc catches Royce asleep in his bed"
+          int=4 Reaction=REACTION_NEUTRAL playertext "<Post Murder>" linkto "Node_MurderIntro"  notes "The first time the PC talks to Royce after Daisy has been killed"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Dumb First Meeting" linkto "Node_FirstIntro"  notes "If the PC is dumb and has never spoken to Royce before"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Dumb Subsequent Meeting" linkto "Node_NextIntro"  notes "If the PC is dumb and has spoken to Royce before, but never accepted a job."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Dumb Post Job" linkto "Node_JobIntro"  notes "If the PC is dumb and has worked for Royce before"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Dumb Midshift" linkto "Node_MidShift"  notes "If a dumb PC speaks to Royce while working for him, or attempts to leave the warehouse during that time"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Dumb End Shift" linkto "Node_JobEnd"  notes "If the PC is dumb and finishes his job"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Dumb Post-robbed" linkto "Node_RobDumb"  notes "If the PC is dumb and has robbed Royce"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Dumb Royce Sleeping" linkto "Node_Sleeping"  notes ""
+              }
+}
+Node "Node_Door"
+notes ""
+is_wtg = false
+{
+NPCText "Then I hope you remember where the door is."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntro"
+notes ""
+is_wtg = true
+{
+NPCText "Yeah?"
+ NPCFemaleText "Damn. Not every day we get something as precious as you in here. You looking for something?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's your name?" linkto "Node_FirstIntroName"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for Royce." linkto "Node_FirstIntro2"  notes "If PC has heard of Royce from fishworker"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello little boy. What is your name?" linkto "Node_DumbIntro"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Wander off]" linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntro2"
+notes ""
+is_wtg = false
+{
+NPCText "Congratulations, you found him. Who the hell are you?"
+ NPCFemaleText "That's my name. I'm surprised you didn't know it already. And who might you be?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Call me <PC>." linkto "Node_FirstIntro3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My name is not important." linkto "Node_FirstIntro4"  notes ""
+              }
+}
+Node "Node_FirstIntro3"
+notes ""
+is_wtg = false
+{
+NPCText "You think I give a shit what your name is? Just tell me what you want."
+ NPCFemaleText "And precious little name and all. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for work." linkto "Node_Job"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to ask you some questions." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Maybe you'll remember my name when I carve it into your forehead." linkto "Node_IntroThreat"  notes "male only"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now." linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntro4"
+notes ""
+is_wtg = false
+{
+NPCText "You got that right. What do you want?"
+ NPCFemaleText "If you say so, precious. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for work." linkto "Node_Job"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to ask you some questions." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now." linkto "done"  notes ""
+              }
+}
+Node "Node_RobIntro"
+notes ""
+is_wtg = true
+{
+NPCText "Yeah, what the fuck do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm here for a job." linkto "Node_RobJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You seem angrier than usual." linkto "Node_RobDumbAngry"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, I heard you got robbed." linkto "Node_RobRobbed"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just passing through. I'll catch you later." linkto "done"  notes ""
+              }
+}
+Node "Node_NextIntro"
+notes ""
+is_wtg = true
+{
+NPCText "This ain't a clubhouse, son, this is a place of work. If you ain't pitching in you should pitch out, if you get me."
+ NPCFemaleText "This ain't a clucking circle, precious, this is a place of work. If you ain't pitching in you should pitch out, if you get me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want a job." linkto "Node_Job"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have some questions for you." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have some questions about Daisy's death." linkto "Node_MurderQAuthoratah"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, wrong dwarf." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> needs a job." linkto "Node_DumbJob2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Wander off]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobIntro"
+notes ""
+is_wtg = true
+{
+NPCText "Didn't expect to see you here again. Did you like it so much the last time?"
+ NPCFemaleText "Well I'll be. Didn't expect to see you here again, precious. Was it so much fun the last time?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need a job. Any openings?" linkto "Node_JobRepeatSwitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to ask you something." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions about Daisy's murder." linkto "Node_MurderQ_CLONE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just passing through. Bye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Royce has a job?" linkto "Node_JobRepeatSwitch"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye!" linkto "done"  notes ""
+              }
+}
+Node "Node_DaisyIntro"
+notes ""
+is_wtg = true
+{
+NPCText "Is she coming? Daisy?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I haven't spoken to her yet." linkto "Node_DaisyNotYet"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "She told me she isn't interested." linkto "Node_DaisyCheck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold that thought, I'll be right back." linkto "done"  notes ""
+              }
+}
+Node "Node_Job"
+notes ""
+is_wtg = false
+{
+NPCText "You want a job? Here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that a problem?" linkto "Node_Job2"  notes ""
+              }
+}
+Node "Node_Job2"
+notes ""
+is_wtg = false
+{
+NPCText "Hey, I never turn down a pair of hands. I got a job for you, but you don't look like the type."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What type is that?" linkto "Node_Job3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the job." linkto "Node_JobInfoCleaning"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right, this place is beneath me. I'll show myself out." linkto "done"  notes ""
+              }
+}
+Node "Node_Job3"
+notes ""
+is_wtg = false
+{
+NPCText "Just look at these idiots. Half of them can't even tie their own shoes. Only reason they're here is they're too stupid to drown. You don't exactly fit in."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should show your workers a little more respect." linkto "Node_JobRespect"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not above a hard day's work. Tell me about the job." linkto "Node_JobInfoCleaning"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll think about it and get back to you." linkto "done"  notes ""
+              }
+}
+Node "Node_JobBarter"
+notes ""
+is_wtg = false
+{
+NPCText "No, son. You'll do it for ten, or you won't do it at all."
+ NPCFemaleText "You'll do it for ten, or you won't do it at all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ten it is. I'll get started." linkto "Node_JobStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're about to lose a valuable asset here. What does another ten caps mean to you?" linkto "Node_JobBarterFail"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess this is goodbye. Goodbye, Royce." linkto "done"  notes ""
+              }
+}
+Node "Node_JobBarterFail"
+notes ""
+is_wtg = false
+{
+NPCText "Every cap means as much as every other cap, that's rule number one. And with you I'm losing nothing I want. Move it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I really need this job. I'll do it for ten." linkto "Node_JobStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobInfoCleaning"
+notes ""
+is_wtg = false
+{
+NPCText "Everybody starts on shovel detail, even fancy folk like you. Just scoop all the fish guts off the floor, and into these green barrels. Shift lasts as long as the sunlight, pays ten caps a day. Get to work."
+ NPCFemaleText "Everybody starts on the shovel, even a precious thing like you. Just scoop all the fish guts off the floor and into these green barrels. Shift lasts as long as the sunlight, pays ten caps a day. You want it? Get started."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm on it." linkto "Node_JobStart"  notes "Variable CleaningWork = 1"
+          int=4 Reaction=REACTION_NEUTRAL playertext "A whole day's work for ten caps? I want twenty, not a cap less." linkto "Node_JobBarter"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wow, that smell just hit me. I quit." linkto "Node_JobQuit"  notes ""
+              }
+}
+Node "Node_JobPromotion"
+notes ""
+is_wtg = false
+{
+NPCText "Lucky for you there's a spot just opened on the gutting table. Some silly bitch cut her thumb off today, she's no good to me now. You ever handle a knife?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never in my life." linkto "Node_JobPromotionEasy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not really." linkto "Node_JobPromotionEasy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Once or twice." linkto "Node_JobPromotionGood"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "More than you know." linkto "Node_JobPromotionGood"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The blade is an extension of my soul." linkto "Node_JobPromotionWeird"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> isn't supposed to play with knives." linkto "Node_JobPromotionEasy"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Knife makes people cry from their skin." linkto "Node_JobPromotionWeird"  notes ""
+              }
+}
+Node "Node_JobPromotionEasy"
+notes ""
+is_wtg = false
+{
+NPCText "Well it's easy. And if you cut yourself up, I can always get someone else. Pays 20 caps a shift. Interested?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it." linkto "Node_JobPromotionStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not in the least. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Interested." linkto "Node_JobPromotionStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC> likes his old job more." linkto "Node_JobPromotionSwitch"  notes ""
+              }
+}
+Node "Node_JobPromotionGood"
+notes ""
+is_wtg = false
+{
+NPCText "Maybe you'll leave with all your fingers. Pays 20 caps a shift. Interested?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do it." linkto "Node_JobPromotionStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'll stick to cleaning." linkto "Node_JobPromotionSwitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not in the least. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_JobPromotionStart"
+notes ""
+is_wtg = false
+{
+NPCText "Good. The tables are on the other side of the warehouse. Just watch what everybody else does, you'll pick it up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobPromotionSwitch"
+notes ""
+is_wtg = false
+{
+NPCText "You sure about that? If you won't get the chance to pass this up again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wouldn't want to miss out. I'll take the promotion." linkto "Node_JobPromotionStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure. I'm more suited to shovel work." linkto "Node_JobRepeatCleanStart"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> wants job with sharp knife." linkto "Node_JobPromotionStart"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> wants to play with the big spoon." linkto "Node_JobRepeatCleanStart"  notes ""
+              }
+}
+Node "Node_JobPromotionWeird"
+notes ""
+is_wtg = false
+{
+NPCText "Right. Wait, what? Fuck it, who cares, you wouldn't be the first. Pays 20 caps a shift, you in?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm in." linkto "Node_JobPromotionStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm out. As in leaving. Now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yeah!" linkto "Node_JobPromotionStart"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Testman likes the big spoon more." linkto "Node_JobPromotionSwitch"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Out! Side! Outside! Bye!" linkto "done"  notes ""
+              }
+}
+Node "Node_JobQuit"
+notes ""
+is_wtg = false
+{
+NPCText "I knew you wouldn't last, but hell if you ain't a bigger pussy than I thought. Get lost, son, you can't handle it."
+ NPCFemaleText "I knew you wouldn't last, precious, but hell if that wasn't quick. Guess a girl like you ain't cut out for a man's work after all."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobRepeatClean"
+notes ""
+is_wtg = false
+{
+NPCText "Sure, it says here I'm short one no-good lazy asshole. If I remember, you about fit that description."
+ NPCFemaleText "Sure, I got space for you. But you didn't quite cut it last time, if I remember."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, about the last time... Let me explain." linkto "Node_JobRepeatClean2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it, I'm not working for you." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> very sleepy last time. Wide awake now." linkto "Node_JobRepeatClean2"  notes ""
+              }
+}
+Node "Node_JobRepeatClean2"
+notes ""
+is_wtg = false
+{
+NPCText "Save it, I could give a shit. If they got more than seven fingers, they're good enough to work for you. That's rule two."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You won't be sorry." linkto "Node_JobRepeatTrust"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> has eleven! Wait... one..." linkto "Node_JobRepeatTrust"  notes ""
+              }
+}
+Node "Node_JobRepeatCleanStart"
+notes ""
+is_wtg = false
+{
+NPCText "You know the drill. Grab a shovel and get started."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobRepeatGutting"
+notes ""
+is_wtg = false
+{
+NPCText "You know the drill. Grab a knife and get started."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobRepeatSwitch"
+notes ""
+is_wtg = false
+{
+NPCText "Let's just take a look... Hmm."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobRepeatClean"  notes "If variable JobSkived = 1 OR variable JobQuit = 1"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobPromotion"  notes "if PC worked hard (no quitting or skiving)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobRepeatGutting"  notes "if PC has been promoted"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobPromotion"  notes "PC is dumb and worked hard last time"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobRepeatClean"  notes "PC is dumb and shirked or quit the last time"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobRepeatGutting"  notes "PC is dumb and has been promoted"
+              }
+}
+Node "Node_JobRepeatTrust"
+notes ""
+is_wtg = false
+{
+NPCText "But since I know you ain't exactly reliable, you got to pay something I call the Trust Tax. Pay's down to 8 caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can live with that." linkto "Node_JobRepeatCleanStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What? Ten was bad enough, no way I'm doing this for eight." linkto "Node_Door"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> tries harder this time." linkto "Node_JobRepeatCleanStart"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No! Bye!" linkto "switcher"  notes "(struggling with these dumb pc options a bit)"
+              }
+}
+Node "Node_JobRespect"
+notes ""
+is_wtg = false
+{
+NPCText "Last I checked I owned this place, which also means I own every dipshit inside of it. You got a problem? That's why I put a door in."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Careful. An attitude like that can get a man killed." linkto "Node_Threat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was just an observation, it didn't mean anything. Tell me about the job." linkto "Node_JobInfoCleaning"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobStart"
+notes ""
+is_wtg = false
+{
+NPCText "That's what I like to hear. Take this shovel and get to work. And don't let me catch you slacking off."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll make you proud." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't worry, you won't catch me." linkto "done"  notes ""
+              }
+}
+Node "Node_Q_Business"
+notes ""
+is_wtg = false
+{
+NPCText "Took my whole life, but this here operation runs slicker than pigshit. I buy my fish straight out of the nets, gut them, salt them, pack them up and send them out the other door at twice the price. And no waste - I even got a guy who buys the innards."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell your fish to?" linkto "Node_Q_Business3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who would want to buy fish guts from you?" linkto "Node_Q_Business2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Business_CR"
+notes ""
+is_wtg = false
+{
+NPCText "You never been to Crossroads? What, did you just wash up on the beach yesterday? Give me your map, I'll show you. [He marks the location on your map.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Can I ask you something else?" linkto "Node_Questions2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Q_Business2"
+notes ""
+is_wtg = false
+{
+NPCText "No idea. They get rid of my trash and pay me for the privilege, and when a deal's that sweet you don't ask questions. All I know's they ain't from around here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find these people?" linkto "Node_Q_Business4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell your fish to?" linkto "Node_Q_Business3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Business3"
+notes ""
+is_wtg = false
+{
+NPCText "Anyone who wants it. A lot of locals fish for themselves, so most of my product goes up north - on the caravans, you know. Nearest trading post is Crossroads, where they go after that I couldn't tell you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you show me how to reach Crossroads?" linkto "Node_Q_Business_CR"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell the innards to?" linkto "Node_Q_Business2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Business4"
+notes ""
+is_wtg = false
+{
+NPCText "Can't tell you for sure. They got their own caravan, they don't say where it goes. But anything going anywhere goes through Crossroads, you could start looking around there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you give me something more to go on? A name?" linkto "Node_Q_Business5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you show me how to reach Crossroads?" linkto "Node_Q_Business_CR"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Business5"
+notes ""
+is_wtg = false
+{
+NPCText "I don't see why I should. I got a good thing going here, I don't need anybody wading in and messing things up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You'll be sorry if you don't." linkto "Node_Q_Business5_STR"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No reason, I'm just curious." linkto "Node_Q_Business5_Curious"  notes ""
+              }
+}
+Node "Node_Q_Business5_Curious"
+notes ""
+is_wtg = false
+{
+NPCText "Well go be curious somewhere else. This is a place of business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Q_Business5_STR"
+notes ""
+is_wtg = false
+{
+NPCText "What? Hey, whatever those guys are mixed up in, it's got nothing to do with me. The guy I made the deal with called himself <UT Name>. That's all I know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Let me ask you something else." linkto "Node_Questions2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all I needed to know. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_Q_CotC"
+notes ""
+is_wtg = false
+{
+NPCText "We all came from the boat, the one the Captain lives in. Hundred years ago, maybe more, we had the storm that washed us up. We've been living here ever since."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about the Captain." linkto "Node_Q_CotC2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is there to do for fun around here?" linkto "Node_Q_CotC3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_CotC_Daisy"
+notes ""
+is_wtg = false
+{
+NPCText "Mitchell's daughter. She's all grown up now, ain't a man in town who wouldn't want to do dark things to her, oh boy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like a real looker." linkto "Node_Q_CotCDaisyMore"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something first." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_CotC_Daisy2"
+notes ""
+is_wtg = false
+{
+NPCText "Just tell her I got no plans for tonight. If she wanted to come up here and talk about our future, I'd like that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll pass it on if I see her." linkto "Node_Q_CotC_Daisy3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wont help you defile an innocent girl. Forget it." linkto "Node_Q_CotC_DaisyNo"  notes ""
+              }
+}
+Node "Node_Q_CotC_Daisy3"
+notes ""
+is_wtg = false
+{
+NPCText "I owe you one. And once you've been around a while, you'll find out that's a good thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Q_CotC_DaisyNo"
+notes ""
+is_wtg = false
+{
+NPCText "Is that what you think? You've got me all wrong, son, all wrong. So unless you plan on picking up a shovel, I think it's time you moved your journeys elsewhere."
+ NPCFemaleText "Is that what you think? You've got me all wrong, but I've seen that look before, you ain't changing your mind. I think it's time you moved on, precious. No good to nobody around here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Q_CotC2"
+notes ""
+is_wtg = false
+{
+NPCText "Quinn? He's one of those retards, you know, brain's all fucked up from something. But he ain't in charge, Hoskins runs the place now, or so he says. If you ask me, the only thing he has control over is that damn boat they're holed up in. Us out here, we run things for ourselves."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is there to do for fun around here?" linkto "Node_Q_CotC3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_CotC3"
+notes ""
+is_wtg = false
+{
+NPCText "Most folk end up in the Cutty Sark, it's the closest you'll get to a bar in this town. The beer tastes like scorpion piss, but it's worth it for the scenery. That Daisy is a fine piece of ass, no doubt about it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Daisy." linkto "Node_Q_CotC_Daisy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Royce"
+notes ""
+is_wtg = false
+{
+NPCText "You want to know about me? Just look around you. Everything you see - that's me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Impressive. You must be one of the richest people around." linkto "Node_Q_Royce2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not sure I understand. All I see is dead fish and underpaid laborers." linkto "Node_Q_Royce3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask about something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Royce2"
+notes ""
+is_wtg = false
+{
+NPCText "Pretty damn near, that's for sure. The only outfit making as much as me is old Pete Hogg's fishing company. And they wouldn't be doing nearly so well if it wasn't me buying all their fish."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you're so rich, why do you treat your workers so badly?" linkto "Node_Q_Royce4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Pete Hogg." linkto "Node_Q_Royce_Hogg"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_Questions2"  notes ""
+              }
+}
+Node "Node_Q_Royce3"
+notes ""
+is_wtg = false
+{
+NPCText "That's right. Dead fish, hungry idiots and the guy who got rich introducing them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you ever feel guilty for exploiting your workers?" linkto "Node_Q_Royce4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like you're at the top of the food chain around here." linkto "Node_Q_Royce2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_FirstIntro"  notes ""
+              }
+}
+Node "Node_Q_Royce4"
+notes ""
+is_wtg = false
+{
+NPCText "You see any chains, son? You see anyone here who didn't choose to be? Hell, if it weren't for me, half these monkeys would turn up face down at low tide. If you got a problem with the way I run my business, you can take it someplace else."
+ NPCFemaleText "You see any chains, precious? Anyone here who didn't choose to be? Hell, if it weren't for me, half these monkeys would turn up face down at low tide. If you got a problem with the way I run my business, you can take it someplace else."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you something else first?" linkto "Node_Questions2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll show myself out." linkto "done"  notes ""
+              }
+}
+Node "Node_Q_Royce_Hogg"
+notes ""
+is_wtg = false
+{
+NPCText "He runs the biggest fishing fleet in town, and he's buying out anyone who'll sell. Not in the best of health, so I've heard. He'll probably hand it all over to one of his sons before he snuffs it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you something else." linkto "Node_Questions"  notes ""
+              }
+}
+Node "Node_Questions"
+notes ""
+is_wtg = false
+{
+NPCText "Ask already, we're getting older here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "Node_Q_Royce"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to know about your business." linkto "Node_Q_Business"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about City on the Coast?" linkto "Node_Q_CotC"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now." linkto "done"  notes ""
+              }
+}
+Node "Node_Questions2"
+notes ""
+is_wtg = false
+{
+NPCText "Just get on with it, alright? I got things to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about yourself." linkto "Node_Q_Royce"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about your business." linkto "Node_Q_Business"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about City on the Coast." linkto "Node_Q_CotC"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now." linkto "done"  notes ""
+              }
+}
+Node "Node_RobJob"
+notes ""
+is_wtg = false
+{
+NPCText "Of course I got a fucking job for you, I always got jobs. But pay's half, courtesy of that son of a whore who robbed me. Still want it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure." linkto "Node_JobRepeatCleanStart"  notes "if pc has not been promoted"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure." linkto "Node_JobRepeatGutting"  notes "if PC has been promoted"
+          int=4 Reaction=REACTION_NEUTRAL playertext "The pay was bad enough before, now it's just slavery. I'm out." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah!" linkto "Node_JobRepeatCleanStart"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah!" linkto "Node_JobRepeatGutting"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC> doesn't need job. Has lots of money now." linkto "Node_RobDumbGag"  notes ""
+              }
+}
+Node "Node_RobRobbed"
+notes ""
+is_wtg = false
+{
+NPCText "It's not a secret. And when I catch whoever did it and put a big fat fucking hole in his head, that won't be a secret either!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Any idea who it was?" linkto "Node_RobRobbed2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you still hiring?" linkto "Node_RobJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I sure hope you catch him. See you around." linkto "done"  notes ""
+              }
+}
+Node "Node_RobRobbed2"
+notes ""
+is_wtg = false
+{
+NPCText "I got a million ideas! Some punk fisherman's kid maybe, or a bunch of them. Maybe one of these lazy dipshits thought he could help himself to overtime, or maybe one of those fucking rat-fucking junkie fucks needed a fix. Hell it could be you!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you calm down, I might be able to help." linkto "Node_RobGag"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hope you catch whoever it was. Are you still hiring?" linkto "Node_RobJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like you've got some interesting theories. I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Node_Threat"
+notes ""
+is_wtg = false
+{
+NPCText "You got balls, son, threatening me in my own damn shop. Now get the hell out before someone cuts them off and feeds them to you."
+ NPCFemaleText "You got nerve, precious, threatening me in my own damn shop. And if you do it again, I'll cut your tongue out. Now fuck off."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_DaisyNotYet"
+notes ""
+is_wtg = false
+{
+NPCText "So why are you hanging around here? When you say you'll do me a favor, you don't come back until it's done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_DaisyStall"
+notes ""
+is_wtg = false
+{
+NPCText "Then do it. The Daisy I'm talking about isn't supposed to say no. I know she wants it, she's just teasing me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you may have misread the situation." linkto "Node_DaisyMisread"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and talk to her again." linkto "done"  notes ""
+              }
+}
+Node "Node_DaisyCheck"
+notes ""
+is_wtg = false
+{
+NPCText "What? That's what she said? You sure you heard her right? Did you even get the right girl?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was her, trust me. Not interested." linkto "Node_DaisySpec"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm fairly certain. I could go back and check." linkto "Node_DaisyStall"  notes ""
+              }
+}
+Node "Node_DaisySpec"
+notes ""
+is_wtg = false
+{
+NPCText "That ain't right. No, no, that ain't right at all. What's wrong with that bitch? Leading me on like that, then spitting in my face? She better have a damn good explanation why I wasted my time on her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think she's the problem." linkto "Node_DaisyFrank"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not personal. I think she's gone off men in general." linkto "Node_DaisySpill"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing's wrong, she just needs time to think." linkto "Node_DaisyThink"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not my problem. I'll let myself out." linkto "Node_DaisyEscape"  notes ""
+              }
+}
+Node "Node_DaisyMisread"
+notes ""
+is_wtg = false
+{
+NPCText "Oh that's what I did, is it? Is it? You just tell me what you know and I don't, we'll see who's missing what."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Try this: she's gay." linkto "Node_DaisySpillAdmit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you looked in a mirror lately? Or ever?" linkto "Node_DaisyFrank2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's at a difficult stage in her life. She just needs to think." linkto "Node_DaisyThink"  notes ""
+              }
+}
+Node "Node_DaisyFrank"
+notes ""
+is_wtg = false
+{
+NPCText "And just what are you saying by that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's young and beautiful. Your face terrorizes small children. It's not a match." linkto "Node_DaisyFrank2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look at yourself, Royce. You're pathetic. What would she see in you?" linkto "Node_DaisyFrank2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're way too old. She's better off with someone her own age.\n" linkto "Node_DaisyFrank2"  notes ""
+              }
+}
+Node "Node_DaisySpill"
+notes ""
+is_wtg = false
+{
+NPCText "Take it from me, she still wants it. They all do, they're just scared to show it. And I know she's stubborn, but I gave her everything she asked for. Now it's time I get what's mine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just telling you what she told me." linkto "Node_DaisyCrux"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's a lot more than stubborn." linkto "Node_DaisySpillString"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "She doesn't belong to you, Royce. Just back off." linkto "Node_Intimidate"  notes ""
+              }
+}
+Node "Node_DaisyThink"
+notes ""
+is_wtg = false
+{
+NPCText "What's to think about? Royce wants to see you, you go see Royce. That bitch has been dancing around me for weeks, I'm starting to lose my patience."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's young and confused. She just needs time to get her life together." linkto "Node_DaisyTime"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you may have misread the situation." linkto "Node_DaisyMisread"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Royce. Listen. It's not happening. It's never going to happen." linkto "Node_DaisyFrank"  notes ""
+              }
+}
+Node "Node_DaisyFrank2"
+notes ""
+is_wtg = false
+{
+NPCText "Don't feed me that. I've had better than her, younger too. I get around to every woman in this town, and you know it ain't on looks alone. What counts around here is cash, and that's what I got a lot of."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not everyone can be bought." linkto "Node_DaisyBought"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just give her time, I'm sure she'll come around." linkto "Node_DaisyTime"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe she's put off by the whole freakish pervert thing." linkto "Node_DaisyAlarm"  notes ""
+              }
+}
+Node "Node_DaisyBought"
+notes ""
+is_wtg = false
+{
+NPCText "You talk that shit because you like the smell, son? Or did you piss your Momma off and she dropped you? Because I'll tell you here and now,  everybody got a price. And I can pay hers, so what's the problem?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The problem is in your head. Why can't you accept it?" linkto "Node_DaisyCrux"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The problem is she doesn't like men. Any of them." linkto "Node_DaisySpill2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The problem is I don't want you anywhere near her." linkto "Node_Intimidate"  notes ""
+              }
+}
+Node "Node_DaisySpillAdmit"
+notes ""
+is_wtg = false
+{
+NPCText "You don't look like you're kidding me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's true. She told me herself." linkto "Node_DaisyDyke"  notes ""
+              }
+}
+Node "Node_DaisyTime"
+notes ""
+is_wtg = false
+{
+NPCText "Well I gave her time. I gave her a whole bunch of time, and she's still shying. So cut the shit and tell me whatever it is you ain't telling me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've told you what she told me. That's all I know." linkto "Node_DaisyCrux"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Daisy just doesn't like men. Any men." linkto "Node_DaisySpill2"  notes ""
+              }
+}
+Node "Node_DaisyAlarm"
+notes ""
+is_wtg = false
+{
+NPCText "Those her words or yours? Because I've known her a lot longer than you, and I know she was willing back then. So what's changed? What are you hiding from me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not hiding anything. I'm telling you what she told me." linkto "Node_DaisyCrux"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Daisy's... different." linkto "Node_DaisySpill2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The only thing I'm holding back is the urge to kick your teeth in. Just leave her alone." linkto "Node_Intimidate"  notes ""
+              }
+}
+Node "Node_DaisyCrux"
+notes ""
+is_wtg = false
+{
+NPCText "Something stinks in here, and it ain't me or the fish. I can tell a man when he's lying, and you're sure as hell doing it right now."
+ NPCFemaleText "Well something stinks in here, and it ain't me or the fish. I paid plenty of women to lie to me, so I can tell when you're doing it right now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're lying to yourself, Royce. She's not interested, and she never was." linkto "Node_DaisySpeech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You want the truth? Daisy's gay. That's it." linkto "Node_DaisySpillAdmit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm through talking. Just leave her alone or you'll regret it." linkto "Node_Intimidate"  notes ""
+              }
+}
+Node "Node_DaisySpill2"
+notes ""
+is_wtg = false
+{
+NPCText "What? Wait, are you saying.... is she a dyke? Is that what you're saying, is that bitch queer?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She thinks so. That's a good indicator." linkto "Node_DaisyDyke"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, she's straight." linkto "Node_DaisyDyke_CLONE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Rejecting you doesn't mean she's gay, it means she's sane." linkto "Node_DaisyFrank2"  notes ""
+              }
+}
+Node "Node_Intimidate"
+notes ""
+is_wtg = false
+{
+NPCText "So you're defending her now? What the hell is that?"
+ NPCFemaleText "What, you're her mother now? What the hell is that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Daisy made her choice, and it wasn't you. Move on." linkto "Node_IntimidateProtect"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking out for her best interests." linkto "Node_Intimidate2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "'That' is the last warning you get. Leave her alone." linkto "Node_IntimidateCrux"  notes ""
+              }
+}
+Node "Node_IntimidateProtect"
+notes ""
+is_wtg = false
+{
+NPCText "So you're the guy, huh? I send you over there to do a favour for me and now you're fucking my woman? Is that it?"
+ NPCFemaleText "She needs some bitch like you to protect her? She some kind of dyke?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Right. So if you want her, you'll have to get through me." linkto "Node_IntimidateCrux"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Exactly. So stop wasting your time." linkto "Node_DaisyDyke"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's got nothing to do with me. You missed the point." linkto "Node_DaisyMisread"  notes ""
+              }
+}
+Node "Node_Intimidate2"
+notes ""
+is_wtg = false
+{
+NPCText "She's got her dad for that, she doesn't need you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She made her choice and you fell short. Live with it." linkto "Node_IntimidateProtect"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm done talking. Leave her alone or I'll make you wish you had." linkto "Node_IntimidateCrux"  notes ""
+              }
+}
+Node "Node_IntimidateCrux"
+notes ""
+is_wtg = false
+{
+NPCText "Don't try that tough guy shit on me, it won't work. What do you think you can do to me? I could get any one of these fuckers to kill you just for overtime."
+ NPCFemaleText "Don't try that hard bitch shit with me precious, it doesn't work. What do you think you can do to me? I could get any one of these fuckers to kill you just for overtime."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you leave her alone, I'll give back all the money I stole." linkto "combat"  notes "only if PC has robbed royce (clearly). Royce simply attacks with the floats from the 'RobCaught' range"
+          int=4 Reaction=REACTION_NEUTRAL playertext "They'll give you a head start. Maybe as much as a minute. Ready?" linkto "Node_IntimidateCrux2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, I'll tell you the truth. She's gay." linkto "Node_DaisySpillAdmit"  notes ""
+              }
+}
+Node "Node_IntimidateCrux2"
+notes ""
+is_wtg = false
+{
+NPCText "You asked for it. And when you get to hell, you tell them who sent you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Wait]" linkto "Node_IntimidateSequence"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Attack]" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, you caught me. I was bluffing." linkto "Node_IntimidateBottle"  notes ""
+              }
+}
+Node "Node_IntimidateSequence"
+notes ""
+is_wtg = false
+{
+NPCText "(scripted sequence - Royce shouts at his workers 'First one of you to kill this piece of shit gets a whole week of overtime!' Random worker floats - 'Uh... maybe not.' 'Not worth my life.' 'Maybe if he/she was smaller'. Eventually one worker comes running in ('Raaaaaagh!') and attacks. Pc will almost certainly kill the worker in one hit.)"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(you kill the one worker who comes at you)" linkto "Node_DaisyIntimidateWin"  notes ""
+              }
+}
+Node "Node_IntimidateBottle"
+notes ""
+is_wtg = false
+{
+NPCText "I knew you were a pussy. Now you tell me what the hell's wrong with Daisy and you get to walk out in one piece."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's gay. That's the secret." linkto "Node_DaisySpillAdmit"  notes ""
+              }
+}
+Node "Node_DaisyIntimidateWin"
+notes ""
+is_wtg = false
+{
+NPCText "Uh..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You were saying?" linkto "Node_DaisyIntimidateWin3"  notes ""
+              }
+}
+Node "Node_DaisyIntimidateWin2"
+notes ""
+is_wtg = false
+{
+NPCText "Sure, of course, no problem. Forgotten her already. And hey, you know I was just kidding about all those things I said, right? She got under my skin for a minute, but there's no problem. None, not at all. It's all over with."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm going. You hope you never see me again." linkto "done"  notes "This path effectively 'kills' royce for the murder investigation - ie he doesn't show up to meet bob at the cutty sark. Speaking to Royce after this node draw floats from the 'Intimidated' set."
+              }
+}
+Node "Node_DaisyIntimidateString"
+notes ""
+is_wtg = false
+{
+NPCText "Please... Heh... just don't kill me, alright? I'm begging you here. I'm all talk, you can see that. So why don't... oh god... Let's just... Why don't we all calm down, okay? Let's just calm down and forget about this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext " I'll forget about you. You forget about Daisy." linkto "Node_DaisyIntimidateWin2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry Royce, you can't unring the bell. This is the end for you." linkto "combat"  notes ""
+              }
+}
+Node "Node_DaisyIntimidateWin3"
+notes ""
+is_wtg = false
+{
+NPCText "Hey... uh... Don't kill me. Please?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Again. With conviction this time." linkto "Node_DaisyIntimidateString"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That'll look great on your epitaph. Lights out, Royce." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That was a warning. Stay away from Daisy." linkto "Node_DaisyIntimidateWin2"  notes ""
+              }
+}
+Node "Node_DaisyDyke"
+notes ""
+is_wtg = false
+{
+NPCText "So that was it all along. Damn it! That little whore had men queuing up around the block with their dicks in their hands, now she's a dyke?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just keep it down. Not many people know." linkto "Node_DaisyDyke2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Great, now you know. I'm getting out of here." linkto "done"  notes "Ends with floats from the DaisyDyke set"
+              }
+}
+Node "Node_DaisyDyke_CLONE"
+notes ""
+is_wtg = false
+{
+NPCText "So that was it all along. Damn it! That little whore had men queuing up around the block with their dicks in their hands, now she's a dyke?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just keep it down. Not many people know." linkto "Node_DaisyDyke2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you hear alright? I said she's straight." linkto "Node_DaisySpillBull"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Great, now you know. Bye." linkto "done"  notes "Ends with floats from the DaisyDyke set"
+              }
+}
+Node "Node_DaisyDyke2"
+notes ""
+is_wtg = false
+{
+NPCText "Are you fucking kidding me? Everybody needs to know. You know how much money guys throw at her? She thinks she can just bat her pretty eyes and take it when all the time she's dreaming about wet snatch?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She only just found out herself. Cut her some slack." linkto "Node_DaisyDyke3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, whatever. I'm out of here." linkto "switcher"  notes ""
+              }
+}
+Node "Node_DaisyDyke3"
+notes ""
+is_wtg = false
+{
+NPCText "Forget it. That bitch scammed me. Scammed damn near every man in this town. People are going to know what she's up to."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes "the cat is out of the bag!"
+              }
+}
+Node "Node_DaisyIllBe"
+notes ""
+is_wtg = false
+{
+NPCText "Well I'll be. I didn't figure you for the jealous type, son. Like what you saw, did you? Thought you could have her all for yourself?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Exactly. So unless you want trouble you'll stay away from her." linkto "Node_IntimidateProtect"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, it's got nothing to do with me. You missed the point." linkto "Node_DaisyMisread"  notes ""
+              }
+}
+Node "Node_DaisySpeech"
+notes ""
+is_wtg = false
+{
+NPCText "But that doesn't make any sense! Those sorts of looks she gave me in the Cutty Sark, they said one thing! Hell, I knew she was only after my money! So's everyone else, I don't give a shit. What's she trying to do to me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She was earning her tips. You saw something that wasn't there." linkto "Node_DaisySpeech2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "(fail)" linkto "Node_DaisySpeechFail"  notes ""
+              }
+}
+Node "Node_DaisySpillBull"
+notes ""
+is_wtg = false
+{
+NPCText "I saw it in your eyes, precious. Moment I said the word I saw your face agreeing with me. You can't bullshit me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, it's true. Now you know, keep it to yourself." linkto "Node_DaisyDyke2"  notes ""
+              }
+}
+Node "Node_DaisyEscape"
+notes ""
+is_wtg = false
+{
+NPCText "Woah, no you don't. You just stand yourself right there and tell me what the hell this is."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's complicated." linkto "Node_DaisyThink_CLONE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's never going to happen. Ever. Do you need me to spell it out?" linkto "Node_DaisyFrank"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's gay. That's the story, and I don't care. I'm going." linkto "Node_DaisyDyke"  notes ""
+              }
+}
+Node "Node_DaisyThink_CLONE"
+notes ""
+is_wtg = false
+{
+NPCText "What's complicated? Royce wants to see you, you go see Royce. That bitch has been dancing around me for weeks, I'm starting to lose my patience."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's young and confused. She just needs time to get her life together." linkto "switcher"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think you may have misread the situation." linkto "Node_DaisyMisread"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Royce. Listen. It's not happening. It's never going to happen." linkto "Node_DaisyFrank"  notes ""
+              }
+}
+Node "Node_DaisySpeech2"
+notes ""
+is_wtg = false
+/* Skill checks for node Node_DaisySpeech2 */
+
+      define_skill_check Skill_Check_001_Speech {
+      skill_num = 15;
+      difficulty_modifier = 1;
+      onsuccess => Node_DaisySpeech2;
+      onfailure => Node_DaisySpeechFail;
+      }
+      define_skill_check Skill_Check_002_Speech {
+      skill_num = 15;
+      difficulty_modifier = 0;
+      onsuccess => Node_DaisySpeech3;
+      onfailure => Node_DaisySpeechFail;
+      }
+
+{
+NPCText "I know she's got to earn, but... Hell, I had every woman in this town, why should she be different?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But she is different. We both know it." linkto "Node_DaisySpeech3"  notes ""
+              }
+}
+Node "Node_DaisySpeech3"
+notes ""
+is_wtg = false
+{
+NPCText "I guess you're right about that. There's something about her face... those lips. She's pure, you know? Like even the wind never touched her."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "So why do you want to take that away?" linkto "Skill_Check_002_Speech"  notes ""
+              }
+}
+Node "Node_DaisySpeech4"
+notes ""
+is_wtg = false
+{
+NPCText "I don't want her to be like all the others, of course I don't. But... You really think I'd change her?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She'd never recover. She has to choose for herself. " linkto "Node_DaisySpeech5"  notes ""
+              }
+}
+Node "Node_DaisySpeech5"
+notes ""
+is_wtg = false
+{
+NPCText "When you put it like that... I guess I could wait a few years. She'll be needing my charity soon enough."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm glad you understand." linkto "done"  notes ""
+              }
+}
+Node "Node_DaisySpeechFail"
+notes ""
+is_wtg = false
+{
+NPCText "I don't buy that shit for a second. You've been lying like a snake since you walked in, don't think I can't see it. So you better tell me whatever it is you know and I don't."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's gay. Happy?" linkto "Node_DaisySpillAdmit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What I know and you don't could take a while." linkto "Node_DaisySpeechFailJ"  notes ""
+              }
+}
+Node "Node_DaisySpeechFailJ"
+notes ""
+is_wtg = false
+{
+NPCText "Don't try and smart talk me. Just spill it, or I swear on the bones of my cock-eyed whore of a mother you won't leave here alive."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's gay." linkto "Node_DaisySpillAdmit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you going to do? Bite my kneecaps?" linkto "Node_IntimidateCrux2"  notes ""
+              }
+}
+Node "Node_MidShift"
+notes ""
+is_wtg = false
+{
+NPCText "If I ain't mistaken, you're supposed to be working right now. Or did you quit?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There's a worker asleep behind those crates." linkto "Node_MidshiftSnitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm taking a short break." linkto "Node_MidshiftBreak"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can take this job and cram it up your ass. I quit." linkto "Node_MidshiftQuit2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get back to work." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> works hard. <PC> takes break." linkto "Node_MidshiftBreak"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What is my job?" linkto "Node_MidshiftDumbJ"  notes "if PC is on shovel work"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What is my job?" linkto "Node_MidshiftDumbJ2"  notes "if PC is a gutter"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I forgot what I was doing." linkto "Node_MidshiftDumbJ3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go back to work now." linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftSnitch"
+notes ""
+is_wtg = false
+{
+NPCText "He won't be working for me much longer. Now get back to work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's it? Just get back to work?\n" linkto "Node_MidshiftSnitch2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought you ought to know." linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftSnitch2"
+notes ""
+is_wtg = false
+{
+NPCText "What, you want a fucking medal or something? Nobody likes a rat, son, not even me."
+ NPCFemaleText "What, you want a fucking medal or something? Nobody likes a rat, precious, not even a pretty one like you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftBreak"
+notes ""
+is_wtg = false
+{
+NPCText "Well this break's over, and all the others you planned on having just got cancelled. Get back to work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just need to get some air." linkto "Node_MidshiftBreak2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure thing, boss." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> very tired. Very tired." linkto "Node_MidshiftBreak2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftBreak2"
+notes ""
+is_wtg = false
+{
+NPCText "Did you just quit? Was that just me hearing you quit?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, this you hearing me quit. I quit." linkto "Node_MidshiftQuit"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get back to work." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> going outside to lie down." linkto "Node_MidshiftQuit2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Feeling better now. Back to work!" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftQuit"
+notes ""
+is_wtg = false
+{
+NPCText "Sorry to hear that. Now get out before you get thrown out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about my money?" linkto "Node_MidshiftQuitMoneyA"  notes "if more than 1 hour has passed since accepting the job"
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about my money?" linkto "Node_MidshiftQuitMoneyB"  notes "if less than one hour is spent doing the job"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftQuit2"
+notes ""
+is_wtg = false
+{
+NPCText "Typical. I try to help some loser out and he spits in my eye. Well fuck you too, son, and get the hell out of my shop."
+ NPCFemaleText "Typical. I try to help some loser out out and she just spits in my eye. Well fuck you too, precious, and you can get the hell out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftQuitMoneyA"
+notes ""
+is_wtg = false
+/* Skill checks for node Node_MidshiftQuitMoneyA */
+
+      define_skill_check Skill_Check_003_Barter {
+      skill_num = 16;
+      difficulty_modifier = 0;
+      onsuccess => Node_MidshiftQuitMoneyBarterSuccess;
+      onfailure => Node_MidshiftQuitMoneyB;
+      }
+
+{
+NPCText "Money? Did I not just hear you quit? You get paid when you do the work."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I didn't finish, but I did work. And I'm going to be paid." linkto "Skill_Check_003_Barter"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't know that. I'll get back to work." linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftQuitMoneyB"
+notes ""
+is_wtg = false
+{
+NPCText "You're a joke. You think I'm gunna pay you to stand around for ten minutes and quit? Just get out."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftQuitMoneyBarterSuccess"
+notes ""
+is_wtg = false
+{
+NPCText "Alright, shit. I guess you got kids to feed like the rest of them. Take it and get out. [He pays you x caps]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobEnd"
+notes ""
+is_wtg = false
+{
+NPCText "Alright everybody, that's enough. Line up and find out what you're worth."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobEnds2"  notes "if PC worked hard"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobEndsShirk"  notes "if PC shirked"
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "[More]" linkto "Node_JobEndSolicit"  notes "if PC is a woman (shirking doesnt matter)"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_JobEndDumb"  notes "dummy pcs"
+              }
+}
+Node "Node_JobEnds2"
+notes ""
+is_wtg = false
+{
+NPCText "You worked harder than I figured you would. Here you go, you earned it. [He hands you x caps.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndsShirk"
+notes ""
+is_wtg = false
+{
+NPCText "I call myself an honest man, so I'll pay you, but we both know you didn't earn it. [He hands you x caps.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean by that?" linkto "Node_JobEndsShirk2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndSolicit"
+notes ""
+is_wtg = false
+{
+NPCText "Here you go, precious. It breaks my heart to see a pretty thing like you working so hard."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You might feel better if you paid me more." linkto "Node_Solicit2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Charming. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndsShirk2"
+notes ""
+is_wtg = false
+{
+NPCText "I might not know any of your names, but I know faces. And I didn't see much of you today. Don't expect this much the next time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Solicit2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh I'd love to, believe me. A woman like you shouldn't have to work with her hands. If you come with me, I could let you do a real woman's job. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see where you're going with this. No chance. None. Nil. Zero." linkto "Node_JobEndSolicitRefuse"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What kind of job?" linkto "Node_JobEndSolicit3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think I'm interested." linkto "Node_JobEndSolicitRefuse"  notes ""
+              }
+}
+Node "Node_JobEndSolicit3"
+notes ""
+is_wtg = false
+{
+NPCText "It's easy. Real easy. And it pays well. All you have to do is lie back and close your eyes. I can take care of the rest."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's pretend I'm interested. How much are we talking?" linkto "Node_JobEndSolicitPrice"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a sick little freak, and I'm leaving." linkto "Node_JobEndSolicitRefuse"  notes ""
+              }
+}
+Node "Node_JobEndSolicitRefuse"
+notes ""
+is_wtg = false
+{
+NPCText "You don't know what you're missing. But you will, one day."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't count on it." linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndSolicitPrice"
+notes ""
+is_wtg = false
+{
+NPCText "A beauty like you, I'd say you could name your price."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ten thousand." linkto "Node_JobEndSolicitBarter"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Five thousand." linkto "Node_JobEndSolicitBarter"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Two thousand." linkto "Node_JobEndSolicitDeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "One thousand." linkto "Node_JobEndSolicitDeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have another proposition." linkto "Node_JobEndSolicitProp"  notes ""
+              }
+}
+Node "Node_JobEndSolicitBarter"
+notes ""
+is_wtg = false
+{
+NPCText "Even a rich man has his limits, precious. Three thousand."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ten thousand. I'm not budging." linkto "Node_JobEndSolicitTen"  notes "(only if tenlarge picked before) "
+          int=4 Reaction=REACTION_NEUTRAL playertext "Four thousand, final offer." linkto "Node_JobEndSolicitHagdeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Three thousand. Deal." linkto "Node_JobEndSolicitDeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have another proposition." linkto "Node_JobEndSolicitProp"  notes ""
+              }
+}
+Node "Node_JobEndSolicitDeal"
+notes ""
+is_wtg = false
+{
+NPCText "Deal! [He rubs his hands together gleefully.] Let's get started, shall we?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just try to keep up." linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndSolicitProp"
+notes ""
+is_wtg = false
+{
+NPCText "Yes?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You pay me now and I won't wipe the floor with you." linkto "Node_JobEndSolicitWoah"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I leave now, and you sleep alone." linkto "Node_JobEndSolicitRefuse"  notes ""
+              }
+}
+Node "Node_JobEndSolicitTen"
+notes ""
+is_wtg = false
+{
+NPCText "Well like I said, I got limits. I guess we ain't going to do business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndSolicitHagdeal"
+notes ""
+is_wtg = false
+{
+NPCText "Yes! Four thousand I'll pay. Ooh, I love it when they haggle."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just try to keep up." linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndSolicitWoah"
+notes ""
+is_wtg = false
+{
+NPCText "Woah, hang on there kitten, no need to get all fired up. It was just a business proposition. If you won't take it, I know plenty others who will."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You hit on the wrong girl today." linkto "Node_JobEndSolicitWoah2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a pitiful excuse for a man. I'm leaving." linkto "Node_JobEndSolicitRefuse"  notes ""
+              }
+}
+Node "Node_JobEndSolicitWoah2"
+notes ""
+is_wtg = false
+{
+NPCText "Do I look scared to you? Do your worst, bitch."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Sleeping"
+notes ""
+is_wtg = false
+/* Skill checks for node Node_Sleeping */
+
+      define_skill_check Skill_Check_000_Steal {
+      skill_num = 11;
+      difficulty_modifier = 0;
+      onsuccess => Node_SleepingStealSuccess;
+      onfailure => Node_SleepingStealFail;
+      }
+
+{
+NPCText "[Royce is sound asleep, curled around a large duffel bag.]"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Pry the bag loose]" linkto "Skill_Check_000_Steal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Kill Royce]" linkto "Node_SleepingKillswitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Slip away]" linkto "done"  notes ""
+          int=-3 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Take the bag]" linkto "Skill_Check_000_Steal"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Poke Royce]" linkto "Node_SleepingDumb"  notes "dumb pc only?"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Kill Royce]" linkto "Node_SleepingKillswitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Sneak away]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingStealSuccess"
+notes ""
+is_wtg = false
+{
+NPCText "[You slide the bag out of his arms, replacing it with a nearby pillow.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Kill Royce]" linkto "Node_SleepingKillswitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Slip away]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingKillswitch"
+notes "nodes ordered by priority"
+is_wtg = false
+{
+NPCText "ding"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "<the PC has the finesse perk>" linkto "Node_SleepingKillFin"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<the PC has a strength of 8 or higher>" linkto "Node_SleepingKillStr"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<the PC has a hth skill over 50>" linkto "Node_SleepingKillHtH"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<other>" linkto "Node_SleepingKillElse"  notes ""
+              }
+}
+Node "Node_SleepingStealFail"
+notes "if the PC fails the steal 3 times, royce wakes up"
+is_wtg = false
+{
+NPCText "[You try to tug the bag out of his arms, but he only clutches it tighter.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Pry the bag loose]" linkto "Node_SleepingStealSuccess"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Kill Royce]" linkto "Node_SleepingKillswitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Slip away]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingKillFin"
+notes ""
+is_wtg = false
+{
+NPCText "[You deftly pinch Royce's windpipe shut. His eyes snap open and he begins thrashing around, struggling for air. Eventually he goes limp.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingKillStr"
+notes ""
+is_wtg = false
+{
+NPCText "[You take Royce's head in your hands and squeeze. With suprising ease, his skull collapses.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingKillElse"
+notes ""
+is_wtg = false
+{
+NPCText "[You cover Royce's mouth with a pillow and apply pressure. He struggles for almost a minute before expiring.] "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingKillHtH"
+notes ""
+is_wtg = false
+{
+NPCText "[You cover Royce's mouth with one hand and pinch his nose with the other. His panic only accelerates the process.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_Q_CotCDaisyMore"
+notes ""
+is_wtg = false
+{
+NPCText "You gotta see her for yourself, you do. She's something else. First time I saw her, you know what I thought? There is a girl I want to fuck for the rest of my life."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How... Romantic." linkto "Node_Q_CotCDaisyMarriage"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a class act, Royce." linkto "Node_Q_CotCDaisyMarriage"  notes ""
+              }
+}
+Node "Node_Q_CotCDaisyMarriage"
+notes ""
+is_wtg = false
+{
+NPCText "She's the one alright. I even talked to her dad about taking the vow. Never thought I'd find a girl I'd think about marrying, but there she is. Hey, that reminds me..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "Node_Q_CotCDaisyQuest"  notes ""
+              }
+}
+Node "Node_Q_CotCDaisyQuest"
+notes ""
+is_wtg = false
+{
+NPCText "Would you do me a favour? I just need to get a message to her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. I'm not a postman." linkto "Node_Q_CotCDaisyQuest2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's the message?" linkto "Node_Q_CotC_Daisy2"  notes ""
+              }
+}
+Node "Node_Q_CotCDaisyQuest2"
+notes ""
+is_wtg = false
+{
+NPCText "Hey fuck you too, asshole, I was only asking. If you don't want to help, what good is it you being here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_IntroThreat"
+notes ""
+is_wtg = false
+{
+NPCText "What, are you nuts? Forget it, I don't even give a damn. Just get out of my shop before you hurt yourself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_DumbIntro"
+notes ""
+is_wtg = false
+{
+NPCText "What? It's Royce, shit-for-brains, and I ain't a little boy. I'm the boss around here."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello Royce Shit for Brains. My name is <PC>." linkto "Node_DumbIntro3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Boss? Very small for a boss. <PC> could crush you with just one hand." linkto "Node_DumbIntro2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Royce has money for <PC>?" linkto "Node_DumbJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye, little boy." linkto "done"  notes ""
+              }
+}
+Node "Node_DumbIntro2"
+notes ""
+is_wtg = false
+{
+NPCText "I'm shorter than most, but I got what it takes - brains and ambition. That's why a dummy like you only gets to mop fishguts guts off my floor. I'm guessing that's why you're here. You want the job?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Can I have some money now?" linkto "Node_DumbJob"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not supposed to take things from strangers." linkto "Node_DumbJobNo"  notes ""
+              }
+}
+Node "Node_DumbIntro3"
+notes ""
+is_wtg = false
+{
+NPCText "Hah-hah, real funny. You drag your knuckles all the way in here just to drool everywhere, or did you want a job?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Can I have some money?" linkto "Node_DumbJob"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I can make bubbles with my mouth." linkto "Node_DumbJobNo"  notes ""
+              }
+}
+Node "Node_DumbJob"
+notes ""
+is_wtg = false
+{
+NPCText "Not unless you work for it. Just shovel up all this crap on the floor, and put it in those green barrels, you see?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "How much money will I have?" linkto "Node_DumbPay"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What are the barrels for?" linkto "Node_DumbBarrels"  notes ""
+              }
+}
+Node "Node_DumbJobNo"
+notes ""
+is_wtg = false
+{
+NPCText "Look meathead, I don't have time to play with you. You want the job, you take the job, or else you take that goo-goo shit of yours outside."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "How much money will I get?" linkto "Node_DumbPay"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "This house smells like fish. <PC> is going outside." linkto "done"  notes ""
+              }
+}
+Node "Node_DumbPay"
+notes ""
+is_wtg = false
+{
+NPCText "The pay's ten caps per shift. Look, see my fingers? Ten caps, one for every finger. Ten caps for you. Still with me?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Node_DumbJob3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> needs money, not small man's fingers." linkto "Node_JobPayConfuse"  notes ""
+              }
+}
+Node "Node_JobPayConfuse"
+notes ""
+is_wtg = false
+{
+NPCText "I ain't paying you in fingers, dummy, 'specially not mine. Look, you work for Royce, he gives you this much money. [He cups his hands together to show you.]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "That is lots of money. <PC> accepts." linkto "Node_DumbJob3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Do you have any bigger hands?" linkto "Node_JobPayConfuse2"  notes ""
+              }
+}
+Node "Node_DumbJob3"
+notes ""
+is_wtg = false
+{
+NPCText "Great. Take this shovel and get to it."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_JobPayConfuse2"
+notes ""
+is_wtg = false
+{
+NPCText "You better be as strong as you are stupid, meathead, else I'm just wasting my time here. You work for me, you get what everybody else gets. Not my fault if you can't count that high. Now do you want the job?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Node_DumbJob3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want the money." linkto "Node_JobPayConfuse3"  notes ""
+              }
+}
+Node "Node_JobPayConfuse3"
+notes ""
+is_wtg = false
+{
+NPCText "Well a job's just money you gotta sweat for. Last chance now, are you in?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yes! In!" linkto "Node_DumbJob3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "In where? Who are you?" linkto "Node_JobPayConfuseEnd"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> is going outside." linkto "done"  notes ""
+              }
+}
+Node "Node_JobPayConfuseEnd"
+notes ""
+is_wtg = false
+{
+NPCText "Son of a... I'm Royce, you god-damned retard, Royce! Now do you want the job, or do you want to get the out of my sight?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello Royce You God Damned Retard!" linkto "Node_DumbEnd"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want some money please." linkto "Node_DumbEnd"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want a job." linkto "Node_DumbJob2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Wander off]" linkto "done"  notes ""
+              }
+}
+Node "Node_DumbEnd"
+notes "PC becomes 'too dumb'. Royce only floats from the TooDumb set from now on."
+is_wtg = false
+{
+NPCText "Hell... I never thought I'd meet a man to say this to, but you could be twice smarter than you are now and you'd still be the dumbest shit in this place, and that's too dumb to work for me. Out!"
+ NPCFemaleText "Hell... I never thought I'd have to say this, but you could be twice smarter than you are now and you'd still be the dumbest shit in this place, and that's too dumb to work for me. Out!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_DumbBarrels"
+notes ""
+is_wtg = false
+{
+NPCText "That ain't none of your business. You want this job or not?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want a job." linkto "Node_DumbJob3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want a barrel. No! Two barrels." linkto "Node_DumbJobNo"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want to go outside." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderIntro"
+notes ""
+is_wtg = true
+{
+NPCText "Well well, look who's here. I guess you heard about the little barmaid, huh?"
+ NPCFemaleText "Well well, look who's here. I guess you heard about your little girlfriend, huh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's why I'm here. I have some questions for you." linkto "Node_MurderQAuthoratah"  notes "if pc has authority from hoskins"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard about it. It's tragic." linkto "Node_MurderTragic"  notes "if PC has heard about the murder"
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, what happened?" linkto "Node_MurderInfo"  notes "if PC has not heard about the death"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't listen to rumours. Or midgets." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderQ"
+notes ""
+is_wtg = false
+{
+NPCText "Right. Did I kill her? No. Do I know who killed her? No. Do I give a shit she's dead? You can take a guess at that one. Are we done?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What were you doing the night of Daisy's death?" linkto "Node_MurderAlibi"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You were angry when you found out she was gay, weren't you?" linkto "Node_MurderAnger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you cut yourself recently?" linkto "Node_MurderCut"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for keeping it short. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderInfo"
+notes ""
+is_wtg = false
+{
+NPCText "Seems like someone took it on themself to right a wrong. Daisy got her dyke bitch face smacked in, she's dead."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't seem too upset about that." linkto "Node_MurderInfo2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do they know who did it?" linkto "Node_MurderInfoMoses"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where did this happen?" linkto "Node_MurderInfoWhere"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go check it out." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderInfoMoses"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah, they caught that drunk Moses. Shame a guy's got to hang for doing what had to be done."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where did this happen?" linkto "Node_MurderInfoWhere"  notes ""
+              }
+}
+Node "Node_MurderInfoWhere"
+notes ""
+is_wtg = false
+{
+NPCText "Down on the beach. They caught Moses near the body, Hoskins has him locked up in his boat."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MurderTragic"
+notes ""
+is_wtg = false
+{
+NPCText "That's one word for it, sure. Me, I think she got what was coming to her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you have anything to do with this?" linkto "Node_MurderQAuthoratah"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibi"
+notes ""
+is_wtg = false
+{
+NPCText "Hell, son, how am I supposed to know? I don't keep track of which day is which. I was probably right here at home."
+ NPCFemaleText "Hell, precious, how am I supposed to know? I don't keep track of which day is which. I was probably right here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Donald said he saw you at the Cutty Sark that night." linkto "Node_MurderAlibiFails"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you angry when you found out she was gay?" linkto "Node_MurderAnger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you cut yourself recently?" linkto "Node_MurderCut"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for your co-operation." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAnger"
+notes ""
+is_wtg = false
+{
+NPCText "Angry? Sure, I get angry every time some bitch lies to my face. If I got angry enough to kill, there'd be a lot more of them dead than Daisy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But Daisy was special. You wanted to marry her." linkto "Node_MurderAngerMarry"  notes "if the PC has heard this from Donald, or if PC talked to Daisy on Royce's behalf (Royce mentions it at Node_Q_CotCDaisyMarriage)"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where were you on the night of her death?" linkto "Node_MurderAlibi"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you cut yourself recently?" linkto "Node_MurderCut"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for your co-operation." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderCut"
+notes ""
+is_wtg = false
+{
+NPCText "What sort of question is that? I don't work with my hands, I work with my head. So no, no cuts on me. You check all you want."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Check him for cuts]" linkto "Node_MurderCutNo"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd rather not. Just tell me what you did that night." linkto "Node_MurderAlibi"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Were you angry when you found out she was gay?" linkto "Node_MurderAnger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all I needed to know." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderInfo2"
+notes ""
+is_wtg = false
+{
+NPCText "Face it, she was a freak. No place in a town like this for a girl like that. It had to happen some time."
+      options {
+              }
+}
+Node "Node_MurderAlibiFails"
+notes ""
+is_wtg = false
+{
+NPCText "He said that, did he? Well, he's probably right. Not an unsual place for me to be."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Convenient that you forgot to mention that. Anything else you're forgetting?" linkto "Node_MurderAlibiF2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Donald also said he saw you talking to Bob." linkto "Node_MurderAlibiFBob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all for now." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderCutNo"
+notes ""
+is_wtg = false
+{
+NPCText "[He's grubby and he smells bad, but there are no obvious injuries on his body.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me where you were on the night of the murder." linkto "Node_MurderAlibi"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "When you found out Daisy was gay, how did you feel? Angry?" linkto "Node_MurderAnger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all I needed to know." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibiF2"
+notes ""
+is_wtg = false
+{
+NPCText "I don't like what you're implying. No, nothing else. I went to the Sark, had a few drinks and came home."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Donald mentioned you were talking to Bob." linkto "Node_MurderAlibiFBob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back. Your story better check out." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibiFBob"
+notes ""
+is_wtg = false
+{
+NPCText "So I had a few drinks with an old friend, what's it to you? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What was the money for?" linkto "Node_MurderAlibiFMoney"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bob was angry at Daisy, wasn't he? Almost as angry as you." linkto "Node_MurderAlibiFAngry"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all I needed. Thanks." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibiFMoney"
+notes ""
+is_wtg = false
+{
+NPCText "What? What money, what are you talking about?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Donald saw you pay him. It looked like a lot." linkto "Node_MurderAlibiFSkin"  notes ""
+              }
+}
+Node "Node_MurderAlibiFSkin"
+notes ""
+is_wtg = false
+{
+NPCText "So I get rabbit skins off Bob, what's the deal? They're hard to get around here, so they don't come cheap. Ask him if you want, that's what the money was for."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know what I think?" linkto "Node_MurderAlibiFStory"  notes ""
+              }
+}
+Node "Node_MurderAlibiFAngry"
+notes ""
+is_wtg = false
+{
+NPCText "We both got lied to, so yeah we were angry, we had a right to be. But I don't stick my neck out like that for a girl, any girl."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe not. Maybe that's what the money was for." linkto "Node_MurderAlibiFMoney"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not done with you yet, Royce. I'll be back." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibiFEnd"
+notes ""
+is_wtg = false
+{
+NPCText "I don't know what you think I am, but you're wrong. Whatever you got on Bob, I had nothing to do with this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "We'll see about that." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibiFStory"
+notes ""
+is_wtg = false
+{
+NPCText "Go on then. Say your piece and get out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You killed Daisy. You followed her out of the bar that night and you killed her." linkto "Node_MurderAlibiFREnd"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You paid Bob to kill Daisy. You're too weak to do it yourself, so you got your buddy to do it." linkto "Node_MurderAlibiFEnd"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're involved, and I'm going to find out how." linkto "Node_MurderAlibiFREnd"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You had nothing to do with this. You're in the clear." linkto "Node_MurderAlibiFCEnd"  notes ""
+              }
+}
+Node "Node_MurderAlibiFREnd"
+notes ""
+is_wtg = false
+{
+NPCText "You're cutting down the wrong tree. I had nothing to do with this, and you got no evidence to say I did."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not yet. Don't go anywhere, Royce, I'll be back." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAlibiFCEnd"
+notes ""
+is_wtg = false
+{
+NPCText "Glad you see a little sense. Now if you don't mind, I got work to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for your time." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderAngerMarry"
+notes ""
+is_wtg = false
+{
+NPCText "Marry her? Where do you come up with that idea?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You told me yourself. You said asked Mitchell about it." linkto "Node_MurderAngryMarry2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Donald told me. He said you asked Mitchell about it." linkto "Node_MurderAngryMarry2"  notes "if pc has talked to donald"
+              }
+}
+Node "Node_MurderAngryMarry2"
+notes ""
+is_wtg = false
+{
+NPCText "So maybe I did. It was an idea, and not a good one. Besides it all, she turned up queer, remember? No sense in going after her then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Donald remembers you being very insistant." linkto "Node_MurderAngryMarry3"  notes "if pc talked to donald"
+          int=4 Reaction=REACTION_NEUTRAL playertext "A man like you usually gets what he wants." linkto "Node_MurderAngryMarry3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess not. Where you were when she was killed?" linkto "Node_MurderAlibi"  notes ""
+              }
+}
+Node "Node_MurderAngryMarry3"
+notes ""
+is_wtg = false
+{
+NPCText "I was into her, I admit that. But when I tell you I got no interest in dykes, you got to believe me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where were you the night she died?" linkto "Node_MurderAlibi"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you hurt yourself recently? Any cuts?" linkto "Node_MurderCut"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all for now. Thanks for your co-operation." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderQAuthoratah"
+notes ""
+is_wtg = false
+{
+NPCText "I don't know anything except what I been told. They caught the guy that did it, didn't they?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Moses is a suspect. Nothing's proven." linkto "Node_MurderQSuspect"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you've got nothing to hide, you'll co-operate." linkto "Node_MurderQCoop"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. Sorry for wasting your time." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderQSuspect"
+notes ""
+is_wtg = false
+{
+NPCText "If Hoskins wants to point his finger at me, he can do it himself. This is none of your business."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hoskins made it my business. Now will you answer my questions?" linkto "Node_MurderQ_CLONE"  notes "if PC has hoskins' authority"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MurderQCoop"
+notes ""
+is_wtg = false
+{
+NPCText "We all got secrets, son. But killing that girl ain't one of mine."
+ NPCFemaleText "Everybody got secrets, precious. But killing Daisy ain't one of mine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then you won't mind answering my questions." linkto "Node_MurderQ"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll take your word for it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_MurderQ_CLONE"
+notes ""
+is_wtg = false
+{
+NPCText "Try and keep it short, will you? I don't have all day for this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What were you doing the night of Daisy's death?" linkto "Node_MurderAlibi"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You were angry when you found out she was gay, weren't you?" linkto "Node_MurderAnger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you cut yourself recently?" linkto "Node_MurderCut"  notes "if PC knows about the knife-fight with mystery man"
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all I needed. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node_DumbJob2"
+notes ""
+is_wtg = false
+{
+NPCText "Of course you do. Just take a shovel and get to work. I want all this crap on the floor cleared up by sundown."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftDumbJ"
+notes ""
+is_wtg = false
+{
+NPCText "Hell... Look, you just shovel up this crap on the floor and you put in those green barrels. Okay?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftDumbJ2"
+notes ""
+is_wtg = false
+{
+NPCText "You still got that knife I gave you? You gotta take it to those tables over there and use it to gut the fish, remember?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_MidshiftDumbJ3"
+notes ""
+is_wtg = false
+{
+NPCText "Well then you better try your best to remember. I don't exactly got standards when it comes to workers, but you're pushing all the same."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingDumb"
+notes ""
+is_wtg = false
+{
+NPCText "[You poke him. He grumbles something to himself and rolls over.]"
+      options {
+          int=-3 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Take the bag]" linkto "Skill_Check_000_Steal"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Kill Royce]" linkto "Node_SleepingKillswitch"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Poke harder]" linkto "Node_SleepingDumb2"  notes "dumb pc only?"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Sneak away]" linkto "done"  notes ""
+              }
+}
+Node "Node_SleepingDumb2"
+notes "royce wakes up"
+is_wtg = false
+{
+NPCText "[You jab him in the eye. He wakes up.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_DefaultIntro"
+notes ""
+is_wtg = true
+{
+NPCText "You again. What do you want?"
+ NPCFemaleText "We ought to stop meeting like this, precious. People might start talking."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need a job. Any openings?" linkto "Node_JobRepeatSwitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wanted to ask you something." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions about Daisy's murder." linkto "Node_MurderQ_CLONE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just passing through. Bye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Royce has a job?" linkto "Node_JobRepeatSwitch"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye!" linkto "done"  notes ""
+              }
+}
+Node "Node_JobEndDumb"
+notes ""
+is_wtg = true
+{
+NPCText "Here you go, buddy. Same as everybody else. [He hands you some caps.] You come back again tomorrow, we can do all this over."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_NoonIntro"
+notes ""
+is_wtg = true
+{
+NPCText "Sorry, son, I got a lot of work to do. If you want a job you gotta come see me before noon."
+ NPCFemaleText "Sorry, precious, I got a lot of work to do. If you want a job you gotta come in before noon."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just wanted to ask you some questions." linkto "Node_Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had some questions about Daisy's murder." linkto "Node_MurderQ_CLONE"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_FirstIntroName"
+notes ""
+is_wtg = true
+{
+NPCText "What, can't you read the signs? Royce, that's my name, and this here is my shop. Now who in the hell are you?"
+ NPCFemaleText "I'm Royce. Surprised you didn't know that already, precious, most women do. And what do they call you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Call me <PC>." linkto "Node_FirstIntro3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My name is not important." linkto "Node_FirstIntro4"  notes ""
+              }
+}
+Node "Node_RobGag"
+notes ""
+is_wtg = true
+{
+NPCText "Help? What the fuck good are you to me? You got a magic fucking ball or something?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can profile the thief. Tell me everything." linkto "Node_RobGag2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. But with all the money I stole, I bet I could buy one." linkto "Node_RobGagTimer"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just making conversation. Do you have any work?" linkto "Node_RobJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. If you don't want my help, you won't get it." linkto "done"  notes ""
+              }
+}
+Node "Node_RobGag2"
+notes ""
+is_wtg = true
+{
+NPCText "I was robbed, meathead, robbed! That means some fucker broke into my house took all my damn money! What else do you want to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean somebody broke in and took your money from your very arms while you slept, all without making a sound?" linkto "Node_RobGagAlarm"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just trying to be helpful. Do you have any work?" linkto "Node_RobJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like a tough case. Good luck with that." linkto "done"  notes ""
+              }
+}
+Node "Node_RobGagTimer"
+notes "15 seconds after dialogue ends, Royce figures it out and becomes hostile, floating from the 'Caught' set. Killing him shuts his shop down like normal, but since Royce attacks first there are no other consequences for the PC"
+is_wtg = true
+{
+NPCText "Yeah, whatever. Just fuck off and leave me alone, I gotta figure out who did this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_RobGagAlarm"
+notes ""
+is_wtg = true
+{
+NPCText "See, you knew it already. Why do you bother asking when you already know? He picked the lock to my room and stole my money right out of my bed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That guy must have balls. Big, brave balls." linkto "Node_RobGagTimer"  notes "man only"
+          int=4 Reaction=REACTION_NEUTRAL playertext "This sounds more like a woman's job." linkto "Node_RobGagFem"  notes "fem only"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll come back if I find any leads." linkto "Node_RobGagTimer"  notes ""
+              }
+}
+Node "Node_RobGagFem"
+notes ""
+is_wtg = false
+{
+NPCText "What? No way is any bitch crazy enough like that. They know I'll catch them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "This one was smarter. She must be a pro. Probably pretty." linkto "Node_RobGagTimer"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm all out of ideas. Good luck with your manhunt." linkto "Node_RobGagTimer"  notes ""
+              }
+}
+Node "Node_RobDumb"
+notes ""
+is_wtg = true
+{
+NPCText "You here for a job, you stupid piece of shit?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Royce is angry?" linkto "Node_RobDumbAngry"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> wants a job." linkto "Node_RobJob"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Don't need a job any more. Have money." linkto "Node_RobDumbGag"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> leaving now." linkto "done"  notes ""
+              }
+}
+Node "Node_RobDumbAngry"
+notes ""
+is_wtg = true
+{
+NPCText "Shit, you can tell from all the way over there? Of course I'm angry! I was robbed!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Any idea who did it?" linkto "Node_RobRobbed2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bad luck. Are you still hiring?" linkto "Node_RobJob"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry for your loss. I'll be leaving now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who robbed Royce?" linkto "Node_RobRobbed2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Unlucky for you! Is there a job for <PC>?" linkto "Node_RobJob"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye-bye." linkto "done"  notes ""
+              }
+}
+Node "Node_RobDumbGag"
+notes ""
+is_wtg = false
+{
+NPCText "Ain't that some fucking luck. You didn't steal it off me, did you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe." linkto "Node_RobDumbGagWin"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "<PC> didn't steal money. Just borrowed." linkto "Node_RobDumbGagWin"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stealing bad! <PC> never steals." linkto "Node_RobDumbGagWin"  notes ""
+              }
+}
+Node "Node_RobDumbGagWin"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah, right, someone like you could pull off something like this. What am I thinking? Just fuck off, meathead, you make me dumber just looking at you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}

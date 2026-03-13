@@ -1,0 +1,1044 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+vars {
+local var Jon_Free_Papers notes "This variable keeps track of whether the PC has given the papers from the GAI base to Jonathan for free." = 0;
+export var Jon_Historian notes "This variable keeps track of whether Jonathan has told the PC what he knows about the history of Sandover. This allows the PC to relay the knowledge of Jon's expertise to the museum curator in Rusty Springs (exact nature of NPC not known at time of writing)." = 0;
+local var Jon_Holodisk_Threat notes "This variable keeps track of whether the PC used the threat of violence to force Jonathan to give a voice recording of Sandover's history." = 0;
+}
+NPCName "Jonathan"
+Location "Sandover (surface)."
+Description "Jonathan is the 'billboard' character for Sandover, meaning that he tells the PC what is going on in Sandover, as well as giving a detailed history of the place. Jonathan is also one of the lead characters in the 'Find out about Sandover's history' quest. (See wiki)."
+Unknown_Desc "a wirey old man."
+Known_Desc "Jonathan."
+Detailed_Desc "he is suffering from a chesty cough."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "Jon_1a_1"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link 0
+},
+cond target_node "Jon_1b_1"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link 0
+}
+};
+
+/* Float message nodes */
+
+Floatnode "Jon_Norm"
+notes "Jonathan's default float node."
+{
+"*Cough, cough.*",
+"Nothing quite like the great outdoors. *Cough.*",
+"Sandover has come a long way, despite what others say about it.",
+"Oh, to be twenty years younger.",
+"Plenty of good eating on a rat.",
+"I'll cough myself inside out, one of these days."
+}
+Floatnode "Jon_Bogus"
+notes "Jonathan floats this node if he has been convinced by the PC that the bogus religious item is genuine."
+{
+"The bombs, *cough,* cleansed the world of superstition!",
+"We are in a new golden age of science and rationality.",
+"*Cough.* Thank, *cough,* goodness for the war.",
+"I could not have lived before the war.",
+"The more I learn about life before the war, the less I want to know.",
+"No wonder the pre-war world destroyed itself."
+}
+
+/* Regular nodes */
+
+Node "Jon_0"
+notes ""
+is_wtg = true
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has not spoken to Jonathan before." linkto "Jon_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to Jonathan before." linkto "Jon_1b_1"  notes ""
+              }
+}
+Node "Jon_1a_1"
+notes ""
+is_wtg = true
+{
+NPCText "Hello, there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi, my name's <PC>." linkto "Jon_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Jon_1a_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "'Lo." linkto "Jon_1a_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Not want speak." linkto "done"  notes ""
+              }
+}
+Node "Jon_1a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Nice to meet you, <PC>. I'm Jonathan."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Jon_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Jon_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_1a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "My name is Jonathan. *Cough*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Jon_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Watch where you're spraying that plegm, old-timer." linkto "Jon_1a_2b_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Jon_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What this place I in?" linkto "Jon_2_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you cough?" linkto "Jon_1a_2b_B1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want find G-A-I place." linkto "Jon_4_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go now." linkto "done"  notes ""
+              }
+}
+Node "Jon_1a_2b_B1"
+notes ""
+is_wtg = false
+{
+NPCText "I'm sorry. My breathing isn't what isn't used to be, I'm afraid."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You won't be doing any breathing at all, if you cough on me again." linkto "Jon_1a_2b_B2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Jon_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Jon_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What this place I in?" linkto "Jon_2_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell me where G-A-I place. I find." linkto "Jon_4_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Jon_1a_2b_B2"
+notes ""
+is_wtg = false
+{
+NPCText "*Cough, cough.* Was that a threat?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You did it again! What did I just say? [Reach for weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Jon_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Jon_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_1b_1"
+notes ""
+is_wtg = true
+{
+NPCText "Oh, hello, again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hello, Jonathan. Do you have time to answer a question?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just stopping by. 'Bye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I ask question you?" linkto "Jon_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Jon_2_1"
+notes ""
+is_wtg = false
+{
+NPCText "This is Sandover. We have a lot of sick and diseased people living here. In fact, just about everyone is sick - *cough* - no one is turned away."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is there anything interesting happening here at the moment?" linkto "Jon_2_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound ill yourself." linkto "Jon_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I ask you 'thing diff'rent." linkto "Jon_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "*Cough.* I don't know what you mean."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That cough you've got doesn't sound too good." linkto "Jon_2_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, that's nothing to worry about. Dr. Oswald says there's not much he can do about it, anyway."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why can't he do anything about your cough?" linkto "Jon_2_2a_3b_1"  notes "If the PC has completed the 'Fix the Autodoc' quest, go to Jon_2_2a_3c instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Dr. Oswald?" linkto "Jon_2_2a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_3a"
+notes ""
+is_wtg = false
+{
+NPCText "As his name suggests, *cough,* he's the closest thing Sandover has to a doctor. You can find him on the upper level of the Sandover caves.  [He points to the mountain behind you, in which is set a guarded cave entrance.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why can't he do anything about your cough?" linkto "Jon_2_2a_3b_1"  notes "If the PC has completed the 'Fix the Autodoc' quest, go to Jon_2_2a_3c instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "There probably isn't anything that *can* be done about it. *Cough.* It probably doesn't help that his Autodoc is broken, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I can fix the Autodoc." linkto "Jon_2_2a_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Dr. Oswald?" linkto "Jon_2_2a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "If you're mechanically inclined, that would be a great help to Sandover, even if it doesn't help me. Go speak to Saman about getting into the caves."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Saman?" linkto "Jon_2_2a_3b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Dr. Oswald?" linkto "Jon_2_2a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_3b_3"
+notes ""
+is_wtg = false
+{
+NPCText "He's standing guard in front of the entrance to the caves. *Cough.* [Jonathan points to the mountain behind you both.] I should warn you that he's not a man to be messed with."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Dr. Oswald?" linkto "Jon_2_2a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2a_3c"
+notes ""
+is_wtg = false
+{
+NPCText "There probably isn't anything that *can* be done about it - *cough* - even though you fixed his Autodoc for us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people living here?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Sandover has become a kind of haven for the desperate and outcast, *cough, cough*. No-one bothers us much because the rads are higher here than they are in most of the rest of the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound ill yourself." linkto "Jon_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How dangerous is the radiation in Sandover?" linkto "Jon_2_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Relax, stranger. It takes months and years of living here before the rads start taking their toll. *Cough.* You're in no real danger if you're just passing through."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound ill yourself, though." linkto "Jon_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2c_1"
+notes ""
+is_wtg = false
+{
+NPCText "Not much. *Cough.* If you're looking for work, you should speak to Saman."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why?" linkto "Jon_2_2c_2a"  notes "If the PC has already completed the 'Fix the Autodoc' quest, go to Jon_2_2c_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound ill yourself." linkto "Jon_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people in Sandover?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2c_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Dr. Oswald is having a problem with his Autodoc. *Cough, cough.* I'm sure he'd be grateful for your help, if you know your way around gadgetry."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Saman?" linkto "Jon_2_2a_3b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Dr. Oswald?" linkto "Jon_2_2a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound ill yourself." linkto "Jon_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people in Sandover?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_2_2c_2b"
+notes ""
+is_wtg = false
+{
+NPCText "I should imagine that he could find some other work for you, now that - *cough, cough* - you've fixed Dr. Oswald's Autodoc for us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Saman?" linkto "Jon_2_2a_3b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about Sandover?" linkto "Jon_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You sound ill yourself." linkto "Jon_2_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are there so many sick people in Sandover?" linkto "Jon_2_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be going. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_1"
+notes "The Jon_3_* path is where the PC can find out about Jonathan's interest in the history of the area, which leads to the 'Find out about Sandover's history' quest."
+is_wtg = false
+{
+NPCText "I've always been interested in Sandover's history, ever since I moved here. There are a lot of ruined buildings in the surrounding area; it must have been quite a place before the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What have you learned about Sandover so far?" linkto "Jon_3_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_2"
+notes ""
+is_wtg = false
+{
+NPCText "Most of what I've heard about Sandover is how the place was founded, which was a long time after the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about that?" linkto "Jon_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "There are a lot of ruined buildings in the surrounding area; it must have been quite a place before the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you had much opportunity to explore them?" linkto "Jon_3_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Not half as much as I'd have liked. *Cough, cough.* I'm too old to wander far from the caves now. It's a damn shame - the answers to so many questions about the past lie in the few square miles around here, I'm sure."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you think there is to find around here that would tell you about the past?" linkto "Jon_3_3a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3a_3"
+notes ""
+is_wtg = false
+{
+NPCText "Pretty much any artefacts, *cough*, from before the war. The big finds are usually paper documents, though. Anything that details what day-to-day life was like."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How hard are they to find?" linkto "Jon_3_3a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3a_4"
+notes ""
+is_wtg = false
+{
+NPCText "Very hard. *Cough.* Especially documents. Most of those that weren't destroyed by the bombs just crumbled to dust in the following years. No, anything made of paper would need to be buried away somewhere cool, dark and dry to survive since the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be doing some looking around whilst I'm in the area. If I find anything that could help you, I'll bring it back." linkto "Jon_3_3a_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3a_5"
+notes "The PC gets the 'Find out about Sandover's history' quest."
+is_wtg = false
+{
+NPCText "Would you? That would be marvelous! *Cough, cough.* I don't have much to offer in return, but I'd do what I could to reimburse you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You needn't worry about paying me. I'd gladly do it for free." linkto "Jon_3_3a_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Talking of the local area, do you know where I could find the General Atomics International base?" linkto "Jon_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3a_6"
+notes "The PC gets the 'Find out about Sandover's history' quest."
+is_wtg = false
+{
+NPCText "Stranger, you're too kind. You've made this old man... *cough.* Well, you've made me cough, but 'very happy' is what I meant to say. *Cough, cough.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Talking of the local area, do you know where I could find the General Atomics International base?" linkto "Jon_4_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take it easy, Jonathan. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Unfortunately, *cough,* because all of Sandover's history is passed on by word of mouth and nothing is written down, it's hard to know exactly what is true."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me what you know." linkto "Jon_3_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Apparently, a small group of people became unpopular in its home town and was exiled into the wastes. They travelled aimlessly for several weeks, before they stumbled upon this cave network. [He coughs and points to the cave entrance behind you both.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Jon_3_3b_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were they exiled?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Desparate for water, they found access to an underground stream at the bottom of the caves. They recovered slowly and realized they had no place else to go. They set up camp here, above ground."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Jon_3_3b_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were they exiled from their home town?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "After a few months of living here, they'd found out the hard way about the higher levels of radiation in the local area. *Cough, cough.* The good outweighed the bad, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do you mean?" linkto "Jon_3_3b_3a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were they exiled from their home town?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3a_3"
+notes ""
+is_wtg = false
+{
+NPCText "They had water, the security and - *cough* - shelter of the caves and some of the best scavenging ground in the wastes on their doorstep."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Jon_3_3b_3a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were they exiled from their home town?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3a_4"
+notes ""
+is_wtg = false
+{
+NPCText "It wasn't long before they established contact with some of the local towns. The settlers sold what scavenge they found in order to survive, and the other towns generally left Sandover alone otherwise, for fear of the radiation here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Jon_3_3b_3a_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were they exiled from their home town?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3a_5"
+notes "Increment the node Jon_Historian by 1. This means the PC can now tell the museum curator in Rusty Springs (exact nature of NPC not known at time of writing) that Jonathan is knowledgable of Sandover's history."
+is_wtg = false
+{
+NPCText "Within a few years of the first settlers arriving here, word of the Sandover encampment spread out along the trade routes. Other people began to turn up, telling their own tales of exile and rejection. Sandover expanded from a mere campsite and became a town in its own right."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were the original settlers exiled from their home town?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3b"
+notes ""
+is_wtg = false
+{
+NPCText "[He smiles.] That is where the stories begin to get a little vague and far-fetched. Some say they were ruthless criminals; others, that they were all hideous mutants; others still that they carried a terrible, contagious plague. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did they decide to live here?" linkto "Jon_3_3b_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they survive for so long in the wastes?" linkto "Jon_3_3b_3c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_3_3b_3c"
+notes ""
+is_wtg = false
+{
+NPCText "A lot of them didn't. *Cough.* Depending on who you speak to, one, two, or as many as fully fifteen of their twenty strong band died of thirst, exposure, or during battles with the various nasty things living in the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did they decide to live here?" linkto "Jon_3_3b_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why were they exiled?" linkto "Jon_3_3b_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what was here before the war?" linkto "Jon_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_4_1"
+notes "The Jon_4_* path is where the PC finds out that Jonathan doesn't know where the GAI base is. Jon will direct the PC to Alexander, the Scabs' leader."
+is_wtg = false
+{
+NPCText "[He frowns in thought.] I don't think I've ever heard of it. You should speak to our leader, Alexander, who might be able to help you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Alexander?" linkto "Jon_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Where Alexrundar?" linkto "Jon_4_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Jon_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "He's usually on the lowest levels of our caves. [He points to the mountain behind you, in which is set a guarded cave entrance.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got 'nuther question ask." linkto "Jon_9"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Jon_5_1"
+notes "The Jon_5_* path is where the PC finds out that Jonathan doesn't know what a pass key is. Jonathan will redirect the PC to the Tech Supplies caravan."
+is_wtg = false
+{
+NPCText "A pass key? *Cough.* Could you describe it, please?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a card made of plastic and is about four inches long." linkto "Jon_5_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Let me ask you about something else, instead." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_5_2"
+notes ""
+is_wtg = false
+{
+NPCText "How would one... excuse me, *cough, cough.* How would one use it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You swipe it through an electronic reader next to the door." linkto "Jon_5_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Let me ask you about something else, instead." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_5_3"
+notes ""
+is_wtg = false
+{
+NPCText "[He thinks about this for a while.] I don't think I've seen anything like that around here. *Cough.* If it's technological fancies you're after, you might want to try asking the Tech Supplies caravaners, the next time they turn up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "When and where would I find them?" linkto "Jon_5_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Let me ask you about something else, instead." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_5_4"
+notes ""
+is_wtg = false
+{
+NPCText "When they come here, they don't go into the caves themselves, so you can always find them just outside. They come every [PERIOD BETWEEN TECH SUPPLIES CARAVAN'S VISITS], and the next one is due on [DATE OF TECH SUPPLIES CARAVAN'S ARRIVAL]."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_1"
+notes "The Jon_6_* path is where the PC can give Jonathan one of the things he found in the GAI base. One is an authentic sheaf of pre-war documents; one is a bogus item which the PC can attempt to pass off as genuine."
+is_wtg = false
+{
+NPCText "Excellent! What have you found?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found these papers in the GAI base which looked interesting." linkto "Jon_6_2a_1"  notes "This node only appears if the PC has found the papers/ledgers (exact details undecided at time of writing) in the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've found this sceptre, which was used by a religious cult that existed before the war." linkto "Jon_6_2b_1"  notes "This node only appears if the PC has found the bogus historical item (exact details undecided at time of writing) in the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I don't have anything for you at the moment." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Let me, *cough*, have a look. [He browses through the pages briefly.] Hmm... this has seen better days, but it's still perfectly legible."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is it of any use to you?" linkto "Jon_6_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give it to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2a_2"
+notes "Decide what the ITEM is. Recommend something of between 100 and 200 caps value. "
+is_wtg = false
+{
+NPCText "Oh my, yes. *Cough.* Here, let me give you [an ITEM] in return. I'd like to be able to offer you some caps, but I don't have any to spare."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I'd appreciate that." linkto "Jon_6_2a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That won't be necessary. Just knowing they're useful is thanks enough." linkto "Jon_6_2a_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give it to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2a_3a"
+notes "Remove the papers/ledgers from the PC's inventorty and give it to Jonathan. \nTransfer the ITEM to the PC's inventory.\nSmall XP boost for completing this part of the 'Find out about Sandover's history' quest. "
+is_wtg = false
+{
+NPCText "Here, take it. [He gives you the ITEM in return for the papers.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. What will you do with the papers?" linkto "Jon_6_2a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2a_3b"
+notes "Remove the papers/ledgers from the PC's inventorty and give it to Jonathan.\nBoost the PC's karma by a small amount, like 5 or 10.\nSmall XP boost for completing this part of the 'Find out about Sandover's history' quest."
+is_wtg = false
+{
+NPCText "That's very good of you, stranger. You're one of a kind."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mention it. What will you do with the papers?" linkto "Jon_6_2a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Enjoy. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2a_4"
+notes ""
+is_wtg = false
+{
+NPCText "Why, read them, of course. *Cough.* [He gives you an odd look.] I wasn't going to use them to light a fire."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess that makes sense. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Fascinating. *Cough.* Tell me more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Apparently, this was a ceremonial mace used to sacrifice children to the gods of pre-war civilization." linkto "Jon_6_2b_2a_1"  notes "Less plausible. Harder Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "From what I can gather, it was carried by priests as a badge of office." linkto "Jon_6_2b_2b_1"  notes "More plausible. Easier Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give this to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "That's appalling! *Cough, cough.* What else can you tell me about this horrible religion?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The cult sprang up in the last few months before the war. It tried to appease its gods with blood sacrifice to try to prevent the war from happening." linkto "Jon_6_2b_2a_2"  notes "More feasible. Milder Barter check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It was nearly two thousand years old. It looks like human sacrifice and even cannibalism were commonplace." linkto "Jon_6_2b_2a_2"  notes "Less feasible. Harder Barter check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "*Cough! Cough!* I had no idea pre-war man was so barbaric. Wait, *cough,* how did you find this information out?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There was an old computer near to where I found the relic. It had a complete history of the cult." linkto "Jon_6_2b_2a_3"  notes "Does the PC look like a computery type to Jonathan? Moderate science skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the relic in an abandoned, pre-war, underground temple. You could still see the blood on the walls, but there were also carvings which told of the religion's history." linkto "Jon_6_2b_2a_3"  notes "Does the PC look like a linguistics expert to Jonathan? Moderate Speech skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_3"
+notes ""
+is_wtg = false
+{
+NPCText "This totally reverses any ideas I had about life before the war. Do you realize that this means we've become more civilized *since* the bombs fell?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a real kicker, isn't it?" linkto "Jon_6_2b_2a_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you still want the item?" linkto "Jon_6_2b_2a_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_4a"
+notes ""
+is_wtg = false
+{
+NPCText "*Cough, cough.* It certainly is, stranger. Everyone I've ever spoken to thinks the world before the war was a technological paradise. How wrong we've been!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you still want the item?" linkto "Jon_6_2b_2a_4b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_4b_1"
+notes "Decide what the ITEM is. Recommend something of between 100 and 200 caps value. "
+is_wtg = false
+{
+NPCText "Of course I do! It's a valuable warning from history.  I'll give you [an ITEM] for it. I'd like to be able to offer you some caps, but I don't have any to spare."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. Let's trade." linkto "Jon_6_2b_2a_4b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_4b_2"
+notes "Remove the bogus item from the PC's inventorty and give it to Jonathan. \nTransfer the ITEM to the PC's inventory.\nSmall XP boost for completing this part of the 'Find out about Sandover's history' quest.\nSmallish penalty to the PC's karma."
+is_wtg = false
+{
+NPCText "[You trade the two items to one another.] Ugh. To barter for such an evil thing. No matter - it is a historian's job to make sure the mistakes of the past do not happen again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What will you do with the item?" linkto "Jon_6_2b_2a_4b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2b_2a_4b_3"
+notes ""
+is_wtg = false
+{
+NPCText "I'll use it to prove the horror stories of the past to anyone who'll listen, and that we're living in a bright new future after the bombs. You've done the world a great service, stranger."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Did you find out anything else about the religion they followed?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "They used to gather every Sunday and worship some guy that people from 2,000 years before nailed to a tree." linkto "Jon_6_2b_2b_2a"  notes "Well, they did, didn't they? Mild Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "They believed that the world was carried on the back of four elephants, which in turn stood on the back of a giant space turtle." linkto "Jon_6_2b_2b_2b"  notes "Not so plausible. Moderate Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "I don't understand. *Cough.* What was the significance of that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My guess is that they thought the guy got special powers and turned into a god when he was nailed to the tree." linkto "Jon_6_2b_2b_3"  notes "Less plausible. Moderate Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think the guy that got nailed to the tree let it happen to sacrifice himself for the benefit of the rest of the human race, or something." linkto "Jon_6_2b_2b_3"  notes "Spooky. More plausible. Mild Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_2b"
+notes ""
+is_wtg = false
+{
+NPCText "How peculiar. [He pauses in thought.] I always thought the world was round, you know. Like a ball. People from before the war must have had some odd ideas, for all their technological achievements."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wasn't able to find out much more about what they believed." linkto "Jon_6_2b_2b_3"  notes "Sensible to keep the bullshit to a minimum. No checks of any sort."
+          int=4 Reaction=REACTION_NEUTRAL playertext "They never sailed further than a hundred miles from land in case they fell off the edge of the world." linkto "Jon_6_2b_2b_3"  notes "The PC's pushing his luck! Moderate Barter skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "How did you, *cough,* find out what you know about this religion, though?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "There was an old computer near to where I found the relic. It had a complete history of the cult." linkto "Jon_6_2b_2b_4"  notes "Does the PC look like a computery type to Jonathan? Mild Science skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found the relic in an abandoned, pre-war, underground temple. There were carvings on the wall which told of the religion's history." linkto "Jon_6_2b_2b_4"  notes "Does the PC look like a linguistics expert to Jonathan? Mild Speech skill check. If failed, go to Jon_6_2b_9_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_4"
+notes ""
+is_wtg = false
+{
+NPCText "I'll have to take your word for it; I won't be travelling out there. *Cough.* What an odd bunch they were before the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you still want the item?" linkto "Jon_6_2b_2b_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_5"
+notes "Decide what the ITEM is. Recommend something of between 100 and 200 caps value."
+is_wtg = false
+{
+NPCText "Certainly! It's a valuable piece - and to think it's been preserved so well since the war. I'll give you [an ITEM] for it. *Cough.* I'd like to be able to offer you some caps, but I don't have any to spare."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Done. Let's trade." linkto "Jon_6_2b_2b_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to give the item to you, though." linkto "Jon_6_2c"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_6"
+notes "Remove the bogus item from the PC's inventorty and give it to Jonathan. \nTransfer the ITEM to the PC's inventory.\nSmall XP boost for completing this part of the 'Find out about Sandover's history' quest.\nSmallish penalty to the PC's karma."
+is_wtg = false
+{
+NPCText "Thank you, stranger. [You trade the two items to one another.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What will you do with the item?" linkto "Jon_6_2b_2b_7"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See you around. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2b_2b_7"
+notes ""
+is_wtg = false
+{
+NPCText "*Cough.* I'll use it to prove to anyone who'll listen how bizarre the world was before the bombs fell. They might have had it better than us, but at least we're not so damn peculiar."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See you around. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_6_2b_9_1"
+notes ""
+is_wtg = false
+{
+NPCText "I think you've been mislead, stranger. *Cough.* I'm sorry, but I believe this item is merely an old machine-part of sorts."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you calling me a liar?" linkto "Jon_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Trust me, this piece is genuine." linkto "Jon_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it, then. Goodbye." linkto "Jon_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Jon_0"  notes ""
+              }
+}
+Node "Jon_6_2c"
+notes ""
+is_wtg = false
+{
+NPCText "Oh. Well, *cough, cough*, why did you say that you did?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Can I ask you about something else?" linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, I have to go. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_1"
+notes "The Jon_7_* path is where the PC can tell Jonathan that the museum curator in Rusty Springs (exact nature of NPC not known at time of writing) wants to know more about Sandover's history. The curator has provided the PC with a blank holodisk. Using his Pipboy, the PC can take a record 'history lesson' from Jonathan to take back to the curator."
+is_wtg = false
+{
+NPCText "*Cough.* Tell me more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's given me a holodisk, which I can use with my Pipboy to take a recording of your voice. He would like to hear what you know about Sandover's history." linkto "Jon_7_2G_1" conditions { LOCAL_VARIABLE Jon_Free_Papers > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's given me a holodisk, which I can use with my Pipboy to take a recording of your voice. He would like to hear what you know about Sandover's history." linkto "Jon_7_2b_1" conditions { LOCAL_VARIABLE Jon_Free_Papers == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Has he now? Well, the complete history of Sandover is a long one, stranger. *Cough.* If your friend wants all of it, one of you is going to have to pay for it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much?" linkto "Jon_7_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Fifty caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, here's fifty caps. [Give him the money.]" linkto "Jon_7_2b_3a_2" conditions { CHECK_MONEY dude_caps >= 50 link_next NONE } notes "Deduct 50 caps from the PC's inventory and give them to Jonathan."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fifty? I'll give you forty, at the most." linkto "Jon_7_2b_3a_1" conditions { CHECK_MONEY dude_caps >= 40 link_next NONE } notes "Barter skill check. If failed, go to Jon_7_2b_3b, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about you just tell the damn story and I don't bust your head in?" linkto "Jon_7_2b_3c"  notes "Mild strength skill check. If failed, go to Jon_7_2b_3d_1, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Let me ask you about something else." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Forty will do, I suppose. *Cough.* Let's see the color of your caps."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here, take them. [Give Jonathan forty caps.]" linkto "Jon_0" conditions { CHECK_MONEY dude_caps >= 40 link_next NONE } notes "Deduct 40 caps from the PC's inventory and give them to Jonathan."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about you just tell the damn story and I don't bust your head in?" linkto "Jon_0"  notes "Mild strength skill check. If failed, go to Jon_7_2b_3d_1, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Let me ask you about something else." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Now that the grubby business of payment is out of the way, what would you have me do?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just speak into here. [Point into your Pipboy's microphone.]" linkto "Jon_7_3"  notes ""
+              }
+}
+Node "Jon_7_2b_3b"
+notes ""
+is_wtg = false
+{
+NPCText "You're talking to the only historian in Sandover, stranger. *Cough, cough.* Fifty caps or you go without."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine, here's fifty caps. [Give him the money.]" linkto "Jon_7_2b_3a_2" conditions { CHECK_MONEY dude_caps >= 50 link_next NONE } notes "Deduct 50 caps from the PC's inventory and give them to Jonathan."
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about you just tell the damn story and I don't bust your head in?" linkto "Jon_7_2b_3c"  notes "Mild strength skill check. If failed, go to Jon_7_2b_3d_1, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Let me ask you about something else." linkto "Jon_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_3c"
+notes "Increment the variable Jon_Holodisk_Threat by 1."
+is_wtg = false
+{
+NPCText "[He recoils.] Don't... *cough, cough,* be hasty stranger. No need for thuggery. I will give you your story, then, *cough, cough,*  leave me be."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Smart move. Speak into this. [Point into your Pipboy's microphone.]" linkto "Jon_7_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_3d_1"
+notes "Increment the variable Jon_Holodisk_Threat by 1."
+is_wtg = false
+{
+NPCText "[Jonathan doubles over in a hysterical coughing fit. You soon realize he is laughing at you, though.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's so funny?" linkto "Jon_7_2b_3d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2b_3d_2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, stranger. *Cough, cough.* Nature just didn't make you the threatening sort. [Tears of laughter are streaming down his face.] Now, seriously though... get out of here before I set Saman on you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You won't find me so amusing in a minute. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_2G_1"
+notes ""
+is_wtg = false
+{
+NPCText "It's heartening that so many people are taking an interest! *Cough.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Does that mean you'll do it?" linkto "Jon_7_2G_2"  notes ""
+              }
+}
+Node "Jon_7_2G_2"
+notes ""
+is_wtg = false
+{
+NPCText "Since you very kindly gave me those papers from the GAI base without taking anything in return, it would be the least I could do. *Cough.*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Great, just speak into here. [Point into your Pipboy's microphone.]" linkto "Jon_7_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps we should do this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_3"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, okay. Is this thing recording now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, go ahead. Start from the beginning." linkto "Jon_7_4"  notes ""
+              }
+}
+Node "Jon_7_4"
+notes ""
+is_wtg = false
+{
+NPCText "Err... right. There are many legends regarding the founding of Sandover. Give or take a year or so, we can reliably place the date of the arrival of the first post-war settlers here at fifty-eight years after the Great War..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Jon_7_5"  notes "Fade to black and back between this node and the next. Increment game time by two or three hours."
+              }
+}
+Node "Jon_7_5"
+notes ""
+is_wtg = false
+{
+NPCText "...so in conclusion, the Sandover of today faces many of the problems it did at the time of its founding, in terms of a finite resource base and the ever present threat of background radiation."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Jon_7_6"  notes "Fade to black and back between this node and the next. Increment game time by two or three hours."
+              }
+}
+Node "Jon_7_6"
+notes ""
+is_wtg = false
+{
+NPCText "Err, that's it, stranger. I'm finished."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Remarkable. You didn't cough once." linkto "Jon_7_7a" conditions { LOCAL_VARIABLE Jon_Holodisk_Threat == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Remarkable. You didn't cough once." linkto "Jon_7_7B" conditions { LOCAL_VARIABLE Jon_Holodisk_Threat > 0 link_next NONE } notes ""
+              }
+}
+Node "Jon_7_7a"
+notes ""
+is_wtg = false
+{
+NPCText "Is there anything else you want from me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Jon_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Jon_4_1"  notes "This node only appears if the PC has not found any of the entrances to the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a pass key. Do you know where I could find it?" linkto "Jon_5_1"  notes "This node only appears if the PC has found the entrance to the GAI base, knows that he needs to find a pass key to enter it, does not already have the pass key, and has not found another way into the GAI base"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I met someone in Rusty Springs who is interested in your knowledge of Sandover's history." linkto "Jon_7_1"  notes "This node only appears if the PC is carrying the blank holodisk given to him by the museum curator in Rusty Springs, (exact nature of NPC not known at time of writing), who wants to know more about Sandover's history."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. I'll come back when I remember. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Jon_7_7B"
+notes ""
+is_wtg = false
+{
+NPCText "Now that our business is done, I have nothing further to say to you. Kindly leave me alone and don't disturb me in the future."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Now where would the fun be in that? *Draw weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Relax. I wouldn't waste a second more of my time on you, anyway." linkto "done"  notes ""
+              }
+}
+Node "Jon_9"
+notes ""
+is_wtg = false
+{
+NPCText "Ask away. *Cough*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place?" linkto "Jon_2_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Jon_4_1"  notes "This node only appears if the PC has not found any of the entrances to the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a pass key. Do you know where I could find it?" linkto "Jon_5_1"  notes "This node only appears if the PC has found the entrance to the GAI base, knows that he needs to find a pass key to enter it, does not already have the pass key, and has not found another way into the GAI base"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found something that I think is a historical artefact. Would you like to see it?" linkto "Jon_6_1"  notes "This option only appears if the PC is carrying at least one of the two things he can give to Jonathan as a historical artefact. One is an authentic sheaf of pre-war documents; one is a bogus item which the PC can attempt to pass off as genuine. The option also does not appear if the PC has already given/traded the other of the two items to Jonathan already."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I met someone in Rusty Springs who is interested in your knowledge of Sandover's history." linkto "Jon_7_1"  notes "This node only appears if the PC is carrying the blank holodisk given to him by the museum curator in Rusty Springs, (exact nature of NPC not known at time of writing), who wants to know more about Sandover's history."
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. I'll come back when I remember. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What this place?" linkto "Jon_2_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell me where G-A-I place. I find." linkto "Jon_4_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No. I go." linkto "done"  notes ""
+              }
+}

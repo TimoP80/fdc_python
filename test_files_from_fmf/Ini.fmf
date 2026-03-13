@@ -1,0 +1,201 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "Initial"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link -1
+},
+cond target_node "Secound"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "Intelligence" eval 6 value_to_check "3" ini_index 9 link -1
+},
+cond target_node "DumbSecound"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link -1,
+    SSL "get_critter_stat(dude_obj, STAT_iq) <= 3" var_param "Intelligence" eval 6 value_to_check "3" ini_index 1 link -1
+}
+};
+
+/* Regular nodes */
+
+Node "Initial"
+notes ""
+is_wtg = false
+{
+NPCText "Please don’t make me leave. I don’t have anywhere else to go  and…and…please don’t hurt me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "5...4...3..." linkto "Leaving"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your presence is disrupting the sanctity of the temple. Why would I let you stay?" linkto "LikeRat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You go now! " linkto "Leaving"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why let stay?" linkto "Dumb"  notes ""
+              }
+}
+Node "Leaving"
+notes ""
+is_wtg = false
+{
+NPCText "but...I... Leaving! [She runs away, choking back tears] "
+      options {
+          int=4 Reaction=REACTION_BAD playertext "[Done]" linkto "done"  notes "This is for when the PC forces Ini to leave. If this node is called, she runs away after the dialogue ends."
+          int=-3 Reaction=REACTION_BAD playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "LikeRat"
+notes ""
+is_wtg = false
+{
+NPCText "I can change. I like rats. They're cute. Sometimes I go play with them. I like the religious stuff too. It’s just that the priests are a little weird and the wasters, they…they seemed to like me. There’s nothing wrong with wanting to feel loved, is there?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you want to feel loved then get a job at a whore house. Now get out of here!" linkto "Leaving2"  notes "-1 karma"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, you say that now. I'm sure that all the other wasters would say that if they weren't stoned at the moment. I'm not going to fall for it so get out of here!" linkto "Leaving"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "I’ll think about it." linkto "done"  notes ""
+              }
+}
+Node "Dumb"
+notes ""
+is_wtg = false
+{
+NPCText "I’m a nice person. I like rats and peace and stuff. You don't need to make me go away."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You drug drug. Drive rats away. " linkto "Pinky"  notes ""
+              }
+}
+Node "Pinky"
+notes ""
+is_wtg = false
+{
+NPCText "Umm…I \"pinky promise\" I won’t buy anymore Dream Juice from Jotham. That way you’ll know you can trust me. [She holds out her pinky finger]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext " [Shake her pink] Ok, me let stay. " linkto "Let_Stay"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No! <PC> no believe pinky finger!" linkto "done"  notes ""
+              }
+}
+Node "Secound"
+notes ""
+is_wtg = false
+{
+NPCText "eek! [She cringes when she sees you] Are you g..going to let me stay? I haven’t touched the Dream Juice."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I’m still thinking about it. You'll be hearing again from me soon." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I haven’t heard any more complaints about you, so I guess I’ll let you stay. Keep up the good work." linkto "Thanks"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you haven’t done anything wrong, why are you stuttering so much?" linkto "fear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let’s make a deal: As long as they can keep get Dream Juice your friends are always going to come back." linkto "Huh?"  notes ""
+              }
+}
+Node "Thanks"
+notes ""
+is_wtg = false
+{
+NPCText "Thank you so much! [She hugs you before you have a chance to say anything. After a second she steps back, looking a little embarrassed.] "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Um…I…ah…see you around. " linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for the hug." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don’t do that again." linkto "done"  notes ""
+              }
+}
+Node "fear"
+notes ""
+is_wtg = false
+{
+NPCText "I’m just afraid of being kicked out. I’m not hiding anything, honest!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you say so." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ya right. I'm sick and tired of your sniveling, lying little ass. Now get out of here." linkto "Leaving"  notes ""
+              }
+}
+Node "toRatout"
+notes ""
+is_wtg = false
+{
+NPCText "You want me to rat out...eep."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you want to stay… " linkto "Ratout"  notes ""
+              }
+}
+Node "Ratout"
+notes ""
+is_wtg = false
+{
+NPCText "Jotham. It comes from Jotham. He sells the Dream Juice to us for whatever we can scavenge. Can I stay now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess. As long as you live according to The Way of the Rat, I’ll let you stay. " linkto "Thanks"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I would never let a dirty little sneak like you, who just sold out her only friends in the world, stay here." linkto "But"  notes ""
+              }
+}
+Node "DumbSecound"
+notes ""
+is_wtg = false
+{
+NPCText "Hi there, you nice person who decided to let me stay."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Dweam-Dweam Juice?" linkto "Reminder"  notes ""
+              }
+}
+Node "Reminder"
+notes ""
+is_wtg = false
+{
+NPCText "Don't worry; I haven't used any more Dream Juice. You can't break a pinky promise, you know."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Oh-Kay" linkto "done"  notes ""
+              }
+}
+Node "Let_Stay"
+notes ""
+is_wtg = false
+{
+NPCText "Thank you so much! Praise Kunsia! I promise I'll take care of the rats and I won't get into the Dream Juice anymore."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Huh?"
+notes ""
+is_wtg = false
+{
+NPCText "But can't you just keep chasing them away?"
+ NPCFemaleText "But can't you just keep chasing them away?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't always be here. Got any ideas for a more permanent solution?" linkto "toRatout"  notes ""
+              }
+}
+Node "But"
+notes ""
+is_wtg = true
+{
+NPCText "But you said that..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext " I lied. Now if you’re still in my sight I’ve finished counting to ten, things are going to get really nasty for you." linkto "Leaving2"  notes "- 4 karma"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your right. I did and I should keep my word to you. So long as you keep the Way of the Rat, you may stay." linkto "Thanks"  notes ""
+              }
+}
+Node "Leaving2"
+notes ""
+is_wtg = true
+{
+NPCText "You...you... Bastard! [She bursts into tears and runs away.]"
+ NPCFemaleText "You...you... Bitch! [She bursts into tears and runs away.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}

@@ -1,0 +1,510 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.1-stable
+
+*/
+
+NPCName "Pete Hogg"
+Location "City of the Coast"
+Description "Simoleon"
+Unknown_Desc "An old man."
+Known_Desc "It's Pete Hogg, the owner of the company."
+Detailed_Desc "You see an old, unhealthy looking man with his face in a bitter scowl."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "Greeting"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link -1
+},
+cond target_node "Greetingknown"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link -1
+}
+};
+
+/* Regular nodes */
+
+Node "Switcher"
+notes ""
+is_wtg = true
+{
+NPCText "Which situation are you in"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've never met you before" linkto "Greeting"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've heard about your coming demise and know about the two brothers" linkto "Quest1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Phil has the company" linkto "PhilOwner"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ike has the company" linkto "IkeOwner"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Brothers share the Company" linkto "SharedOwnership"  notes ""
+          int=5 Reaction=REACTION_NEUTRAL playertext "I'm dumb as a brick." linkto "DumbGreeting"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Phil has been killed and the PC hasn't spoken to Pete since." linkto "PhilKilled_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ike has been killed and the PC hasn't spoken to Pete since." linkto "Ikekilled_1"  notes ""
+              }
+}
+Node "Angry"
+notes ""
+is_wtg = false
+{
+NPCText "You're making my balls itch. Get lost."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever." linkto "done"  notes ""
+              }
+}
+Node "DumbGreeting"
+notes ""
+is_wtg = false
+{
+NPCText "[Stares at you with a look of disgust] I've never seen such a retarded expression on a man's face. Get out of my face you inbred moron. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[done]" linkto "done"  notes ""
+              }
+}
+Node "Greeting"
+notes ""
+is_wtg = false
+{
+NPCText "Howdy, stranger. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi there. I'm looking for some answers." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey there, the name is <PC>" linkto "Name"  notes ""
+              }
+}
+Node "Greetingknown"
+notes ""
+is_wtg = false
+{
+NPCText "What do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi there. I'm looking for some answers." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have the look of a troubled man." linkto "Troubled"  notes ""
+              }
+}
+Node "Ikekilled_1"
+notes ""
+is_wtg = false
+{
+NPCText "[The old man seems troubled.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's up?" linkto "Ikekilled_2"  notes ""
+              }
+}
+Node "Ikekilled_2"
+notes ""
+is_wtg = false
+{
+NPCText "Haven't you heard? About Ike? Poor sumbitch was killed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's going to run the business now?" linkto "Ikekilled_3N"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Best thing that could have happened to him." linkto "Ikekilled_3B"  notes ""
+              }
+}
+Node "Ikekilled_3B"
+notes ""
+is_wtg = false
+{
+NPCText "I suppose where you come from that passes as humor. Just get out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Ikekilled_3N"
+notes ""
+is_wtg = false
+{
+NPCText "Phil o' course. Way it was always gonna be. It don't mean Ike wasn't a good boy, though. Hell no."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to hear about Ike. I'll leave you in peace." linkto "done"  notes ""
+              }
+}
+Node "IkeOwner"
+notes ""
+is_wtg = false
+{
+NPCText "I hope Ike keeps this company on the right track."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure he will, farewell Pete. " linkto "done"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "You've forsaken your own blood. I hope you'll live your last days in torment." linkto "done"  notes ""
+              }
+}
+Node "Name"
+notes "Name known"
+is_wtg = false
+{
+NPCText "[Shakes Hands] Pete Hogg. Owner of this fine fishing establishment. What can I do ya for <PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for some answers." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You have the look of a troubled man." linkto "Troubled"  notes ""
+              }
+}
+Node "Nomoredrinking"
+notes ""
+is_wtg = false
+{
+NPCText "Maybe you're right. I have plenty of things to take care of before I die. Might as well keep death out of the door for a while longer."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good, go on with your story. " linkto "Story3"  notes ""
+              }
+}
+Node "NotAfraid"
+notes ""
+is_wtg = false
+{
+NPCText "I'm a man standing on Death's doorsteps, <PC>. Threatening me isn't going to change my mind. Now get lost."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "I'd be glad to give you that little extra push. Die! [Combat]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "PhilKilled_1"
+notes ""
+is_wtg = false
+{
+NPCText "[The old man is staring into the distance and seems not to notice you approach.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's up?" linkto "PhilKilled_2"  notes ""
+              }
+}
+Node "PhilKilled_2"
+notes ""
+is_wtg = false
+{
+NPCText "What's up? The hell d'you think's up? My boy, my flesh and blood: he's dead goddamn it!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's going to run the business now?" linkto "PhilKilled_3N"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Best place for the sack of shit if you ask me." linkto "PhilKilled_3B"  notes ""
+              }
+}
+Node "PhilKilled_3B"
+notes ""
+is_wtg = false
+{
+NPCText "WHAT?! I'll kill you, I swear! KILL YOU!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "[Fight]" linkto "combat"  notes ""
+              }
+}
+Node "PhilKilled_3N"
+notes ""
+is_wtg = false
+{
+NPCText "Ike, of course. Boy'll do a good job and he better make sure he does. Honor his brother's memory. It ain't right, though. Ain't right."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry about Phil. I'll leave you in peace." linkto "done"  notes ""
+              }
+}
+Node "PhilOwner"
+notes ""
+is_wtg = false
+{
+NPCText "I always knew I did the right thing. The only sane thing to do is leave your inheritance to your children. Your real children. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Damn right, Pete. May your passing be swift and merciful." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hope Marie will piss on your grave. See you in hell Pete." linkto "done"  notes ""
+              }
+}
+Node "PleadforIke"
+notes ""
+is_wtg = false
+/* Skill checks for node PleadforIke */
+
+      define_skill_check PleadforIke_speechcheck_hard {
+      skill_num = 15;
+      difficulty_modifier = 10;
+      onsuccess => PleadForIke2;
+      onfailure => PleadforIkeFailure;
+      }
+
+{
+NPCText "Ike? Why? He's not my real son. My grandfather's blood does not run through his veins. It would be treason to my kin, you understand. My father's ghost is going to make my afterlife as miserable as this one. Can't let that happen. The company needs a true Hogg to lead it."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Ike is a good fisherman. He knows the spots, he has patience. He's got experience. Think about it, Ike was born to be a fisherman." linkto "PleadforIke_speechcheck_hard"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ike just brought back the biggest load of fish in the history of this town. That ought to count for something. " linkto "PleadForIke2"  notes "This one only appears after the \"Greatest Haul Ever\" quest has been completed. Script conditions will be implemented later."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, you pathetic old man, when I say Ike's the better candidate, he is. Understand?" linkto "NotAfraid"  notes ""
+              }
+}
+Node "PleadForIke2"
+notes ""
+is_wtg = false
+/* Skill checks for node PleadForIke2 */
+
+      define_skill_check pleadForIke_speechcheck_hard2 {
+      skill_num = 15;
+      difficulty_modifier = 10;
+      onsuccess => PleadForIke3;
+      onfailure => PleadforIkeFailure;
+      }
+      define_skill_check pleadForIke_speechcheck_hard2 {
+      skill_num = 15;
+      difficulty_modifier = 10;
+      onsuccess => PleadForIke3;
+      onfailure => PleadforIkeFailure;
+      }
+
+{
+NPCText "I don't know. Ike's a good lad, he's been my right hand man for a good while now and he's always done a great job. I just... He's not my son. You can put your boots in the oven, but that doesn't make them biscuits."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "You love him like a son, he loves you like a father. You raised him like a son. What is he to you but a son?" linkto "pleadForIke_speechcheck_hard2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's as much your son as Phil is, and a much better candidate to run your company. Phil just botched a deal by committing fraud. Your grandfather wouldn't want a man like that to his old business into the ground. " linkto "PleadForIke3"  notes "This only appears after you completed the \"Sabotage Phil\" quest"
+              }
+}
+Node "PleadForIke3"
+notes ""
+is_wtg = false
+{
+NPCText "Maybe you're right. Heck, Ike even reminds me of dad sometimes. I didn't name him Hogg for nothing. I taught him the works, he does his job the Hogg way. I always thought Phil was too young to take on such a responsibility... I'll tell the boys about my change of plans first thing tomorrow. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You did the right thing, Pete. Good luck. " linkto "done"  notes ""
+              }
+}
+Node "PleadforIkeFailure"
+notes ""
+is_wtg = false
+/* Skill checks for node PleadforIkeFailure */
+
+      define_skill_check PleadforIke_speechcheck_rebound {
+      skill_num = 15;
+      difficulty_modifier = 10;
+      onsuccess => PleadForIke2;
+      onfailure => Angry;
+      }
+
+{
+NPCText "No. I don't care if Ike was the best fisherman in the world. He's no Hogg and he ain't running no Hogg's business, period. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Blood isn't everything. The future of your company is simply in better hands with Ike. " linkto ""  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Looks like you made up your mind. I'm done talking to you. " linkto "done"  notes ""
+              }
+}
+Node "pleadforPhil"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah. Ike's a good kid, but Phil is a true Hogg. A savvy businessman just like his grandfather. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sure he is. It's a good thing you chose your real son. No bond is as strong as the bond of blood. Nice talking to you Pete." linkto "done"  notes ""
+              }
+}
+Node "PleadforSharing"
+notes ""
+is_wtg = false
+/* Skill checks for node PleadforSharing */
+
+      define_skill_check pleadforsharing_speechcheck_hard {
+      skill_num = 15;
+      difficulty_modifier = 9;
+      onsuccess => PleadForSharing2;
+      onfailure => PleadforSharingFailure;
+      }
+      define_skill_check pleadforsharing_initialcheck {
+      skill_num = 15;
+      difficulty_modifier = 9;
+      onsuccess => PleadForSharing2;
+      onfailure => PleadforSharingFailure;
+      }
+
+{
+NPCText "Equal ownership you say? Sails are up but nobody's at the helm in that head of yours, right? Splitting up the business is like tearing it apart. If you cut a good ship in half it will sink, as sure as you get drunk when you drink. "
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "The boys can work together. Phil is an excellent salesman and Ike knows his way around a trawler. Together they have everything it takes to run this business." linkto "pleadforsharing_initialcheck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've spoken to both of them. If you don't let them share the company, neither of them is going to take it. That will surely ruin your company. Face it, old man, you have no real choice in this any more. " linkto "PleadforSharingUltimatum"  notes "This option only shows when the boys have agreed on the ultimatum"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pete, your sons are trying to kill each other over this company. If you love them, talk to them and let them share this company. Things have gotten out of hand. " linkto "PleadforSharingLove"  notes "This option only shows when both Sabotage quests have been initiated. "
+          int=4 Reaction=REACTION_BAD playertext "I'll cut you in half if you don't give both kids their rightful share, pissface. " linkto "NotAfraid"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're probably right. See you around Pete. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "PleadForSharing2"
+notes ""
+is_wtg = false
+/* Skill checks for node PleadForSharing2 */
+
+      define_skill_check pleadforsharing_speechcheck_hard {
+      skill_num = 15;
+      difficulty_modifier = 9;
+      onsuccess => PleadforSharingsucces;
+      onfailure => PleadforSharingFailure;
+      }
+
+{
+NPCText "Sure, both kids have their merits. But Philip is my biological son. I reckon Ike can work for him if he wants to. Dividing up the company is going to leave it scattered and powerless in less than two generations, bub. I might as well blow everything we got to hell right now. "
+      options {
+          int=8 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "How can you be afraid of your grandchildren scattering your assets when you don't even trust your own two sons with sharing it? Phil and Ike complement each other. They're both called Hogg, they'll run it as a family business I'm sure. Let them share it, Pete." linkto "pleadforsharing_reboundcheck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe you're right. Have it your way, old man." linkto "done"  notes ""
+              }
+}
+Node "PleadforSharingFailure"
+notes ""
+is_wtg = false
+/* Skill checks for node PleadforSharingFailure */
+
+      define_skill_check pleadforsharing_reboundcheck {
+      skill_num = 15;
+      difficulty_modifier = 9;
+      onsuccess => PleadforSharingsucces;
+      onfailure => Angry;
+      }
+      define_skill_check pleadforsharing_reboundcheck {
+      skill_num = 15;
+      difficulty_modifier = 9;
+      onsuccess => PleadforSharingsucces;
+      onfailure => Angry;
+      }
+
+{
+NPCText "I don't want to hear bout it. If you say one more word about having two damn captains on the bridge of one ship I'll kick you out and drink myself to death. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alright, alright. I'm gone. " linkto "done"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Who said anything about two captains on one ship? They'll have different tasks, they excel at different things. Use that to your advantage, Pete. Get the best of both worlds." linkto "pleadforsharing_reboundcheck"  notes ""
+              }
+}
+Node "PleadforSharingLove"
+notes ""
+is_wtg = false
+{
+NPCText "[His alcohol addled features show as much terror as still possible] What? They're trying to kill each other? I never thought..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "PleadforSharingLove_2"  notes ""
+              }
+}
+Node "PleadforSharingLove_2"
+notes ""
+is_wtg = false
+{
+NPCText "This is all wrong. I'll talk to them and let them share it if they want to. If they both die there will be no Hogg left to run it, trueblood or not. Thanks for telling me, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem, Pete. I hope things work out." linkto "done"  notes ""
+              }
+}
+Node "PleadforSharingsucces"
+notes ""
+is_wtg = false
+{
+NPCText "[Pete smiles showing yellow, crooked teeth] You know what? You're right. Philip has his grandfather's keen nose for business and Ike reminds me of my own dad sometimes, he always knows where the catch is at. Hell I love them both, might as well trust them both. Thanks for showing me what familly's all about, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm glad you made your decision, Pete. See you around. " linkto "done"  notes ""
+              }
+}
+Node "PleadforSharingUltimatum"
+notes ""
+is_wtg = false
+{
+NPCText "[Pete looks angry] They said what? Brats. You raise them, you love them. You care for them and their mother. And then they turn on you, the weasels. Well, obviously they ain't having no problems with taking decisions without old Pete. No reason to stick around scratching my butt, is there? I'm off to the Cutty Sark. Damn those kids, damn them to hell. "
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Wait, Pete. Their plan is very reasonable. The boys can work together. Phil is an excellent salesman and Ike knows his way around a trawler. Together they have everything it takes to run this business." linkto "pleadforsharing_initialcheck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, you do that, Pete. Have a drink, you deserve it. See you around." linkto "done"  notes ""
+              }
+}
+Node "Quest1"
+notes ""
+is_wtg = false
+{
+NPCText "So, you been talking to my son?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. I think Ike should be running the company." linkto "PleadforIke"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have. Phil is the man for the job. You're doing the right thing Pete. " linkto "pleadforPhil"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure have. Both of them. I think the company would be suited best if the brothers had equal ownership and worked together. " linkto "PleadforSharing"  notes "This is available only when the player has convinced the brothers to work together. "
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to get involved. Good luck old man." linkto "done"  notes ""
+              }
+}
+Node "Questions"
+notes ""
+is_wtg = false
+{
+NPCText "Answers? I don't have any. Get lost."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me rephrase..." linkto "Greetingknown"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget about it." linkto "done"  notes ""
+              }
+}
+Node "SharedOwnership"
+notes ""
+is_wtg = false
+{
+NPCText "[Pete smiles] My sons told me they were both, whatchamacallit? Chairmen. It ain't really the Hogg way, two men doing the job of one. But whatever, they seem to be doing a good job. I guess I can die with a satisfied mind now. Thanks for your help, <PC>. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem, Pete. I hope your last few days will be pleasant." linkto "done"  notes ""
+              }
+}
+Node "Story"
+notes "This smooths out Pete for the speech solution to this quest."
+is_wtg = false
+{
+NPCText "[Sighs] Well, you seem like a trustworthy person, <PC>. Have a drink and I'll tell you. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Always up for a drink. Tell me your story, Pete." linkto "Story2_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "No thanks, but I will hear your story." linkto "Angry"  notes ""
+              }
+}
+Node "Story2_1"
+notes "Put the effects of a bottle of beer on the PC (-1 Per for a while) as a result of accepting the drink."
+is_wtg = false
+/* Skill checks for node Story2_1 */
+
+      define_skill_check Speech_Check_harder {
+      skill_num = 15;
+      difficulty_modifier = -7;
+      onsuccess => Nomoredrinking;
+      onfailure => Angry;
+      }
+
+{
+NPCText "Good! Always nice to meet a fellow drinker. I'll be frank with ya, <PC>: I'm dying. Medicine woman says my drinking habits are bitin' me in the ass. Mighty whale of a liver's turned into a pathetic little shrimp."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Story2_2"  notes ""
+              }
+}
+Node "Story2_2"
+notes ""
+is_wtg = false
+{
+NPCText "I tell ya son, that's tough news to swallow for a hard working man. I thought I was gonna live forever. That I was one of them folks who sail to the other shore with their ship intact. Want another drink?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, go on." linkto "Story3"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "No, I've had enough. So have you, Pete, I don't need your shrivelled liver to give up on you during our conversation." linkto "Speech_Check_harder"  notes ""
+              }
+}
+Node "Story3"
+notes "Put the effects of (another) bottle of beer on the PC (-1 Per for a while) as a result of accepting the drink."
+is_wtg = false
+{
+NPCText "[Coughs heavily] When my pappy died he left me this company. I worked as hard as he did turning it into what it is now. I don't have no regrets, you know. My Marie will be the wealthiest widow in town. All I'm worried about is my business. My sons do a fine job working for me, but when Phil inherits the company he'd better run a tight ship.  "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why Phil? You said you had more than one son. " linkto "Story4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah. Guess you're right. Nice talking to you, Pete. [Leave]" linkto "done"  notes ""
+              }
+}
+Node "Story4"
+notes "Gets the Fisherman Family Feud quest\n"
+is_wtg = false
+{
+NPCText "I did? Well, you see. Phil is my only real son. Ike is Marie's kid, I raised him like my own and hell, I guess I love him like my own. But he sure ain't no Hogg. I don't know how he's taking it though. Maybe you can talk to him for me, he's been all cold with me since I told him about the adoption. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what I can do." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't want to get involved in your messy family affairs, old man. Have a nice death. " linkto "done"  notes ""
+              }
+}
+Node "Troubled"
+notes ""
+is_wtg = false
+/* Skill checks for node Troubled */
+
+      define_skill_check Speech_check_easy {
+      skill_num = 15;
+      difficulty_modifier = -4;
+      onsuccess => Story;
+      onfailure => Angry;
+      }
+
+{
+NPCText "Troubled? I'm just feeling a little under the weather, 's all. Now state your business or get lost. "
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Then it's gotta be raining dog piss. What's your story?" linkto "Speech_check_easy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Very well. Something else then." linkto "Greetingknown"  notes ""
+              }
+}

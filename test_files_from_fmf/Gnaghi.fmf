@@ -1,0 +1,689 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+vars {
+local var Gnaghi_Story_Interrupt notes "This variable keeps track of how many times the PC has interrupted Gnaghi whilst he's telling his life story. It also doubles as a means of keeping track of the PC's general rudeness." = 0;
+}
+NPCName "Gnaghi"
+Location "Sandover"
+Description "Eventually gives the PC the whereabouts of Sandover's scavenging grounds."
+Unknown_Desc "a very old man."
+Known_Desc "Gnaghi."
+Detailed_Desc "he has a sprightly energy about him."
+/* Float message nodes */
+
+Floatnode "Gna_Float_1"
+notes "Gnaghi's standard float node."
+{
+"Too many scavengers, not enough scavenge.",
+"I'm getting too old for this.",
+"Nice place to live, so long as you like rads.",
+"If Jedrek wasn't such a shyster, I could've retired by now.",
+"I ain't as young as I was, that's for sure.",
+"The wastes are a dangerous place, mark my words."
+}
+Floatnode "Gna_Hostile"
+notes "This node is used if the PC has offended Gnaghi, or Gnaghi is attacking the PC."
+{
+"Lucky for you I'm not twenty years younger than I am.",
+"I've a good mind to teach you some manners.",
+"I wouldn't have gotten away with that in my day.",
+"Youngsters these days - no respect.",
+"I'm not putting up with that behavior.",
+"You'll walk away if you've any sense."
+}
+
+/* Regular nodes */
+
+Node "Gnaghi_0"
+notes "If the local variable Gnaghi_Story_Interrupt >= 6 then Gnaghi will not speak to the PC at all and will only float the float node Gna_Hostile ."
+is_wtg = true
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "The PC has not spoken to Gnaghi before." linkto "Gnaghi_1a_1"  notes ""
+          int=6 Reaction=REACTION_NEUTRAL playertext "The PC has spoken to Gnaghi before." linkto "Gnaghi_1B_1"  notes ""
+              }
+}
+Node "Gnaghi_1a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hello there, young feller. I don't recall seeing you 'round here before."
+ NPCFemaleText "Hello there, young lady. I don't recall seeing you 'round here before."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Gnaghi_1a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who you?" linkto "Gnaghi_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, old-timer." linkto "Gnaghi_1B_1"  notes "Increment the local variable Gnaghi_Story_Interrupt by 3. This means Gnaghi will never train the PC's Outdoorsman skill."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I leave." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_1a_2"
+notes ""
+is_wtg = false
+{
+NPCText "They call me Gnaghi 'round these parts. As I recall, it's a nickname of sorts. Don't ask me what my real name is, though. Been years since I forgot it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know where I can find the General Atomics International base?" linkto "Gnaghi_1a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Gnaghi_2_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, old-timer." linkto "Gnaghi_1B_1"  notes "Increment the local variable Gnaghi_Story_Interrupt by 3. This means Gnaghi will never train the PC's Outdoorsman skill."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Gnag-hi?" linkto "Gnaghi_1a_3D_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go now." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_1a_3"
+notes ""
+is_wtg = false
+{
+NPCText "[He stratches his chin in thought, causing a loud rasping noise.] Never heard o' such a place. Name like that strikes me as something from before the war."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Gnaghi_2_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_1a_3D_1"
+notes ""
+is_wtg = false
+{
+NPCText "Err... sure, that's it. Don't go straining the brain there, young 'un. Take it easy."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I go now." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_1B_1"
+notes ""
+is_wtg = true
+{
+NPCText "An attitude, eh? Don't think just because I'm old, you can just push me around, young feller. Big mistake."
+ NPCFemaleText "An attitude, eh? Don't think just because I'm old, you can just push me around, young lady. Big mistake."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't we see about that? *Draw weapon.*" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_1b_1"
+notes ""
+is_wtg = true
+{
+NPCText "Hello, again, youngster. Keeping yourself out of trouble, I hope."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hi. Do you have time to answer a question?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander sent me. Could you tell me where your scavenging grounds are?" linkto "Gnaghi_3_1"  notes "This node only appears if Alexander (Scab leader) has agreed to reveal the whereabouts of the Scabs' scavenging grounds and told the PC to go to Gnaghi to get the information."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a pass key. Have you seen one?" linkto "Gnaghi_4_1"  notes "This option only appears if the PC has found the entrance to the GAI base, knows that he needs to find a pass key to enter it, does not already have the pass key, and has not found another way into the GAI base."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you, old-timer." linkto "Gnaghi_1B_1"  notes "Increment the local variable Gnaghi_Story_Interrupt by 3. This means Gnaghi will never train the PC's Outdoorsman skill, if he has not done so already."
+          int=10 Reaction=REACTION_NEUTRAL playertext "Sorry, I thought you were someone else. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not trouble." linkto "Gnaghi_1b_2D_1"  notes ""
+              }
+}
+Node "Gnaghi_1b_2D_1"
+notes ""
+is_wtg = true
+{
+NPCText "Of course you're not. Old Gnaghi can tell you're a good kid. You take care, now."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Blar." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_1"
+notes "The Gnaghi_2_* path is where the PC can find out about Gnaghi's role as a scavenger and about the Tech Supplies caravan."
+is_wtg = false
+{
+NPCText "I do what most of us in Sandover do and that is scavenge to make ends meet. I'm one of the town's better scavengers."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you scavenge for?" linkto "Gnaghi_2_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes you so good at scavenging?" linkto "Gnaghi_2_1c_01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_2"
+notes ""
+is_wtg = false
+{
+NPCText "We scavenge for anything that's worth anything. That, we sell on."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell your goods to?" linkto "Gnaghi_2_1a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you go to scavenge?" linkto "Gnaghi_2_1a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "We don't have any choice but to sell to those goddamn rip-off merchants, the Tech Supplies caravan. They'll take you for every last cap if you give them half a chance."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you sell to other buyers?" linkto "Gnaghi_2_1a_3a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find the Tech Supplies caravan?" linkto "Gnaghi_2_1a_3a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you go to scavenge?" linkto "Gnaghi_2_1a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_3a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "No-one else comes out here to Sandover, see? Tech Supplies have got theirselves a regular mo- no- poly."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find the Tech Supplies caravan?" linkto "Gnaghi_2_1a_3a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you go to scavenge?" linkto "Gnaghi_2_1a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_3a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "They usually pitch up topside, every [PERIOD BETWEEN TECH SUPPLIES CARAVAN'S VISITS] regular as clockwork on [DATE OF TECH SUPPLIES CARAVAN'S ARRIVAL]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where do you go to scavenge?" linkto "Gnaghi_2_1a_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "So you can go help yourself, too, huh? You're not going to pull the brahmin hide over this old man's eyes, young feller, I can tell you that."
+ NPCFemaleText "So you can go help yourself, too, huh? You're not going to pull the brahmin hide over this old man's eyes, young missy, I can tell you that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had no intention of stealing from you, I was just interested." linkto "Gnaghi_2_1a_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell your goods to?" linkto "Gnaghi_2_1a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1a_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[He makes a placatory gesture.] Forget it. Take no notice of me; age makes you a little cranky. No, we don't tell the whereabouts of our scavenging grounds to any outsiders. I'm sure you can understand why."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who do you sell your goods to?" linkto "Gnaghi_2_1a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1b_1"
+notes ""
+is_wtg = false
+{
+NPCText "I can tell you it's home for me and a couple hundred more unfortunates. You should ask Jonathan if you want to know Sandover inside and out, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find Jonathan?" linkto "Gnaghi_2_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Gnaghi_2_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, you can usually find him wandering around topside somewhere."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Gnaghi_2_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I'll try to find him. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_01"
+notes "The Gnaghi_2_1c_* path is where Gnaghi can tell the PC about his personal history. If the PC listens without interrupting more than twice, he can then ask Gnaghi to train his Outdoorsman skill."
+is_wtg = false
+{
+NPCText "What makes me so good at it? I've been doing it for longer'n anyone hereabouts, that's why."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "For how many years have you worked as a scavenger?" linkto "Gnaghi_2_1c_02a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you scavenge for?" linkto "Gnaghi_2_1a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_02a"
+notes ""
+is_wtg = false
+{
+NPCText "I been working the grounds around Sandover ever since I came here, many years ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_03"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_02b"
+notes ""
+is_wtg = true
+{
+NPCText "No. I've lived here for most of my life, but not all of it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_03" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt < 3 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_03"
+notes ""
+is_wtg = false
+{
+NPCText "If you're of a mind, I'd like to tell you how I came to be here. Nothing I like more than to talk about the good old days."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd be glad to listen." linkto "Gnaghi_2_1c_04"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_04"
+notes ""
+is_wtg = false
+{
+NPCText "It all started when I was kicked out of the town I grew up in, Clearwater, when I was even younger than you are."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where is Clearwater?" linkto "Gnaghi_2_1c_05b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_05a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_05a"
+notes ""
+is_wtg = false
+{
+NPCText "Had a thing for the dice, see? Ran myself up quite some impressive debts, with lots of noughts in them. I decided to quit town whilst I still had the legs to do so."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly in debt were you?" linkto "Gnaghi_2_1c_06b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_06a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_05b"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "Don't interrupt me, son. Now, I had a thing for the dice, see? Ran myself up quite some impressive debts, with lots of noughts in them. I decided to quit town whilst I still had the legs to do so."
+ NPCFemaleText "Don't interrupt me, young lady. Now, I had a thing for the dice, see? Ran myself up quite some impressive debts, with lots of noughts in them. I decided to quit town whilst I still had the legs to do so."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How badly in debt were you?" linkto "Gnaghi_2_1c_06c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_06a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_06a"
+notes ""
+is_wtg = false
+{
+NPCText "I'd heard about this place, Sandover, which serves as a kind of refuge for folks who find it hard to get along in other places in the wastes. I set out a-walking here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find out about Sandover?" linkto "Gnaghi_2_1c_07b" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find out about Sandover?" linkto "Gnaghi_2_1c_07c_1" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt >= 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_07a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_06b"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "Now, don't you interrupt me, young 'un. Anyhow, I'd heard about this place, Sandover, which serves as a kind of refuge for folks who find it hard to get along in other places in the wastes. I set out a-walking here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find out about Sandover?" linkto "Gnaghi_2_1c_07c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_07a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_06c_1"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "I thought I told you not to interrupt, me, youngster! Goddamn it, where was I..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_06c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_06c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, so I'd heard about this place, Sandover, which serves as a kind of refuge for folks who find it hard to get along in other places in the wastes. I set out a-walking here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you find out about Sandover?" linkto "Gnaghi_2_1c_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_07a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_07a"
+notes ""
+is_wtg = false
+{
+NPCText "When I got here, it was much the same as it is today. Except with fewer people living here, maybe."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many people lived here when you arrived?" linkto "Gnaghi_2_1c_08b" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt == 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many people lived here when you arrived?" linkto "Gnaghi_2_1c_08c" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt == 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many people lived here when you arrived?" linkto "Gnaghi_2_1c_B1" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt >= 2 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_08a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_07b"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "Now, I can't tell my tale if you're going to interrupt, son. When I got here, Sandover was much the same as it is today. Except with fewer people living here, maybe."
+ NPCFemaleText "Now, I can't tell my tale if you're going to interrupt, girl. When I got here, Sandover was much the same as it is today. Except with fewer people living here, maybe."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many people lived here when you arrived?" linkto "Gnaghi_2_1c_08c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_08a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_07c_1"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "For pity's sakes, will you young 'uns ever shut up and learn to listen? Put a cork in it!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_07c_2"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_07c_2"
+notes ""
+is_wtg = false
+{
+NPCText "So where was I? Oh yeah. When I got here, Sandover was much the same as it is today. Except with fewer people living here, maybe."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How many people lived here when you arrived?" linkto "Gnaghi_2_1c_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_08a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_08a"
+notes ""
+is_wtg = false
+{
+NPCText "'Course, back in them days, they weren't as organized as they are now when it came to scavenging. No idea how to plan a search, or cope in the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they learn to scavenge more effectively?" linkto "Gnaghi_2_1c_09b_1" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt <= 1 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they learn to scavenge more effectively?" linkto "Gnaghi_2_1c_B1" conditions { LOCAL_VARIABLE Gnaghi_Story_Interrupt >= 2 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_09a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_08b"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "Don't interrupt, now. I'm almost done. Anyway. Back then, when I arrived, Sandover wasn't as organized as it is now when it came to scavenging. No idea how to plan a search, or cope in the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they learn to scavenge more effectively?" linkto "Gnaghi_2_1c_09b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_09a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_08c"
+notes "Increment the local variable Gnaghi_Story_Interrupt by 1."
+is_wtg = false
+{
+NPCText "Haven't I already told you to quit flapping yer gums? Anyway. Back then, when I arrived, Sandover wasn't as organized as it is now when it came to scavenging. No idea how to plan a search, or cope in the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did they learn to scavenge more effectively?" linkto "Gnaghi_2_1c_B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_09a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_09a"
+notes ""
+is_wtg = false
+{
+NPCText "It took the know-how I'd picked up as a youngster and what I'd learned travelling out here to teach them the scavenging trade. I hate to think what would have become of the place if I hadn't turned up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've a pretty high opinion of your own abilities." linkto "Gnaghi_2_1c_10b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_10a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_09b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Just hold on. I was already set to tell you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_09b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_09b_2"
+notes ""
+is_wtg = false
+{
+NPCText "It took the know-how I'd picked up as a youngster, and what I'd learned travelling out here, to teach Sandover the scavenging trade. I hate to think what would have become of the place if I hadn't turned up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've a pretty high opinion of your own abilities." linkto "Gnaghi_2_1c_10b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_10a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_10a"
+notes ""
+is_wtg = false
+{
+NPCText "Well, that's it. Thanks for listening, kiddo. It's good to be able to gas about the past and rare to meet someone who'll let you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You've a pretty high opinion of your own abilities." linkto "Gnaghi_2_1c_10b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you teach me some of the skills you passed onto Sandover?" linkto "Gnaghi_2_1c_11"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_10b"
+notes ""
+is_wtg = false
+{
+NPCText "And not without good reason, cheeky young pup. I know the wastes hereabouts like the back of my hand. When I say that, you better believe it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you teach me some of the skills you passed onto Sandover?" linkto "Gnaghi_2_1c_11"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I should ask you about something else, instead." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_11"
+notes ""
+is_wtg = false
+{
+NPCText "Hell, why not? You've been good enough to give me your time, so I can spare you some of mine. Let's see what you already know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_12a_1" conditions { CHECK_SKILL gambling <= 60 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_12b" conditions { CHECK_SKILL gambling >= 61 link_next NONE } notes ""
+              }
+}
+Node "Gnaghi_2_1c_12a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Looks like you've still got a lot to learn. Okay, lets start with the basics. Finding water."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_12a_2"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_12a_2"
+notes "Boost the PC's Outdoorsman skill by 10 or 15 points."
+is_wtg = false
+{
+NPCText "[Several hours pass. Gnaghi teaches you many new wasteland survival techniques.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_2_1c_12a_3"  notes "Fade to black and back again. Several hours (five?) pass."
+              }
+}
+Node "Gnaghi_2_1c_12a_3"
+notes ""
+is_wtg = false
+{
+NPCText "...and when you return to the trap, make sure it's sprung before you dismantle it. Got it? Okay, I think that's all I can teach you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, Gnaghi." linkto "Gnaghi_2_1c_12a_4"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_12a_4"
+notes ""
+is_wtg = false
+{
+NPCText "My pleasure. You know, you remind me of myself at your age in an odd kinda way."
+ NPCFemaleText "Don't mention it, young lady. I just hope you don't have to call on those skills too often."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_12b"
+notes ""
+is_wtg = false
+{
+NPCText "Hmm... looks like your skills are pretty sharp already. You're a credit to whoever taught you. I don't have anything more to teach you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_2_1c_B1"
+notes ""
+is_wtg = false
+{
+NPCText "You can't stop running your trap while I'm talking, younster. I'm not going to bother if you're not going to listen."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, then." linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_3_1"
+notes "The Gnaghi_3_* path is where Gnaghi tells the PC where to find the Scabs' scavenging grounds."
+is_wtg = false
+{
+NPCText "I heard you gone did something to impress ol' Alex. Good for you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_3_2"  notes ""
+              }
+}
+Node "Gnaghi_3_2"
+notes "Add the location of the Sandover scavenging grounds to the PC's Pipboy."
+is_wtg = false
+{
+NPCText "Okay, now look here. [He digs out a tatty piece of brahmin parchment.] This here is a map I made of the area. See this? This is Sandover. This over here, to the east, that's our current main scavenging site."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Gnaghi_3_3"  notes ""
+              }
+}
+Node "Gnaghi_3_3"
+notes ""
+is_wtg = false
+{
+NPCText "There are a lot of ruins and what-have-you there. Must've been some place before the war. I imagine that's a good place to look for this place you're after."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, Gnaghi." linkto "Gnaghi_3_4"  notes ""
+              }
+}
+Node "Gnaghi_3_4"
+notes ""
+is_wtg = false
+{
+NPCText "Don't mention it. Now, listen. The scavenging area is pretty hot with rads, so don't you go wandering over there until you've picked up plenty of anti-rad meds, you hear me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any you could sell me?" linkto "Gnaghi_3_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hear you. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_3_5"
+notes ""
+is_wtg = false
+{
+NPCText "I can barely afford enough to keep myself dosed up, so the answer's no. Sorry, young 'un."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_4_1"
+notes "The Gnaghi_4_* path is where the PC can ask Gnaghi if he knows where to find a pass key for the GAI base."
+is_wtg = false
+{
+NPCText "A pass key? You mean like a key for a door?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sort of. It's a card made of plastic and is about four inches long." linkto "Gnaghi_4_2"  notes ""
+              }
+}
+Node "Gnaghi_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "I can't see how that would work. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You swipe it through an electronic reader next to the door." linkto "Gnaghi_4_3"  notes ""
+              }
+}
+Node "Gnaghi_4_3"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, I see. You had me thinking of keys of the type that you put in a lock and turn. Heh. Well, if it's tech stuff you want, you should ask the Tech Supplies caravaners, when they turn up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "When do they turn up?" linkto "Gnaghi_4_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_4_4"
+notes ""
+is_wtg = false
+{
+NPCText "They usually pitch up topside, every [PERIOD BETWEEN TECH SUPPLIES CARAVAN'S VISITS] regular as clockwork on [DATE OF TECH SUPPLIES CARAVAN'S ARRIVAL]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Can I ask you about something else?" linkto "Gnaghi_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Gnaghi_9"
+notes ""
+is_wtg = false
+{
+NPCText "As long as you're not all day about it. What do you need to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do in Sandover?" linkto "Gnaghi_2_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Gnaghi_2_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have you lived in Sandover all your life?" linkto "Gnaghi_2_1c_02b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander sent me. Could you tell me where your scavenging grounds are?" linkto "Gnaghi_3_1"  notes "This node only appears if Alexander (Scab leader) has agreed to reveal the whereabouts of the Scabs' scavenging grounds and told the PC to go to Gnaghi to get the information."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm looking for a pass key. Have you seen one?" linkto "Gnaghi_4_1"  notes "This option only appears if the PC has found the entrance to the GAI base, knows that he needs to find a pass key to enter it, does not already have the pass key, and has not found another way into the GAI base."
+          int=10 Reaction=REACTION_NEUTRAL playertext "My mistake. I don't have anything I need to ask. Goodbye." linkto "done"  notes ""
+              }
+}

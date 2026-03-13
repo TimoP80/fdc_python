@@ -1,0 +1,306 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "StartCave"
+notes "Douglas is hanging out in his cave down in Sandover."
+{
+NPCText "Hello there. What can I do for you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want to talk about your brother." linkto "Seville"  notes "If Douglas has already told the PC that Seville is his brother."
+          int=4 Reaction=REACTION_NEUTRAL playertext "You could tell me who you are." linkto "Introduction"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't know. What are you doing down here?" linkto "Scavenger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm just looking around. Seeya." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You have nice things for me?" linkto "Rejection"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Uh, what? Oh no, I forgot. Bye bye." linkto "done"  notes ""
+              }
+}
+Node "Introduction"
+notes "Whether or not the PC asks for Douglas' name, it'll still appear as his short description after the PC talks to him, so one can assume that the PC could've asked someone else who Douglas is."
+{
+NPCText "I'm Douglas. Who are you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm <PC>. What are you doing down here?" linkto "Scavenger"  notes "It doesn't really matter if the PC introduces themselves - if Douglas wants to know the name of the PC he can always ask someone else in Sandover to see what they call the PC."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's not important. What are you up to?" linkto "Scavenger"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "None of your business. Seeya!" linkto "done"  notes ""
+              }
+}
+Node "Rejection"
+notes ""
+{
+NPCText "No. You'll have to find your own stuff. This is mine. Now go away."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[sigh with disappointment] Okay. I go ask other scabs." linkto "done"  notes ""
+              }
+}
+Node "Scavenger"
+notes ""
+{
+NPCText "Just sorting through my latest finds and trying to see who might want what. Not much else to do while I'm at home."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh yeah? Perhaps you've got something for me then?" linkto "Trading"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What, no friends or family down here then?" linkto "Family"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good luck with that then. See you around." linkto "done"  notes ""
+              }
+}
+Node "Trading"
+notes ""
+{
+NPCText "Nah, I'd like to go through everything first. And you don't look like the type who'd need the stuff I've found. Most of it is pretty heavy to carry around, so it'll probably go to either someone local or to the traders."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind then. Got any family or friends down here then?" linkto "Family"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Goodbye then." linkto "done"  notes ""
+              }
+}
+Node "Family"
+notes "Set a variable so the PC can go straight to asking about Seville the next time they talk to Douglas."
+{
+NPCText "Well, I've got a few friends, but no family. Not down here anyway. Not anymore. They ran my brother Seville out of here some time ago, so I don't see him very often."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "They did? Why?" linkto "Posse"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Seville? That smartass out in the scavenging grounds?" linkto "MetSeville"  notes "If the PC has spoken to Seville."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, they did, huh? Well, I'm not going to take up anymore of your time. Bye." linkto "done"  notes ""
+              }
+}
+Node "Posse"
+notes ""
+{
+NPCText "Alexander thought that my brother and his friends were causing too much trouble, so one day he had Saman round up a posse and force them to leave the caves. I guess my brother was a bit of a troublemaker, but to just kick them out like that? I don't know... [He shakes his head.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Blood is thicker than water, huh?" linkto "Blood"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've already met your brother, and I could tell he was trouble." linkto "MetSeville"  notes "If the PC has spoken to Seville."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, that's all I wanted to know. Bye." linkto "done"  notes ""
+              }
+}
+Node "Blood"
+notes ""
+{
+NPCText "I guess so. But I'm not the only one who feels that it was wrong to kick them out. Not much we can do about it though. Alexander is in charge, and he's got the guards on his side."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So how do they survive out there?" linkto "Survive"  notes "If the PC has NOT found out that Douglas and others supply the Vultures."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Well, thanks for the chat. I've got to go now." linkto "done"  notes ""
+              }
+}
+Node "Survive"
+notes ""
+{
+NPCText "I don't know. They have their ways I suppose. What's it to you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I heard that they rob other scavengers." linkto "Raiding"  notes "If the PC has agreed to get rid of the Vultures."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I plan to do business with them, and that'd be hard if they die off." linkto "Business"  notes "If the PC has discussed selling drugs and booze to Seville."
+          int=6 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your brother made quite an impression on me. I just want to make sure he stays safe. [Wink]" linkto "Woman"  notes "If the female PC has agreed to get rid of the Vultures AND if she also has met Seville."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just curious. Bye." linkto "done"  notes ""
+              }
+}
+Node "Raiding"
+notes ""
+{
+NPCText "Yeah, I've heard that too, but I'm sure you could see how such rumors would serve those who want my brother gone from the scavenging grounds. They might not see much difference between robbery and scavenging on 'their' territory."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess you're right about that, but that wasn't a denial." linkto "Denial"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. I'll be off then. Bye." linkto "done"  notes ""
+              }
+}
+Node "Denial"
+notes ""
+{
+NPCText "Yeah, well, I know they can be rough and talk tough, but I don't think they'd rob people from here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you say so. I'd like to talk more about your brother though." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Thanks. Bye." linkto "done"  notes ""
+              }
+}
+Node "Seville"
+notes ""
+{
+NPCText "Oh yeah? What about him?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Quite some mouth your brother's got." linkto "MetSeville"  notes "If the PC has met Seville AND if the PC has NOT found out that Douglas supplies the Vultures."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why did they run your brother out of Sandover?" linkto "Posse"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. Bye." linkto "done"  notes ""
+              }
+}
+Node "MetSeville"
+notes ""
+{
+NPCText "Uh, yeah, that sounds like him. Hope you got along anyway."
+      options {
+          int=6 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Oh, we got along juuust fine, if you know what I mean. [Wink]" linkto "Woman"  notes "If the female PC has agreed to get rid of the Vultures."
+          int=4 Reaction=REACTION_NEUTRAL playertext "We got along well enough for business purposes." linkto "Business"  notes "If the PC spoke to Seville about selling booze and drugs."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why was he kicked out of here?" linkto "Posse"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, we didn't get along at all. I had to shut his mouth for good." linkto "Killer"  notes "If the PC has killed Seville but hasn't completed the \"Kill the Vultures\" quest, thus no one but the PC necessarily knows that Seville is dead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, enough about your brother. I've got to go now." linkto "done"  notes ""
+              }
+}
+Node "Killer"
+notes ""
+{
+NPCText "What? Damn... [His surprise briefly turns to sadness before ending in anger.] Well, get the hell away from me then, murderer!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stay alive, Douglas. Don't do anything stupid." linkto "done"  notes ""
+              }
+}
+Node "Woman"
+notes ""
+{
+NPCText "No, I'm not sure what you mean by that. Are you saying you're his woman now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but I'd like to be, so why don't you help me out?" linkto "Attractive" conditions { CHECK_STAT charisma > 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, but I'd like to be, so why don't you help me out?" linkto "NotAttractive" conditions { CHECK_STAT charisma < 6 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh no, that's not what I meant at all! But while we're on the subject of Seville..." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ah, I didn't mean anything special. We got along, that's all. Bye." linkto "done"  notes ""
+              }
+}
+Node "Business"
+notes ""
+{
+NPCText "What kind of business would that be? [He gives you a suspicious look.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, drugs and booze and such." linkto "Drugs"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind that. Let's talk about Seville himself instead." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "None of YOUR business, that's for sure. I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "NotAttractive"
+notes ""
+{
+NPCText "Eh, I don't know. I think you'll have to manage that on your own. [He looks somewhat uncomfortable.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So no help from you, huh? Well, about Seville..." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Pout] If you're going to be like that I'm leaving!" linkto "done"  notes ""
+              }
+}
+Node "Attractive"
+notes ""
+{
+NPCText "[He looks pleasantly surprised.] Oh! Heh. I guess there's no harm in that. What kind of help do you need?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was hoping you'd TELL me what I'd need." linkto "BadLuck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "They say that the fastest way to a man's heart is through his stomach." linkto "Cooking"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "On second though I might not need your help. Let's just talk about Seville instead." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I just realized that I have to go now. Bye!" linkto "done"  notes ""
+              }
+}
+Node "Drugs"
+notes ""
+{
+NPCText "What the hell? I don't want you selling drugs or booze to him! Drugs do bad shit to people, and booze ain't much better. I don't want my brother's brain to turn to mush, so you'd better stay away from Seville, or else!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, okay. I won't sell drugs or booze to him then. Calm down!" linkto "Promise"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, what would YOU suggest I sell to him then?" linkto "Food"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's a big boy. He can decide for himself what to buy." linkto "BigBoy"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever. I'm gone." linkto "done"  notes ""
+              }
+}
+Node "Promise"
+notes ""
+{
+NPCText "Okay, but I'm going to hold you to that promise."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Isn't there anything else he'd need then?" linkto "Food"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure. Now, let's talk some more about Seville." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, yeah. Regular booze. I got it. I think we're done with each other then." linkto "done"  notes ""
+              }
+}
+Node "BigBoy"
+notes ""
+{
+NPCText "[He struggles to regain his composure.] Just because he wants to buy doesn't mean that you have to sell. Do it as a favor to me, okay? Don't sell drugs or booze to Seville. Please."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, what would you suggest I sell to him instead?" linkto "Food"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "A favor? And what do I get in return?" linkto "Narc"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll think about it. Bye." linkto "done"  notes ""
+              }
+}
+Node "Narc"
+notes ""
+{
+NPCText "If my gratitude isn't enough, then perhaps a promise that I won't tell the guards that you deal in drugs would be worth something to you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, if I can't sell drugs to him, do you have any other suggestion?" linkto "Food"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That sounds more like a threat to me, but I get your point. Bye for now." linkto "done"  notes ""
+              }
+}
+Node "Food"
+notes ""
+{
+NPCText "They always need food, water and other supplies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Food and water, huh? Don't they live off the land?" linkto "Suppliers" conditions { CHECK_SKILL speech >= 60 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, but let's go back to talking about your brother now." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Food and water. Got it. I'll see you around then." linkto "done"  notes ""
+              }
+}
+Node "Suppliers"
+notes "With this information the PC can tell Saman that Douglas and others are supplying the Vultures."
+{
+NPCText "No, we have to bring them food and water from here. Everything out there is irradiated. But it's not so bad - we get their scavenged finds in return, which is what I assume you'll be getting as well."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "\"We?\" You and who else?" linkto "Interrogation"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. About your brother..." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good business for everyone then. Thanks and goodbye." linkto "done"  notes ""
+              }
+}
+Node "Interrogation"
+notes ""
+{
+NPCText "You don't need to know that. Now, is there anything else I can help you with?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to talk more about your brother." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can't think of a thing. Bye for now." linkto "done"  notes ""
+              }
+}
+Node "BadLuck"
+notes ""
+{
+NPCText "Well, between you and me, Seville has had some bad luck with women, so it'd probably help if he knew that he could trust you. But I guess trust comes with time, so you'd just have to get to know each other. Be yourself!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "They say that the fastest way to a man's heart is through his stomach." linkto "Cooking"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Be myself, huh? About Seville..." linkto "Seville"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for your help. I think I'll manage on my own then." linkto "done"  notes ""
+              }
+}
+Node "Cooking"
+notes ""
+{
+NPCText "That's not a bad idea! The Vultures don't have a decent cook, and anything brought from here is bound to grow cold and would need to be reheated anyway."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You bring them food from here? That's so sweet of you!" linkto "Irradiated" conditions { CHECK_SKILL speech >= 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What? You bring them food from here?" linkto "Birthday" conditions { CHECK_SKILL speech < 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me of Seville's women then?" linkto "BadLuck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better go learn how to cook then. Bye!" linkto "done"  notes ""
+              }
+}
+Node "Irradiated"
+notes "With this information the PC can tell Saman that Douglas and others are supplying the Vultures."
+{
+NPCText "[He lights up noticeably.] Heh. Yeah, we bring them food and water. I doubt they even know how to forage for any of it, but it's a moot point because anything they'd find would be irradiated."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Aha. How's Seville's lovelife been then?" linkto "BadLuck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Well, thanks for your help. I've got to go now." linkto "done"  notes ""
+              }
+}
+Node "Birthday"
+notes ""
+{
+NPCText "[He looks momentarily puzzled.] Er... no. Well, only on special occasions. Anything else you want to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Seville's lovelife?" linkto "BadLuck"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can't think of anything right now, so I'll get back to you if I do." linkto "done"  notes ""
+              }
+}

@@ -21,7 +21,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Add the current directory to Python path for imports
-sys.path.insert(0, os.path.dirname(__file__))
+# In frozen mode, we need to handle paths differently
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    # Running as PyInstaller bundle - _MEIPASS contains the extracted files
+    base_path = Path(sys._MEIPASS)
+else:
+    # Running in development
+    base_path = Path(__file__).parent
+
+sys.path.insert(0, str(base_path))
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QSplitter
 from PyQt6.QtCore import Qt, QSettings
@@ -38,8 +46,12 @@ def main():
 
     # Set application properties
     app.setApplicationName("Fallout Dialogue Creator")
-    app.setApplicationVersion("2.0.0")
+    app.setApplicationVersion("2.1.1")
     app.setOrganizationName("FMF Tools")
+
+    # Apply Fallout 2 theme before creating any widgets
+    from ui.fallout_theme import FalloutUIHelpers
+    FalloutUIHelpers.apply_theme(app)
 
     # Initialize core components
     settings = Settings()
@@ -50,7 +62,11 @@ def main():
 
     # Load plugins
     plugin_manager = dialog_manager.plugin_manager
-    plugins_dir = Path(__file__).parent / "plugins"
+    
+    # Use the correct plugins directory based on whether we're frozen or in development
+    # The plugin_manager already handles this internally, but we log it for debugging
+    plugins_dir = base_path / "plugins"
+    logger.info(f"Looking for plugins in: {plugins_dir}")
 
     # Discover and load all available plugins
     discovered_plugins = plugin_manager.discover_plugins()

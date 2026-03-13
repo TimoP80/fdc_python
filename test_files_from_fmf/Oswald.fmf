@@ -1,0 +1,1548 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+vars {
+local var Osw_Auto_Price notes "This variable keeps track of the number of stimpaks Dr. Oswald has agreed to give to the PC upon completion of the 'Fix the Autodoc quest." = 3;
+local var Osw_Euth_Arg_1 notes "This variable determines if Dr. Oswald has told the PC his first argument in favour of euthanasia." = 0;
+local var Osw_Euth_Arg_2 notes "This variable determines if Dr. Oswald has told the PC his second argument in favour of euthanasia." = 0;
+local var Osw_Euth_Arg_3 notes "This variable determines if Dr. Oswald has told the PC his third argument in favour of euthanasia." = 0;
+local var Osw_Euth_Arg_4 notes "This variable determines if Dr. Oswald has told the PC his fourth argument in favour of euthanasia." = 0;
+local var Osw_Euth_Arg_5 notes "This variable determines if Dr. Oswald has told the PC his fifth argument in favour of euthanasia." = 0;
+local var Osw_Fran_Euth notes "This variable keeps track of whether Dr. Oswald has made the decision to euthanase Fran. If Osw_Fran_Euth > 0, he will go and administer a lethal dose of drugs to Fran at the end of the dialogue with the PC." = 0;
+local var Osw_Hosp_Attempt notes "This variable keeps track of whether the PC has offered to help out at the hospital (as per the quest of the same name) but failed to suitably impress Dr. Oswald with his medical skills." = 0;
+local var Osw_Hosp_Job notes "This variable keeps track of whether Dr. Oswald has accepted the PC's medical credentials and has allowed him access to the hospital's patients." = 0;
+}
+NPCName "Dr. Bernard Oswald"
+Location "Caves of Sandover"
+Description "This is Bernard Oswald, the Scab Doctor.\nHe will not barter with the PC unless he has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered."
+Unknown_Desc "You see a man in a white lab coat."
+Known_Desc "It's Doctor Oswald. He looks busy."
+Detailed_Desc "The doctor is kept extremely busy by all his patients."
+/* Float message nodes */
+
+Floatnode "Osw_Eleanor"
+notes "This float node is used when Oswald is still at the site where Eleanor, the lost scavenger, is found, after Oswald has healed the woman."
+{
+"That should hold for now, although she should get back to the caves as soon as possible.",
+"Honestly, what was she doing out here on her own, anyway?",
+"Some nasty injuries she had there.",
+"It'll be a few months before that young lady is out scavenging again."
+}
+Floatnode "Osw_PC_Not_Doc"
+notes "Dr. Oswald floats one of these lines if the PC tries to interfere with any of his patients before he has given the PC permission to do so. See the 'Help Out in the Hospital' quest in the Wiki for details."
+{
+"STAY AWAY FROM THOSE PATIENTS!",
+"YOU ARE NOT TO INTERFERE WITH THOSE PATIENTS!"
+}
+Floatnode "Osw_Normal"
+notes "Oswald's standard float node."
+{
+"Another day, another tumor.",
+"I don't know if our meds will last out the week, let alone the month.",
+"That's all I need - another patient.",
+"*Sigh.* I don't hold out much hope for some of these poor souls.",
+"When will these people learn to buy more rad drugs?",
+"I do wish they wouldn't try scavenging the more dangerous areas."
+}
+Floatnode "Osw_Euth"
+notes "Oswald floats this text whilst administering a lethal dose of drugs to Fran, if the PC convinces the Doctor to euthanase her."
+{
+"I'm sorry it has come to this, Fran.",
+"Sleep well, you poor soul.",
+"It'll all be over in a second.",
+"You're going to a better place."
+}
+
+/* Regular nodes */
+
+Node "Osw_0"
+notes ""
+is_wtg = false
+{
+NPCText "***STARTING CONDITIONS***"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The PC has not spoken to Oswald before -" linkto "Osw_1a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The PC has spoken to Oswald before -" linkto ""  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The PC has fixed the Autodoc AND not spoken to Dr. Oswald since doing so -" linkto "Osw_3_1b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "- The PC has failed to fix the Autodoc AND not spoken to Dr. Oswald since doing so -" linkto "Osw_3_1c_1"  notes "The PC has made five attempts to fix the Autodoc, none of which were successful."
+              }
+}
+Node "Osw_1a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Just a second. [The lab-coated man scribbles something on a clipboard.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[WAIT]" linkto "Osw_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you writing, there?" linkto "Osw_1a_2b"  notes ""
+              }
+}
+Node "Osw_1a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Right. Sorry about the wait. What appears to be the problem?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a doctor, I presume?" linkto "Osw_1a_3a" conditions { CHECK_STAT perception >= 4 link_next AND, CHECK_STAT charisma >=  7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you think there is a problem?" linkto "Osw_1a_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What were you writing, there?" linkto "Osw_1a_2a_2a"  notes ""
+              }
+}
+Node "Osw_1a_2a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Not that it's any of your concern, but I was updating a patient's notes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a doctor, I presume?" linkto "Osw_1a_3a" conditions { CHECK_STAT perception >= 4 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do around here?" linkto "Osw_1a_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's my concern if I choose it to be." linkto "Osw_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_1a_2a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "I am a doctor. Bernard Oswald is my name. Presumably you are feeling poorly or you would not be in here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you think there is a problem?" linkto "Osw_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What were you writing, there?" linkto "Osw_1a_2a_2a"  notes ""
+              }
+}
+Node "Osw_1a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "I said just a second! [He continues scribbling.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[WAIT]" linkto "Osw_1a_2a_1"  notes ""
+              }
+}
+Node "Osw_1a_3a"
+notes ""
+is_wtg = false
+{
+NPCText "Of course. My name is Doctor Oswald. Are you unwell?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've been injured." linkto "Osw_2_1a_1"  notes "This node only appears if the PC has less than maximum health points."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need surgery on a serious injury." linkto "Osw_2_1b_1"  notes "This node appears if the PC has eye damage or has crippled limbs."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've been poisoned." linkto "Osw_2_1c_1" conditions { CHECK_STAT cur_poison_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've been exposed to radiation." linkto "Osw_2_1d_1" conditions { CHECK_STAT cur_rad_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing that needs looking at for now. Let me ask you a question." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_1a_3b"
+notes ""
+is_wtg = false
+{
+NPCText "[He frowns.] Very few people come in here unless there is something wrong with them. If you aren't unwell, please leave at once."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've been injured." linkto "Osw_2_1a_1"  notes "This node only appears if the PC has less than maximum health points."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need surgery on a serious injury." linkto "Osw_2_1b_1"  notes "This node appears if the PC has eye damage or has crippled limbs."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've been poisoned." linkto "Osw_2_1c_1" conditions { CHECK_STAT cur_poison_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've been exposed to radiation." linkto "Osw_2_1d_1" conditions { CHECK_STAT cur_rad_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing that needs looking at for now. Let me ask you a question." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1_0"
+notes ""
+is_wtg = false
+{
+NPCText "And what seems to be the problem?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've been injured." linkto "Osw_2_1a_1"  notes "This node only appears if the PC has less than maximum health points."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need surgery on a serious injury." linkto "Osw_2_1b_1"  notes "This node appears if the PC has eye damage or has crippled limbs."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've been poisoned." linkto "Osw_2_1c_1" conditions { CHECK_STAT cur_poison_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I've been exposed to radiation." linkto "Osw_2_1d_1" conditions { CHECK_STAT cur_rad_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing that needs looking at for now. Let me ask you a question." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_1"
+notes "The Osw_2_1a* path is where the PC can have losses in hit points healed."
+is_wtg = false
+{
+NPCText "I see. Let me take a look at you, then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Allow him to examine you.]" linkto "Osw_2_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I would prefer it if I were examined by a female member of staff." linkto "Osw_2_1a_2F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "Osw_2_1a_2b"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Hmm. You seem to have a series of small cuts, abrasions and bruising, none of which should be life-threatening on their own. However, they should be treated straight away. In combination with one another, even minor wounds can cause more serious problems."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's just what I was going to say." linkto "Osw_2_1a_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you help me?" linkto "Osw_2_1a_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get them looked at another time. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "I see. I suppose you were about to treat yourself as well?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. I just wanted a second opinion." linkto "Osw_2_1a_2a_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No." linkto "Osw_2_1a_2a_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, now you have it, 'doctor'. If you will excuse me, I have patients to whom I must attend who don't share your medical expertise."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to buy some meds from you so I can heal myself." linkto "Osw_5a_1"  notes "If the PC has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered, go to Osw_5b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "In that case, kindly leave the diagnoses to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right. Will you help me?" linkto "Osw_2_1a_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "That's what I'm here to do. Just pop yourself into one of the empty beds and we'll see what we can do to get you fixed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "Osw_2_1a_2a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get the injuries looked at another time. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2b_2"
+notes "Make the PC's health points five less than his maximum. If he was only 5 or less away from his health points, make no change."
+is_wtg = false
+{
+NPCText "[Doctor Oswald applies a series of treatments to your wounds and dresses them all appropriately. Finally, he brings you an earthenware mortar bowl filled with a murky looking liquid.] Drink this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is it?" linkto "Osw_2_1a_2a_2b_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thank you. I don't want to." linkto "Osw_2_1a_2a_2b_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Drink the bowl's contents.]" linkto "Osw_2_1a_2a_2b_3a_1"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2b_3a_1"
+notes "Take the PC up to full health. Apply the temporary -1 to PER that you get from using one sack of Healing Powder."
+is_wtg = false
+{
+NPCText "[The liquid is surprisingly warm. It is a watery concoction that tastes of an unpleasant mix of unfamiliar herbs.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yuck!" linkto "Osw_2_1a_2a_2b_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you." linkto "Osw_2_1a_2a_2b_3a_2"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2b_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "[He takes the bowl back.] That's all I can do for you. Now, if you don't mind, I'll be needing that bed back, as well."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have another injury that I'd like you to take a look at." linkto "Osw_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Before I go, can I ask you a question?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you for your help, Doctor. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2b_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "It's nothing to worry about. It's a simple mix of plant matter that is known for its healing properties."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Drink the bowl's contents.]" linkto "Osw_2_1a_2a_2b_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are there any side effects?" linkto "Osw_2_1a_2a_2b_3b_2"  notes ""
+              }
+}
+Node "Osw_2_1a_2a_2b_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, some slight drowsiness, perhaps, but nothing that won't pass after an hour or two. Really, you have nothing to worry about. Drink it whilst it's still warm."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Drink the bowl's contents.]" linkto "Osw_2_1a_2a_2b_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, thank you. You've done enough for me." linkto "Osw_2_1a_2a_2b_3a_2"  notes ""
+              }
+}
+Node "Osw_2_1a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Don't be silly. Come on, this won't take a moment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Allow him to examine you.]" linkto "Osw_2_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I would prefer it if I were examined by a female member of staff." linkto "Osw_2_1a_2F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I said no. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1a_2F"
+notes ""
+is_wtg = false
+{
+NPCText "You needn't worry. You won't have anything I haven't seen before."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Allow him to examine you.]" linkto "Osw_2_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1b_1"
+notes "The Osw_2_1b* path is where the PC can have damaged eyes or crippled limbs healed."
+is_wtg = false
+{
+NPCText "Yes, I thought I noticed that you were having trouble when you came in. Let me take a look at that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Allow him to examine you.]" linkto "Osw_2_1b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I would prefer it if I were examined by a female member of staff." linkto "Osw_2_1b_2F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "Osw_2_1a_2b"  notes ""
+              }
+}
+Node "Osw_2_1b_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh dear. Yes, this is quite nasty. I dread to think what would have happened if you hadn't got this treated soon."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you fix it?" linkto "Osw_2_1b_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get it looked at another time. Goodbye for now." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1b_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Yes. What needs to be done is actually fairly simple, given how unpleasant the injury is. Lie down, won't you? We'll have you patched up in no time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Lie down as Dr. Oswald instructs you.]" linkto "Osw_2_1b_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll get it looked at another time. Goodbye for now." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1b_2a_3"
+notes "An hour or so should pass whilst the PC is 'in surgery'. Any crippled limbs or eye damage the PC is suffering from is repaired."
+is_wtg = false
+{
+NPCText "[The Doctor spends a long time tending to your injury.] When he's finished, he helps you out of bed. Now, that's not a miracle cure; you're still going to need to take it easy for a few days whilst that heals, okay?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have another ailment that I'd like you to take a look at." linkto "Osw_2_1_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Before I go, can I ask you a question?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you for your help, Doctor. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1b_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Don't be silly. Come on, this won't take a moment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Allow him to examine you.]" linkto "Osw_2_1b_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I would prefer it if I were examined by a female member of staff." linkto "Osw_2_1a_2F"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I said no. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1b_2F"
+notes ""
+is_wtg = false
+{
+NPCText "You needn't worry. You won't have anything I haven't seen before."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. [Allow him to examine you.]" linkto "Osw_2_1a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_1"
+notes "The Osw_2_1c* node is where the PC can be cured of poison by Dr. Oswald."
+is_wtg = false
+{
+NPCText "Poisoned, you say? Well, I'll need a blood sample to be sure of what I need to provide an antidote for."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Blood sample?" linkto "Osw_2_1c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. What do you need me to do?" linkto "Osw_2_1c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I feel better already. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh yes, I can't make a diagnosis without it. Just a little amount. You're a big boy; you don't mind needles, do you?"
+ NPCFemaleText "Oh yes, I can't make a diagnosis without it. Just a little amount. You're a big girl; you don't mind needles, do you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I hate needles. No deal." linkto "Osw_2_1c_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. What do you need me to do?" linkto "Osw_2_1c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I feel better already. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "I can't help you, in that case. Come back when you've come to your senses."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, I've changed my mind. What do you want me to do?" linkto "Osw_2_1c_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Just roll your sleeve up, please. [He fishes a convincingly clean-looking needle from a neatly arranged wall-rack.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Roll up your sleeve and allow Dr. Oswald to take a blood sample.]" linkto "Osw_2_1c_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I feel better already. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[You hardly feel the needle as it goes in or, half a minute later, when it comes out.] There, all done. Just a moment whilst I run an analysis on the sample."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do I get a lollipop for being brave?" linkto "Osw_2_1c_2b_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[WAIT]" linkto "Osw_2_1c_2b_4"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_3a"
+notes ""
+is_wtg = false
+{
+NPCText "[Dr. Oswald forces a smile.] Very good. I haven't heard that one today. Now I must have a look at this sample."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[WAIT]" linkto "Osw_2_1c_2b_4"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_4"
+notes ""
+is_wtg = false
+{
+NPCText "[Five minutes later he comes back.] Yes, you were right; you do have a high level of toxins in your bloodstream. Luckily, I have an antidote to hand."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's have it." linkto "Osw_2_1c_2b_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will it taste bad?" linkto "Osw_2_1c_2b_5b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will it have any side-effects?" linkto "Osw_2_1c_2b_5c"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_5a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He hands you an earthenware bowl. The contents are a liquid which is thick, milky and has various chunks floating in it. It tastes absolutely foul. Once you have drained it, the Doctor takes the bowl away from you with a smile.] Tastes unpleasant, huh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Awful, yes." linkto "Osw_2_1c_2b_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've had worse." linkto "Osw_2_1c_2b_5a_2"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_5a_2"
+notes "Reset the PC's poison levels to 0."
+is_wtg = false
+{
+NPCText "Well, you're probably feeling better already, so it's worthwhile putting up with the nasty taste."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have something else wrong with me, Doctor." linkto "Osw_2_1_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a question I need to ask you." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for your help, Doctor. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_5b"
+notes ""
+is_wtg = false
+{
+NPCText "I'm afraid it will taste quite awful. Often, a poison's antidote tastes worse than the poison itself."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's have it, anyway." linkto "Osw_2_1c_2b_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will it have any side-effects?" linkto "Osw_2_1c_2b_5c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it, then. Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't like the sound of it. Goodbye." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1c_2b_5c"
+notes ""
+is_wtg = false
+{
+NPCText "Luckily, there are none. This will simply neutralise the toxins."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's have it." linkto "Osw_2_1c_2b_5a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Will it taste bad?" linkto "Osw_2_1c_2b_5b"  notes ""
+              }
+}
+Node "Osw_2_1d_1"
+notes "The Osw_2_1d* path is where the PC can receive treatment for radiation sickness."
+is_wtg = false
+{
+NPCText "[Dr. Oswald sighs.] If I had a bottle cap for every time I heard that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you help me?" linkto "Osw_2_1d_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you get a lot of radiation sickness cases?" linkto "Osw_2_1d_2b_1"  notes ""
+              }
+}
+Node "Osw_2_1d_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "As much as I hate to stretch Sandover's supplies of anti-rad drugs any further, yes, I can treat you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Allow Dr. Oswald to treat you.]" linkto "Osw_2_1d_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you not have many anti-rad drugs?" linkto "Osw_2_1d_2a_2a"  notes "If the PC has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered, go to Osw_2_1d_2a_2b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you get a lot of radiation sickness cases?" linkto "Osw_2_1d_2b_1"  notes ""
+              }
+}
+Node "Osw_2_1d_2a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "No, our supplies are badly overstretched. Do you want treatment, or not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes, please." linkto "Osw_2_1d_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe later. Tell me why your supplies are so overstretched." linkto "Osw_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you get a lot of radiation sickness cases?" linkto "Osw_2_1d_2b_1"  notes ""
+              }
+}
+Node "Osw_2_1d_2a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "We're not so badly off since you drummed some sense into the Tech Supplies caravan. I still can't afford to throw our anti-rads around, though. Listen, as much as I'd like to stand around all day talking, I ought to treat you as soon as possible."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Allow Dr. Oswald to treat you.]" linkto "Osw_2_1d_3"  notes ""
+              }
+}
+Node "Osw_2_1d_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "It's the most common cause of illness in Sandover. This town suffers from a high level of background radiation."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you know what the source of radiation is?" linkto "Osw_2_1d_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you help me with my radiation sickness?" linkto "Osw_2_1d_2a_1" conditions { CHECK_STAT cur_rad_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_2_1d_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "We think that Sandover is built on the ruins of what was a large city before the war - this whole area was devastated by nukes. It's because of that that the background level of radiation has been so high since."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you help me with my radiation sickness?" linkto "Osw_2_1d_2a_1" conditions { CHECK_STAT cur_rad_lev > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you a question about something else." linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_2_1d_3"
+notes ""
+is_wtg = false
+{
+NPCText "[Dr. Oswald hands you a brightly colored cocktail of pills and tablets, and gives you a mug full of dark liquid with which to wash it down.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Take the pills and wash them down with the liquid.]" linkto "Osw_2_1d_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not taking this. It looks foul." linkto "Osw_2_1d_4b_1"  notes ""
+              }
+}
+Node "Osw_2_1d_4a_1"
+notes "Set the PC's current radiation level to 0."
+is_wtg = false
+{
+NPCText "[The combination of medicines is unpleasant.] The liquid is a sort of metabolic stimulant. What that means is that the pills will get to work very quickly, cleanse your body of any cells that the rads have damaged, and absorb any harmful radioactive particles in your bloodstream."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yuck. Thanks, Doc. I think." linkto "Osw_2_1d_4a_2"  notes ""
+              }
+}
+Node "Osw_2_1d_4a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Try to avoid exposing yourself to too many rads in the future. Now, is there anything else I can help you with?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I still have something else wrong with me, Doctor." linkto "Osw_2_1_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, that's it, thanks. Goodbye for now." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_1d_4b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Don't be put off because it looks odd. Trust me, it's as good as any treatment you'll find in the wastes. Stop making a fuss and get it down you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Take the pills and wash them down with the liquid.]" linkto "Osw_2_1d_4a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think so. [Give the pills and liquid back to Dr. Oswald.]" linkto "Osw_2_1d_4b_2"  notes ""
+              }
+}
+Node "Osw_2_1d_4b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Very well. Hopefully they'll still be here when you come to your senses. Is there anything else I can do for you whilst you're here?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I still have something else wrong with me, Doctor." linkto "Osw_2_1_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, that's it, thanks. Goodbye for now." linkto "Osw_2_End"  notes ""
+              }
+}
+Node "Osw_2_End"
+notes ""
+is_wtg = false
+{
+NPCText "NEXT!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[DONE]" linkto "done"  notes ""
+              }
+}
+Node "Osw_3_1a_1"
+notes "The Osw_3_1a_* path is where the PC can tell Dr. Oswald that he's been told that Oswald's Autodoc needs fixing."
+is_wtg = false
+{
+NPCText "I see. You want to have a go at fixing it? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes. Let's not waste any more time. Where is it?" linkto "Osw_3_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe. Depends if the price is right." linkto "Osw_3_1a_2a_a1"  notes "If the PC got into the caves by offering to Saman to fix the Autodoc rather than paying the entrance fee, go to Osw_3_1a_2a_b1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "It's the big machine at the back of the room."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right. I'll be back once I've fixed it." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "First, tell me what you're prepared to pay me for fixing it." linkto "Osw_3_1a_2a_a1"  notes "If the PC got into the caves by offering to Saman to fix the Autodoc rather than paying the entrance fee, go to Osw_3_1a_2a_b1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1a_2a_a1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, if you fix the machine, that'll ease the load on my medical supplies. I'll give you three stimpaks once you do it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, let's not waste any more time. Where is the Autodoc?" linkto "Osw_3_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not good enough. I want more." linkto "Osw_3_1a_2a_a2_a"  notes "Moderate Barter skill check. If failed, go to Osw_3_1a_2a_a2_b, instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1a_2a_a2_a"
+notes "Make the local variable Osw_Auto_Price = 5."
+is_wtg = false
+{
+NPCText "[He sighs.] Very well. Five stimpaks."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, let's not waste any more time. Where is the Autodoc?" linkto "Osw_3_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1a_2a_a2_b"
+notes ""
+is_wtg = false
+{
+NPCText "Listen, peoples' lives are at stake and I cannot afford to barter any more supplies to a repair man. Do your damn job and take the three 'paks."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, let's not waste any more time. Where is the Autodoc?" linkto "Osw_3_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1a_2a_b1"
+notes ""
+is_wtg = false
+{
+NPCText "I heard Saman will waive your fee for admission into the caves if you fix the Autodoc. I suggest you uphold your side of the bargain if you value your health."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Did you just threaten me?" linkto "Osw_3_1a_2a_b2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's not waste any more time. Where is the Autodoc?" linkto "Osw_3_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1a_2a_b2"
+notes ""
+is_wtg = false
+{
+NPCText "No. I fix people, I don't break them. Saman will make short work of you if you cross him, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's not waste any more time. Where is the Autodoc?" linkto "Osw_3_1a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might fix it later. In the meantime, can I ask you something else?" linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_3_1b_1"
+notes "The Osw_3_1b_* path is used when the PC has fixed the Autodoc."
+is_wtg = false
+{
+NPCText "Good work, stranger. The Autodoc is working perfectly, now. You have no idea how much easier this is going to make things around here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to be paid for the work." linkto "Osw_3_1b_2a"  notes "This option does not appear if the PC got into the caves by offering to Saman to fix the Autodoc rather than paying the entrance fee."
+          int=4 Reaction=REACTION_NEUTRAL playertext "That one's on me. I'm just glad to be able to help." linkto "Osw_3_1b_2b"  notes "This option does not appear if the PC got into the caves by offering to Saman to fix the Autodoc rather than paying the entrance fee."
+          int=4 Reaction=REACTION_NEUTRAL playertext "My pleasure. Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mention it. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_3_1b_2a"
+notes "<x> = the local variable Osw_Auto_Price.\nPut <x> stimpaks in the PC's inventory."
+is_wtg = false
+{
+NPCText "Certainly. Here, take these <x> stimpaks. Use them wisely; they're very hard to come by in this part of the world."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you say they are hard to come by?" linkto "Osw_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_3_1b_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Well, that is truly commendable, stranger. I can only thank you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My pleasure. Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't mention it. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_3_1c_1"
+notes "The Osw_3_1c_* path is used when the PC has made five attempts to fix the Autodoc, none of which were successful."
+is_wtg = false
+{
+NPCText "[Dr. Oswald looks at the Autodoc and sighs in frustration.] Never mind. You did your best."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You still owe me for the work, though." linkto "Osw_3_1c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_3_1c_2"
+notes ""
+is_wtg = false
+{
+NPCText "What? Don't be ridiculous. As far as I can tell, it's a miracle you didn't make the problem worse."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's not my fault your machine is as fucked as it is. If you didn't want work done on it, you shouldn't have let me do it." linkto "Osw_3_1c_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_3_1c_3"
+notes ""
+is_wtg = false
+{
+NPCText "[He rolls his eyes.] Stranger, if you will excuse me, I have patients who genuinely need my attention."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't like it when customers don't pay up. [Draw weapon.]" linkto "combat"  notes ""
+              }
+}
+Node "Osw_4_1"
+notes "The Osw_4_* path is where the PC can ask Dr. Oswald's help in giving medical aid to Eleanor, the Lost Scavenger."
+is_wtg = false
+{
+NPCText "What? Where is she?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I found her buried under a pile of rubble in the scavenging grounds. She's still there. Will you help me?" linkto "Osw_4_2"  notes ""
+              }
+}
+Node "Osw_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "Of course! Lead the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[DONE]" linkto "done"  notes "Fade to black and switch back to the scavenging grounds, where Dr. Oswald fixes up Eleanor's injuries. See the Find The Lost Scavenger quest summary in the wiki for details."
+              }
+}
+Node "Osw_5a_1"
+notes "The Osw_5* path is where the PC can ask for Oswald to sell him some meds.\nOsw_5a_* is used if the PC has not completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered."
+is_wtg = false
+{
+NPCText "Goodness, no. I need every last medical supply I can lay my hands on for my patients."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why are your medical supplies stretched so thinly?" linkto "Osw_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_5a_2"
+notes ""
+is_wtg = false
+{
+NPCText "That would be down to our friend, Jedrek the trader. His monopolistic hold on trade coming to Sandover means he can charge the earth for medical supplies. That means I can only afford to buy a fraction of the meds that I need."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find this Jedrek?" linkto "Osw_5a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He doesn't sound like a very nice guy." linkto "Osw_5a_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_5a_3a"
+notes ""
+is_wtg = false
+{
+NPCText "He only comes here once every [DURATION BETWEEN TECH SUPPLIES CARAVAN RUNS]. I'm not sure of the dates. You should be able to find out when he's next scheduled to arrive here from someone just outside of the caves' entrance."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He doesn't sound like a very nice guy." linkto "Osw_5a_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'll have a word with him and see what I can do to get him to lower his prices." linkto "Osw_5a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_5a_3b"
+notes ""
+is_wtg = false
+{
+NPCText "[He snorts.] That's putting it mildly. The man would do anything to take your caps from you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find this Jedrek?" linkto "Osw_5a_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe I'll have a word with him and see what I can do to get him to lower his prices." linkto "Osw_5a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_5a_4"
+notes "This gives the PC the 'Challenge the Tech Supplies caravan's charges' quest, if he hasn't gotten it from another source already."
+is_wtg = false
+{
+NPCText "[Oswald laughs.] Sorry. It just sounds to me like you haven't met Jedrek yet. Who knows - if you can get him to lower his prices, I might have some spare meds to sell to you in the future."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_5b_1"
+notes "The Osw_5* path is where the PC can ask for Oswald to sell him some meds.\nOsw_5b_* is used if the PC has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered."
+is_wtg = false
+{
+NPCText "Getting Tech Supplies to lower their charges like that was some piece of work, <PC>. Now that I can afford to buy more supplies for the hospital, I'm sure I can spare you something. It won't be cheap, mind."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's see what you've got." linkto "Osw_5b_2"  notes "Opens barter screen. When it closes, go to Osw_5b_2."
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_5b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Anything else?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_02"
+notes ""
+is_wtg = false
+{
+NPCText "I suppose I could spare the time. The more people who have been properly educated about assisted suicide, the better."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd be interested to hear your arguments." linkto "Osw_6_03"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_03"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, well, let's start by clarifying what I mean when I talk about euthanasia. It's not as if I want free rein to kill people the minute they walk into my hospital."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I should think not." linkto "Osw_6_04"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_04"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_04"
+notes "Here endeth the first argument. Increment the local variable Osw_Euth_Arg_1 by 1.\nAlthough it's not a pro-euthanasia arguement per se, by defining what he wants and setting some clear limits, Dr. Oswald is reassuring the PC that the practice is much less likely to be abused."
+is_wtg = false
+{
+NPCText "Naturally, the practice needs to be very tightly regulated. I would never administer euthanasia to anyone who was not conscious and lucid enough to reliably make the decision to end their own lives for themselves."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Osw_6_05a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's not an argument in favor of legalizing it, though." linkto "Osw_6_05b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_05a"
+notes ""
+is_wtg = false
+{
+NPCText "Now that we're both clear what euthanasia would mean in practice for Sandover, let's tackle some of the reasons why it's needed."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "Osw_6_06"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_05b"
+notes ""
+is_wtg = false
+{
+NPCText "That's true, but it's a point that needed making, none the less. Let's move on to the reasons to legalize the practice."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay." linkto "Osw_6_06"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_06"
+notes ""
+is_wtg = false
+{
+NPCText "The medical care around here is always going to be found wanting when you consider how many people are reliant upon it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_07a_1"  notes "If the PC has completed the 'Fix the Autodoc' quest, go to Osw_6_7b instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_07a_1"
+notes ""
+is_wtg = false
+{
+NPCText "This isn't a vault. We don't have a team of skilled health-workers; our supply of med-drugs is pitiful; and our one Autodoc is busted to hell."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_08_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I should take a look at your Autodoc. Maybe I can fix it." linkto "Osw_6_07a_2"  notes "Saying this allows the PC to offer to fix the Autodoc."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_07a_2"
+notes ""
+is_wtg = false
+{
+NPCText "You'd be doing me a great service if you did. Make sure to remind me about that once we're done talking about the euthanasia arguments."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. Go back to what you were saying about the lack of resources in Sandover." linkto "Osw_6_07b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_07b"
+notes ""
+is_wtg = false
+{
+NPCText "This isn't a vault. We don't have a team of skilled health-workers and our supply of med-drugs is pitiful."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_08_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_08_1"
+notes "Here endeth the second argument. Increment the local variable Osw_Euth_Arg_2 by 1.\nOswald has illustrated the lack of resources and medical staffing in Sandover."
+is_wtg = false
+{
+NPCText "My point is that, if a patient doesn't stand a cockroach's chance in hell of survival, we should concentrate resources that would be used on them to help other poor souls who probably would survive. Sandover is no place for the sick to hang around waiting, either."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see your point." linkto "Osw_6_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's a callous way of dealing with your patients - it means you're basically choosing who lives and who dies." linkto "Osw_6_08_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is Sandover a bad place for ill people to wait for treatment?" linkto "Osw_6_08_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_08_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Haven't you heard that Sandover has a higher level of background radiation than the rest of the wastes?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, yes." linkto "Osw_6_08_2a_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, has it?" linkto "Osw_6_08_2a_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_08_2a_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Then you shouldn't need to ask why it's a bad place for the sick to be waiting for treatment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I guess not." linkto "Osw_6_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_08_2a_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, it has. You needn't worry if you're not planning on any length of time here. It only affects those of us who live here for years. But you can see why Sandover is no place for the ill to be forced to wait for treatment."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see your point." linkto "Osw_6_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_08_2b"
+notes ""
+is_wtg = false
+{
+NPCText "No-one's pretending it isn't callous. But that's life in the wastes for you, stranger. A man in my position is forced to make those kinds of decisions on a daily basis."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see your point." linkto "Osw_6_09"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why is Sandover a bad place for ill people to wait for treatment?" linkto "Osw_6_08_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_09"
+notes ""
+is_wtg = false
+{
+NPCText "Something else to consider is that of the patients coming into my hospital, a much greater proportion have illnesses that are radiation-related and terminal than you'd find in hospitals in other towns in the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Osw_6_10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see, but I don't understand how that's relevant." linkto "Osw_6_10"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_10"
+notes "Here endeth the third argument. Increment the local variable Osw_Euth_Arg_3 by 1.\nDr. Oswald has pointed out the higher percentage of terminal cases that come into his hospital."
+is_wtg = false
+{
+NPCText "That means that I have to offer a higher number of beds and resources per capita to patients who aren't going to make it. Sandover is the last place on earth which can afford that sort of... indulgence, when you consider how badly our resources are stretched in the first place."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So the need for euthanasia is more pressing in Sandover than anywhere else." linkto "Osw_6_11a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "'Indulgence'? I hardly think making life easier for terminal patients is pampering them." linkto "Osw_6_11b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_11a"
+notes ""
+is_wtg = false
+{
+NPCText "Precisely. Well put."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Osw_6_12"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_11b"
+notes ""
+is_wtg = false
+{
+NPCText "You misunderstand me. When I used the word 'indulgence', I'm talking about the difference between accepting the hard realities of our over-stretched healthcare system and what we might wish for in better circumstances."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So you're saying the need for euthanasia is more pressing in Sandover than anywhere else." linkto "Osw_6_11a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_12"
+notes ""
+is_wtg = false
+{
+NPCText "And that brings me on to my next point. Putting aside the patients who have no chance of survival a moment. What about their relatives?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What about them?" linkto "Osw_6_13a_1"  notes "If the PC has cured Fran, go to Osw_6_13b_1 instead. If the PC has convinced Dr. Oswald to euthanase Fran, go to Osw_6_13c_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_13a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Take one of my current patients for example. Fran, her name is. I'm almost certain she isn't going to see this year out. That's bad enough, except she has a son, Connor, here in Sandover, too."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_13a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_13a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Let's assume that the only thing keeping both Connor and his mother in Sandover is Fran's illness. Heaven forbid, but if Fran were to die tomorrow, there would be nothing tying Connor to Sandover and he could leave whenever he wished."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_13b_1"
+notes ""
+is_wtg = false
+{
+NPCText "If a patient has relatives in Sandover, not only does the patient suffer exposure to Sandover's higher levels of radiation, whether they're receiving treatment or not - their relatives do, too"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_13b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_13b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Let's assume that the only thing keeping both the patient and their relatives in Sandover is the patient's illness. I that patient were to die tomorrow, there would be nothing tying the relatives to Sandover and they could leave whenever they wished."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_13b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_13b_3"
+notes "Here endeth the forth argument. Increment the local variable Osw_Euth_Arg_4 by 1.\nDr. Oswald has pointed out that, not only do patients suffer from Sandover's increased background radiation levels, relatives who are emotionally tied to them do too."
+is_wtg = false
+{
+NPCText "Assuming those relatives were perfectly healthy when the patient was first admitted to hospital, if they were to stay in Sandover, would they be in the same shape in twelve months' time? You see, the current system is a vicious circle where the sick get sicker, and where they often take their relatives with them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. What other arguments do you have?" linkto "Osw_6_15"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_13c"
+notes ""
+is_wtg = false
+{
+NPCText "Take Fran, for example. What I had to do was a tragedy, but you and I both know she wouldn't have seen the year out. Let's not forget Connor, though. Now that his poor mother's suffering has come to an end, there is nothing tying him to Sandover any more."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_14"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_14"
+notes "Here endeth the forth argument. Increment the local variable Osw_Euth_Arg_4 by 1.\nDr. Oswald has pointed out that, not only do patients suffer from Sandover's increased background radiation levels, relatives who are emotionally tied to them do too."
+is_wtg = false
+{
+NPCText "Connor is a fairly healthy young man. If he were to stay in Sandover, would he be in the same shape in twelve months' time, though? You see, the current system is a vicious circle where the sick get sicker, and where they often take their relatives with them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. What other arguments do you have?" linkto "Osw_6_15"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_15"
+notes ""
+is_wtg = false
+{
+NPCText "I already administer mercy killings occasionally and, of course, only when absolutely necessary. However, until Alexander grasps the nettle and makes the practice legal, and whilst my most vocal opponents condemn it, there's always going to be a sense that it's somehow wrong."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_16"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_16"
+notes "Here endeth the fifth and final argument. Increment the local variable Osw_Euth_Arg_5 by 1.\nDr. Oswald has pointed out that many of his terminally ill patients turn down the option of euthanasia because they think it is morally wrong."
+is_wtg = false
+{
+NPCText "Contrary to what people in other towns in the wastes may think, the majority of Sandover's inhabitants are decent, moral people. For years, many of my terminal patients, in spite of how much pain they were in, or that they had no hope of surviving, denied themselves a merciful end simply because they saw euthanasia as a grubby and immoral practice."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_6_17"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_17"
+notes ""
+is_wtg = false
+{
+NPCText "This is why the current state of affairs can't go on. For the reasons I've given so far, if you forced me to hazard a guess at the number of patients that die an unpleasant death, where they could have been offered a merciful way out, I'd say approximately 70-75% of all fatalities in this hospital fall into that category."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. What else can you tell me about your viewpoint?" linkto "Osw_6_18"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe we should talk about this another time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_6_18"
+notes ""
+is_wtg = false
+{
+NPCText "I think I've covered the most obvious points. I'm glad to have met someone who has kept an open mind regarding the subject. Now, is there anything else? As you probably appreciate given what we've just discussed, I really must get back to my patients."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I won't take up any more of your time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1a"
+notes "The Osw_7_* path is where the PC can offer to help out in the hospital, as per the quest of the same name (see wiki for details).\n"
+is_wtg = false
+{
+NPCText "Alexander sent you, did he? Well, then, let's start with the basics. What do you know about medicine?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've received a lot of training and experience in the use of practical, field medicine." linkto "Osw_7_2a_1" conditions { CHECK_SKILL first_aid >= 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not much, to be honest." linkto "Osw_7_2b_1" conditions { CHECK_SKILL first_aid < 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps this isn't a good idea. Let me ask you about something else." linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_7_1b_1"
+notes "The Osw_7_1b_* path is where the PC can offer to help out in the hospital, if he offered before and was unsuccessful."
+is_wtg = false
+{
+NPCText "We've talked about this already. Look, I appreciate that you want to help, but you just don't have sufficient knowledge of first aid or higher level medicine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "My skills have improved since we last spoke about them. Please give me another chance." linkto "Osw_7_1b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. Let me ask you about something else instead." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to have wasted your time. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[He sighs.] I don't suppose it could hurt. Go on, then. Impress me. What have you learned about medicine since we last spoke about it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've received a lot of training and experience in the use of practical, field medicine." linkto "Osw_7_2a_1" conditions { CHECK_SKILL first_aid >= 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not much, to be honest." linkto "Osw_7_2b_1" conditions { CHECK_SKILL first_aid < 50 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps this isn't a good idea. Let me ask you about something else." linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_7_1c_1"
+notes "The Osw_7_1c_* path is used when the PC wants to talk to Dr. Oswald about the diagnosis he made on Fran."
+is_wtg = false
+{
+NPCText "Yes, she's suffering terribly, the poor woman. What did you have in mind?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "All her symptoms indicate massive radiation poisoning. We should treat her with anti-rad drugs at once." linkto "Osw_7_1c_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't think she stands much chance of survival. She'd be better off dead than alive." linkto "Osw_7_1c_2b_1"  notes "If the PC has completed the 'Resolve the euthanasia debate' quest and persuaded Alexander to ban euthanasia, go to Osw_7_1c_2c_1 instead."
+              }
+}
+Node "Osw_7_1c_2a_1"
+notes "The Osw_7_1c_2a_* path is used when the PC prescribes a course of Rad-Away for Fran."
+is_wtg = false
+{
+NPCText "I concur. I'd treat her myself, but we simply don't have the resources. If you could find the Rad-Away yourself, you could save her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think five sachets of Rad-Away should be sufficient." linkto "Osw_7_1c_2a_2"  notes ""
+              }
+}
+Node "Osw_7_1c_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "[Oswald nods in solemn agreement.] Yes, that sounds about right. It's a massive dose, though. [He smiles ruefully.] You can appreciate my position, Doctor <PC> - that represents nearly a month's worth of anti-rad drugs for all of Sandover!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What would you have done if we couldn't get her the drugs?" linkto "Osw_7_1c_2a_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what I can do to find the drugs." linkto "Osw_7_1c_2a_3b"  notes ""
+              }
+}
+Node "Osw_7_1c_2a_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He shrugs and sighs.] When she would have gotten really bad, I would have done would I could to make her comfortable, then given her something to help her on her way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean you would have killed her?" linkto "Osw_7_1c_2a_3a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what I can do to find the drugs." linkto "Osw_7_1c_2a_3b"  notes ""
+              }
+}
+Node "Osw_7_1c_2a_3a_2"
+notes ""
+is_wtg = false
+{
+NPCText "[Oswald fixes you with a steely glare.] Come on, Doctor. You're a medical man. You're aware of what the harsh realities of a hospital force us to do. Yes, I'm talking about giving her, you know, the final mercy."
+ NPCFemaleText "[Oswald fixes you with a steely glare.] Come on, Doctor. You're a medical woman. You're aware of what the harsh realities of a hospital force us to do. Yes, I'm talking about giving her, you know, the final mercy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[MORE]" linkto "Osw_7_1c_2a_3a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that even allowed in Sandover?" linkto "Osw_6_01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what I can do to find the drugs." linkto "Osw_7_1c_2a_3b"  notes ""
+              }
+}
+Node "Osw_7_1c_2a_3a_3"
+notes ""
+is_wtg = false
+{
+NPCText "I may still have to do that if you don't bring those drugs back. She's relying on you, Doctor. Don't let her down."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll see what I can do to find the drugs." linkto "Osw_7_1c_2a_3b"  notes ""
+              }
+}
+Node "Osw_7_1c_2a_3b"
+notes ""
+is_wtg = false
+{
+NPCText "It would be nothing short of a miracle if you found enough to save her, but I wish you the very best of luck, Doctor. Bring them back here as fast as you can!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1c_2b_1"
+notes "The Osw_7_1c_2b_* path is used when the PC suggests that Fran would be better off dead and Dr. Oswald decides to euthanase her."
+is_wtg = false
+{
+NPCText "[He sighs.] Yes, I think she's reached that stage. Would you have any objections if I gave her something to help her slip away?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean, ' help her slip away'?" linkto "Osw_7_1c_2b_2"  notes ""
+              }
+}
+Node "Osw_7_1c_2b_2"
+notes "Increment the local variable Osw_Fran_Euth by 1."
+is_wtg = false
+{
+NPCText "A man of your experience must know very well what I mean, Doctor. I'm talking about a merciful death for Fran."
+ NPCFemaleText "A woman of your experience must know very well what I mean, Doctor. I'm talking about a merciful death for Fran."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case I agree. It's for the best. Do what you have to do." linkto "Osw_7_1c_2b_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Absolutely not. I refuse to have anything to do with it." linkto "Osw_7_1c_2b_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You mean euthanasia? Is that even legal in Sandover?" linkto "Osw_6_01"  notes ""
+              }
+}
+Node "Osw_7_1c_2b_3a"
+notes ""
+is_wtg = false
+{
+NPCText "I hate this part. Very well, I'll talk to her. If she's lucid enough and agrees to it, I'll give her a lethal dose of drugs. Don't worry, Doctor; she won't feel a thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[DONE]" linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1c_2b_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Be that as it may, given that our diagnoses concur, I am convinced it's the best course of action. If she's lucid enough and agrees to it, I will give Fran a lethal dose of drugs. Don't worry, Doctor; she won't feel a thing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you take one step towards that woman, I'll strike you down where you stand." linkto "Osw_7_1c_2b_3b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is this even legal in Sandover?" linkto "Osw_6_01"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, do what you have to do. I wash my hands of it." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1c_2b_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Then strike, Doctor. My diagnosis will not be altered by intimidation."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "In that case, do what you have to do. I wash my hands of it." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Have it your way. [Draw weapon.]" linkto "combat"  notes ""
+              }
+}
+Node "Osw_7_1c_2c_1"
+notes "The Osw_7_1c_2c_* path is used when the PC suggests that Fran would be better off dead, but Dr. Oswald cannot euthanase her because the PC persuaded Alexander to ban the practice."
+is_wtg = false
+{
+NPCText "[Dr. Oswald scowls at you for a moment.] Not that I can do much about that now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "Osw_7_1c_2c_2"  notes ""
+              }
+}
+Node "Osw_7_1c_2c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Well, I would put the poor woman out of her misery, but of course, you persuaded Alexander to prevent me from doing it by law."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you're talking about euthanasia, it's a wicked practice and I'm glad it's banned." linkto "Osw_7_1c_2c_3a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't realize it would have these sorts of consequences." linkto "Osw_7_1c_2c_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I had better leave." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1c_2c_3a"
+notes ""
+is_wtg = false
+{
+NPCText "Are you glad that poor woman will deteriorate over weeks and months in agony until she dies anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I didn't realize banning euthanasia would have these sorts of consequences." linkto "Osw_7_1c_2c_3b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I change the subject and ask you about something else?" linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I had better leave." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_1c_2c_3b"
+notes ""
+is_wtg = false
+{
+NPCText "Then why...? No, just forget it! I think you had better leave before I do something I regret."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Was that a threat?" linkto "Osw_7_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you about something else?" linkto "Osw_7_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Osw_7_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Good. Go on."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I can set broken bones; diagnose illnesses and prescribe cures for them; and know several techniques for preventing and dealing with radiation poisoning." linkto "Osw_7_2a_2a_1" conditions { CHECK_SKILL doctor >= 40 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "But that's as far as it goes. I don't know much about detailed surgery and that sort of thing." linkto "Osw_7_2a_2" conditions { CHECK_SKILL doctor < 40 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps this isn't a good idea. Let me ask you about something else." linkto "Osw_9"  notes ""
+              }
+}
+Node "Osw_7_2a_2"
+notes "Increment the local variable Osw_Hosp_Attempt by 1."
+is_wtg = false
+{
+NPCText "Hmm. It sounds to me like you've got a reasonable grounding in basic first aid, but you've a long way to go if you ever want to practice as a doctor. Thank you for the offer, but you aren't ready to work with my patients."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_7_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[He nods in satisfaction.] Excellent. It'll be good to have another skilled pair of hands in the hospital. All right, take a look at the patients in the ward and see what you can do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where is the ward?" linkto "Osw_7_2a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, I'll do that. Speak to you soon." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I think I had better not. I'm not suited to this." linkto "Osw_7_2b_1"  notes ""
+              }
+}
+Node "Osw_7_2a_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "It's just through the curtain, there. [He points to the east side of the room.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, I'll go and have a look at your patients. Speak to you soon." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I think I had better not. I'm not suited to this." linkto "Osw_7_2b_1"  notes ""
+              }
+}
+Node "Osw_7_2b_1"
+notes "Increment the local variable Osw_Hosp_Attempt by 1."
+is_wtg = false
+{
+NPCText "Wha..? Then stop wasting my goddamn time! Go on, get out of here, and don't come back unless it's for a genuinely important reason!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't you raise your voice to me, pal." linkto "Osw_7_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Osw_7_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "GET OUT!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fuck you. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[LEAVE]" linkto "done"  notes ""
+              }
+}
+Node "Osw_8_1"
+notes ""
+is_wtg = false
+{
+NPCText "Why do I seem busy? In case you hadn't noticed, I work in a hospital. You'll find doctors are usually kept on their toes. Mind you, I have a mountain of other problems on top of that to make matters worse."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What problems are those?" linkto "Osw_8_2"  notes "If the PC has fixed the Autodoc AND NOT completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered, go to Osw_8_3 instead.\nIf the PC has fixed the Autodoc AND completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered AND NOT completed the 'Resolve the euthanasia debate' quest, go to Osw_8_4_1 instead.\nIf the PC has fixed the Autodoc AND completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered AND completed the 'Resolve the euthanasia debate' quest, go to Osw_8_5 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sore subject. Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_2"
+notes ""
+is_wtg = false
+{
+NPCText "Take my Autodoc, for instance. The damn thing refuses to work. Without it, I'm forced to spend hours on routine operations that used to take five minutes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me have a look. I'm quite skilled at mechanical repairs." linkto "Osw_3_1a_1"  notes "This node only appears if the PC has not already fixed the Autodoc."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that the only thing that is causing you problems?" linkto "Osw_8_3"  notes "If the PC has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered AND NOT completed the 'Resolve the euthanasia debate' quest, go to Osw_8_4_1 instead.\nIf the PC has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered AND completed the 'Resolve the euthanasia debate' quest, go to Osw_8_5 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sore subject. Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_3"
+notes ""
+is_wtg = false
+{
+NPCText "I'm short on day-to-day day medical supplies, too. Meds, stims, anti-rads, you name it. I have to stretch the doses I give out so thinly they're practically a waste of time."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's causing this shortage of supplies?" linkto "Osw_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any other set-backs?" linkto "Osw_8_4_1"  notes "If the PC has completed the 'Resolve the euthanasia debate' quest, go to Osw_8_5 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sore subject. Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_4_1"
+notes ""
+is_wtg = false
+{
+NPCText "There are certain people in Sandover who are standing in the way of more... progressive medical thinking. These people mean well, but their archaic viewpoints are directly holding me back."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is it they're complaining about?" linkto "Osw_8_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "'Progressive medical thinking'? Not sure I like the sound of that." linkto "Osw_8_4_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sore subject. Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_4_2"
+notes ""
+is_wtg = false
+{
+NPCText "I'm talking about the discussion that has raged in Sandover for years about euthanasia. It would mean a great deal to this town if we allowed its very ill citizens to choose when they wanted to die."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me a bit more about your views regarding euthanasia?" linkto "Osw_6_02"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Which people in Sandover are against euthanasia?" linkto "Osw_8_4_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't sound very progressive to me. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_4_3"
+notes ""
+is_wtg = false
+{
+NPCText "There are several people who have Alexander, our leader's, ear who don't support the legalization of euthanasia, and who stand in the way of the process's legitimization. David, Michael's acolyte is amongst the most vocal."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me a bit more about your views regarding euthanasia?" linkto "Osw_6_02"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where can I find David?" linkto "Osw_8_4_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sore subject. Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_4_4"
+notes ""
+is_wtg = false
+{
+NPCText "You can usually find him in the chapel, which is on this level of the caves. [IS IT? CHECK THIS OUT AND MAKE SURE IT'S RIGHT]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Could you tell me a bit more about your views regarding euthanasia?" linkto "Osw_6_02"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sore subject. Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Osw_8_5"
+notes ""
+is_wtg = false
+{
+NPCText "Apart from the lesser issues daily life throws up, I don't have any other major, individual problems like the ones I've told you about."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Osw_9"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Osw_9"
+notes ""
+is_wtg = false
+{
+NPCText "Make it brief. I have precious little enough time as it is."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need medical attention. Can you help me?" linkto "Osw_2_1_0"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've been told that your Autodoc is broken. I'm skilled at repairing machinery." linkto "Osw_3_1a_1"  notes "This node only appears if the PC has been given the 'Fix the Autodoc' quest by Saman as an alternative means of getting into Sandover AND the PC has not already fixed the Autodoc OR used up all his five chances to do so unsuccessfully."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any meds you can sell me?" linkto "Osw_5a_1"  notes "If the PC has completed the 'Challenge the Tech Supplies caravan's charges' quest in such a way that the caravan's prices are lowered, go to Osw_5b_1 instead."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander told me you want help around the hospital. What should I do?" linkto "Osw_7_1a" conditions { LOCAL_VARIABLE Osw_Hosp_Attempt == 0 link_next AND, LOCAL_VARIABLE Osw_Hosp_Job == 0 link_next NONE } notes "This option only appears if the PC has been given the 'Help around the Hospital' quest by Alexander."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Alexander told me you want help around the hospital. What should I do?" linkto "Osw_7_1b_1" conditions { LOCAL_VARIABLE Osw_Hosp_Attempt > 0 link_next AND, LOCAL_VARIABLE Osw_Hosp_Job == 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've run a diagnosis on Fran. I'd like to talk to you about it." linkto "Osw_7_1c_1"  notes "This node only appears if the PC has diagnosed severe radiation sickness in Fran (funnily enough) as part of the 'Help out at the Hospital' quest AND Fran has NOT been euthanased or cured."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm trying to find those patients you wanted me to look at. Where did you say is the ward is?" linkto "Osw_7_2a_2a_2" conditions { LOCAL_VARIABLE Osw_Hosp_Job > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You seem very busy. Why is that?" linkto "Osw_8_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I won't take up any more of your time. Goodbye." linkto "done"  notes ""
+              }
+}

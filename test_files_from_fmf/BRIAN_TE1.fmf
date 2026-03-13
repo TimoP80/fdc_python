@@ -1,0 +1,370 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Timed events */
+
+// Intervals are entered in seconds (converted to game ticks by the script)
+// default_event points to an index from the timed event list
+// starting from zero
+Default_Event = 0
+TimeEvent fixed_param_name="d", enum=0
+IsRandomInterval = True
+IntervalMin=2
+IntervalMax=8
+   code = {
+    "call d;",
+    "flush_add_timer_event_sec(self_obj, random(2, 8),d);"
+  }
+
+/* Regular nodes */
+
+Node "0"
+notes ""
+{
+NPCText "Hi <PC>. You're back! Can I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey Brian, how's things?" linkto "A1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey Brian, say, what's happening around here? " linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm alright, thanks..." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me <PC>. Who you?" linkto "DUMB1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I is <PC>. I help myself." linkto "done"  notes ""
+              }
+}
+Node "A1"
+notes ""
+{
+NPCText "Boring. I'm so lonely. These new magazines should help though. Thanks."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm glad, say, I'm hurt. Can you fix me up?" linkto "C1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "My pleasure. Tell me, what's been happening?" linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not a problem. See you around." linkto "done"  notes ""
+              }
+}
+Node "A2"
+notes ""
+{
+NPCText "Oh, just the usual. Most of our casualties are from brawls between the workers, minor stuff, cuts and bruises, the odd broken bone here and there. Although, there has been a steady increase in casualties from the reactor, radiation poisoning, where something’s gone wrong and the Handee’s can’t fix it, gotta send in a technician it’s getting really bad."
+ NPCFemaleText "Well, you wouldn't believe it... I've saved the lives of seventeen people today..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I’m hurt. Can you fix me up? " linkto "C1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "So how's things?" linkto "A1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Well, it seems like you haven’t got time to waste, I’ll leave you to it. " linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "In that case, I'd love it if you could fix me up a bit?" linkto "C1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Wow, you are a hero. What is your actual job here?" linkto "A1/B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Yeah sure!!! What's you job here?" linkto "A1/B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Really!!! Well I shouldn't keep you from saving lives. See you around." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Yeah, right. How stupid do I look? Loser..." linkto "done"  notes ""
+              }
+}
+Node "C1"
+notes ""
+{
+NPCText "*sigh* I have too much work to do. You should ask the doctor."
+ NPCFemaleText "Ce... ce... certainly... just lay down here..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Ok. So, what exactly do you do? " linkto "A1/B1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Oh, right. Say, what’s been going on around here lately?" linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I’ll ask him then, I’ll leave you to it. Later." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Thanks." linkto "C2"  notes "HP should restore."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Only if you join me... *wink*" linkto "C3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Actually, it's fine. Just tell me, what's been going on around here?" linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Ugh. Don't you dare touch me with those hands..." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Actually, I don't really need it. I'll see you later" linkto "done"  notes ""
+              }
+}
+Node "C2"
+notes ""
+{
+NPCText "Not a problem..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Now, how about you join me on this hospital bed?" linkto "C3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Tell me, what's been going on around here?" linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks for your help... I see you around..." linkto "done"  notes ""
+              }
+}
+Node "C3"
+notes ""
+{
+NPCText "Re... re... really... OK!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "C'mon big boy!" linkto "C4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I changed my mind. Can you tell me what's been happening lately?" linkto "A2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I've got a bit of a headache... maybe later..." linkto "done"  notes ""
+              }
+}
+Node "C4"
+notes ""
+{
+NPCText "Th... th... that was great..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thank you. I'd best be off." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Meh... I've had better. See you later." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You are the worst screw I've ever had... UGH!!!" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You weren't so bad yourself. So, what's been happening around here lately?" linkto "A2"  notes ""
+              }
+}
+Node "DUMB1"
+notes ""
+{
+NPCText "I am Brian... I'm the doctor's assistant... Can I help you?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me <PC>. I'm the doctor." linkto "DUMB2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I'm <PC>. What you do?" linkto "DUMB3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I is <PC>. I help myself." linkto "done"  notes ""
+              }
+}
+Node "DUMB2"
+notes ""
+{
+NPCText "No you're not. The doctor is over there. Go and speak to him. I have things to do."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Oh. If he is doctor... what are you doing?" linkto "DUMB3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I am doctor. You are fired. Leave now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ok. Me speak to doctor." linkto "done"  notes ""
+              }
+}
+Node "DUMB3"
+notes ""
+{
+NPCText "I help to heal the injured workers from the reactor or from brawls. Seems like you're beyond help though... Please, I have much to do."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ok. I will help. I will go and injure people for you to fix." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I see. Bye bye." linkto "done"  notes ""
+              }
+}
+/* Custom procedures */
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }
+      custom_proc Heal associate_node 6 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(7200));",
+      "gfade_in(1000);",
+      "call C2;"
+      }
+      custom_proc Sex associate_node 9 {
+      "gfade_out(1000);",
+      "game_time_advance(game_ticks(1800));",
+      "do_default_sex",
+      "gfade_in(1000);",
+      "call C4;"
+      }

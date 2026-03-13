@@ -1,0 +1,124 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+     Dialogue script version 1.0
+
+ Created with version 0.23
+
+*/
+
+NPCName "Raider_Sentry"
+Location "TBD"
+Description "This is just my application dialog, written up as per DU's request"
+Unknown_Desc "An angry looking raider."
+Known_Desc "The raider gate guard."
+Detailed_Desc "The gate guard looks at you warily. What an asshole."
+Node "Start"
+notes "Option 1 should not appear if PC's PE is less than 6"
+{
+NPCText "You got ten seconds. Either you tell me the password, or I blow your fucking head clean off."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, you and what army, you yellow-bellied cock-sucking piece of trash? " linkto "A" conditions { CHECK_STAT perception < 6 } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey, hey, take it easy! I got an urgent message for the King, and if he finds out you held me up…. " linkto "B_Pass" conditions { CHECK_SKILL speech >= 75 } notes "if the player fails this check, it should lead to node B_Fail"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, I don’t know the password. But my friend here, Mr. Bottlecap does…. " linkto "I"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hold on a sec, I’ve got it here somewhere…." linkto "Z"  notes "This is only available only if the player has completed the side-quest to get the password."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, I’ll be going now." linkto "done"  notes ""
+              }
+}
+Node "A"
+notes ""
+{
+NPCText "Nobody talks to me that way, you little punk! Turn around right now and maybe my buddies over there won’t double your body weight with lead."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Buddies? Wha...? Er, I was just joking.(grin) No harm no foul, eh? " linkto "J"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah? Well, I didn’t really want in anyways." linkto "done"  notes ""
+              }
+}
+Node "B_Pass"
+notes ""
+{
+NPCText "Message huh? Well, I..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You know, if you let me through I might put in a good word for you..." linkto "G"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This message is worth more than your life, scumbag. Now let me in!" linkto "H"  notes ""
+              }
+}
+Node "I"
+notes ""
+{
+NPCText "(He glances around and leans in to whisper in your ear) 3000. And if you tell anyone about this, you are a dead man. You understand?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Dead you say? I can handle that!" linkto "Z" conditions { CHECK_MONEY dude_caps == 3000 } notes "This should remove 3000 caps from the players inverntory."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whoa, that’s a little steep. How about you bring it down to 2000?" linkto "K" conditions { CHECK_SKILL barter >= 65 } notes "Failure on the check should lead to M"
+          int=4 Reaction=REACTION_NEUTRAL playertext "You must be crazy. No way in hell you’re getting three grand out of me." linkto "done"  notes ""
+              }
+}
+Node "J"
+notes "At this point, the sentry should start counting down from 10, one number per response."
+{
+NPCText "10... 9... 8..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Seriously, I just had it in my pocket…." linkto "J"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I, I..." linkto "J"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "(Start yelling random numbers, in the hopes of confusing him!)" linkto "L" conditions { CHECK_STAT luck > 8 } notes "This option will result in the player correctly guessing the password after 4-6 clicks, assuming they pass the luck check."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ok, ok! Have you met my friend yet? His name is Bottlecap…" linkto "I"  notes ""
+              }
+}
+Node "B_Fail"
+notes ""
+{
+NPCText "Message my ass! No one gets in without the password. Get outta my face, you little turd!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}
+Node "G"
+notes ""
+{
+NPCText "Seriously? (He glances around) I guess it couldn’t hurt… I kinda, you know, fucked up the other day and caught a lot of shit for it. Alright, fine, you can go in. But if anyone asks, the password is “19644357”, ok? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, dickweed." linkto "Z"  notes ""
+              }
+}
+Node "H"
+notes ""
+{
+NPCText "Please. If it was that important, I would have known about it by now. Now, do you have the password or not? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I don’t, but you’ll be sorry that you kept me out. When the King hears about this, heads are going to roll… " linkto "G"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget this, I'm outta here!" linkto "done"  notes ""
+              }
+}
+Node "Z"
+notes "This should (Duh!) open the gate."
+{
+NPCText "(The sentry opens the gate for you to pass.)"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(End)" linkto "done"  notes ""
+              }
+}
+Node "L"
+notes "This node can only be accessed if the player passes the luck check at option 3, node J."
+{
+NPCText "What the... How did you... Beuh? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Gue- I mean, know the password? I've just been messing with you this whole time. Lemme in, biatch!" linkto "Z"  notes ""
+              }
+}
+Node "K"
+notes ""
+{
+NPCText "(The sentry is sweating a little now, he is clearly nervous) Alright, alright fine. Just give me the damn money. "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Pleasure doing business with you." linkto "Z"  notes ""
+              }
+}
+Node "M"
+notes ""
+{
+NPCText "Fuck you! I'm already sticking my neck out, so you can pay up or fuck off, asshole."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "(grumble grumble) Alright, fine. Heres your bottlecaps." linkto "Z"  notes "This should deduct 3000 bottlecaps from the PC."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Screw you and your \"King\"! I You.... You're just a big stupid!" linkto "done"  notes ""
+              }
+}

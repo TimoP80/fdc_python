@@ -1,0 +1,53 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.28.0-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+/* Skill checks for node Node001 */
+
+      define_skill_check Skill_Check_000_Speech {
+      skill_num = 15;
+      difficulty_modifier = -1;
+      onsuccess => Node002Succcess;
+      onfailure => Node002Failure;
+      }
+
+{
+NPCText "It's time to test a skill check yo! What up man."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Drop a little hizzle for my shizzle in my nizzle eh?" linkto "Skill_Check_000_Speech"  notes ""
+              }
+}
+Node "Node002Succcess"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, you succesfully passed the skill check."
+      options {
+              }
+}
+Node "Node002Failure"
+notes ""
+is_wtg = false
+{
+NPCText "Unfortunately you failed the skill check mister."
+      options {
+              }
+}

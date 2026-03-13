@@ -1,0 +1,127 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Tim"
+Location "V31, near the PC's room"
+Description "almost utterly insignificant."
+Unknown_Desc "You see Tim."
+Known_Desc ""
+Detailed_Desc "He has an usually bushy beard for a man of his age."
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "Hey <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are you two doing?" linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "We're playing coins."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How do you play that?" linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I join in?" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "It's easy. You just throw your coin. Whoever gets closest to the wall wins all the coins."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like fun. Can I play?" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it." linkto "done"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "Sure, you just need a coin. We all throw at the wall and whoever gets closest wins."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Count me in." linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I changed my mind. I have to be somewhere." linkto "Node_007"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+/* Skill checks for node Node_005 */
+
+      define_skill_check cointoss {
+      skill_num = 6;
+      difficulty_modifier = 1;
+      onsuccess => Node_008;
+      onfailure => Node_006;
+      }
+
+{
+NPCText "Sure thing. But aren't you supposed to be somewhere?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "I've got time. Let's do this." linkto "cointoss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. I'll leave you to it." linkto "Node_007"  notes ""
+              }
+}
+Node "Node_006"
+notes "<win> has a 50/50 chance of being 'I win' or 'Jason wins'"
+{
+NPCText "Unlucky, <PC>. It looks like <win>."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Let's play again." linkto "cointoss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've had enough. Goodbye." linkto "Node_007"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "Take care, <PC>."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "Nice shot. It looks like you win this one."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Let's play again." linkto "cointoss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've had enough. Goodbye." linkto "Node_007"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "Back for more, <PC>?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Let's play." linkto "cointoss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just passing through." linkto "done"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "Fancy another game?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Let's play." linkto "cointoss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not right now." linkto "done"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "Back for more punishment?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "You're money's mine, Cain!" linkto "cointoss"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not right now." linkto "done"  notes ""
+              }
+}

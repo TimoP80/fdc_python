@@ -1,0 +1,38 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Brian"
+Location "V31, 1st Floor,  Medical Wing"
+Description "Brian is a low and lonely lab assistant bored with his existence and desperate for a little female attention. His inward nature and reclusive attitude make him a complete romantic dud."
+Unknown_Desc "You see a young man."
+Known_Desc "You see Brian."
+Detailed_Desc "You see a depressed young man."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node ""
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link 0
+}
+};
+
+/* Regular nodes */
+
+Node "0"
+notes ""
+{
+NPCText "I can’t talk right now, I have too much to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[end]" linkto "done"  notes ""
+              }
+}

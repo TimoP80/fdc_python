@@ -1,0 +1,113 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Captain's Computer"
+Location "CotC"
+Description "Captain's Computer"
+Unknown_Desc "You see a computer terminal."
+Known_Desc "You see the whaler's main computer terminal."
+Detailed_Desc "You see a computer terminal. The screen is grimy and scratched, but it appears to be displaying information. "
+/* Regular nodes */
+
+Node "Login"
+notes ""
+is_wtg = false
+{
+NPCText "Ichtocorp Vessel Y764A: Main computer system operational.\nSelect desired function:"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Engage engine systems]" linkto "EngineSystem"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Access communication systems]" linkto "Communication"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Run self-diagnostic system]" linkto "Diagnostic"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Access ship's log]" linkto "Logs"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "EngineSystem"
+notes ""
+is_wtg = false
+{
+NPCText "ENGAGING ---- PHASE 1:\nERROR: System cannot locate primary power coupler subsystem."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "Login"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "Communication"
+notes ""
+is_wtg = false
+{
+NPCText "SCANNING:\nERROR: No compatible receivers/transmitters within range."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "Login"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "Diagnostic"
+notes ""
+is_wtg = false
+{
+NPCText "RUNNING DIAGNOSTIC:\nArchives 93.6% corrupted ---- Could not access subsystems ---- Could not perform automatic repairs.\nRecommendation: Priority essential: full maintenance and repair period in dry dock."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "Login"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "Logs"
+notes ""
+is_wtg = false
+{
+NPCText "ACCESSING LOGS:\nWARNING: System detects extensive file corruption. Search anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Perform search]" linkto "SearchResult"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "Login"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "SearchResult"
+notes ""
+is_wtg = false
+/* Skill checks for node SearchResult */
+
+      define_skill_check GetLog {
+      skill_num = 13;
+      difficulty_modifier = -10;
+      onsuccess => CheckPassed;
+      onfailure => CheckFailed;
+      }
+
+{
+NPCText "SEARCH COMPLETE:\n1 file available: \"LOGCAPT_778PV\"\n64341 files unavailable: bad file header/contents."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Attempt to download LOGCAPT_778PV to your PIPBoy]" linkto "GetLog"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "Login"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "CheckPassed"
+notes "The captain's log is transferred to the PIPBoy"
+is_wtg = false
+{
+NPCText "TRANSFERRING: \nDownload successful."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "Login"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}
+Node "CheckFailed"
+notes ""
+is_wtg = false
+{
+NPCText "TRANSFERRING: \nERROR: Could not access file transfer protocol for output device 'PIPBoy'."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Go back]" linkto "SearchResult"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Log out]" linkto "done"  notes ""
+              }
+}

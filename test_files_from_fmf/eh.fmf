@@ -1,0 +1,38 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.28.0-dev
+
+*/
+
+NPCName "vittu"
+Location "perser"
+Description "homo"
+Unknown_Desc "lol"
+Known_Desc "paska"
+Detailed_Desc "lel"
+/* Float message nodes */
+
+Floatnode "esa"
+notes "hasa"
+{
+"sgses",
+"zsehzse",
+"zbsebzsb"
+}
+
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "bezsebzzzeb"
+ NPCFemaleText "zsebzsebzs"
+      options {
+              }
+}

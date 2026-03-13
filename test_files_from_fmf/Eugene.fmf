@@ -1,0 +1,112 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Eugene"
+Location "SandLevel1"
+Description "Level 1 merchant."
+Unknown_Desc "A gangly Sandover denizen."
+Known_Desc "Eugene, the fast-talking Sandover merchant. He looks very busy. "
+Detailed_Desc "You see a younger looking man with a wild gleam in his eye."
+/* Regular nodes */
+
+Node "EUGENE001"
+notes ""
+is_wtg = false
+{
+NPCText "Howdy partner! Name's Eugene, and this here's my little piece o' heaven. What can I do for ya?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd like to take a look at your wares." linkto "EUGENE002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What is it you do around here, Eugene?" linkto "EUGENE003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heaven indeed. I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "EUGENE002"
+notes "Node enters barter menu."
+is_wtg = false
+{
+NPCText "Well that's just damn fine of ya! Step over yonder and let's see what ol' Eugene can do for ya..."
+      options {
+              }
+}
+Node "EUGENE003"
+notes ""
+is_wtg = false
+{
+NPCText "Ah, ya know, little of this, little of that. Mostly try and do what I can to keep the folks 'round here in what they need 'tween Jedrek's visits."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Can I look at your wares?" linkto "EUGENE004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who's Jedrek?" linkto "EUGENE005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How thoughtful. I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "EUGENE004"
+notes "Node enters barter menu."
+is_wtg = false
+{
+NPCText "Ah, the sweet sound of commerce! Come on over yonder and let's see what ol' Eugene can do for ya..."
+      options {
+              }
+}
+Node "EUGENE005"
+notes ""
+is_wtg = false
+{
+NPCText "Well ol' Jedrek runs the caravans 'tween here and the Crossroads. Not my favorite sort of character, but we'd be up the damn creek missin' a paddle if it weren't for the food and supplies he runs to us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Can I look at your wares?" linkto "EUGENE004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You don't have your own food supply?" linkto "EUGENE006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good for him. I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "EUGENE006"
+notes ""
+is_wtg = false
+{
+NPCText "Hell no! Heh, last time me and the Doc tried growing somethin' it damn near bit our heads off."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Can I look at your wares?" linkto "EUGENE004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It tried to bite your head off?" linkto "EUGENE007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe the two of you should be a little more careful next time. I'll be going now." linkto "done"  notes ""
+              }
+}
+Node "EUGENE007"
+notes ""
+is_wtg = false
+{
+NPCText "Hell yes it did! Doc says there's too many of them radioactive i-si-topes and what-not floatin' around to make the ground worth a damn. That's why we're relyin' on that schyster Jedrek to bring in what we can't scavenge outta' the wastes."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like alot of work. Can I see your wares?" linkto "EUGENE004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What makes the radiation here so much worse?" linkto "EUGENE008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't sound like a very good deal to me." linkto "EUGENE009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds rough. I need to be going." linkto "done"  notes ""
+              }
+}
+Node "EUGENE008"
+notes ""
+is_wtg = false
+{
+NPCText "Can't say for sure. Doc thinks it's got somethin' to do with the groundwater running through these parts, but you'd have to ask him about all that. Check the med center; somebody over there can point you his way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I see. Can I look at your wares?" linkto "EUGENE004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Doesn't sound like you've got a very good deal going with Jedrek." linkto "EUGENE009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like a plan. I'll be heading that way now." linkto "done"  notes ""
+              }
+}
+Node "EUGENE009"
+notes ""
+is_wtg = false
+{
+NPCText "Well ain't you just the brightest shovel in the shed! 'Course it's a shitty deal! But ain't nothin' we can do about it; Jedrek's got our backs to the wall and he knows it. But enough of my troubles; You here to deal or what?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure am." linkto "EUGENE004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have to be going." linkto "done"  notes ""
+              }
+}

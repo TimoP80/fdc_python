@@ -1,0 +1,152 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Waster"
+Location "City on the Coast"
+Description ""
+Unknown_Desc "a sick looking guy, he looks a bit scared too."
+Known_Desc "One of the wasters. He looks very nervous and is mumbling something about demons."
+Detailed_Desc "a man with a dirty old robe on him, everytime he sees movement near him, he gets shocked. Something is REALLY wrong about this guy."
+/* Float message nodes */
+
+Floatnode "floater1"
+notes ""
+{
+"The demons are approaching...",
+"Hide while you still can.",
+"I'm scared.",
+"Please, get them away from me!",
+"They're everywhere!"
+}
+
+/* Regular nodes */
+
+Node "Start"
+notes ""
+is_wtg = false
+{
+NPCText "-Conditions-"
+      options {
+          int=0 Reaction=REACTION_NEUTRAL playertext "The player has gotten rid of the waster already" linkto "waster6"  notes ""
+          int=0 Reaction=REACTION_NEUTRAL playertext "The player hasn't gotten rid of the waster" linkto "waster0"  notes ""
+              }
+}
+Node "waster0"
+notes ""
+is_wtg = true
+{
+NPCText "No! Don't come any closer!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why not?" linkto "waster1" notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, bye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I don't take orders from you, punk!" linkto "waster1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want you to leave!" linkto "waster5"  notes ""
+              }
+}
+Node "waster1"
+notes ""
+is_wtg = false
+{
+NPCText "The demon hippies will get you! They're everywhere!"
+      options {
+          int=0 Reaction=REACTION_NEUTRAL playertext "Demon hippies? Well then I really should leave immediately. Goodbye." linkto "done"  notes ""
+          int=0 Reaction=REACTION_NEUTRAL playertext "What are you babbling about?" linkto "waster2"  notes ""
+              }
+}
+Node "waster2"
+notes ""
+is_wtg = false
+{
+NPCText "They're real! DEEEEMON! DEEEEEMON! Hippies from hell!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're sick dude, I'm outta here." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "There's one behind you! Run for your life!" linkto "waster3"  notes "Quest node"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes! I am their leader and I'm here to kill you. Now die!" linkto "combat"  notes ""
+              }
+}
+Node "waster3"
+notes ""
+is_wtg = false
+{
+NPCText "What? NO! Don't let it eat me!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I was just kidding. Don't you have any sense of humor?" linkto "waster9"  notes ""
+              }
+}
+Node "waster4"
+notes ""
+is_wtg = false
+{
+NPCText "Ssshhhh... Be quiet, they'll hear us."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're nuts. I'll go find someone with a clear head to talk to. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Seriously, I think you should stop using drugs." linkto "waster2"  notes ""
+              }
+}
+Node "waster5"
+notes ""
+is_wtg = false
+/* Skill checks for node waster5 */
+
+      define_skill_check speech_skill {
+      skill_num = 15;
+      difficulty_modifier = 55;
+      onsuccess => waster6;
+      onfailure => waster7;
+      }
+
+{
+NPCText "I can't leave! This place is holy, the demon hippies can't get me from here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Look, pal, there's no such things as demon hippies. Got it?" linkto "waster2"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "This is your final chance, LEAVE." linkto "speech_skill"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Nevermind" linkto "done"  notes ""
+              }
+}
+Node "waster6"
+notes ""
+is_wtg = false
+{
+NPCText "...*sob* Just don't hurt me, I'm leaving already..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, do it." linkto "done"  notes ""
+              }
+}
+Node "waster7"
+notes ""
+is_wtg = false
+{
+NPCText "N-n-no! I'm not going anywhere, the holy aura of this place protects me from the evil hippies. Tsk Tsk!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So be it, let's have it your way then. [Punch him in the stomach]" linkto "waster8"  notes ""
+          int=0 Reaction=REACTION_NEUTRAL playertext "Whatever, Goodbye." linkto "done"  notes ""
+              }
+}
+Node "waster8"
+notes ""
+is_wtg = false
+{
+NPCText "[He drops to his knees as you punch him] Auuuieeeeee! That hurt... *cough*"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's gonna hurt a lot more if you won't leave now!" linkto "waster6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why should I leave it at that? The world is a better place without you. Time to die!" linkto "combat"  notes ""
+              }
+}
+Node "waster9"
+notes ""
+is_wtg = false
+{
+NPCText "[He glares at you, shocked]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Guess not." linkto "done"  notes ""
+              }
+}
+

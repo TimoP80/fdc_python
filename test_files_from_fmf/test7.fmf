@@ -1,0 +1,40 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.1-stable
+
+*/
+
+NPCName "tester"
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition 0
+{
+cond target_node "Node001"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link 0
+}
+};
+
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "what?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "bye" linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "grrr" linkto "combat"  notes ""
+              }
+}

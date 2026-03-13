@@ -1,0 +1,1697 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.0-stable
+
+*/
+
+vars {
+local var Daisy_Temper notes "This variable keeps track of Daisy's temper. If it falls to -3 or below, the PC will be unable to open future dialogues with her. She will float appropriate lines instead." = 0;
+local var Daisy_Grace_Dead notes "This variable keeps track of whether or not the PC has shown condolences to Daisy when she tells the PC that her mother died six years ago. It prevents the player from repeatedly clicking on the node to increase the local variable Daisy_Temper ad infinitum." = 0;
+}
+NPCName "Daisy Duket"
+Location "Cutty Sark, City on the Coast."
+Description "Daisy is involved in the 'Find a date for Daisy' and 'Who killed Daisy?' quests. See the CotC section of the DevWiki for details."
+Unknown_Desc "You see: a very attractive young woman."
+Known_Desc "You see: Daisy. She looks busy."
+Detailed_Desc "PC is male or has a charisma of 6 or less: She's struggling with the unwanted attention of the bar's male clientele. Daisy is not a follower, and the PC is female and has a charisma of 7 or above (random chance, say 15% that this happens, else the previous message shows): For a split second, Daisy looks up and your glances meet. She quickly looks away, but with a hint of a smile on her lips. Daisy is a follower: She looks up and as your eyes meet, she gives you a wink."
+/* Float message nodes */
+
+Floatnode "Daisy_Normal"
+notes "Daisy floats these lines under default circumstances."
+{
+"I could see that was going to spill over.",
+"Damn it, that'll take forever to clean out.",
+"For the last time, no, I won't do anything of the sort for money.",
+"*Sigh.* Men.",
+"Who was that who pinched my butt?",
+"Don't you fellas ever think about anything else?"
+}
+Floatnode "Daisy_Dyke"
+notes "Daisy floats these lines if the rumor is out that she is a lesbian."
+{
+"Yeah, never mind what you heard.",
+"You just go on thinking what you like.",
+"*Sigh.* I can't put up with this for much longer.",
+"Gossip: the one thing faster than light.",
+"I have to get out of here.",
+"Who said that? Who just called me a dyke?"
+}
+Floatnode "Daisy_Annoyed"
+notes "Daisy floats these lines if the local variable Daisy_Temper =< -3 and the PC tries to speak to her directly."
+{
+"I got nothing more to say to you.",
+"What makes you think I want any more of your abuse?",
+"You just stay away from me, or I'll have my father deal with you.",
+"Yeah, I can see you there.",
+"Talk to the hand.",
+"The face ain't listenin'."
+}
+Floatnode "DaisyF_Hurt"
+notes "Daisy floats these lines if she is a follower and is hurt."
+{
+"I suppose I knew traveling weren't gonna be easy, but...",
+"Can we rest soon?",
+"I think I need some of your TLC over here, honey.",
+"I hope you can look after me, girl.",
+"Damn, that stings.",
+"Am I slowing you down?"
+}
+Floatnode "DaisyF_Badly_Hurt"
+notes "Daisy floats these lines if she is a follower and is badly hurt."
+{
+"*Sob*",
+"This... really hurts.",
+"Seriously, honey, I don't think I can go on much longer.",
+"I feel faint.",
+"I really need a doctor.",
+"I wish my Daddy was here."
+}
+Floatnode "DaisyF_Poisoned"
+notes "Daisy floats these lines if she is a follower and is poisoned."
+{
+"Woah, I don't feel none too good.",
+"It's like the worst hangover I've ever had, except worse.",
+"You got any antidote in that bag of yours?",
+"Something is *seriously* disagreeing with my tummy.",
+"I think I'm going to need the bathroom sometime soon.",
+"Did something flash over there, or is it just my eyes?"
+}
+Floatnode "DaisyF_Radiated"
+notes "Daisy floats these lines if she is a follower and is radiated."
+{
+"My hair! Some of my hair just fell out!",
+"Oh god, I think I'm gonna puke.",
+"So this is what the rad sickness is like.",
+"I don't wanna die like this.",
+"Honey? You need to get me to a doctor real soon.",
+"Oh shit, my gums are bleeding."
+}
+Floatnode "DaisyF_Drugs"
+notes "Daisy floats these lines if she is a follower and PC uses drugs on her."
+{
+"Is that even legal?",
+"I hope you kept some for yourself!",
+"Is this going to make me go crazy?",
+"Do you even know what that stuff does?",
+"I hope you know what you're doing.",
+"I'm starting to feel weird already..."
+}
+Floatnode "DaisyF_Move"
+notes "Daisy floats these lines if she is a follower and PC uses tooltip 'get out of my way' to make her move. "
+{
+"Sorry, honey. Didn't mean to stand in your way.",
+"Where should I stand, over here?",
+"No prizes for guessing who wears the pants in *this* relationship.",
+"Oops!",
+"I'm sure you could have squeezed past me. *Giggles.*",
+"Oh, I didn't realize you were coming through here."
+}
+Floatnode "DaisyF_Heal1"
+notes "Daisy floats these lines if she is a follower and PC uses healing on her."
+{
+"I feel better already.",
+"Thanks, hon. I knew you'd take good care of me.",
+"I didn't know you knew all that doctor stuff.",
+"I should get hurt more often if it means I get this sort of quality time with you.",
+"Just make sure you keep enough for yourself.",
+"Thanks. I was starting to get worried, there."
+}
+Floatnode "DaisyF_Heal2"
+notes "Daisy floats these lines if she is a follower, PC uses healing on her, but Daisy doesn't need healing."
+{
+"Save it for when we really need it, hon.",
+"Looks like someone likes playing nurses and nurses. *Giggles.*",
+"Any excuse to get your hands on me, huh? *Giggles.*",
+"Hey, wait 'til we're somewhere more private, at least!",
+"But I'm not hurt, hon.",
+"What's that for?"
+}
+Floatnode "DaisyF_Alone"
+notes "Daisy floats these lines if she is a follower but has been left behind."
+{
+"I don't like being on my own.",
+"I hope she comes back soon.",
+"She'd better not leave me here.",
+"I hope I have enough to eat.",
+"I'm starting to feel lonely already.",
+"*Sigh*"
+}
+Floatnode "DaisyF_CotC"
+notes "Daisy floats these lines if she is a follower and the PC's party are in City on the Coast."
+{
+"A lot of memories here. Not all of them good.",
+"Sure am glad to be leaving some of these faces behind.",
+"I hope Dad can cope on his own.",
+"This place is looking smaller already.",
+"I used to hide toys over there when I was a kid.",
+"Never thought the smell of fish would make me feel so homesick."
+}
+Floatnode "DaisyF_Area"
+notes "Daisy floats these lines if she is a follower and doesn't like the area the PC's party are in."
+{
+"Do we have to stay here for long?",
+"This place creeps me out, hon.",
+"Aren't you scared, too?",
+"What do we have to do here?",
+"Did I just see something move?",
+"City on the Coast doesn't seem so boring right now."
+}
+
+/* Regular nodes */
+
+Node "Daisy_0"
+notes ""
+is_wtg = false
+{
+NPCText "- STARTING CONDITIONS -"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "The player has not spoken to Daisy before." linkto "Daisy_1a_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL Gender=MALE playertext "The player has spoken to Daisy before; the PC is male." linkto "Daisy_1b_M"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The player has spoken to Daisy before; the PC is female, but Daisy is not attracted to her." linkto "Daisy_1b_M"  notes "get_critter_stat(dude_obj, STAT_ch) < 7"
+          int=1 Reaction=REACTION_NEUTRAL playertext "The player has spoken to Daisy before; the PC is female and Daisy is attracted to her." linkto "Daisy_1b_F"  notes "get_critter_stat(dude_obj, STAT_ch) >= 7"
+          int=1 Reaction=REACTION_NEUTRAL playertext "The rumor that Daisy is a lesbian is out; the PC has not spoken to Daisy since." linkto "Daisy_1c_1"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "The rumor that Daisy is a lesbian is out; the PC has spoken to Daisy since." linkto "Daisy_1c_6"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Daisy is a follower of the PC; the PC has good karma." linkto "DaisyF_1G"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Daisy is a follower of the PC; the PC has bad karma." linkto "DaisyF_1B"  notes ""
+              }
+}
+Node "Daisy_1a_1"
+notes "The Daisy_1a_* path is the default greeting Daisy uses when she speaks to the PC for the first time. It branches after this node depending on whether she finds the PC attractive."
+is_wtg = false
+{
+NPCText "Hey there, welcome to the Cutty Sark."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Hi, I'm <PC>. Who are you?" linkto "Daisy_1a_2Ma_1"  notes "This option appears for intelligent male PC's. It routs the conversation along a path where Daisy is far less amenable, since she finds the PC unattractive. \nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Hi, I'm <PC>. Who are you?" linkto "Daisy_1a_2Ma_1" conditions { CHECK_STAT charisma < 7 link_next NONE } notes "This option appears for intelligent female PC's to whom Daisy is not attracted, due to the PC's less-then-dazzling Charisma score. It routs the conversation along a path where Daisy is far less amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Hi, I'm <PC>. Who are you?" linkto "Daisy_1a_2F_1a" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes "This option appears for intelligent female PC's to whom Daisy is attracted, due to the PC's high Charisma score. It routs the conversation along a path where Daisy is far more amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "What do you do here?" linkto "Daisy_1a_2Mb_1"  notes "This option appears for intelligent male PC's. It routs the conversation along a path where Daisy is far less amenable, since she finds the PC unattractive. \nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "What do you do here?" linkto "Daisy_1a_2Mb_1" conditions { CHECK_STAT charisma < 7 link_next NONE } notes "This option appears for intelligent female PC's to whom Daisy is not attracted, due to the PC's less-then-dazzling Charisma score. It routs the conversation along a path where Daisy is far less amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "What do you do here?" linkto "Daisy_1a_2F_1b" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes "This option appears for intelligent female PC's to whom Daisy is attracted, due to the PC's high Charisma score. It routs the conversation along a path where Daisy is far more amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I <PC>. Who you?" linkto "Daisy_1a_2Ma_1"  notes "This option appears for dumb male PC's. It routs the conversation along a path where Daisy is far less amenable, since she finds the PC unattractive. \nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I <PC>. Who you?" linkto "Daisy_1a_2Ma_1" conditions { CHECK_STAT charisma < 7 link_next NONE } notes "This option appears for dumb female PC's to whom Daisy is not attracted, due to the PC's less-then-dazzling Charisma score. It routs the conversation along a path where Daisy is far less amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I <PC>. Who you?" linkto "Daisy_1a_2F_1a" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes "This option appears for dumb female PC's to whom Daisy is attracted, due to the PC's high Charisma score. It routs the conversation along a path where Daisy is far more amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "What you do here?" linkto "Daisy_1a_2Mb_1"  notes "This option appears for dumb male PC's. It routs the conversation along a path where Daisy is far less amenable, since she finds the PC unattractive. \nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "What you do here?" linkto "Daisy_1a_2Mb_1" conditions { CHECK_STAT strength < 7 link_next NONE } notes "This option appears for dumb female PC's to whom Daisy is not attracted, due to the PC's less-then-dazzling Charisma score. It routs the conversation along a path where Daisy is far less amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "What you do here?" linkto "Daisy_1a_2F_1b" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes "This option appears for dumb female PC's to whom Daisy is attracted, due to the PC's high Charisma score. It routs the conversation along a path where Daisy is far more amenable.\nThis differentiation is applied at several points in the dialogue. This is why you'll see several copies of the same player option in many of the dialogue's nodes."
+              }
+}
+Node "Daisy_1a_2F_1a"
+notes ""
+is_wtg = false
+{
+NPCText "I'm Daisy. Daisy Duket. It's a pleasure to meet you, <PC>. I haven't seen you in here before; what brings you to town?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do here?" linkto "Daisy_1a_2F_1b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I come from a vault to the north; I'm just getting to know the place." linkto "Daisy_1a_2F_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This and that. Can I ask you a question about something else?" linkto "Daisy_9F_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What you do here?" linkto "Daisy_1a_2F_1b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> from Vault 31. <PC> traveler." linkto "Daisy_1a_2F_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want ask you about another thing." linkto "Daisy_9F_1"  notes ""
+              }
+}
+Node "Daisy_1a_2F_1b"
+notes ""
+is_wtg = false
+{
+NPCText "I'm a waitress here. Clean tables, work out back; that sort of thing. So, what brings you to town?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I come from a vault to the north; I'm just getting to know the place." linkto "Daisy_1a_2F_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "This and that. Can I ask you a question about something else?" linkto "Daisy_9F_1"  notes ""
+              }
+}
+Node "Daisy_1a_2F_2"
+notes "This node increments the variable which keeps track of how many people the PC has told that (s)he comes from a vault from the north. It regulates whether or not Bruce, the Wasteland Explorer will be at Vault 31 when the PC returns."
+is_wtg = false
+{
+NPCText "Wow, a vault? You mean, like, one of those towns underground? I really like what you're wearing, by the way. It makes you look great."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I ask you a question about something else?" linkto "Daisy_9F_1"  notes ""
+              }
+}
+Node "Daisy_1a_2Ma_1"
+notes ""
+is_wtg = false
+{
+NPCText "I'm Daisy, Mitchell's daughter."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do here?" linkto "Daisy_1a_2Mb_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who is Mitchell?" linkto "Daisy_1a_2Ma_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What you do here?" linkto "Daisy_1a_2Mb_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Who Mitchell?" linkto "Daisy_1a_2Ma_2"  notes ""
+              }
+}
+Node "Daisy_1a_2Ma_2"
+notes ""
+is_wtg = false
+{
+NPCText "Dad owns this place. You can find him out back if you want to speak to him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What else can you tell me about him?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where is your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you do here?" linkto "Daisy_1a_2Mb_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks, I'll do that. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell more 'bout Mitchell." linkto "Daisy_3_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Where your mom?" linkto "Daisy_3_3b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What you do here?" linkto "Daisy_1a_2Mb_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1a_2Mb_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, you know, the usual waitress stuff. If you don't mind, I ought to get back to my work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I get a drink?" linkto "Daisy_1a_2Mc_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's your name?" linkto "Daisy_1a_2Ma_1"  notes ""
+          int=4 Reaction=REACTION_BAD Gender=MALE playertext "What's a fine piece of ass such as yourself doing working in a dump like this?" linkto "Daisy_1a_2Mb_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not at all. Sorry to bother you." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What your name?" linkto "Daisy_1a_2Ma_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I like you, pretty girl." linkto "Daisy_1a_2Mb_2B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1a_2Mb_2B_1"
+notes ""
+is_wtg = false
+{
+NPCText "[She looks at you as if she gets comments like those all the time.] Please, sir, I really must get back to what I was doing."
+ NPCFemaleText "[She looks at you as if she gets comments like those all the time.] Please, miss, I really must get back to what I was doing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Not before you give me a kiss with those sweet-as-candy red lips of yours." linkto "Daisy_1a_2Mb_2B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want touch you, pretty girl." linkto "Daisy_1a_2Mb_2B_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1a_2Mb_2B_2"
+notes "Decrement the local variable Daisy_Temper by 1."
+is_wtg = false
+{
+NPCText "[She manages to remain smiling, but her eyes are beginning to look angry.] Sir, if you don't stop, I'm going to have to call my father out here."
+ NPCFemaleText "[She manages to remain smiling, but her eyes are beginning to look angry.] Madam, if you don't stop, I'm going to have to call my father out here."
+      options {
+          int=4 Reaction=REACTION_BAD Gender=MALE playertext "I'll happily walk over his body and everyone else's in here just to get to yours." linkto "Daisy_1a_2Mb_2B_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not care. <PC> want pretty girl." linkto "Daisy_1a_2Mb_2B_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1a_2Mb_2B_3"
+notes ""
+is_wtg = false
+{
+NPCText "DADDY! We got a troublemaker, here."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "[Fight.]" linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Fight.]" linkto "combat"  notes ""
+              }
+}
+Node "Daisy_1a_2Mc_1"
+notes ""
+is_wtg = false
+{
+NPCText "Heh, the Cutty ain't that kinda place. It's self-service. If you want a drink, speak to Donald, behind the bar."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought you said you were a waitress." linkto "Daisy_1a_2Mc_2"  notes ""
+          int=4 Reaction=REACTION_BAD Gender=MALE playertext "What's a fine piece of ass such as yourself doing working in a dump like this?" linkto "Daisy_1a_2Mb_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Sorry to bother you." linkto "done"  notes ""
+              }
+}
+Node "Daisy_1a_2Mc_2"
+notes ""
+is_wtg = false
+{
+NPCText "Waitress as in cleaning dishes, tidying up, that sort of thing. Bar's over there. [She hooks a thumb in the bar's direction.]"
+      options {
+          int=4 Reaction=REACTION_BAD Gender=MALE playertext "What's a fine piece of ass such as yourself doing working in a dump like this?" linkto "Daisy_1a_2Mb_2B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay. Sorry to bother you." linkto "done"  notes ""
+              }
+}
+Node "Daisy_1b_F"
+notes ""
+is_wtg = false
+{
+NPCText "Hey, <PC>! I thought I'd never see you 'round here again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you say that?" linkto "Daisy_9F_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a man who's interested in going on a date with you." linkto "Daisy_2a_1"  notes "This option only appears if the PC has the 'Find a date for Daisy' quest."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your father asked me to give you some tips on how to date men." linkto "Daisy_2b_1"  notes "This option only appears if the PC has triggered the 'Find a date for Daisy' quest. See the DevWiki for details."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place and what you do here?" linkto "Daisy_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you say that?" linkto "Daisy_9F_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> what Daisy do here." linkto "Daisy_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1b_M"
+notes ""
+is_wtg = false
+{
+NPCText "Hey."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a man who's interested in going on a date with you." linkto "Daisy_2a_1"  notes "This option only appears if the PC has the 'Find a date for Daisy' quest."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your father asked me to give you some tips on how to date men." linkto "Daisy_2b_1"  notes "This option only appears if the PC has triggered the 'Find a date for Daisy' quest. See the DevWiki for details."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place and what you do here?" linkto "Daisy_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> what Daisy do here." linkto "Daisy_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_1"
+notes ""
+is_wtg = false
+{
+NPCText "You again!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is something the matter?" linkto "Daisy_1c_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What wrong?" linkto "Daisy_1c_2"  notes ""
+              }
+}
+Node "Daisy_1c_2"
+notes ""
+is_wtg = false
+{
+NPCText "I don't know, it depends if you think everyone in town sniggering at you and calling you names behind your back is bad or not."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me guess, you're being sarcastic." linkto "Daisy_1c_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's happening to you?" linkto "Daisy_1c_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "They do that?" linkto "Daisy_1c_3"  notes ""
+              }
+}
+Node "Daisy_1c_3"
+notes ""
+is_wtg = false
+{
+NPCText "Well, duh! Do you really think so?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What are they saying about you?" linkto "Daisy_1c_4"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What the bad peep say?" linkto "Daisy_1c_4"  notes ""
+              }
+}
+Node "Daisy_1c_4"
+notes ""
+is_wtg = false
+{
+NPCText "[Daisy blushes and folds her arms before continuing.] Lesbian. Dyke. Queer. You name it. All thanks to you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I had no idea City on the Coast was so prejudiced." linkto "Daisy_1c_5a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's it got to do with me?" linkto "Daisy_1c_5b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why it <PC> fault they do this?" linkto "Daisy_1c_5D_1"  notes ""
+              }
+}
+Node "Daisy_1c_5a"
+notes ""
+is_wtg = false
+{
+NPCText "Yeah, well, where you come from, it might be okay for girls to be like I am. Not here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's it got to do with me?" linkto "Daisy_1c_5b_1"  notes ""
+              }
+}
+Node "Daisy_1c_5b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Don't play innocent with me! You're the only person who knew what I'm like. I thought I could trust you. You just went and ratted me out to the first person you spoke to!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It wasn't like that, honest." linkto "Daisy_1c_5b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You shouldn't be ashamed of who you are, no matter how other people respond." linkto "Daisy_1c_5b_2b"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Welcome to the real world, Daisy. The only person you can trust is yourself." linkto "Daisy_1c_5b_2B_1"  notes ""
+              }
+}
+Node "Daisy_1c_5b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "What difference does it make? My life is ruined here, now. The only way my father can look me in the eye is by telling himself the rumors are lies."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you plan to do?" linkto "Daisy_1c_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You shouldn't be ashamed of who you are, no matter how other people respond." linkto "Daisy_1c_5b_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What Daisy do now?" linkto "Daisy_1c_6"  notes ""
+              }
+}
+Node "Daisy_1c_5b_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, sure. Were you born yesterday? I mean, do you have any idea what life is like in an ass-end-of-the-wastes town like this? I can't work out if you're a bastard or just plain dumb."
+ NPCFemaleText "Oh, sure. Were you born yesterday? I mean, do you have any idea what life is like in an ass-end-of-the-wastes town like this? I can't work out if you're a bitch or just plain dumb."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you plan to do?" linkto "Daisy_1c_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I certainly didn't mean for you to be hurt like this." linkto "Daisy_1c_5b_2a"  notes ""
+              }
+}
+Node "Daisy_1c_5b_2B_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, right. So I'm supposed to be *grateful* for the lesson?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Yes, but this one's free of charge." linkto "Daisy_1c_5b_2B_2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "What doesn't kill you makes you stronger. Remember that." linkto "Daisy_1c_5b_2B_2"  notes ""
+              }
+}
+Node "Daisy_1c_5b_2B_2"
+notes "Decrement the local variable Daisy_Temper by 3."
+is_wtg = false
+{
+NPCText "GET THE FUCK OUT OF HERE! I *never* want to see you again!"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "And now the final lesson. Never shout at someone as crazy as me. [Draw weapon.]" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "You not shout bad thing! <PC> kill!" linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_5D_1"
+notes ""
+is_wtg = false
+{
+NPCText "I have no idea! Either you told someone, or someone overheard us when we were talking about... well, you know what."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I not want bad thing done to you." linkto "Daisy_1c_5b_2a"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "He he! Now no-one like Daisy-gay!" linkto "Daisy_1c_5D_2B_1"  notes ""
+              }
+}
+Node "Daisy_1c_5D_2B_1"
+notes "Decrement the local variable Daisy_Temper by 1."
+is_wtg = false
+{
+NPCText "I should have known better than to trust a damn *retard* like you!"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> not retard. <PC> get mad when peep say that word." linkto "Daisy_1c_5D_2B_2"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Gay, gay, Daisy-gay!" linkto "Daisy_1c_5b_2B_2"  notes ""
+              }
+}
+Node "Daisy_1c_5D_2B_2"
+notes ""
+is_wtg = false
+{
+NPCText "See? It's not nice when people use nasty names, is it?"
+      options {
+          int=-3 Reaction=REACTION_BAD playertext "<PC> kill nasty-name Daisy!" linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Gay, gay, Daisy-gay!" linkto "Daisy_1c_5b_2B_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_6"
+notes ""
+is_wtg = false
+{
+NPCText "I'm going to leave. I don't know where I'm going to go; I just have to get away from here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "When are you leaving?" linkto "Daisy_1c_7a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Maybe you should come with me." linkto "Daisy_1c_7b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "When you go?" linkto "Daisy_1c_7a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy come with <PC>." linkto "Daisy_1c_7b_1"  notes ""
+              }
+}
+Node "Daisy_1c_7a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Like I'm going to tell a blabbermouth like you. I don't want the whole town knowing what I'm doing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7a_2"  notes ""
+              }
+}
+Node "Daisy_1c_7a_2"
+notes ""
+is_wtg = false
+{
+NPCText "God damn it! I'm doing it again! Why did I even tell you I'm leaving? I mean, who the hell are you, anyway?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Maybe you should come with me." linkto "Daisy_1c_7b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy should come with <PC>." linkto "Daisy_1c_7b_1"  notes ""
+              }
+}
+Node "Daisy_1c_7b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[She snorts.] You're just one surprise after another. Why the hell should I come with you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I could use another pair of hands. You'd be safer traveling with me in the wastes, too." linkto "Daisy_1c_7b_2N_b1"  notes ""
+          int=4 Reaction=REACTION_GOOD Gender=FEMALE playertext "Because, Daisy, you're not the only girl who has feelings like you do. I want to be with you." linkto "Daisy_1c_7b_2F_1"  notes "Only if the PC is a girl."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> help Daisy. You useful to <PC>. It work." linkto "Daisy_1c_7b_2N_b1"  notes ""
+          int=-3 Reaction=REACTION_GOOD Gender=FEMALE playertext "<PC>-lady like girl like Daisy. <PC> want to kiss Daisy." linkto "Daisy_1c_7b_2F_1"  notes "Only if the PC is a girl."
+              }
+}
+Node "Daisy_1c_7b_2F_1"
+notes ""
+is_wtg = false
+{
+NPCText "[Her eyes widen.] What do you mean?"
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "I don't have time to waste, Daisy. I want you; you want me. So how about it?" linkto "Daisy_1c_7b_2F_2a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=4 Reaction=REACTION_GOOD playertext "Don't you get it, Daisy? I love you and I think you feel the same way. That's why you told me what you did." linkto "Daisy_1c_7b_2F_2b"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. The offer still stands, though. You're welcome to join me if you want." linkto "Daisy_1c_7b_2N_a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. The offer still stands, though. You're welcome to join me if you want." linkto "Daisy_1c_7b_2N_b1"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=-3 Reaction=REACTION_GOOD playertext "<PC> love Daisy. It simple." linkto "Daisy_1c_7b_2F_2a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=-3 Reaction=REACTION_GOOD playertext "<PC> love Daisy. It simple." linkto "Daisy_1c_7b_2F_2b"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "It a joke. Daisy still come with <PC>, though. It work." linkto "Daisy_1c_7b_2N_a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "It a joke. Daisy still come with <PC>, though. It work." linkto "Daisy_1c_7b_2N_b1"  notes "This option only appears if the rumor is out that Daisy is gay."
+              }
+}
+Node "Daisy_1c_7b_2F_2a"
+notes ""
+is_wtg = false
+{
+NPCText "This is all happening so fast. Just give me a moment to think."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3b_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3a" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3b_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3a" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+              }
+}
+Node "Daisy_1c_7b_2F_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Oh my god. I had no idea. It makes so much sense, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3b_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3a" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3b_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_1c_7b_2F_3a" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+              }
+}
+Node "Daisy_1c_7b_2F_3a"
+notes ""
+is_wtg = false
+{
+NPCText "I'm sorry, though, I just don't feel about you the same way you do about me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. The offer still stands, though. You're welcome to join me if you want." linkto "Daisy_1c_7b_2N_a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. The offer still stands, though. You're welcome to join me if you want." linkto "Daisy_1c_7b_2N_b1"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'd better leave. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy still come with <PC>, though. It work." linkto "Daisy_1c_7b_2N_a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy still come with <PC>, though. It work." linkto "Daisy_1c_7b_2N_b1"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_7b_2F_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[Daisy moves closer to you until your lips are almost touching.] Show me."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "[Go to bed with Daisy.]" linkto "Daisy_1c_7b_2F_3b_2"  notes "This option triggers a tasteful FtBaB which glosses over the female PC's sex scene in bed with Daisy. And stop thinking about it, you dirty bastard."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. The offer still stands, though. You're welcome to join me if you want." linkto "Daisy_1c_7b_2N_a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. The offer still stands, though. You're welcome to join me if you want." linkto "Daisy_1c_7b_2N_b1"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I think I'd better leave. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_GOOD playertext "[Go to bed with Daisy.]" linkto "Daisy_1c_7b_2F_3b_2"  notes "This option triggers a tasteful FtBaB which glosses over the female PC's sex scene in bed with Daisy. And stop thinking about it, you dirty bastard."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "It a joke. Daisy still come with <PC>, though. It work." linkto "Daisy_1c_7b_2N_a"  notes "This option only appears if the rumor is NOT out that Daisy is gay."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "It a joke. Daisy still come with <PC>, though. It work." linkto "Daisy_1c_7b_2N_b1"  notes "This option only appears if the rumor is out that Daisy is gay."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_7b_2F_3b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[Daisy helps you to get dressed.] That was... I don't know how to describe it. It was great. [She grins.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you coming with me, then?" linkto "Daisy_1c_7b_2F_3b_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You come with <PC>, now?" linkto "Daisy_1c_7b_2F_3b_3"  notes ""
+              }
+}
+Node "Daisy_1c_7b_2F_3b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Just try and stop me! Where are we going first?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "To the ends of the earth and beyond, honey. Pack your things: let's go." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Shrug.] Pack bag. We go." linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_7b_2N_a"
+notes ""
+is_wtg = false
+{
+NPCText "Uhh... no offense, but I don't think it would work. I appreciate the offer, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_1c_7b_2N_b1"
+notes ""
+is_wtg = false
+{
+NPCText "Hold on. Let me get this straight. You ruin my life, then you expect me to want to go traveling with you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You can look at it like that if you want." linkto "Daisy_1c_7b_2N_b2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You made the decision to leave; I'm just offering you protection and companionship." linkto "Daisy_1c_7b_2N_b2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Daisy_1c_7b_2N_b2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wait. You confuse <PC>." linkto "Daisy_1c_7b_2N_b2"  notes ""
+              }
+}
+Node "Daisy_1c_7b_2N_b2"
+notes ""
+is_wtg = false
+{
+NPCText "Okay, let me put this simply so even you can understand it: not if you were the last person on this whole god damned planet."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Suit yourself. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ug. [Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_1"
+notes "The Daisy_2a_* path is where the PC can try to get Daisy to date any one of several CotC NPC's. Any attempt to do this is doomed to fail, but in taking this path, the PC can find out that Daisy is a lezza."
+is_wtg = false
+{
+NPCText "Oh. [She doesn't seems too keen on the idea.] Who's that, then?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Royce." linkto "Daisy_2a_2a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bob." linkto "Daisy_2a_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jimmy." linkto "Daisy_2a_2c_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Franklin." linkto "Daisy_2a_2d_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Me." linkto "Daisy_2a_2M_1"  notes "Only if the PC is male."
+              }
+}
+Node "Daisy_2a_2a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Royce? Heh. I shoulda guessed. Listen, perhaps you should be let in on a little family joke. Royce never stops hitting on me; there ain't no way I'm ever going to date him, though. Nuh-uh."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Royce hits you?" linkto "Daisy_2a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "What? No, you dolt, he never stops hitting *ON* me. He never stops trying to pick me up. Like on a date."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Bob? [She screws her face up.] Eww. What ever made you think I'd be interested in *him*?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "He seems very keen on you." linkto "Daisy_2a_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Sure, keen like a dog on heat. Trust me, stranger, you got work to do on your match-making skills."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I take it you're not interested in Bob, then?" linkto "Daisy_2a_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Uh, yeah, you sure as hell can take it I'm not interested."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2c_1"
+notes ""
+is_wtg = false
+{
+NPCText "Jimmy? Aw, hell, that's sweet. I didn't even know he was old enough to look at girls like that. I've known him since he was only this big. [She holds her hand face down, at around her waist level.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is that a yes?" linkto "Daisy_2a_2c_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2c_2"
+notes ""
+is_wtg = false
+{
+NPCText "Shoot, no. He should be looking for girls his own age. I always thought he looked to me like a Mommy. You just let him down gently, though, you hear?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2d_1"
+notes ""
+is_wtg = false
+{
+NPCText "Franklin? Oh, no, I don't think that'd work..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why not? Is he too old or something?" linkto "Daisy_2a_2d_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2d_2"
+notes ""
+is_wtg = false
+{
+NPCText "Too old... Sure, whatever."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2M_1"
+notes ""
+is_wtg = false
+{
+NPCText "Oh. Well, look, I'm flattered and all, but I don't think it could work out between you and I."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why not? I'm not like the other losers in this town. I've seen the world. Let me buy you a drink." linkto "Daisy_2a_2M_2a" conditions { CHECK_STAT strength >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why not? I'm not like the other losers in this town. I've seen the world. Let me buy you a drink." linkto "Daisy_2a_2M_2b_1" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2M_2a"
+notes ""
+is_wtg = false
+{
+NPCText "You are kinda good-looking in that sort of way, I suppose. But, trust me, there's no way it could work."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2M_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "[You see her bite her lip in an effort not to laugh.] Sure, I guess you've got a great personality and all. Seriously, no."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "\"A great personality?\" Don't give me that patronizing shit." linkto "Daisy_2a_2M_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone else?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2M_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "[Daisy holds your eye steadily.] Now, look here. If you can't take rejection, you ought not to go askin' in the first place. My Daddy will whoop you six ways from Sunday if you lose your temper with me, so you just take it easy, hear?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "If you won't give yourself to me, I'll have you by force." linkto "Daisy_1a_2Mb_2B_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I should ask you about something else." linkto "Daisy_2a_2M_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_2M_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "No, I think I'm done talking to you. Scram."
+      options {
+          int=4 Reaction=REACTION_BAD playertext "Fucking bitch. I'll beat some manners into you." linkto "Daisy_1a_2Mb_2B_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_3"
+notes ""
+is_wtg = false
+{
+NPCText "[Daisy frowns and looks away.] No, I ain't dating nobody."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I suppose you're just waiting for the right guy to come along." linkto "Daisy_2a_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_4"
+notes ""
+is_wtg = false
+{
+NPCText "Right guy. Yeah. Huh."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I take it you've been let down by men before." linkto "Daisy_2a_5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_5"
+notes ""
+is_wtg = false
+{
+NPCText "Not really, no."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "So what's stopping you?" linkto "Daisy_2a_6"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_6"
+notes "We need to decide what level we're going to set the karma level, x, mentioned in the player options, which decides if Daisy will let the PC in on her secret."
+is_wtg = false
+{
+NPCText "[Daisy regards you carefully for a while.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_2a_7a_1" conditions { LOCAL_VARIABLE Daisy_Temper >= 0 link_next NONE } notes "This option appears if the PC's karma is above a certain level, x, AND the local variable Daisy_Temper is at 0 or above."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_2a_7b_1"  notes "This option appears if the PC's karma is below a certain level, x, regardless of what the local variable Daisy_Temper is at."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_2a_7b_1" conditions { LOCAL_VARIABLE Daisy_Temper < 0 link_next NONE } notes "This option appears if the PC's karma is above a certain level, x, but the local variable Daisy_Temper is below 0."
+              }
+}
+Node "Daisy_2a_7a_1"
+notes ""
+is_wtg = false
+{
+NPCText "[Daisy speaks in a low voice, confiding in you.] Maybe the right *man* ain't what I'm looking for."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "Daisy_2a_7a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_2"
+notes ""
+is_wtg = false
+{
+NPCText "I guess I've always known I was kinda different. Never liked girls' toys when I was a kid. I liked the things the boys got to play with - things with engines. You know I can strip a V8 engine down to its components in ten minutes?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's that got to do with anything?" linkto "Daisy_2a_7a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have a feeling I know where this is going." linkto "Daisy_2a_7a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_3"
+notes ""
+is_wtg = false
+{
+NPCText "Well, this girl, she stayed liking the things boys liked... even after she grew up. Even when the boys started chasing pretty girls. [She looks at you desperately, hoping not to have to spell it out for you.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not with you." linkto "Daisy_2a_7a_4a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a lesbian?" linkto "Daisy_2a_7a_4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_4a"
+notes "The PC now knows that Daisy is a lesbian."
+is_wtg = false
+{
+NPCText "[Daisy blushes to the roots of her hair.] Aww... come on. I'm saying I like *girls*, not boys."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a lesbian?" linkto "Daisy_2a_7a_4b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy gay?" linkto "Daisy_2a_7a_4b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_4b"
+notes "The PC now knows that Daisy is a lesbian."
+is_wtg = false
+{
+NPCText "That's right. So you can see why I'm not interested in hooking up with any of the men in this town. Or any other."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why don't you find yourself a girlfriend?" linkto "Daisy_2a_7a_5a_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Your perversion disgusts me." linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you not with other girl?" linkto "Daisy_2a_7a_5a_1"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Ha ha! You said you gay!" linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_5a_1"
+notes ""
+is_wtg = false
+{
+NPCText "You have to be kidding me! And will you keep your voice down? There ain't no way a girl like me could find... another girl like me, in a town like this."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You found one in me, sugar. Why don't you leave this place and come with me?" linkto "Daisy_1c_7b_2F_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why not?" linkto "Daisy_2a_7a_5a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you want me to keep my voice down?" linkto "Daisy_2a_7a_5a_2"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Your perversion disgusts me." linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC> like Daisy. <PC> want do sexy with Daisy. Daisy come with <PC>." linkto "Daisy_1c_7b_2F_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why it hard to get girl?" linkto "Daisy_2a_7a_5a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you want <PC> talk quiet?" linkto "Daisy_2a_7a_5a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ha ha! You said you gay!" linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_5a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Because. City on the Coast ain't that sorta place. People could... start acting difficult. I know my Dad won't like it. He's sure set on me bringing grandchildren into the world for him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You're not the only one who thinks other girls are hot. Why don't you leave this place and come with me?" linkto "Daisy_1c_7b_2F_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your father doesn't know you're a lesbian?" linkto "Daisy_2a_7a_5a_3"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Your perversion disgusts me." linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC>-girl like girl, too. <PC> do sexy with Daisy, then Daisy come with <PC>." linkto "Daisy_1c_7b_2F_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy dad not know Daisy gay?" linkto "Daisy_2a_7a_5a_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ha ha! You said you gay!" linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_5a_3"
+notes ""
+is_wtg = false
+{
+NPCText "No. And just you make sure it stays that way, too. I'll tell him when the time is right, and that may be never."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "You're not the only one who thinks other girls are hot. Why don't you leave this place and come with me?" linkto "Daisy_1c_7b_2F_1"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Your perversion disgusts me." linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "<PC>-girl like girl, too. <PC> do sexy with Daisy, then Daisy come with <PC>." linkto "Daisy_1c_7b_2F_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Ha ha! You said you gay!" linkto "Daisy_2a_7a_5B_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_5B_1"
+notes "Decrement the local variable Daisy_Temper by 1."
+is_wtg = false
+{
+NPCText "What?"
+      options {
+          int=4 Reaction=REACTION_BAD playertext "You're sick, Daisy. Only men should have sex with women. You need help." linkto "Daisy_2a_7a_5B_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Daisy gay! Daisy gay!" linkto "Daisy_2a_7a_5B_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_5B_2"
+notes "Decrement the local variable Daisy_Temper by 1."
+is_wtg = false
+{
+NPCText "I should have known better than to talk to you. Just... stay away from me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Perhaps I should ask you about something else." linkto "Daisy_2a_7a_5B_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "He he! Gay!" linkto "Daisy_2a_7a_5B_3"  notes "Decrement the local variable Daisy_Temper by a further 1."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want ask thing 'bout other thing." linkto "Daisy_2a_7a_5B_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7a_5B_3"
+notes ""
+is_wtg = false
+{
+NPCText "No, really. I don't want you judging me any more. I have work to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7b_1"
+notes ""
+is_wtg = false
+/* Skill checks for node Daisy_2a_7b_1 */
+
+      define_skill_check Skill_Check_000_Speech {
+      skill_num = 15;
+      difficulty_modifier = -15;
+      onsuccess => Daisy_2a_7a;
+      onfailure => Daisy_2a_7b_2;
+      }
+
+{
+NPCText "No offense, but I'd rather not talk about kinda personal stuff with people I don't really know."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Go on, you can trust me. I won't tell a soul, I swear." linkto "Skill_Check_000_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2a_7b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Seriously, no."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_2b_1"
+notes "The Daisy_2b_* path is where a female PC can offer to give Daisy advice on finding 'the right man', after having been prompted to do so by her father, Mitchell Ducket. This is doomed to failure, but can also lead to the path where Daisy reveals that she is a lesbian."
+is_wtg = false
+{
+NPCText "[She looks angry for a moment, then smiles.] That's my Dad, okay. Never gives up on the old grandchildren thing, huh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone already?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Would you rather I didn't talk to you about it?" linkto "Daisy_2b_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Don't get me wrong. I appreciate you taking the time and all, but it ain't necessary, trust me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you dating someone already?" linkto "Daisy_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'd better leave you to it. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_1"
+notes "The Daisy_3_* path is where the PC can find out about her mother and father. Noteworthy information: Mitchell carries a large knife (relevant to 'Who killed Daisy?'); Grace, Daisy's mother, died some time ago."
+is_wtg = false
+{
+NPCText "I'm a waitress here. I clean tables, work out back, that sort of thing. Haven't I told you this already, though?"
+ NPCFemaleText "I'm a waitress here. I clean tables, work out back, that sort of thing. Haven't I told you this already, though, hon?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No." linkto "Daisy_3_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yes." linkto "Daisy_3_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Nuh-uh." linkto "Daisy_3_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yuh-uh." linkto "Daisy_3_2b"  notes ""
+              }
+}
+Node "Daisy_3_2a"
+notes ""
+is_wtg = false
+{
+NPCText "I must be thinking of someone else, then."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_3_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_3_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Well anyway, my father, Mitchell, owns this place. He's out back if you want to speak to him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy father." linkto "Daisy_3_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy mother." linkto "Daisy_3_3b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3a_1"
+notes ""
+is_wtg = false
+{
+NPCText "Well, he's my Daddy. [She grins.] He's always looked after me. Strong as hell. Don't you go messing with him, now, or he'll make you sorry!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Is he aggressive?" linkto "Daisy_3_3a_2a_1a"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "We'll see about that." linkto "Daisy_3_3a_2a_1B"  notes "Decrement the local variable Daisy_Temper by 1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy daddy dangerous?" linkto "Daisy_3_3a_2a_1a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3a_2a_1a"
+notes ""
+is_wtg = false
+{
+NPCText "Hell, no! I'm just teasin' ya. So long as you're straight with him, he'll be a good a friend to you as anyone. He knows his way around the wastes, though. Picked up a few tricks on the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_3_3a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_3_3a_2a_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3a_2a_1B"
+notes ""
+is_wtg = false
+{
+NPCText "What was that?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. Tell me more about your father." linkto "Daisy_3_3a_2a_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3a_2a_2"
+notes ""
+is_wtg = false
+{
+NPCText "Before our family bought this place, Dad would go hunting practically every day to bring us something to eat. Not once did we have to buy our own food. The money we saved helped us buy the Cutty, I reckon."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Your father is a skilled hunter?" linkto "Daisy_3_3a_2a_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes "PC is male."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes "PC is female, and charisma < 7"
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes "PC is female and charisma >= 7"
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy daddy good at hunt?" linkto "Daisy_3_3a_2a_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy mother." linkto "Daisy_3_3b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes "PC male"
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes "PC female and charisma < 7"
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes "PC female and charisma >= 7"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3a_2a_3"
+notes ""
+is_wtg = false
+{
+NPCText "Well, he don't carry that big ol' knife of his around for decoration, you know."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your mother?" linkto "Daisy_3_3b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy mother." linkto "Daisy_3_3b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Mom ain't around no more. [Daisy shrugs her shoulders and sniffs.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Where did she go?" linkto "Daisy_3_3b_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's dead?" linkto "Daisy_3_3b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Where she go?" linkto "Daisy_3_3b_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy father." linkto "Daisy_3_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3b_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, she's about six foot down, a few hundred yards from here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "She's dead?" linkto "Daisy_3_3b_2b_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy mommy dead?" linkto "Daisy_3_3b_2b_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy father." linkto "Daisy_3_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3b_2b_1"
+notes ""
+is_wtg = false
+{
+NPCText "Yup. Happened about six years ago. Sad."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did it happen?" linkto "Daisy_3_3b_2b_2"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "I'm sorry to hear that." linkto "Daisy_3_3b_2b_2" conditions { LOCAL_VARIABLE Daisy_Grace_Dead == 0 link_next NONE } notes "Increment both local variables Daisy_Grace_Dead and Daisy_Temper by 1."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What make Daisy mom deaded?" linkto "Daisy_3_3b_2b_2"  notes ""
+          int=-3 Reaction=REACTION_GOOD playertext "It make <PC> sad, too." linkto "Daisy_3_3b_2b_2"  notes "Increment both local variables Daisy_Grace_Dead and Daisy_Temper by 1."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy father." linkto "Daisy_3_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3b_2b_2"
+notes ""
+is_wtg = false
+{
+NPCText "Cancer. Life after the bombs, I guess."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you coping?" linkto "Daisy_3_3b_2b_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_3_3b_2b_3"
+notes ""
+is_wtg = false
+{
+NPCText "Oh, you know. Life goes on. I mean, it destroyed my world at the time, but you can't just give up. It's made running the Cutty harder for me and my Dad, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about your father?" linkto "Daisy_3_3a_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=MALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Perhaps I should ask you about something else." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll leave you to it, goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> 'bout Daisy father." linkto "Daisy_3_3a_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=MALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9M" conditions { CHECK_STAT charisma < 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "I want ask thing 'bout other thing." linkto "Daisy_9F_1" conditions { CHECK_STAT charisma >= 7 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_9F_1"
+notes ""
+is_wtg = false
+{
+NPCText "Sure, I could speak to you all day, hon. [She gives you a huge grin which lights up her face.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Why do you say that?" linkto "Daisy_9F_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a man who's interested in going on a date with you." linkto "Daisy_2a_1"  notes "This option only appears if the PC has the 'Find a date for Daisy' quest."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your father asked me to give you some tips on how to date men." linkto "Daisy_2b_1"  notes "This option only appears if the PC has triggered the 'Find a date for Daisy' quest. See the DevWiki for details."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place and what you do here?" linkto "Daisy_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Why you say that?" linkto "Daisy_9F_2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> what Daisy do here." linkto "Daisy_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_9F_2"
+notes ""
+is_wtg = false
+{
+NPCText "Because I kinda like you. [She bites her lip and looks away.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What sort of 'like'?" linkto "Daisy_9F_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a man who's interested in going on a date with you." linkto "Daisy_2a_1"  notes "This option only appears if the PC has the 'Find a date for Daisy' quest."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your father asked me to give you some tips on how to date men." linkto "Daisy_2b_1"  notes "This option only appears if the PC has triggered the 'Find a date for Daisy' quest. See the DevWiki for details."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place and what you do here?" linkto "Daisy_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Daisy kinda like <PC>?" linkto "Daisy_9F_3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> what Daisy do here." linkto "Daisy_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Daisy_9F_3"
+notes "We need to decide what level we're going to set the karma level, x, mentioned in the player options, which decides if Daisy will let the PC in on her secret."
+is_wtg = false
+{
+NPCText "[Daisy regards you carefully for a while.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "[More.]" linkto "Daisy_2a_7a_4a" conditions { LOCAL_VARIABLE LOCAL_VARIABLE >= 0 link_next NONE } notes "This option appears if the PC's karma is above a certain level, x, AND the local variable Daisy_Temper is at 0 or above."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_9F_4"  notes "This option appears if the PC's karma is below a certain level, x, regardless of what the local variable Daisy_Temper is at."
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_9F_4" conditions { LOCAL_VARIABLE LOCAL_VARIABLE < 0 link_next NONE } notes "This option appears if the PC's karma is above a certain level, x, but the local variable Daisy_Temper is below 0."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Daisy_2a_7a_4a"  notes "Dumb female PC option. Daisy automatically trusts dummy PC's with her secret, (see Wiki for details), karma and Daisy_Temper checks are overlooked."
+              }
+}
+Node "Daisy_9F_4"
+notes ""
+is_wtg = false
+{
+NPCText "Nothing. Forget it. What was it you wanted to speak to me about?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a man who's interested in going on a date with you." linkto "Daisy_2a_1"  notes "This option only appears if the PC has the 'Find a date for Daisy' quest."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your father asked me to give you some tips on how to date men." linkto "Daisy_2b_1"  notes "This option only appears if the PC has triggered the 'Find a date for Daisy' quest. See the DevWiki for details."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place and what you do here?" linkto "Daisy_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. Goodbye for now." linkto "done"  notes ""
+              }
+}
+Node "Daisy_9M"
+notes ""
+is_wtg = false
+{
+NPCText "Uh, yeah. I guess."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I know a man who's interested in going on a date with you." linkto "Daisy_2a_1"  notes "This option only appears if the PC has the 'Find a date for Daisy' quest."
+          int=4 Reaction=REACTION_NEUTRAL Gender=FEMALE playertext "Your father asked me to give you some tips on how to date men." linkto "Daisy_2b_1"  notes "This option only appears if the PC has triggered the 'Find a date for Daisy' quest. See the DevWiki for details."
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about this place and what you do here?" linkto "Daisy_3_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "It slipped my mind. Goodbye for now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Tell <PC> what Daisy do here." linkto "Daisy_3_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_1B"
+notes "The DaisyF_* path includes all the nodes Daisy speaks once she has become a follower of a female PC (the 'F' is for 'follower'). She uses DaisyF_1B when dialogue is opened if the PC's karma is below a certain level, to be decided upon by the scripters."
+is_wtg = false
+{
+NPCText "I'm not sure this relationship is working out. I didn't realize what sort of person you are."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's go, Daisy." linkto "DaisyF_2a"  notes "This option only appears if Daisy is not currently in the PC's group."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need you to wait here until I come back." linkto "DaisyF_2b"  notes "This option only appears if Daisy is currently in the PC's group."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Put your weapons away." linkto "DaisyF_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to know what weapons you can use." linkto "DaisyF_2d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about City on the Coast?" linkto "DaisyF_2e_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change the distance between us when we travel." linkto "DaisyF_2f_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should heal yourself now." linkto "DaisyF_2g"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You come with <PC> now." linkto "DaisyF_2a"  notes "This option only appears if Daisy is not currently in the PC's group."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wait here." linkto "DaisyF_2b"  notes "This option only appears if Daisy is currently in the PC's group."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Put away weapon." linkto "DaisyF_2c"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What weapon you use good?" linkto "DaisyF_2d"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want you at other distance from me." linkto "DaisyF_2f_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You do heal on self." linkto "DaisyF_2g"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Stop talk now." linkto "done"  notes ""
+              }
+}
+Node "DaisyF_1G"
+notes "The DaisyF_* path includes all the nodes Daisy speaks once she has become a follower of a female PC (the 'F' is for 'follower'). She uses DaisyF_1G when dialogue is opened if the PC's karma is above a certain level, to be decided upon by the scripters."
+is_wtg = false
+{
+NPCText "[Daisy smiles at you.] What's up, <PC>?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's go, Daisy." linkto "DaisyF_2a"  notes "This option only appears if Daisy is not currently in the PC's group."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need you to wait here until I come back." linkto "DaisyF_2b"  notes "This option only appears if Daisy is currently in the PC's group."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Put your weapons away." linkto "DaisyF_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to know what weapons you can use." linkto "DaisyF_2d"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about City on the Coast?" linkto "DaisyF_2e_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change the distance between us when we travel." linkto "DaisyF_2f_1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You should heal yourself now." linkto "DaisyF_2g"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You come with <PC> now." linkto "DaisyF_2a"  notes "This option only appears if Daisy is not currently in the PC's group."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Wait here." linkto "DaisyF_2b"  notes "This option only appears if Daisy is currently in the PC's group."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Put away weapon." linkto "DaisyF_2c"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "What weapon you use good?" linkto "DaisyF_2d"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I want you at other distance from me." linkto "DaisyF_2f_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You do heal on self." linkto "DaisyF_2g"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Stop talk now." linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2a"
+notes ""
+is_wtg = false
+{
+NPCText "That's a relief. Part of me kept wondering if you were ever coming back."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2b"
+notes ""
+is_wtg = false
+{
+NPCText "[She looks frightened.] Okay, but just make sure you come back, you hear?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2c"
+notes ""
+is_wtg = false
+{
+NPCText "Sure, I'm not really a weapons type of girl, anyhow."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2d"
+notes ""
+is_wtg = false
+{
+NPCText "Weapons? Gee. I guess I've got a pretty good throwing arm. I cracked Bob upside the head with a beer bottle at twenty paces once, when he... well, never mind, now. Long time ago."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2e_1"
+notes ""
+is_wtg = false
+{
+NPCText "Not much to say about the place, really. Our ancestors were all sailors, once upon a time, which is why you'll find that great hulk of a ship, there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "DaisyF_2e_2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2e_2"
+notes ""
+is_wtg = false
+{
+NPCText "It's a nice place to live, so long as you like fish. The guys land so much, we can even sell some on to places like Crossroads."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Crossroads?" linkto "DaisyF_2e_3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2e_3"
+notes ""
+is_wtg = false
+{
+NPCText "Not a great deal, sorry hon. I lived my entire life in City on the Coast without ever traveling more than a few miles in any direction. Kinda sad, huh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "DaisyF_2e_4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2e_4"
+notes ""
+is_wtg = false
+{
+NPCText "All I can tell you is that I know Crossroads is due north-west of City on the Coast."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2f_1"
+notes ""
+is_wtg = false
+{
+NPCText "Really? Like how?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stay closer to me." linkto "DaisyF_2f_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't stay too close, but don't stray too far, either." linkto "DaisyF_2f_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need you to stay much further away from me." linkto "DaisyF_2f_2c"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Walk closerer to <PC>." linkto "DaisyF_2f_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Be close, but not too close." linkto "DaisyF_2f_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> want big gap between <PC> and Daisy." linkto "DaisyF_2f_2c"  notes ""
+              }
+}
+Node "DaisyF_2f_2a"
+notes ""
+is_wtg = false
+{
+NPCText "Ooh... I like the sound of that. You got something planned for later?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2f_2b"
+notes ""
+is_wtg = false
+{
+NPCText "Okay. It sounds like you know what you're doing."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2f_2c"
+notes ""
+is_wtg = false
+{
+NPCText "Was it something I said? We're still... you know, friends, aren't we?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}
+Node "DaisyF_2g"
+notes ""
+is_wtg = false
+{
+NPCText "Thanks, <PC>. It's nice to know you're looking out for me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to speak to you about something else." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing else for now, honey." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1G"  notes "This option only appears if the PC's karma is above a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "I got other thing I need say to Daisy." linkto "DaisyF_1B"  notes "This option only appears if the PC's karma is below a certain level."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[End conversation.]" linkto "done"  notes ""
+              }
+}

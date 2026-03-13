@@ -1,0 +1,60 @@
+/*
+
+       Fallout Dialogue Creator
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.29.1-beta
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+
+/* Regular nodes */
+
+Node "Node001"
+notes ""
+is_wtg = false
+{
+NPCText "This is a test of the player options count bug."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #1" linkto "Node002" conditions { CHECK_CUSTOM_CODE "global_var(GVAR_TEST) == 1" link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #2" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #3" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #4" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #5" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #6" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #7" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #8" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #9" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #10" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #11" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #12" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #13" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #14" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #15" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #16" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #17" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #18" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #19" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #20" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #21" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #22" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Esko piipan esa #23" linkto "Node002"  notes ""
+              }
+}
+Node "Node002"
+notes ""
+is_wtg = false
+{
+NPCText "And this is the end result of the node."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "hasa jee" linkto "done"  notes ""
+              }
+}

@@ -131,8 +131,13 @@ class DialogManager(QObject):
         return self.current_dialogue
 
     def get_current_node(self) -> Optional[DialogueNode]:
-        """Get currently selected node"""
-        # TODO: Implement node selection tracking
+        """Get currently selected node.
+        
+        Note: This requires integration with the UI's node selection tracking.
+        The main_window.py tracks selection in nodes_tree QTreeWidget.
+        """
+        # TODO: Implement node selection tracking - requires UI integration
+        # The selected node is tracked in main_window.nodes_tree
         return None
 
     def add_node(self, node: DialogueNode):

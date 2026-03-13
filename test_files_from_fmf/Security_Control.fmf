@@ -1,0 +1,444 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.2-beta
+
+*/
+
+NPCName "Security Control"
+Location "GAI - Level 2"
+Description "This is the central computer in the security control room on level 2 of the GAI HQ."
+Unknown_Desc "You see a security computer."
+Known_Desc "You see Security Control."
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Switcher"
+notes ""
+{
+NPCText "Starting conditions:"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Power is off" linkto "Node_001"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Power is on" linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "After startup" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_001"
+notes ""
+{
+NPCText "The power is off. The screen is blank."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "Switcher"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "System Alert: GridSec(tm) Security Sphere compromised. System functions may be inaccessible. Consult your manual for recommended protocols."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Start up]" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "GridSec(tm) Diagnostics Pro has performed a status check on your security network. Run the GridSec Repair Wizard now? (Recommended)"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Run the Wizard]" linkto "Node_009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue without the Wizard]" linkto "Node_006"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "Accessing this station is not advisable. Recommended course of action: (062) Maintain local peace and await instruction from surface security forces."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Ignore the warning]" linkto "Node_005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave]" linkto "done"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "All GridSec(tm) Safety Guarantees will be void on execution. Are you sure? Y/N"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Yes]" linkto "Node_007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "done"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "Welcome to GAInet Security Control! There are 1 urgent notice(s) waiting."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Read the message" linkto "Node_015"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Security Measures Control]" linkto "Node_016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Damage Report]" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Records Archive]" linkto "Node_020"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logout]" linkto "done"  notes ""
+              }
+}
+Node "Node_006b"
+notes ""
+{
+NPCText "Welcome to GAInet Security Control!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Security Measures Control]" linkto "Node_016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Damage Report]" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Records Archive]" linkto "Node_020"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logout]" linkto "done"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "A GridSec(tm) All-Points Lockdown is in effect. System Repair must end the lockdown to continue."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Continue]" linkto "Node_008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "done"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "Decreasing threat level... Security fields deactivated... Non-human security forces standing down... Lockdown lifted. Restoring GridSec(tm) core from backup..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "-MORE-" linkto "Node_003"  notes "30min-1hour blackout between this node and the next"
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "System Error: Expected library 'GStmSR0008-repwiz.hlp.ll' could not be found. Please insert the manufacturer's disk labelled: Accessibility Features 2/3."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Close the Wizard]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "Please wait while GridSec(tm) Active Shield Sensor Diagnostics analyses your problem..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "GridSec(tm) Corporate Security Solutions: The safety of your business is our business.\n\nPlease wait..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node_012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_012"
+notes ""
+{
+NPCText "Coming soon: GridSec(tm) Control/Support Platforms: The versatility of a fully mobile command suite, the power of a small army.\n\nPlease wait..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "MORE" linkto "Node_013"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "done"  notes ""
+              }
+}
+Node "Node_013"
+notes ""
+{
+NPCText "System Error: Sensor Failure 047. Process cannot continue."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Error details" linkto "Node_014"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_014"
+notes ""
+{
+NPCText "Sensor Error 047: Multiple HDS Failure. Damage analysis systems have been damaged."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Cancel]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_015"
+notes ""
+{
+NPCText "Priority message from: 62srj@GAInet:Surface. Copy: 'bombs here. lockdown now. pray.'"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_006b"  notes ""
+              }
+}
+Node "Node_016"
+notes ""
+{
+NPCText "Threat level: <threat>"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Raise the threat level" linkto "Node_017"  notes "Activates fields and robots"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Lower the threat level" linkto "Node_018"  notes "Deactivates fields and robots"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Advanced Options]" linkto "Node_019"  notes "Moderate science check"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_017"
+notes ""
+{
+NPCText "Increasing threat level... Security fields active... Non-human forces armed and patrolling."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_016"  notes ""
+              }
+}
+Node "Node_018"
+notes ""
+{
+NPCText "Decreasing threat level... Security fields deactivated... Non-human security forces standing down."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_016"  notes ""
+              }
+}
+Node "Node_019"
+notes ""
+{
+NPCText "Enter Advanced Command."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Toggle Security Fields" linkto "Switcher"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Toggle Security Robots" linkto "Switcher"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Force factory shutdown" linkto "Switcher"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_016"  notes ""
+              }
+}
+Node "Node_020"
+notes ""
+{
+NPCText "Access to Security Archives require D-2 clearance. Enter authorization code:"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Enter the number from the yellow keycard" linkto "Node_021"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Enter the number from the red keycard" linkto "Node_022"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Try to break into the system" linkto "Switcher"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_021"
+notes ""
+{
+NPCText "Insufficent clearance. A security detail has been dispatched to your location."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "END" linkto "done"  notes ""
+              }
+}
+Node "Node_022"
+notes ""
+{
+NPCText "Enter a term to search the archives."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Handy OS" linkto "Node_039"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Xion" linkto "Node_023"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Abraham" linkto "Node_026"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Blaine, Richard" linkto "Node_028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "DeChasse, Juliette" linkto "Node_032"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Taylor, Robert" linkto "Node_035"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Christie, Benjamin" linkto "Node_037"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back]" linkto "Node_006"  notes ""
+              }
+}
+Node "Node_023"
+notes ""
+{
+NPCText "Your search term, 'Xion', has yielded 5 document matches."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document: 'Xion - Project brief'" linkto "Node_024"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document: 'Xion - Project Updates'" linkto "Node_024"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document: 'Security Intercepts: RB/HV'" linkto "Node_024"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document: 'Xion Implementation Procedures'" linkto "Node_024"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document: 'HV Interviews'" linkto "Node_024"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_024"
+notes ""
+{
+NPCText "Document not found."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Modification History" linkto "Node_025"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_023"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_025"
+notes ""
+{
+NPCText "Last Edited: 00/00/00, 0000. Authorization: ABRAHAM"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_023"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_026"
+notes ""
+{
+NPCText "Your search term, 'Abraham', yielded 1 match."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document: 'The Abraham Incident'" linkto "Node_027"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_027"
+notes ""
+{
+NPCText "You download the document to your PIPboy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Logoff]" linkto "done"  notes ""
+              }
+}
+Node "Node_028"
+notes ""
+{
+NPCText "Your search term, 'Blaine, Richard' yielded 3 results."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Employee Complaint 55rcb-1'" linkto "Node_029"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Employee Complaint 55rcb-2'" linkto "Node_030"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Accident Report 07/06/73'" linkto "Node_031"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_029"
+notes ""
+{
+NPCText "Complaint lodged by employee Helen G. Larken against Richard C. Blaine. Category: Sexual Harrassment. Action taken: Unofficial reprimand. Risk of litigation: Low."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_030"
+notes ""
+{
+NPCText "Complaint lodged by employee Juliette A. DeChasse against Richard C. Blaine. Category: Sexual Harrassment. Action taken: Second offense, details passed to HR for review. Risk of litigation: Low/Moderate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_031"
+notes ""
+{
+NPCText "07/06/73: Critical equipment malfunction affecting levels 2, 3, 4. Cause of malfunction: Unknown. Damage to assets: estimated $70,000. Human casualties: 4 wounded, 1 dead. Richard C. Blaine, deceased."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_032"
+notes ""
+{
+NPCText "Your search term, 'DeChasse, Juliette', yielded 2 matches."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Employee Complaint 55rbc-2'" linkto "Node_033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Contract Termination - Juliette DeChasse'" linkto "Node_034"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_033"
+notes ""
+{
+NPCText "Complaint lodged by employee Juliette A. DeChasse against Richard C. Blaine. Category: Sexual Harrassment. Action taken: Second offense, details passed to HR for review. Risk of litigation: Low/Moderate."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_032"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_034"
+notes ""
+{
+NPCText "06/09/70 Employee Juliette Aveline Dechasse reported missing from personnel complex. Details passed to local law enforcement. Contract terminated following two weeks without contact."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_032"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_035"
+notes ""
+{
+NPCText "Your search term, 'Taylor, Robert', yielded 1 match."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Employee Complaint xxrgt-1'" linkto "Node_036"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_036"
+notes ""
+{
+NPCText "(Dateme) Employee Robert A. Taylor detained by surface security forces after attempting to leave the facility without authorization. Action taken: Official reprimand."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_037"
+notes ""
+{
+NPCText "Your search term, 'Christie, Benjamin', yielded 1 match."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Contract Termination - Benjamin Christie'" linkto "Node_038"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_038"
+notes ""
+{
+NPCText "07/03/73: Employee Dr. Benjamin Rafael Christie involved in a series of uncontrolled outbursts in the Level 4 laboratories. Christie was forcibly evicted from the facility after physically assaulting two security staff and Director Hadrian Voight. Contract immediately terminated."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_039"
+notes ""
+{
+NPCText "Your search term, 'Handy OS', yielded 3 results."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Handy ME Recall Notice'" linkto "Node_040"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Handy CE'" linkto "Node_041"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "View Document - 'Combat Handy Trial Results'" linkto "Node_042"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_040"
+notes ""
+{
+NPCText "NOTICE TO ALL EMPLOYEES: GAI is recalling all extant copies of its operating system 'Handy ME' due to product fault. Please turn any and all copies of this product over at the recall station on Level 3. Please ensure that all Handys under your direction have been upgraded to Handy SE."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_039"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_041"
+notes ""
+{
+NPCText "Second stage testing has begun for combat-capable Mr. Handys. If a success, declassification and mass production of a new product is expected to begin in 6-8 months."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_039"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_042"
+notes ""
+{
+NPCText "Document not found."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Modification History" linkto "Node_043"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_039"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}
+Node "Node_043"
+notes ""
+{
+NPCText "Last Edited: 11/23/76, 0356. Authorization: Voight, H."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Back to Search Results]" linkto "Node_039"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[New Search]" linkto "Node_022"  notes ""
+              }
+}

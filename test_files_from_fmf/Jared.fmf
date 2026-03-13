@@ -1,0 +1,445 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.30.0-stable
+
+*/
+
+vars {
+local var clarcGable notes "" = 0;
+}
+NPCName "Jared Gable"
+Location "LS"
+Description "He's the fled debtor. The PC must kill him and take his head, should he want to climb the crime ladder in Lone Star."
+Unknown_Desc "You see a careful looking figure."
+Known_Desc "It's Jared Gable."
+Detailed_Desc "He's got a small black moustache and slick, oily hair."
+/* Regular nodes */
+
+Node "switch"
+notes ""
+is_wtg = false
+{
+NPCText "choose your destiny!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "First time the PC speaks to Jared, mission to kill him activated" linkto "Node002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jared is a follower, and PC talks to him outside of Agnes' office, but still in LS." linkto "Node035"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Jared is a follower, and PC talks to him on a non LS map" linkto "Node036"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "LVAR_clarkGable == 1" linkto "Node037"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "LVAR_clarkGable == 0, PC spoke to Jared before, Jared is not a follower." linkto "Node038"  notes ""
+              }
+}
+Node "Node002"
+notes ""
+is_wtg = false
+/* Skill checks for node Node002 */
+
+      define_skill_check Skill_Check_000_Speech {
+      skill_num = 15;
+      difficulty_modifier = -2;
+      onsuccess => Node004;
+      onfailure => Node006;
+      }
+
+{
+NPCText "Hey, what's up?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Mind your own business!" linkto "Node003"  notes ""
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Is your name Jared Gable?" linkto "Skill_Check_000_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nevermind. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node003"
+notes ""
+is_wtg = true
+{
+NPCText "Okay, sorry."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node004"
+notes ""
+is_wtg = true
+{
+NPCText "[He hesitates for a second.] Yes. Why?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have come to kill you, Jared." linkto "Node005"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have come to warn you, Jared. Your life is in danger!" linkto "Node011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I bring you good news, Jared. Mrs. Big have decided to free you of your debts." linkto "Node012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, just curious. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node005"
+notes ""
+is_wtg = false
+{
+NPCText "I beg your pardon?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you read the rat bible, Jared? There's this passage I've memorized..." linkto "Node009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You heard me. And when I've killed you, I will decapitate you with a hacksaw, and bury you in the backyard." linkto "Node010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Mrs. Big sent me. Now you can die." linkto "Node013"  notes ""
+              }
+}
+Node "Node006"
+notes "Set LVAR_clarcGable := 1"
+is_wtg = false
+{
+NPCText "Uhh... No! I'm, err... Clark. Yeah, Clark Gable, that's me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're lying!" linkto "Node007" conditions { CHECK_STAT intelligence > 5 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hmm, you haven't seen Jared, then?" linkto "Node008"  notes ""
+              }
+}
+Node "Node007"
+notes ""
+is_wtg = true
+{
+NPCText "No, it's true! Jared is my, err.. Brother! Tell me what you want with him, and I'll tell him."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I SAID you're lying! Die, Jared!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am to inform Jared that he is freed from his debts. All he's gotta do is sign a paper." linkto "Node022"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm here to warn him, Mrs. Big have sent somebody to make an example of him." linkto "Node023"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have come to kill him. Tell me where he is!" linkto "Node008"  notes ""
+              }
+}
+Node "Node008"
+notes ""
+is_wtg = false
+{
+NPCText "Err... I think he went that way [he points to the west]. He said he was in a hurry."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, thank you." linkto "done"  notes ""
+              }
+}
+Node "Node009"
+notes ""
+is_wtg = true
+{
+NPCText "The rat bible? What are you talking about? Why did you say you were going to kill me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Begin reciting]" linkto "done"  notes "Start the reciting now"
+              }
+}
+Node "Node010"
+notes ""
+is_wtg = true
+{
+NPCText "W-what? You're crazy!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Spare the pleasantries and get ready to be decapitated." linkto "Node013"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hardly. I'm a homicidal maniac, but I'm not crazy in the traditional sense of the word. Now you may die." linkto "combat"  notes ""
+              }
+}
+Node "Node011"
+notes ""
+is_wtg = true
+{
+NPCText "What is this, who are you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Mrs. Big have sent somebody to kill you. She wants to make an example out of you." linkto "Node018"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm your executioner." linkto "Node019"  notes ""
+              }
+}
+Node "Node012"
+notes ""
+is_wtg = true
+/* Skill checks for node Node012 */
+
+      define_skill_check Skill_Check_001_Speech {
+      skill_num = 15;
+      difficulty_modifier = -5;
+      onsuccess => Node020;
+      onfailure => Node021;
+      }
+
+{
+NPCText "What do you think I look like, a moron? Agnes would never do such a thing!"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "It's true! She's in a good mood for the first time since her husband disappeared. She already dismissed three other debtors today." linkto "Skill_Check_001_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're right. I'm here to kill you." linkto "Node005"  notes ""
+              }
+}
+Node "Node013"
+notes ""
+is_wtg = true
+{
+NPCText "Wait! I can pay!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Too late for that, Gable. Die!" linkto "combat"  notes ""
+          int=4 linkflags custom_proc Reaction=REACTION_NEUTRAL playertext "Then pay!" linkto "giveMoney"  notes "Gives 1k caps to the PC"
+              }
+}
+Node "Node014"
+notes ""
+is_wtg = false
+{
+NPCText "[He fiddles in his pockets] Here! Here's a thousand, I'll err.. I'll give you the rest tomorrow, okay?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Now I suggest you leave town, and don't come back. Ever." linkto "Node017"  notes ""
+          int=4 linkflags custom_proc Reaction=REACTION_NEUTRAL playertext "You pay me everything, or you die!" linkto "giveMoney2"  notes ""
+              }
+}
+Node "Node015"
+notes ""
+is_wtg = true
+{
+NPCText "Okay, okay! Here's another 1000. That's all I've got, please don't kill me!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Now I suggest you leave town, and don't come back. Ever." linkto "Node017"  notes ""
+          int=4 linkflags custom_proc Reaction=REACTION_NEUTRAL playertext "Thanks. Now you can die!" linkto "combat"  notes ""
+              }
+}
+Node "Node016"
+notes ""
+is_wtg = false
+{
+NPCText "That's all I've got, I swear!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then I suggest you leave town, and don't come back. Ever." linkto "Node017"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then you shall die!" linkto "combat"  notes ""
+              }
+}
+Node "Node017"
+notes "Jared flees from the scene. Set variable GVAR_agnes_quest_1 := 2\n(0 = quest not started, 1 = quest started but not finished, 2 = Jared disappears (PC gets no head), 3 = quest success, 4 = PC caught with the body)"
+is_wtg = true
+{
+NPCText "Thank you, thank you!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node018"
+notes ""
+is_wtg = true
+{
+NPCText "How do you know this?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you really want to know?" linkto "Node024"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm your executioner." linkto "Node019"  notes ""
+              }
+}
+Node "Node019"
+notes ""
+is_wtg = true
+{
+NPCText "Wh-... Bu-... Why are you telling me this?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I have my reasons. If you wanna live, I suggest you run. Now." linkto "Node025"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I thought it would be fun to scare you a little before I killed you." linkto "Node010"  notes ""
+              }
+}
+Node "Node020"
+notes ""
+is_wtg = true
+/* Skill checks for node Node020 */
+
+      define_skill_check Skill_Check_002_Speech {
+      skill_num = 15;
+      difficulty_modifier = -7;
+      onsuccess => Node030;
+      onfailure => Node021;
+      }
+
+{
+NPCText "Really? So what are you suggesting?"
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Come with me to her office and sign the papers. You better hurry before she change her mind." linkto "Skill_Check_002_Speech"  notes ""
+              }
+}
+Node "Node021"
+notes ""
+is_wtg = true
+{
+NPCText "I don't like this one bit..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Like it or not, you're coming with me!" linkto "Node026"  notes ""
+              }
+}
+Node "Node022"
+notes ""
+is_wtg = true
+/* Skill checks for node Node022 */
+
+      define_skill_check Skill_Check_003_Speech {
+      skill_num = 15;
+      difficulty_modifier = -10;
+      onsuccess => Node031;
+      onfailure => Node027;
+      }
+
+{
+NPCText "What? No, you gotta be kidding - Agnes would never do such a thing."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "Well, she just did." linkto "Skill_Check_003_Speech"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, I'm just kidding. I'm actually here to kill him. " linkto "Node032"  notes ""
+              }
+}
+Node "Node023"
+notes ""
+is_wtg = true
+{
+NPCText "Is that so? Well, I'll go find Jared, and tell him the news... Thank you, stranger."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not so fast, Clark. Or should I call you Jared?" linkto "Node028"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You do that." linkto "done"  notes "Jared will walk away, and dissappear. Set GVAR_agnes_quest_1 := 3"
+              }
+}
+Node "Node024"
+notes ""
+is_wtg = true
+{
+NPCText "I... I guess not."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "If you wanna live, I suggest you run. Now." linkto "Node025"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I changed my mind. You die now, Jared." linkto "combat"  notes ""
+              }
+}
+Node "Node025"
+notes "Jared runs away, off the map. Unless the PC attacks him, that is... If he makes it, set GVAR_agnes_quest_1 := 2"
+is_wtg = true
+{
+NPCText "Shit... [He runs away]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node026"
+notes ""
+is_wtg = true
+{
+NPCText "Over my dead body!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That can be arranged." linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll be back." linkto "done"  notes ""
+              }
+}
+Node "Node027"
+notes ""
+is_wtg = true
+{
+NPCText "I smell rats..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[You sniff the air] Nope, no rats here. Tell your brother that he's wanted." linkto "Node034"  notes ""
+              }
+}
+Node "Node028"
+notes ""
+is_wtg = true
+{
+NPCText "I told you, Jared is my brother!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "His brother is good enough to me. Time to die!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh yes, sorry. Well, you go tell your brother then." linkto "done"  notes ""
+              }
+}
+Node "Node029"
+notes ""
+is_wtg = true
+{
+NPCText "What, I need to sign papers to get rid of the debt? I smell rats..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're coming with me, like it or not." linkto "Node026"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then I'm afraid I shall have to kill you." linkto "Node005"  notes ""
+              }
+}
+Node "Node030"
+notes "Jared becomes a temporary follower. If the PC leaves LS and go to a new map, Jared will initiate dialogue immediately -> Node036"
+is_wtg = true
+{
+NPCText "It's certainly not like her, but who am I to argue with mrs. Big? You lead the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right, follow me." linkto "done"  notes ""
+              }
+}
+Node "Node031"
+notes "set LVAR_clarkCable := 0;\nJared becomes a temporary follower. If the PC leaves LS and enter any other map, Jared will initiate dialogue -> Node036"
+is_wtg = true
+{
+NPCText "Hrrm... Actually, I AM Jared. You can never be too careful these days. So, will you take me to mrs. Big?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure. Just follow me." linkto "done"  notes ""
+              }
+}
+Node "Node032"
+notes ""
+is_wtg = false
+{
+NPCText "[He chuckles, then stops as he realize you weren't kidding.] Well, umm... He's not here. Actually, I don't know where he is."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, but I think you do, Clark. Or shall I call you Jared?" linkto "Node033"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't worry about it, I'll find him." linkto "done"  notes ""
+              }
+}
+Node "Node033"
+notes ""
+is_wtg = true
+{
+NPCText "Wait, I'm not Clark! I mean Gable! I mean Jared! I just... I'm his brother, okay? Please don't kill me!"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just shut up take what's coming to you!" linkto "combat"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Whatever. I'll be back." linkto "done"  notes ""
+              }
+}
+Node "Node034"
+notes ""
+is_wtg = true
+{
+NPCText "Okay, I'll do that."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node035"
+notes ""
+is_wtg = true
+{
+NPCText "Hey, this isn't Agnes' office! Where are you taking me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Closer to your grave, so I don't have to carry your fat body so far." linkto "combat"  notes "Only available if the PC is on a LS map"
+          int=4 Reaction=REACTION_NEUTRAL playertext "We're almost there, trust me." linkto "done"  notes ""
+              }
+}
+Node "Node036"
+notes "This node is for if the PC leaves LS with Jared. "
+is_wtg = true
+{
+NPCText "Where are you taking me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Oh, just some place where nobody will hear you scream." linkto "combat"  notes ""
+              }
+}
+Node "Node037"
+notes ""
+is_wtg = false
+{
+NPCText "No, I haven't met Jared since last we spoke. What do you want?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, go find him then!" linkto "Node034"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me where Jared is, or I'll kill you instead!" linkto "Node008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing. Bye." linkto "done"  notes ""
+              }
+}
+Node "Node038"
+notes ""
+is_wtg = false
+{
+NPCText "What do you want now?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I want your head. Give it to me." linkto "Node010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing, bye." linkto "done"  notes ""
+              }
+}
+/* Custom procedures */
+      custom_proc giveMoney associate_node 12 {
+      "item_caps_adjust(dude_obj,1000);",
+      "call Node014;"
+      }
+      custom_proc giveMoney2 associate_node 13 {
+      "item_caps_adjust(dude_obj,1000);",
+      "call Node015;"
+      }

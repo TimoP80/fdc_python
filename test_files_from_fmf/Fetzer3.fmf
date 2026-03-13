@@ -1,0 +1,316 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName "Fetzer"
+Location "CotC, Docks, Inside the Bar"
+Description "This is Fetzer. A reference character for Fester from the Adams Family. He doesn't reward the PC with anything, but helps expand the world feel and the concequences of player actions.(I.e. robbing Royce helps change Fetzers life)\n\nHe is 34 years old and has been in CotC for just over nign years now. He lives in absolute poverty with his family. He has a son, Pubert, a daugther, Thursday, and a wife Cathy or Debbie. Or non reference version: Mark, Emma, and Cathy.\n\nHe's had several jobs. Once you steal from Royce he becomes a gaurd at the warehouse."
+Unknown_Desc "You see a man wearing worn out clothes. In front of him lies an empty hat with holes in it. He's surounded by empty bottles."
+Known_Desc "You see Fester. In front of him lies an empty hat with holes in it. He's surounded by empty bottles."
+Detailed_Desc "A man wearing worn out clothes and a pale skin. In front of him lies an empty hat with holes in it. He's surounded by empty bottles."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition -1
+{
+cond target_node "A1"
+{
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link -1
+},
+cond target_node "A2"
+{
+    SSL "local_var(LVAR_Herebefore) == 1" var_param "" eval -1 value_to_check "" ini_index 9 link -1
+}
+};
+
+/* Float message nodes */
+
+Floatnode "Smart Royce version"
+notes ""
+{
+"Hey don't try anything funny.",
+"I'm keeping an eye out for any funny buisness.",
+"Things are finally looking up... Hey you! Don't try anything funny.",
+"Hey weren't you in the bar the other day?"
+}
+
+/* Regular nodes */
+
+Node "A1"
+notes "After two years of poverty, Fetzer is desperate."
+{
+NPCText "Hey. You wouldn't be willing to share some caps for a man down on his luck, would you? I'm Fetzer by the way."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're who?" linkto "B"  notes ""
+          int=4 Reaction=REACTION_GOOD playertext "Sure, here's a cap. [You throw a cap in his hat]" linkto "C" conditions { CHECK_MONEY dude_caps > 0 link_next NONE } notes "Give a cap to Fetzer+ 1 karma"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure, here you go. Buy yourself a beer. [You throw some caps in his hat] " linkto "C" conditions { CHECK_MONEY dude_caps > 4 link_next AND } notes "give 5 caps + karma1"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Here. Get yourself lucky tonight. [You toss some nuka cola caps and a few Jimmy Hats in his hat]" linkto "D1" conditions { CHECK_MONEY  > 14 link_next AND } notes "give 15 caps and two condoms set item requirement for two condoms of any kind"
+          int=4 Reaction=REACTION_BAD playertext "No I'm not willing to give you my hard earned cash. Now get away from me you beggar!" linkto "done"  notes "-1 karma"
+          int=-3 Reaction=REACTION_GOOD playertext "<PC> give you money. [You throw a cap in his hat.]" linkto "D2" conditions { CHECK_MONEY dude_caps > 0 link_next NONE } notes "Give a cap to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me  no money give. You tell <PC> funny tale and me money give you maybe." linkto "E3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me not like people that no money have. Me leave." linkto "done"  notes ""
+              }
+}
+Node "A2"
+notes "Starting node after you have met."
+{
+NPCText "Hey its you again."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey Fester, here's a cap. [You toss a cap in his hat.]" linkto "C" conditions { CHECK_MONEY dude_caps > 0 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How did you end up in here again?" linkto "E1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I gotta go. See you later Fester." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_GOOD playertext "<PC> give you money. [You throw a cap in his hat.]" linkto "D2" conditions { CHECK_MONEY dude_caps > 0 link_next NONE } notes "Give a cap to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me no money give. You tell <PC> funny tale and me money give you maybe." linkto "E3"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Me not like people that not have money. Me leave." linkto "done"  notes "-1 karma"
+              }
+}
+Node "B"
+notes ""
+{
+NPCText "I'm Fetzer. I need money to feed my family. Do you have something to spare? Something like money?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry. I've been having some trouble getting by lately myself. In fact I should probaly ask you for some caps." linkto "E2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah sure, here you go. [You toss a cap in his hat]" linkto "C" conditions { CHECK_MONEY  > 0 link_next AND } notes "need to make sure that money script works"
+          int=4 Reaction=REACTION_GOOD playertext "Of course, here you go. [You toss some caps in his hat]" linkto "C" conditions { CHECK_MONEY dude_caps > 3 link_next AND } notes "Give Fetzer 3 caps"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nope. Well gotta go," linkto "done"  notes ""
+              }
+}
+Node "C"
+notes ""
+{
+NPCText "Hey thanks friend. If you ever feel in a giving mood again come see me. I'll probably still be here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Speaking of which, how did you end up here anyway? You don't seem like somebody who would just end up on the floor." linkto "E1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I might do that, see you around Fester." linkto "J1"  notes ""
+              }
+}
+Node "D1"
+notes ""
+{
+NPCText "Euhh.. Thank you.. I guess. [He looks at the ring on his finger and shakes his head.] Euhm..if you ever feel in a giving mood again, just come see me. I'll  be here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah about that. How did you end up here in the first place?" linkto "E1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah well have a good time Fetzer. I'll see you around." linkto "done"  notes ""
+              }
+}
+Node "D2"
+notes ""
+{
+NPCText "Euhh.. Thank you.. I guess. [He looks at you and shakes his head.] Euhm.. if you ever feel in a giving mood again, just come see me. I'll  be here."
+      options {
+          int=-3 Reaction=REACTION_GOOD playertext "I like give money. [You throw a cap to Fetzer.]" linkto "D3" conditions { CHECK_MONEY dude_caps > 0 link_next NONE } notes "Give one cap to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me give you money. Now you tell <PC> funny story." linkto "E3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "OK Goodbye friend. [You wave at Fetzer for a while.]" linkto "done"  notes ""
+              }
+}
+Node "D3"
+notes ""
+{
+NPCText "Thanks. [Fetzer looks at you puzzled.] Your a good person <PC>."
+      options {
+          int=-3 Reaction=REACTION_GOOD playertext "Me like to be good. Me give you more money and be good more. [You throw several caps in Fetzer's direction. One of them hits his head.]" linkto "D4" conditions { CHECK_MONEY dude_caps > 4 link_next NONE } notes "Give 5 caps to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You caps have now. You tell me funny story." linkto "E3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Yes <PC> good. Me go now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_BAD playertext "Me not good. Me big and not nice. Me leave you alone and sad." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go look for more caps now." linkto "done" conditions { CHECK_MONEY dude_caps < 1 link_next NONE } notes ""
+              }
+}
+Node "D4"
+notes "I was thinking we could get Fetzer into trouble for robbing a stupid person out of money, but not doing so un purpose."
+{
+NPCText "Yes thank you <PC>. Euhhm.. you don't have to give me anymore caps. [People are starting to stare at Fetzer.]"
+      options {
+          int=-3 Reaction=REACTION_GOOD playertext "Me give you more money. <PC> big good person is. [You hit Fetzer on the head with several caps. One of them hits his eye.]" linkto "D5" conditions { CHECK_MONEY dude_caps > 9 link_next NONE } notes "Give 10 caps to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go look for more caps now." linkto "done" conditions { CHECK_MONEY dude_caps < 1 link_next NONE } notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You many caps have. You tell me funny story now." linkto "E3"  notes ""
+          int=-3 Reaction=REACTION_GOOD playertext "Me go now. [You wave at Fetzer as you go.]" linkto "done"  notes ""
+              }
+}
+Node "D5"
+notes ""
+{
+NPCText "[Fetzer's eye turns black.] Really, you can stop giving me caps. I don't think everybody understands. [People are starting to make comments about Fetzer.]"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me have even more money. Me got from nice sleeping man in desert. You have nice sleeping-man-money. [You throw several blood covered caps at Fetzer.]" linkto "D6" conditions { CHECK_MONEY dude_caps > 4 link_next NONE } notes "Give 5 caps to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You tell me story now." linkto "E3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me go now. Me look for nice caps for you." linkto "done"  notes ""
+              }
+}
+Node "D6"
+notes ""
+{
+NPCText "Enough already! Just go you retarded moron. I don't want your money. I just want you to leave me alone...."
+      options {
+          int=-3 Reaction=REACTION_BAD playertext "You not very nice be to <PC>. Me not gonna be nice to you." linkto "combat"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You not nice person be. Me go look for new friends." linkto "done"  notes "Make it so Fetzer ignores PC from now on.(I.e. the PC can not restart dialogue.) PC gains exp bonus for reaching this point."
+              }
+}
+Node "E1"
+notes ""
+{
+NPCText "Well I first came here almost ten years ago, I was just a young man. I came here by caravan from Lone Star in search of a simpler life than that of a city."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You certainly seemed to have succeeded." linkto "F1"  notes ""
+              }
+}
+Node "E2"
+notes ""
+{
+NPCText "Yeah I know what that's like. When I first came here almost ten years ago, I was just a young man. I came here by caravan from Lone Star in search of a simpler life than that of a city."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well you certainly found that." linkto "F1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey that's nice. I'm a traveler myself you see. But go on." linkto "F1"  notes ""
+              }
+}
+Node "E3"
+notes ""
+{
+NPCText "A funny story? I don't know if it's a funny story, but... Well you see I first came here almost ten years ago, I was just a young man. I came here by caravan from Lone Star in search of a simpler life than that of a city."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me also have simple life." linkto "F2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me only want to listen to funny story. Me go look for new friend with a funny story." linkto "done"  notes ""
+              }
+}
+Node "F1"
+notes ""
+{
+NPCText "Yeah, but this wasn't what I had in mind. After finding a place to stay it didn't take me long to get a job as packer at Hoggs'. The pay wasn't great and its probably even worse now, but at least it paid the rent. In my spare time me and the boys from work would usually go out hunting or hang out at the bar. It's there that I met my beautiful Cathy. It was love at first sight."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "G1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Listen, I'm not interested in your love life. [Done]" linkto "done"  notes ""
+              }
+}
+Node "F2"
+notes ""
+{
+NPCText "Yeah I'm sure you have, but this wasn't exactly what I had in mind. After finding a place to stay it didn't take me long to get a job as packer at Hogg's. The pay wasn't great and it's probably even worse now, but at least it paid the rent. In my spare time me and the boys from work would usually go out hunting or hang out at the bar. It's there that I met my beautiful Cathy. It was love at first sight."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me love you too friend. You tell me more story now friend." linkto "G2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me not like love story. Me like funny story. Story about plasma gun blowing big ghoul into puddle of goo. That very funny story." linkto "done"  notes ""
+              }
+}
+Node "G1"
+notes ""
+{
+NPCText "Less than a year later we got married. Six months after that, Mark, my son, was born. Life was just how I imagined it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Then what happened?" linkto "H1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hey it sounds like you don't have such a bad life at all. [Done]" linkto "done"  notes ""
+              }
+}
+Node "G2"
+notes ""
+{
+NPCText "We got married less than a year after I met her. Six months after that, Mark, my son, was born. Life was just how I imagined it."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me like imagining too. Me play pretend a lot with my friend Jimmy. [You point at an empty spot next to you.]" linkto "H2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You made hole story up? Me want real story and funny is also. Me once heard very funny story about ghoul. Me look for other story now." linkto "done"  notes ""
+              }
+}
+Node "H1"
+notes ""
+{
+NPCText "Then my wife got pregnant again. I was on top of the world for a while. We had a baby girl. We called her April, as the best hauls usually come in April, I think."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "But?" linkto "I1"  notes ""
+              }
+}
+Node "H2"
+notes ""
+{
+NPCText "[Fetzer looks at the empty space for a moment.] Right. Anway after a few years my wife got pregnant again. I was on top of the world for a while. We had a baby girl. We called her April, as the best hauls usually come in April, I think."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me like April. You tell me more of story." linkto "I2"  notes ""
+              }
+}
+Node "I1"
+notes ""
+{
+NPCText "[He looks down at the floor.] With an extra mouth to feed my salary was no longer enough to pay the bill. So I asked for a raise. But... You see, this is Hogg's, you're lucky to keep your job after you ask for a raise. I couldn't watch my family suffer though, so I took up a job on the side. When Hogg found out about it he fired me. I lost my other job a week later after I got drunk and showed up late for work. Several lousy jobs later and here I am. Broke, penniless and with a family to take care of."
+      options {
+          int=4 Reaction=REACTION_GOOD playertext "Wow that's a pretty sad tale. I hope things work out for you though. See you around." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What a sad tale. Here's an extra cap.[You toss a cap in his hat.]  I hope things work out for you. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_BAD playertext "Yeah well, that's what you get for moonlighting and slacking. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "I2"
+notes ""
+{
+NPCText "[He looks down at the floor.] With an extra mouth to feed my salary was no longer enough to pay the bill. So I asked for a raise. But... You see, this is Hogg's, you're lucky to keep your job after you ask for a raise. I couldn't watch my family suffer though, so I took up a job on the side. When Hogg found out about it he fired me. I lost my other job a week later after I got drunk and showed up late for work. Several lousy jobs later and here I am. Broke, penniless and with a family to take care of."
+      options {
+          int=-3 Reaction=REACTION_GOOD playertext "That not funny life you have. Luckily you just pretend story. Me liked story, but me go now." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me want to help you. Me give you cap. [You hand him a cap.] You bye lizard on stick for your family." linkto "done" conditions { CHECK_MONEY dude_caps > 0 link_next NONE } notes "Give 1 cap from PC to Fetzer"
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You not tell funny story. Me go find new friend with story of deathclaw or plasmarifle. " linkto "done"  notes ""
+              }
+}
+/* Custom procedures */
+      custom_proc Haxor associate_node 0 {
+      "// hasan hardcore",
+      "debug_msg(\"Go to nation of bitches.\");"
+      }
+      custom_proc SexProc associate_node 6 {
+      "// commence default sex1!1",
+      "variable sex_rating_self;",
+      "variable sex_rating_dude;",
+      "",
+      "gfade_out(300);",
+      "game_time_advance(3600);",
+      "do_default_sex;",
+      "gfade_in(300);",
+      "",
+      "sex_rating_dude := dude_sex_rating;",
+      "sex_rating_self := self_sex_rating;",
+      "debug_msg(obj_name(dude_obj)+\" sex rating: \"+sex_rating_dude);",
+      "debug_msg(obj_name(self_obj)+\" sex rating: \"+sex_rating_self);",
+      "",
+      "call AfterSex;"
+      }
+      custom_proc Haxor associate_node 0 {
+      "// hasan hardcore",
+      "debug_msg(\"Go to nation of bitches.\");"
+      }
+      custom_proc SexProc associate_node 6 {
+      "// commence default sex1!1",
+      "variable sex_rating_self;",
+      "variable sex_rating_dude;",
+      "",
+      "gfade_out(300);",
+      "game_time_advance(3600);",
+      "do_default_sex;",
+      "gfade_in(300);",
+      "",
+      "sex_rating_dude := dude_sex_rating;",
+      "sex_rating_self := self_sex_rating;",
+      "debug_msg(obj_name(dude_obj)+\" sex rating: \"+sex_rating_dude);",
+      "debug_msg(obj_name(self_obj)+\" sex rating: \"+sex_rating_self);",
+      "",
+      "call AfterSex;"
+      }
+      custom_proc Haxor associate_node 0 {
+      "// hasan hardcore",
+      "debug_msg(\"Go to nation of bitches.\");"
+      }
+      custom_proc SexProc associate_node 6 {
+      "// commence default sex1!1",
+      "variable sex_rating_self;",
+      "variable sex_rating_dude;",
+      "",
+      "gfade_out(300);",
+      "game_time_advance(3600);",
+      "do_default_sex;",
+      "gfade_in(300);",
+      "",
+      "sex_rating_dude := dude_sex_rating;",
+      "sex_rating_self := self_sex_rating;",
+      "debug_msg(obj_name(dude_obj)+\" sex rating: \"+sex_rating_dude);",
+      "debug_msg(obj_name(self_obj)+\" sex rating: \"+sex_rating_self);",
+      "",
+      "call AfterSex;"
+      }

@@ -1,0 +1,172 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.25.4-stable
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+/* Regular nodes */
+
+Node "Node_001"
+notes ""
+{
+NPCText "You must be the one they're sending outside. <PC>, is it?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's me." linkto "Node_002"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "They asked me, but I'm not going." linkto "Node_003"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're confusing me with someone else." linkto "done"  notes ""
+              }
+}
+Node "Node_002"
+notes ""
+{
+NPCText "Well, good luck out there. The vault's survival depends on you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Are you the person that looks after the Handys?" linkto "Node_005"  notes "int/sci option"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Node_003"
+notes ""
+{
+NPCText "You aren't going? Why not?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It's a wasteland out there!" linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No reason. Just didn't really feel like it." linkto "Node_004"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not risking my life for some fatcats." linkto "Node_004"  notes ""
+              }
+}
+Node "Node_004"
+notes ""
+{
+NPCText "[He looks concerned] Well, I hope they can find a suitable replacement. And soon - there isn't much time left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What exactly is the problem?" linkto "Node_007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You scientists are always exaggerating. I'm sure we'll be fine." linkto "Node_006"  notes ""
+              }
+}
+Node "Node_005"
+notes ""
+{
+NPCText "Sure am. The name's Duane."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's the problem here, exactly?" linkto "Node_008"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "See you later, Duane." linkto "done"  notes ""
+              }
+}
+Node "Node_006"
+notes ""
+{
+NPCText "If only that were true. If only."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What exactly is the problem?" linkto "Node_007"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_007"
+notes ""
+{
+NPCText "It's complicated. Not the sort of thing you'd understand."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_008"
+notes ""
+{
+NPCText "The problem is we don't know what the problem is. Bugs keep appearing in random sections of the operating code, then spreading. In the time it takes us to deal with one, five new ones spring up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any idea what the cause is?" linkto "Node_009"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much time do you think we have?" linkto "Node_012"  notes ""
+              }
+}
+Node "Node_009"
+notes ""
+{
+NPCText "Aren't you listening? If we knew the cause, we could work on fixing it. At the moment we're only slowing it down, and not by much."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much time do you think we have left?" linkto "Node_012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Do you have any theories?" linkto "Node_010"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How will my mission help?" linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Bye." linkto "done"  notes ""
+              }
+}
+Node "Node_010"
+notes ""
+{
+NPCText "My guess is we reprogrammed the Handys one time too many. Doesn't make it any easier to fix, though, that's why we need the original code."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How will the original code help?" linkto "Node_011"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll go and find the code." linkto "done"  notes ""
+              }
+}
+Node "Node_011"
+notes ""
+{
+NPCText "If we have a clean copy of the source code, we have a reference point, something to compare against our own modifications. We've reprogrammed the bots so many times we've lost track of the all the changes we've made."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How can you be sure the same bugs don't exist in the original?" linkto "Node_013"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How much time do you think we have?" linkto "Node_012"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I should get on with my mission." linkto "done"  notes ""
+              }
+}
+Node "Node_012"
+notes ""
+{
+NPCText "Not much. <time> days, give or take a week. The rate of corruption keeps changing, there's no way to be sure."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "And you have no idea why this is happening?" linkto "Node_010"  notes ""
+              }
+}
+Node "Node_013"
+notes ""
+{
+NPCText "It worked for a century, didn't it? Worst case scenario, we can give all our Handys a clean install and buy another hundred years."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can I have a look at the code? I may be able to help." linkto "Node_015" conditions { CHECK_SKILL science > 70 link_next NONE } notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good point. I'll get on with my mission." linkto "done"  notes ""
+              }
+}
+Node "Node_015"
+notes ""
+{
+NPCText "Alright, but don't take too long. We've got people working here, we need you out there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "Node_014"  notes ""
+              }
+}
+Node "Node_014"
+notes ""
+{
+NPCText "(after blackout)"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Success" linkto "Node_016"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Failure" linkto "Node_017"  notes ""
+              }
+}
+Node "Node_016"
+notes ""
+{
+NPCText "Hey, you're pretty good. That should buy us a few more days. We should've gotten you in here sooner."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "Node_017"
+notes ""
+{
+NPCText "No, that didn't work the last five times you tried it, either. You should get on with your mission. Let the professionals handle things in here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}

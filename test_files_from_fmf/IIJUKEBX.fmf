@@ -1,0 +1,112 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.27.1-stable
+
+*/
+
+vars {
+local var Juke_Fixed notes "This variable keeps track of whether the PC has opened dialogue with the jukebox since fixing it. It determines which node to start the dialogue on, thereafter." = 0;
+}
+NPCName "Jukebox"
+Location "Cutty Sark, City on the Coast"
+Description "Is the eponymous jukebox in the Fix the jukebox quest. Is broken by default, until the PC fixes it. See wiki for details. Features two different detailed look descriptions: the first is used when the machine is still broken; the second after it is fixed."
+Unknown_Desc "You see: a jukebox."
+Known_Desc "You see: the Cutty Sark's jukebox."
+Detailed_Desc "1. This piece of pre-war machinery must be over two centuries old, and it shows. 2. A Warlitzer 1015-Babbler - primed and loaded for some heavy groovin'."
+/* Dialogue starting conditions */
+
+start_conditions
+default_condition 0
+{
+cond target_node "Juke_1a"
+{
+    SSL "local_var(LVAR_Juke_Fixed) == 0" var_param "Juke_Fixed" eval 1 value_to_check "0" ini_index 3 link 0,
+    SSL "local_var(LVAR_Herebefore) == 0" var_param "" eval -1 value_to_check "" ini_index 6 link -1
+},
+cond target_node "Juke_1b"
+{
+    SSL "local_var(LVAR_Juke_Fixed) == 1" var_param "Juke_Fixed" eval 1 value_to_check "1" ini_index 3 link -1
+},
+cond target_node "Juke_1c_1"
+{
+    SSL "local_var(LVAR_Juke_Fixed) == 2" var_param "Juke_Fixed" eval 1 value_to_check "2" ini_index 3 link -1
+}
+};
+
+/* Regular nodes */
+
+Node "Juke_1a"
+notes ""
+is_wtg = false
+{
+NPCText "[You can see a single record inside the Jukebox. Maybe you could listen to it if only the machine was working.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}
+Node "Juke_1b"
+notes "Set LVAR_Juke_Fixed to 1."
+is_wtg = false
+{
+NPCText "[The machine had been broken by someone bypassing the coin-op mechanism. Their tampering caused the electronics to short, but you fixed the problem - nice work!]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Juke_1c_1"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[More.]" linkto "Juke_1c_1"  notes ""
+              }
+}
+Node "Juke_1c_1"
+notes ""
+is_wtg = false
+{
+NPCText "[The Jukebox's lights glow as if in anxious anticipation. You feel tempted to play a song from one of the records within.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Play \"Maybe\" by The Ink-spots." linkto "Juke_1c_2a"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Play \"I don't want to set the World on Fire\" by The Ink-spots." linkto "Juke_1c_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Play \"A kiss to build a dream on\" by Louis Armstrong." linkto "Juke_1c_2b"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Play \"Eve of destruction\" by Barry McGuire." linkto "Juke_1c_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Play \"Guilty\" by Yann Tiersen." linkto "Juke_1c_2c"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Play \"Maybe\" by The Ink-spots." linkto "Juke_1c_2a"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Play \"I don't want to set the World on Fire\" by The Ink-spots." linkto "Juke_1c_2c"  notes "Play \"I don't want to set the World on Fire\"by The Ink-spots."
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Play \"A kiss to build a dream on\" by Louis Armstrong. " linkto "Juke_1c_2b"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Play \"Eve of destruction\" by Barry McGuire. " linkto "Juke_1c_2c"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Play \"Guilty\" by Yann Tiersen. " linkto "Juke_1c_2c"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Leave.]" linkto "done"  notes ""
+              }
+}
+Node "Juke_1c_2a"
+notes ""
+is_wtg = false
+{
+NPCText "[As the record begins to play, you somehow reminisce of some of the best moments in your past life. It gives you a nice warm and fuzzy feeling in the stomach.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Music… Music never changes." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> like." linkto "done"  notes ""
+              }
+}
+Node "Juke_1c_2b"
+notes ""
+is_wtg = false
+{
+NPCText "[As the Jukebox springs to life with sound you almost unintentionally begin to hum along with the tune. Mixed feeling of nostalgia for the past and hope for the future overwhelms you.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Music… Music never changes." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "<PC> like." linkto "done"  notes ""
+              }
+}
+Node "Juke_1c_2c"
+notes ""
+is_wtg = false
+{
+NPCText "[As you press the old button you hear some mechanism inside starts whirling and then music fills the bar and spills out onto the City of the Coast's streets.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done.]" linkto "done"  notes ""
+              }
+}

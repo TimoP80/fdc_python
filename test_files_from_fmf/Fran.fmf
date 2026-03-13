@@ -1,0 +1,299 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+vars {
+local var Fran_Rad_Away notes "Number of Rad-Aways Fran has been treated with." = 0;
+}
+NPCName "Fran"
+Location "Sandover"
+Description "Dialogue with Fran."
+Unknown_Desc "You see an extremely sick-looking older woman. CURED-You see a thin older woman."
+Known_Desc "It's Fran. She doesn't seem to notice you. CURED-It's Fran. She smiles broadly at you."
+Detailed_Desc "You see an older woman seemingly on the verge of death. Her eyes are sunken, and her skin is stretched tight over her bones. CURED-You see Fran. She still looks a little frail, but far healthier than before."
+/* Float message nodes */
+
+Floatnode "Illfloat"
+notes "Fran is in the hospital"
+{
+"*groan*",
+"*moan*",
+"End... please let it end...",
+"Connor? Connor, is that you?",
+"You left the brahmin out again, grampa! He's gonna get cold!"
+}
+Floatnode "Curedfloat"
+notes "Fran is cured"
+{
+"I can't thank you enough.",
+"I feel so much better.",
+"How's it going, Doc?"
+}
+
+/* Regular nodes */
+
+Node "Switch"
+notes ""
+is_wtg = false
+{
+NPCText "switch"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fran is in hospital" linkto "TalkIll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fran is cured" linkto "Cured"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fran is cured, Connor is in the party" linkto "WithConnor"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fran is cured, Connor has joined but has either been left behind or died." linkto "HadConnor"  notes ""
+              }
+}
+Node "TalkIll"
+notes "Option 1 is only available if the player hasn't attempted diagnosis yet.\nOption 2-6 are only available if player has determined curing Fran is possible, and has at least 1 rad-away."
+is_wtg = false
+{
+NPCText "[The woman groans in agony.] Who...?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm here to help you, ma'am. What's your name?" linkto "WhoIs"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a dose of Rad-Away.]" linkto "RadAway5" conditions { LOCAL_VARIABLE Fran_Rad_Away == 0 link_next NONE } notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a second dose of Rad-Away.]" linkto "RadAway4" conditions { LOCAL_VARIABLE Fran_Rad_Away == 1 link_next NONE } notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a third dose of Rad-Away.]" linkto "RadAway3" conditions { LOCAL_VARIABLE Fran_Rad_Away == 2 link_next NONE } notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a fourth dose of Rad-Away.]" linkto "RadAway2" conditions { LOCAL_VARIABLE Fran_Rad_Away == 3 link_next NONE } notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a fifth dose of Rad-Away.]" linkto "RadAway1" conditions { LOCAL_VARIABLE Fran_Rad_Away == 4 link_next NONE } notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to bother you. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Cured"
+notes ""
+is_wtg = false
+{
+NPCText "If it isn't Doc <PC>! Can I help you? Just say the word."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you today?" linkto "HowAreYou"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Nothing for now." linkto "done"  notes ""
+              }
+}
+Node "WithConnor"
+notes ""
+is_wtg = false
+{
+NPCText "Well well, it's Doc <PC>! Hope you're taking care of my boy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you today?" linkto "HowAreYou"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, he needs a lot of taking care of. We manage, though." linkto "ConnorRubbish"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure am, Fran. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "HadConnor"
+notes "Option 3 only available if Connor is dead"
+is_wtg = false
+{
+NPCText "Hey, Doc! What've you done with my boy? He isn't giving you too much grief is he?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you today?" linkto "HowAreYou"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "He's around. I'm just running a few jobs on my own at the moment, but we're meeting up later." linkto "ConnorHome"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Um, yeah. He's... around. See you later." linkto "done"  notes ""
+              }
+}
+Node "WhoIs"
+notes ""
+is_wtg = false
+{
+NPCText "I'm... Fran..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fran, Dr. Oswald's asked me to help you. I'm going to try a couple of tests to see what's wrong." linkto "OKDiagnose"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, I hope you get better soon, Fran. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "OKDiagnose"
+notes ""
+is_wtg = false
+/* Skill checks for node OKDiagnose */
+
+      define_skill_check Diagnose {
+      skill_num = 8;
+      difficulty_modifier = -110;
+      onsuccess => TestSuccess;
+      onfailure => TestFailure;
+      }
+
+{
+NPCText "Hurts... hurts so much..."
+      options {
+          int=4 linkflags skill_check Reaction=REACTION_NEUTRAL playertext "[Attempt diagnosis]" linkto "Diagnose"  notes ""
+              }
+}
+Node "TryLeave"
+notes ""
+is_wtg = false
+{
+NPCText "[As you turn away, Fran clasps your arm with surprising strength and looks directly at you.] Please... hurts so much... make... the pain stop..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What do you mean?" linkto "KillMe"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll do what I can. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "KillMe"
+notes ""
+is_wtg = false
+{
+NPCText "Just... kill me... make it end... [She slumps back exhausted, releasing your arm.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "TestSuccess"
+notes ""
+is_wtg = false
+{
+NPCText "[After performing a series of tests with the limited resources available, you diagnose Fran with an extremely severe case of radiation poisoning.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[More]" linkto "TestSuccess2"  notes ""
+              }
+}
+Node "TestSuccess2"
+notes ""
+is_wtg = false
+{
+NPCText "[However, the malignant tumors have metastasized in such a way that her internal organs have not yet been irreversibly affected. A combined dosage of 5 Rad-Aways, administered as soon as possible, should destroy the cancer and give Fran a chance at recovery.] "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "TestFailure"
+notes ""
+is_wtg = false
+{
+NPCText "[After performing all of the diagnostic techniques that you know of, you diagnose Fran with a fatal case of radiation poisoning. There is no hope of recovery as the cancer has spread to such a vast degree.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "RadAway5"
+notes "Option 1 only available if player has rad-away"
+is_wtg = false
+{
+NPCText "[You administer a dose of Rad-Away. Four more are required to complete the treatment.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a second dose of Rad-Away.]" linkto "RadAway4"  notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "RadAway4"
+notes "Option 1 only available if player has rad-away"
+is_wtg = false
+{
+NPCText "[You administer a dose of Rad-Away. Three more are required to complete the treatment.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a third dose of Rad-Away.]" linkto "RadAway3"  notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "RadAway3"
+notes "Option 1 only available if player has rad-away"
+is_wtg = false
+{
+NPCText "[You administer a dose of Rad-Away. Two more are required to complete the treatment.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a fourth dose of Rad-Away.]" linkto "RadAway2"  notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "RadAway2"
+notes "Option 1 only available if player has rad-away"
+is_wtg = false
+{
+NPCText "[You administer a dose of Rad-Away. One more is required to complete the treatment.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Treat Fran with a fifth dose of Rad-Away.]" linkto "RadAway1"  notes "increment Fran_Rad_Away"
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "RadAway1"
+notes "Option 1 needs to fade out,advance time, then back in before going into thankyou sequence"
+is_wtg = false
+{
+NPCText "[You administer a dose of Rad-Away. The course of treatment is now complete.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "[Wait]" linkto "Treated"  notes ""
+              }
+}
+Node "Treated"
+notes ""
+is_wtg = false
+{
+NPCText "[After sleeping for some time, Fran awakes. Using Sandover's limited medical equipment, you determine that your treatment was a success. Although her internal organs display signs of damage, her prognosis is good.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How are you feeling, Fran?" linkto "Feelgreat"  notes ""
+              }
+}
+Node "Feelgreat"
+notes ""
+is_wtg = false
+{
+NPCText "I feel... nothing hurts any more, I can breathe properly, I can see... am I in heaven?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not exactly. Still Sandover, I'm afraid." linkto "Thanks"  notes ""
+              }
+}
+Node "Thanks"
+notes "Karma reward for option 1?"
+is_wtg = false
+{
+NPCText "Wait, I remember you now. You're the guy who gave me all those pills. You've cured me! I don't know how I can ever thank you."
+ NPCFemaleText "Wait, I remember you now. You're the lady who gave me all those pills. You've cured me! I don't know how I can ever thank you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No thanks necessary. I'm just glad you feel better." linkto "Goodbye"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, nothing says thankyou like a bag of cash." linkto "Poor"  notes ""
+              }
+}
+Node "Goodbye"
+notes ""
+is_wtg = false
+{
+NPCText "You're such a good person. Don't see many like you in this world. Well, you've given me another chance at life, and I plan to make the most of it. It's so great that I can be independent again - won't have to rely on my son anymore."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's good, but you'll need to allow some time to recover. Try to take it easy from now on." linkto "done"  notes ""
+              }
+}
+Node "Poor"
+notes ""
+is_wtg = false
+{
+NPCText "[She looks downcast.] I'd love to give you a reward, but I've no money at all. My savings, and my son's, all went towards buying my medicine. But I'll make some more as soon as I'm back on my feet. Won't have to rely on my son to look after me anymore, either."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, you take it easy from now on. You're not out of the woods yet." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Great, I save your life and don't get a single cap. See you around." linkto "done"  notes ""
+              }
+}
+Node "HowAreYou"
+notes ""
+is_wtg = false
+{
+NPCText "Feeling great, Doc, just great. I've got a decent scavenging patch now, not too far from the caves. Some would say it's not much of a living, but it suits me just fine. Thanks again for what you did."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem. See you later, Fran." linkto "done"  notes ""
+              }
+}
+Node "ConnorRubbish"
+notes ""
+is_wtg = false
+{
+NPCText "Ha! He was always like that, ever since he was a baby. But I'm glad he's travelling with you, seeing the world. You will look after him, won't you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Of course. Goodbye." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "So long as he doesn't accidentally shoot me in the back, we'll get on fine. See you." linkto "done"  notes ""
+              }
+}
+Node "ConnorHome"
+notes ""
+is_wtg = false
+{
+NPCText "Well when you see him, tell him to stop by some time. I can promise you both a decent meal - you look like you need feeding up."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds good. I'll tell him you said hi." linkto "done"  notes ""
+              }
+}

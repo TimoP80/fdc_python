@@ -1,0 +1,526 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Connor"
+Location "Sandover / Party"
+Description "Connor dialogue"
+Unknown_Desc "You see an anxious looking man."
+Known_Desc "You see Connor."
+Detailed_Desc "You see a thin, anxious looking man with a receding hairline."
+/* Float message nodes */
+
+Floatnode "Con_Vent"
+notes "When Connor spots the GAI base's air vent"
+{
+"Take a look over there! Maybe it's some sort of vent."
+}
+Floatnode "Con_hurt"
+notes "Connor is hurt"
+{
+"I hate to be a nuisance, but could I get a bit of healing here?",
+"I don't suppose you've got a spare stimpak at all, have you?",
+"If it's not too much hassle, could you pass me a stimpak please?",
+"Owww... have we got a spare stimpak, please?",
+"I've always hated the sight of my own blood."
+}
+Floatnode "Con_badlyhurt"
+notes "Connor is badly hurt"
+{
+"Everything's going dark. I'm getting scared...",
+"It's futile - I'm dead for sure, now.",
+"Please - please help me! I'm bleeding out, help me!",
+"Oh God, oh mother, it hurts!"
+}
+Floatnode "Con_poisoned"
+notes "Connor is poisoned"
+{
+"Uhhhh... I don't feel so good.",
+"Could we rest for a minute? I don't feel so HUUURRRRRKK!",
+"I feel ill - sorry, but could we maybe rest up here for a while?"
+}
+Floatnode "Con_radiated"
+notes "Connor is radiated"
+{
+"Oh no - I think I've got radiation poisoning! Please, do something!",
+"Help, I'm irradiated! Give me some Rad-Away, now!",
+"I've seen radiation poisoning before! Get me to a doctor right now!",
+"I'm radiated! I am NOT going to die like this!"
+}
+Floatnode "Con_area"
+notes "Connor doesn't like the area"
+{
+"Do we really have to be here?",
+"I trust you, but this place looks sort of dangerous.",
+"I'll stick close to you here. For... mutual protection.",
+"Nothing bad's going to happen, is it?",
+"Be strong, Connor... don't let them know what a wuss you are.",
+"Nobody had better start anything. They, they just better not. Or... else."
+}
+Floatnode "Connor_drugs"
+notes "Player uses drugs on Connor"
+{
+"Mother always told me to stay away from drugs...",
+"That stuff's completely safe, right?",
+"Well, I suppose taking drugs just once won't hurt.",
+"This won't make me into a reliant, will it?",
+"If everyone else is doing them, I suppose they can't be all bad."
+}
+Floatnode "Connor_pushed"
+notes "Player pushes Connor out of the way"
+{
+"Oh, sorry, was I in the way?",
+"I'm in the way again, aren't I? So stupid...",
+"I've got to stop getting under everyone's feet."
+}
+Floatnode "Connor_heal1"
+notes "Connor is healed while hurt"
+{
+"That feels a lot better.",
+"Thankyou, I really needed that.",
+"Thanks a lot. I'll try not to get hurt from now on.",
+"Well, if you think you can spare a stimpak on me..."
+}
+Floatnode "Connor_heal2"
+notes "Connor is healed while at full health"
+{
+"I don't want to argue with you, but I didn't really need that.",
+"Thanks for looking after me, but I'm honestly fine.",
+"I'm sure someone else needs that more - I'm feeling good."
+}
+Floatnode "Connor_waiting"
+notes "Connor is waiting to be collected"
+{
+"Oh, you came back for me! Thankyou so much!",
+"It's so good to see you again! Ready to go, partner?",
+"Let's hit the trail, buddy, amigo, compadre!",
+"I've really missed you.",
+"I feel kind of lonely here."
+}
+Floatnode "Connor_Sandover"
+notes "Connor is in Sandover"
+{
+"Let's not stay for too long - if that's all right with you.",
+"I don't want to tell you your business, but do we need to be here?"
+}
+
+/* Regular nodes */
+
+Node "Switcher"
+notes ""
+is_wtg = false
+{
+NPCText "switch"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "Connor is in the party" linkto "Party"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Connor has been in the party and told to wait" linkto "Waiting"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Connor has not joined, player has not shown interest in him as a friend" linkto "Talk"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "Connor has not joined but is friendly with the player." linkto "Friends"  notes ""
+              }
+}
+Node "Party"
+notes "Heal node only available if Connor is hurt"
+is_wtg = false
+{
+NPCText "What is it? Am I doing something wrong? "
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No - I just want to ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Never mind, it wasn't important." linkto "done"  notes ""
+              }
+}
+Node "PartyWait"
+notes "Both options remove Connor from the party."
+is_wtg = false
+{
+NPCText "You're going to leave me here? I promise I can do better in future, please, just let me tag along..."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I won't be long." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Connor, you're being a little clingy. I need to be on my own for a while, but I'll be back... probably." linkto "done"  notes ""
+              }
+}
+Node "PartyHeal"
+notes "Heal node only available if Connor is hurt"
+is_wtg = false
+{
+NPCText "I feel much better now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good. Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartyHeal2"
+notes "Heal node only available if Connor is hurt"
+is_wtg = true
+{
+NPCText "I feel much better now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good. Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartyGear"
+notes "Put away weapon and armor are only visible if Connor has the respective items equipped."
+is_wtg = false
+{
+NPCText "What do you want to know?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Can you use any weapons, Connor?" linkto "PartyWeapons"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Put away your weapon." linkto "PartyWeaponOff"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Take off the armor you're wearing." linkto "PartyArmorOff"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, never mind. Something else I wanted to talk to you about..." linkto "Party"  notes ""
+              }
+}
+Node "PartyWeapons"
+notes ""
+is_wtg = false
+{
+NPCText "Ummm, I suppose I could use a knife if I had to. I fired a rifle once as well, and I suppose a shotgun's not that much different. Why do you ask though? We're not going somewhere dangerous are we?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Ah - no, Connor. Just making conversation. Something else I wanted to talk to you about..." linkto "Party"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's move on, huh?" linkto "done"  notes ""
+              }
+}
+Node "PartyWeaponOff"
+notes "Heal node only available if Connor is hurt"
+is_wtg = false
+{
+NPCText "It's probably for the best. I never felt all that comfortable around weapons."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartyArmorOff"
+notes "Heal node only available if Connor is hurt"
+is_wtg = false
+{
+NPCText "Well, okay. I'd feel safer with it on, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartyQuestions"
+notes "Option 1 is available only if the GAI base hasn't been found yet."
+is_wtg = false
+{
+NPCText "Questions? Well, I'll answer them if I can."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need you to help me find a place called GAI, some sort of pre-war facility. It should be somewhere in the Sandover area." linkto "PartyGAI"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, never mind. I need to talk to you about something else." linkto "Party"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Forget it. Let's move on." linkto "done"  notes ""
+              }
+}
+Node "PartyDistance"
+notes "The current formation should not be displayed."
+is_wtg = false
+{
+NPCText "Um, all right, just tell me what I need to do."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Stay close to me." linkto "PartyClose"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Don't move too far away." linkto "PartyMedium"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's spread out a little." linkto "PartySpreadout"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, I think this distance is okay for now." linkto "PartySameDistance"  notes ""
+              }
+}
+Node "PartyClose"
+notes "Heal node only available if Connor is hurt"
+is_wtg = false
+{
+NPCText "Good thinking! Probably safer for both of us that way - we got each others' backs, eh?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartyMedium"
+notes "Heal node only available if Connor is hurt"
+is_wtg = true
+{
+NPCText "No problem. Protect each other but give you more room to do your thing, right? Got it."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartySpreadout"
+notes "Heal node only available if Connor is hurt"
+is_wtg = true
+{
+NPCText "Okay - but don't go too far, will you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartySameDistance"
+notes "Heal node only available if Connor is hurt"
+is_wtg = true
+{
+NPCText "Sounds good to me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "PartyQuestions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Heal yourself up, Connor." linkto "PartyHeal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "We need to change our distance from each other." linkto "PartyDistance"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to talk to you about your gear." linkto "PartyGear"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait here until I come back." linkto "PartyWait"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, let's go." linkto "done"  notes ""
+              }
+}
+Node "PartyGAI"
+notes ""
+is_wtg = false
+{
+NPCText "Well, I can't say that I've heard of it. I'll keep an eye out for anything unusual around Sandover, though. Sorry I can't be more helpful."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "That's all right, Connor. I need to talk to you about something else." linkto "Party"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem. Let's move on." linkto "done"  notes ""
+              }
+}
+Node "Waiting"
+notes "1) needs to check if maximum party has been exceeded, and link to node TooMany, or LowChr if the player's charisma prevents any party members. Otherwise, add Connor to the party."
+is_wtg = false
+{
+NPCText "Listen, I've been thinking - whatever made you ditch me before, I'm really sorry. Can you give me another chance?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sure thing, Connor. Let's get going." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Hang tight a little while longer. I'll be back." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll give you another couple of weeks to think about what you did. Later." linkto "done"  notes ""
+              }
+}
+Node "TooMany"
+notes ""
+is_wtg = false
+{
+NPCText "I'd love to come along - but I don't do well in large groups. I'd be happy to travel with a couple fewer people, though."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine." linkto "done"  notes ""
+              }
+}
+Node "LowChr"
+notes ""
+is_wtg = false
+{
+NPCText "[He looks closely at you.] Actually, I - I'm not sure that I really want to travel at the moment. Nothing personal, yeah?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine." linkto "done"  notes ""
+              }
+}
+Node "Talk"
+notes ""
+is_wtg = false
+{
+NPCText "Um, hello. Can I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "What's your story?" linkto "Dubious"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No, I'm just looking around. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "You no happy? Me help?" linkto "Stoopid"  notes ""
+              }
+}
+Node "Dubious"
+notes ""
+is_wtg = false
+{
+NPCText "[He glances up warily.] Me? You want to know about me?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I asked, didn't I? Talk to me." linkto "Lifestory1"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "On second thoughts, no. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Friends"
+notes "1) Needs to link to a procedure that check's Fran's health and links appropriately to FranIll, FranDead or FranCured"
+is_wtg = true
+{
+NPCText "Oh, hello... You're back, how are you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not bad. How's your mother?" linkto "FranIll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good, thanks. I'll see you around." linkto "done"  notes ""
+              }
+}
+Node "FranIll"
+notes ""
+is_wtg = false
+{
+NPCText "She's very sick in the hospital. Doc Oswald's doing all he can for her at the moment. He's a good man, he'll do his best... but I just know it's hopeless."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "It sounds like there's not much you can do. Listen, I'm leaving here pretty soon. Why don't you come along with me?" linkto "JoinRefuseIll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to hear that, Connor. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "FranCured"
+notes "1) needs to check if maximum party has been exceeded, and link to node TooMany, or LowChr if the player's charisma prevents any party members. Otherwise, add Connor to the party and go to JoinCured."
+is_wtg = false
+{
+NPCText "She's doing great! Doctor Oswald told me that it's you who cured her. I owe you a huge debt, and if there's anything I can do to help you out, just ask."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about you come along with me? It'll get you out of here, and I'm sure you can help me out." linkto "JoinCured"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'll bear it in mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "FranDead"
+notes "1) needs to check if maximum party has been exceeded, and link to node TooMany, or LowChr if the player's charisma prevents any party members. Otherwise, add Connor to the party and go to JoinDead."
+is_wtg = false
+{
+NPCText "[He looks distraught.] She... she's dead. Alexander recently allowed euthanasia to be practiced in Sandover, and... I guess Doctor Oswald thought it was for the best. She's not in any pain now, anyway."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm sorry to hear that. Listen, it sounds like you need to get out of here. Come along with me, make yourself a new life somewhere else." linkto "JoinDead"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry, Connor. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "JoinRefuseIll"
+notes ""
+is_wtg = false
+{
+NPCText "I'd like to come. I really would, but my mother needs me at the moment. You can understand that, right?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a good son. Maybe some other time, then." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Just asking. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "JoinDead"
+notes "option 1 adds Connor to the party."
+is_wtg = false
+{
+NPCText "There's nothing here for me now. Yeah. I'll... I'll come with you."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's go, then." linkto "done"  notes ""
+              }
+}
+Node "JoinCured"
+notes "Option 1 adds Connor to party."
+is_wtg = false
+{
+NPCText "My mother's alive, and it's all thanks to you. Yeah, I'll come with you. You won't regret this, I promise."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Great. Let's go." linkto "done"  notes ""
+              }
+}
+Node "Lifestory1"
+notes ""
+is_wtg = true
+{
+NPCText "Well... my name's Connor. It's good to meet you, I guess. [He shakes your hand tentatively.] We don't get many as healthy as you around here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You look healthy enough." linkto "LifeStory2"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good to meet you. See you around." linkto "done"  notes ""
+              }
+}
+Node "LifeStory2"
+notes ""
+is_wtg = true
+{
+NPCText "It's only a matter of time, believe me. Everyone who lives here knows they're on borrowed time, before the radiation gets them."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Well, why are you here, then? Better for you to get out while you can." linkto "LifeStory3"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah - I'm leaving as soon as I can. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "LifeStory3"
+notes ""
+is_wtg = true
+{
+NPCText "I... I came here with my mother. We lived some distance east of here. A few years ago, she developed symptoms of radiation poisoning. Wasn't a particularly high-rad area - just one of those things."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Go on." linkto "LifeStory4"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I've heard all I want to. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "LifeStory4"
+notes ""
+is_wtg = true
+{
+NPCText "People in our town were pretty ignorant. Thought that she'd spread what she had to the rest of the folks there. They raised a mob, and gave us the choice of being lynched or leaving. I... I'm not a strong man, I couldn't stand up to them, so we left."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sounds like the only thing you could have done. So you and your mother ended up here?" linkto "LifeStory5"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I wouldn't have let a bunch of trash run me out of my home. I've heard enough." linkto "done"  notes ""
+              }
+}
+Node "LifeStory5"
+notes "1) Needs to link to a procedure that check's Fran's health and links appropriately to FranIll, FranDead or FranCured. Asking after Fran also turns 'friend status' with Connor on, so life story doesn't have to be trawled through to ask him to join."
+is_wtg = true
+{
+NPCText "Yeah. Mother worked here for a while scavenging - so did I, and I got pretty good at it. But over the last couple of months, she got really sick, and I had to stop working to take care of her."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "How is your mother?" linkto "FranIll"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Sorry to hear that. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Stoopid"
+notes ""
+is_wtg = false
+{
+NPCText "[He smiles sadly.] I suppose some folks have it worse than me. My name is Connor."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Hello Connor!" linkto "Stoopid2"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye bye." linkto "done"  notes ""
+              }
+}
+Node "Stoopid2"
+notes ""
+is_wtg = false
+{
+NPCText "I'm sorry I can't talk right now. My mother is very sick. Do you know what that means?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me were sick once. It had carrots in." linkto "Stoopid3"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Bye!" linkto "done"  notes ""
+              }
+}
+Node "Stoopid3"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, that's right. And I have to think of a way to make her feel better. So, go and play somewhere else, please?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. Me sorry about mother." linkto "done"  notes ""
+              }
+}
+          }
+}
+Node "Stoopid3"
+notes ""
+is_wtg = false
+{
+NPCText "Yes, that's right. And I have to think of a way to make her feel better. So, go and play somewhere else, please?"
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Okay. Me sorry about mother." linkto "done"  notes ""
+              }
+}

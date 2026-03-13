@@ -1,0 +1,292 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 0.26.0-beta
+
+*/
+
+NPCName "Angus"
+Location "Sandover"
+Description "angus"
+Unknown_Desc "You see a guard."
+Known_Desc "You see Angus the guard."
+Detailed_Desc "You see a well-muscled guard, looking intently ahead."
+/* Regular nodes */
+
+Node "Switcher"
+notes ""
+is_wtg = false
+{
+NPCText "switch"
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "player tries to enter supply room, first time" linkto "StopFirst"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "player tries to enter supply room, been warned before" linkto "StopAgain"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "player initiates conversation, first time" linkto "TalkFirst"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "player initiates conversation, spoken to before" linkto "TalkAgain"  notes ""
+          int=1 Reaction=REACTION_NEUTRAL playertext "player moves further past after being warned." linkto "Angry"  notes ""
+              }
+}
+Node "StopFirst"
+notes ""
+is_wtg = false
+{
+NPCText "You. Stop. You can't go through here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I'm not planning on stealing anything, friend." linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I go where I want, and it'll take more than a pissant like you to stop me." linkto "BeatUp"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who're you?" linkto "Whois"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "All right - I'm leaving." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "No go in?" linkto "Dumb"  notes ""
+              }
+}
+Node "StopAgain"
+notes ""
+is_wtg = false
+{
+NPCText "I told you before, pal. Step away from there."
+ NPCFemaleText "I told you before, miss. Step away from there."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Let me ask you some questions instead." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah, you told me before. This time, I'm telling you - take a walk before I break all your bones." linkto "BeatUp"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. I'm leaving." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "But wan' go in!" linkto "DumbAgain"  notes ""
+              }
+}
+Node "TalkFirst"
+notes ""
+is_wtg = false
+{
+NPCText "Can I help you?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Yeah - who are you?" linkto "Whois"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Not at the moment. Goodbye." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Help, yeah! Me wan' help." linkto "DumbTalk"  notes ""
+              }
+}
+Node "TalkAgain"
+notes ""
+is_wtg = false
+{
+NPCText "You're back. Is there a problem?"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No problem - just some questions." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "No - just saying hi. See you around." linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Me prob'em? No... urrrr... hello!" linkto "DumbTalkAgain"  notes ""
+              }
+}
+Node "Angry"
+notes ""
+is_wtg = false
+{
+NPCText "Don't say you weren't warned."
+      options {
+          int=1 Reaction=REACTION_NEUTRAL playertext "[END]" linkto "combat"  notes ""
+              }
+}
+Node "Questions"
+notes "Main hub for questions"
+is_wtg = false
+{
+NPCText "I don't get paid to chat. Ask your question, then stop hassling me."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Who are you?" linkto "Whois"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "What can you tell me about Sandover?" linkto "Sandover"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Any work for a traveller round here?" linkto "Work"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "I need to get into the supply room." linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Actually, never mind. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Whois"
+notes ""
+is_wtg = false
+{
+NPCText "I'm Angus. I guard the supply room."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're a fount of information. Tell me a little more about yourself." linkto "MorePersonal"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Good to meet you, Angus. See you later." linkto "done"  notes ""
+              }
+}
+Node "Sandover"
+notes ""
+is_wtg = false
+{
+NPCText "It's a home. Folks here tend to be decent. No major trouble to speak of. [He eyes you suspiciously.]"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Major trouble? That implies that there's something I could help out with." linkto "Work"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Work"
+notes ""
+is_wtg = false
+{
+NPCText "I'm not the person to talk to. Try Saman or Alexander. They might have a job or two going."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Saman." linkto "Saman"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Alexander." linkto "Alexander"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "GetPast"
+notes ""
+is_wtg = false
+{
+NPCText "No entry, buddy. Move along."
+ NPCFemaleText "No entry, miss. Move along."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I really need to get into the supplies. It's a matter of life and death." linkto "LifeDeath"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "How about if I make it worth your while? Fifty caps." linkto "Bribe"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me in, or I'll beat you senseless and take what I want anyway!" linkto "BeatUp"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*FEMALE ONLY* [Smile suggestively] What if I made it... worth your while? " linkto "Seduce"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "*IF MET SAMAN* Saman sent me. I need to pick up some supplies for him." linkto "SamanSent"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fair enough. Can I ask you a question before I go?" linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Right, right... I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "MorePersonal"
+notes ""
+is_wtg = false
+{
+NPCText "There's nothing else about me you need to know. Now move along."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Wait. Let me ask you another question." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "You're not a talker - I can respect that. See you around." linkto "done"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine - it's probably a boring story anyway. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Saman"
+notes ""
+is_wtg = false
+{
+NPCText "He's my boss. Decent guy. Plays fair with you if you return the courtesy."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Alexander." linkto "Alexander"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Alexander"
+notes ""
+is_wtg = false
+{
+NPCText "He's the guy who runs this place. Does a pretty good job of it, too. He's had some troubles lately, but that's no business of mine."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Troubles? Like what?" linkto "Troubles"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Saman." linkto "Saman"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Thanks. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Troubles"
+notes ""
+is_wtg = false
+{
+NPCText "It's no business of yours, either. I'm no gossip."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Tell me about Saman instead." linkto "Saman"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you about something else, then." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "LifeDeath"
+notes ""
+is_wtg = false
+{
+NPCText "I don't care how urgent you think it is - nobody gets into the supplies. Now move along."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come on! Just look the other way for a couple of minutes." linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let's talk about something else." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Bribe"
+notes ""
+is_wtg = false
+{
+NPCText "I don't take bribes. Now get out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "A hundred?" linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Surely there's some way you'll let me through?" linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "BeatUp"
+notes ""
+is_wtg = false
+{
+NPCText "[His eyes narrow.] Get out of here. Now."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "No. You heard what I said. What're you going to do?" linkto "Angry"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Okay, okay - I'm leaving." linkto "done"  notes ""
+              }
+}
+Node "Seduce"
+notes ""
+is_wtg = false
+{
+NPCText "[His face remains impassive.] Caps or a woman - I don't take bribes. Move along, miss."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Surely there's some way you'll let me through?" linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "SamanSent"
+notes ""
+is_wtg = false
+{
+NPCText "Bullshit. He'll tell me himself when he wants something. Now get out of here."
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "Come on! Surely there's some way you'll let me through." linkto "GetPast"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Let me ask you another question." linkto "Questions"  notes ""
+          int=4 Reaction=REACTION_NEUTRAL playertext "Fine. Goodbye." linkto "done"  notes ""
+              }
+}
+Node "Dumb"
+notes ""
+is_wtg = false
+{
+NPCText "Not too bright, are you? No. No go in."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Urrr... Okay!" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Break into a run past the guard]" linkto "Angry"  notes ""
+              }
+}
+Node "DumbAgain"
+notes ""
+is_wtg = false
+{
+NPCText "Listen to me - you can't go in. Now clear off."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "Urrr... Okay!" linkto "done"  notes ""
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Break into a run past the guard]" linkto "Angry"  notes ""
+              }
+}
+Node "DumbTalk"
+notes ""
+is_wtg = false
+{
+NPCText "Great, one of those. I can't help you, pal. Get out of here."
+ NPCFemaleText "Great, one of those. I can't help you, lady. Get out of here."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
+Node "DumbTalkAgain"
+notes ""
+is_wtg = false
+{
+NPCText "This again. Get - out - of - here."
+      options {
+          int=-3 Reaction=REACTION_NEUTRAL playertext "[Done]" linkto "done"  notes ""
+              }
+}
