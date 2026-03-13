@@ -55,18 +55,24 @@ class FalloutButton(QPushButton):
             self._apply_standard_style()
     
     def _apply_standard_style(self):
-        """Apply standard military-style button"""
+        """Apply standard military-style button with skeuomorphic 3D effect"""
         colors = FalloutColors()
         self.setStyleSheet(f"""
             QPushButton {{
                 background-color: qlineargradient(
                     x1: 0, y1: 0, x2: 0, y2: 1,
-                    stop: 0 {colors.OLIVE_DRAB},
-                    stop: 0.5 {colors.DARK_OLIVE_GREEN},
-                    stop: 1 {colors.MILITARY_GREEN}
+                    stop: 0 #5a7a2a,
+                    stop: 0.15 #4a6a1a,
+                    stop: 0.4 #4a5d23,
+                    stop: 0.6 #3d4f2a,
+                    stop: 1 #2d3f1a
                 );
-                color: {colors.TEXT_NORMAL};
-                border: 3px outset {colors.PANEL_BORDER};
+                color: #d4c4a8;
+                border: 3px outset #6b8e23;
+                border-top-color: #8fa863;
+                border-left-color: #8fa863;
+                border-right-color: #3d4f2a;
+                border-bottom-color: #3d4f2a;
                 border-radius: 4px;
                 padding: 8px 20px;
                 font-family: Consolas;
@@ -76,28 +82,47 @@ class FalloutButton(QPushButton):
             QPushButton:hover {{
                 background-color: qlineargradient(
                     x1: 0, y1: 0, x2: 0, y2: 1,
-                    stop: 0 {colors.FADED_GREEN},
-                    stop: 0.5 {colors.OLIVE_DRAB},
-                    stop: 1 {colors.DARK_OLIVE_GREEN}
+                    stop: 0 #6b8e23,
+                    stop: 0.15 #5a7a2a,
+                    stop: 0.4 #556b2f,
+                    stop: 0.6 #4a5d23,
+                    stop: 1 #3d4f2a
                 );
-                color: {colors.FALLOUT_YELLOW};
-                border: 3px solid {colors.RUST_ORANGE};
+                color: #ffcc00;
+                border: 3px outset #8fa863;
+                border-top-color: #a8c878;
+                border-left-color: #a8c878;
+                border-right-color: #556b2f;
+                border-bottom-color: #556b2f;
             }}
             QPushButton:pressed {{
                 background-color: qlineargradient(
                     x1: 0, y1: 0, x2: 0, y2: 1,
-                    stop: 0 {colors.MILITARY_GREEN},
-                    stop: 0.5 {colors.DARK_OLIVE_GREEN},
-                    stop: 1 {colors.OLIVE_DRAB}
+                    stop: 0 #2d3f1a,
+                    stop: 0.15 #3d4f2a,
+                    stop: 0.4 #4a5d23,
+                    stop: 0.6 #4a5d23,
+                    stop: 1 #556b2f
                 );
-                border: 3px inset {colors.PANEL_BORDER};
+                color: #ffffff;
+                border: 3px inset #3d4f2a;
+                border-top-color: #2d3f1a;
+                border-left-color: #2d3f1a;
+                border-right-color: #6b8e23;
+                border-bottom-color: #6b8e23;
             }}
             QPushButton:disabled {{
-                background-color: {colors.DARK_METAL};
-                color: {colors.TEXT_DIM};
-                border: 2px solid {colors.DARK_METAL};
+                background-color: #3a3a3a;
+                color: #5c5c5c;
+                border: 2px solid #3a3a3a;
             }}
         """)
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(4)
+        shadow.setOffset(2, 2)
+        shadow.setColor(QColor(0, 0, 0, 100))
+        self.setGraphicsEffect(shadow)
     
     def _apply_rust_style(self):
         """Apply rusty metal button style"""
@@ -434,15 +459,25 @@ class FalloutPanel(QFrame):
                 QFrame {{
                     background-color: qlineargradient(
                         x1: 0, y1: 0, x2: 1, y2: 1,
-                        stop: 0 {colors.DARK_METAL},
-                        stop: 0.3 {colors.PANEL_HIGHLIGHT},
-                        stop: 0.7 {colors.DARK_METAL},
-                        stop: 1 {colors.CHARCOAL}
+                        stop: 0 #4a4a48,
+                        stop: 0.3 #5a5a58,
+                        stop: 0.7 #3a3a38,
+                        stop: 1 #2d2d2d
                     );
-                    border: 3px outset {colors.PANEL_BORDER};
+                    border: 3px outset #5c5c5c;
+                    border-top-color: #6a6a6a;
+                    border-left-color: #6a6a6a;
+                    border-right-color: #4a4a4a;
+                    border-bottom-color: #4a4a4a;
                     border-radius: 4px;
                 }}
             """)
+            # Add shadow effect
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(8)
+            shadow.setOffset(3, 3)
+            shadow.setColor(QColor(0, 0, 0, 120))
+            self.setGraphicsEffect(shadow)
         elif self.panel_type == "rust":
             self.setStyleSheet(f"""
                 QFrame {{
@@ -453,26 +488,54 @@ class FalloutPanel(QFrame):
                         stop: 0.6 {colors.COPPER_RUST},
                         stop: 1 {colors.WOOD_BROWN}
                     );
-                    border: 3px solid {colors.DARK_RUST};
+                    border: 3px outset {colors.DARK_RUST};
+                    border-top-color: #a04a1e;
+                    border-left-color: #a04a1e;
+                    border-right-color: #6b2a0e;
+                    border-bottom-color: #6b2a0e;
                     border-radius: 4px;
                 }}
             """)
+            # Add shadow effect
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(6)
+            shadow.setOffset(2, 2)
+            shadow.setColor(QColor(0, 0, 0, 100))
+            self.setGraphicsEffect(shadow)
         elif self.panel_type == "pipboy":
             self.setStyleSheet(f"""
                 QFrame {{
                     background-color: {colors.PIPBOY_SCREEN};
-                    border: 2px solid {colors.DIM_GREEN};
+                    border: 2px outset {colors.DIM_GREEN};
+                    border-top-color: {colors.BRIGHT_GREEN};
+                    border-left-color: {colors.BRIGHT_GREEN};
+                    border-right-color: #0a150a;
+                    border-bottom-color: #0a150a;
                     border-radius: 4px;
                 }}
             """)
         else:  # standard
             self.setStyleSheet(f"""
                 QFrame {{
-                    background-color: {colors.PANEL_BACKGROUND};
-                    border: 3px solid {colors.PANEL_BORDER};
+                    background-color: qlineargradient(
+                        x1: 0, y1: 0, x2: 0, y2: 1,
+                        stop: 0 #3a3a38,
+                        stop: 1 #2a2a28
+                    );
+                    border: 3px outset #5c5c5c;
+                    border-top-color: #6a6a6a;
+                    border-left-color: #6a6a6a;
+                    border-right-color: #4a4a4a;
+                    border-bottom-color: #4a4a4a;
                     border-radius: 4px;
                 }}
             """)
+            # Add shadow effect
+            shadow = QGraphicsDropShadowEffect()
+            shadow.setBlurRadius(6)
+            shadow.setOffset(2, 2)
+            shadow.setColor(QColor(0, 0, 0, 80))
+            self.setGraphicsEffect(shadow)
 
 
 class WornMetalPanel(FalloutPanel):

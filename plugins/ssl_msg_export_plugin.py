@@ -389,10 +389,10 @@ class SSLMSGExportPlugin(PluginInterface):
         logger.info("SSL + MSG Export Plugin: Application startup")
 
     def on_menu_bar_created(self, menu_bar):
-        """Called when menu bar is created - add our export menu items"""
-        logger.info("SSL + MSG Export Plugin: Adding export menu items")
+        """Called when menu bar is created - add configuration only (export is in File menu)"""
+        logger.info("SSL + MSG Export Plugin: Adding configuration menu item")
 
-        # Find the File or Tools menu
+        # Find the File menu
         file_menu = None
         for action in menu_bar.actions():
             if action.text() == "&File":
@@ -410,29 +410,9 @@ class SSLMSGExportPlugin(PluginInterface):
             # Create File menu if it doesn't exist
             file_menu = menu_bar.addMenu("&File")
 
-        # Add export actions
+        # Add configuration only (export functionality is in File → Export in main_window)
         file_menu.addSeparator()
-        
-        export_menu = file_menu.addMenu("Export")
-        
-        # Export Both SSL + MSG
-        self.menu_action_export = export_menu.addAction("Export SSL + MSG...")
-        self.menu_action_export.triggered.connect(self.export_ssl_msg)
-        
-        export_menu.addSeparator()
-        
-        # Export SSL only
-        self.menu_action_export_ssl = export_menu.addAction("Export SSL Script...")
-        self.menu_action_export_ssl.triggered.connect(self.export_ssl)
-        
-        # Export MSG only
-        self.menu_action_export_msg = export_menu.addAction("Export MSG Messages...")
-        self.menu_action_export_msg.triggered.connect(self.export_msg)
-        
-        file_menu.addSeparator()
-        
-        # Configuration
-        self.menu_action_configure = file_menu.addAction("Configure Export...")
+        self.menu_action_configure = file_menu.addAction("Configure SSL/MSG Export...")
         self.menu_action_configure.triggered.connect(self.show_config_dialog)
     
     def on_dialogue_loaded(self, dialogue):

@@ -35,6 +35,8 @@ class Settings:
             'msg_path': '',
             'headers_path': '',
             'check_updates': True,
+            'last_update_check': '',  # ISO timestamp of last check
+            'skipped_version': '',  # Version user chose to skip
             'cloned_node_format': 'Copy_of_{}',
         }
 
@@ -127,3 +129,24 @@ class Settings:
             return False, f"File does not appear to be an executable: {path}"
         
         return True, ""
+    
+    # Update checker helper methods
+    def get_last_update_check(self) -> Optional[str]:
+        """Get last update check timestamp"""
+        return self.get('last_update_check', '')
+    
+    def set_last_update_check(self, timestamp: str):
+        """Set last update check timestamp"""
+        self.set('last_update_check', timestamp)
+    
+    def get_skipped_version(self) -> str:
+        """Get the version user chose to skip"""
+        return self.get('skipped_version', '')
+    
+    def set_skipped_version(self, version: str):
+        """Set the version user chose to skip"""
+        self.set('skipped_version', version)
+    
+    def should_check_updates(self) -> bool:
+        """Check if automatic update checking is enabled"""
+        return self.get('check_updates', True)

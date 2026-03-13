@@ -11,6 +11,7 @@ This module provides the visual interface for the plugin designer including:
 
 import math
 import logging
+import re
 from typing import Dict, List, Optional, Any, Tuple, Set
 from dataclasses import dataclass
 
@@ -26,7 +27,8 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QPointF, QPoint, QRectF, pyqtSignal, QMimeData, QTimer, QSize
 from PyQt6.QtGui import (
     QPen, QBrush, QColor, QFont, QPainter, QPainterPath, QCursor,
-    QDrag, QKeyEvent, QMouseEvent, QFocusEvent, QDragEnterEvent, QDragMoveEvent, QDropEvent
+    QDrag, QKeyEvent, QMouseEvent, QFocusEvent, QDragEnterEvent, QDragMoveEvent, QDropEvent,
+    QSyntaxHighlighter, QTextCharFormat, QTextFormat
 )
 
 from core.plugin_designer import (
@@ -53,11 +55,226 @@ COMPONENT_COLORS = {
 
 
 # =============================================================================
+# Python Syntax Highlighter
+# =============================================================================
+
+class PythonSyntaxHighlighter(QSyntaxHighlighter):
+    """
+    Python syntax highlighter for QTextEdit/QPlainTextEdit.
+    Recognizes keywords, string literals, comments, decorators, function/class
+    definitions, indentation-based blocks, built-in functions, and operators.
+    """
+    
+    # Python keywords
+    KEYWORDS = frozenset([
+        'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await',
+        'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except',
+        'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is',
+        'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try',
+        'while', 'with', 'yield'
+    ])
+    
+    # Python built-in functions
+    BUILTINS = frozenset([
+        'abs', 'all', 'any', 'ascii', 'bin', 'bool', 'bytearray', 'bytes',
+        'callable', 'chr', 'classmethod', 'compile', 'complex', 'delattr',
+        'dict', 'dir', 'divmod', 'enumerate', 'eval', 'exec', 'filter',
+        'float', 'format', 'frozenset', 'getattr', 'globals', 'hasattr',
+        'hash', 'help', 'hex', 'id', 'input', 'int', 'isinstance', 'issubclass',
+        'iter', 'len', 'list', 'locals', 'map', 'max', 'memoryview', 'min',
+        'next', 'object', 'oct', 'open', 'ord', 'pow', 'print', 'property',
+        'range', 'repr', 'reversed', 'round', 'set', 'setattr', 'slice',
+        'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type',
+        'vars', 'zip', '__import__'
+    ])
+    
+    # Python decorators
+    DECORATORS = frozenset([
+        'property', 'staticmethod', 'classmethod', 'abstractmethod',
+        'override', 'cached_property', 'lru_cache', 'retry', 'timeout'
+    ])
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._highlighting_rules = []
+        self._setup_formatting_rules()
+    
+    def _setup_formatting_rules(self):
+        """Set up the regex-based highlighting rules."""
+        
+        # Create color scheme
+        keyword_format = QTextCharFormat()
+        keyword_format.setForeground(QColor('#569CD6'))  # Blue
+        keyword_format.setFontWeight(QFont.Weight.Bold)
+        
+        builtin_format = QTextCharFormat()
+        builtin_format.setForeground(QColor('#DCDCAA'))  # Yellow
+        
+        decorator_format = QTextCharFormat()
+        decorator_format.setForeground(QColor('#C586C0'))  # Purple
+        
+        string_format = QTextCharFormat()
+        string_format.setForeground(QColor('#CE9178'))  # Orange/Brown
+        
+        fstring_format = QTextCharFormat()
+        fstring_format.setForeground(QColor('#CE9178'))  # Orange/Brown
+        
+        comment_format = QTextCharFormat()
+        comment_format.setForeground(QColor('#6A9955'))  # Green
+        comment_format.setFontItalic(True)
+        
+        docstring_format = QTextCharFormat()
+        docstring_format.setForeground(QColor('#6A9955'))  # Green
+        
+        number_format = QTextCharFormat()
+        number_format.setForeground(QColor('#B5CEA8'))  # Light Green
+        
+        function_def_format = QTextCharFormat()
+        function_def_format.setForeground(QColor('#DCDCAA'))  # Yellow
+        
+        class_def_format = QTextCharFormat()
+        class_def_format.setForeground(QColor('#4EC9B0'))  # Teal
+        
+        operator_format = QTextCharFormat()
+        operator_format.setForeground(QColor('#D4D4D4'))  # Light Gray
+        
+        self_Format = QTextCharFormat()
+        self_Format.setForeground(QColor('#9CDCFE'))  # Light Blue
+        
+        # Build regex patterns
+        
+        # Decorators (@ decorator_name)
+        self._highlighting_rules.append((
+            re.compile(r'@\w+'),
+            decorator_format
+        ))
+        
+        # Single-line comments
+        self._highlighting_rules.append((
+            re.compile(r'#.*'),
+            comment_format
+        ))
+        
+        # Triple-quoted strings (docstrings) - must be before single quotes
+        self._highlighting_rules.append((
+            re.compile(r'"""[\s\S]*?"""'),
+            docstring_format
+        ))
+        self._highlighting_rules.append((
+            re.compile(r"'''[\s\S]*?'''"),
+            docstring_format
+        ))
+        
+        # f-strings with braces
+        self._highlighting_rules.append((
+            re.compile(r'f"(?:[^"\\]|\\.)*"'),
+            fstring_format
+        ))
+        self._highlighting_rules.append((
+            re.compile(r"f'(?:[^'\\]|\\.)*'"),
+            fstring_format
+        ))
+        
+        # Regular strings (double quotes)
+        self._highlighting_rules.append((
+            re.compile(r'"(?:[^"\\]|\\.)*"'),
+            string_format
+        ))
+        
+        # Regular strings (single quotes)
+        self._highlighting_rules.append((
+            re.compile(r"'(?:[^'\\]|\\.)*'"),
+            string_format
+        ))
+        
+        # Numbers (integers and floats)
+        self._highlighting_rules.append((
+            re.compile(r'\b\d+\.?\d*\b'),
+            number_format
+        ))
+        
+        # Hex numbers
+        self._highlighting_rules.append((
+            re.compile(r'\b0x[0-9a-fA-F]+\b'),
+            number_format
+        ))
+        
+        # self keyword
+        self._highlighting_rules.append((
+            re.compile(r'\bself\b'),
+            self_Format
+        ))
+        
+        # class definition
+        self._highlighting_rules.append((
+            re.compile(r'\bclass\s+\w+'),
+            class_def_format
+        ))
+        
+        # def function_name
+        self._highlighting_rules.append((
+            re.compile(r'\bdef\s+\w+'),
+            function_def_format
+        ))
+        
+        # Operators
+        self._highlighting_rules.append((
+            re.compile(r'[+\-*/%=<>!&|^~@:]+'),
+            operator_format
+        ))
+        
+        # Keywords (must be last to not match other patterns)
+        for keyword in self.KEYWORDS:
+            pattern = re.compile(r'\b' + keyword + r'\b')
+            self._highlighting_rules.append((pattern, keyword_format))
+        
+        # Built-in functions (must be after keywords)
+        for builtin in self.BUILTINS:
+            pattern = re.compile(r'\b' + builtin + r'\b')
+            self._highlighting_rules.append((pattern, builtin_format))
+    
+    def highlightBlock(self, text: str):
+        """
+        Apply syntax highlighting to the given block of text.
+        
+        This method is called by QSyntaxHighlighter for each text block.
+        """
+        # Handle indentation-based block detection
+        self._highlight_indentation(text)
+        
+        # Apply all highlighting rules
+        for pattern, fmt in self._highlighting_rules:
+            iterator = pattern.finditer(text)
+            for match in iterator:
+                start = match.start()
+                length = match.end() - start
+                self.setFormat(start, length, fmt)
+    
+    def _highlight_indentation(self, text: str):
+        """
+        Highlight indentation to show block structure.
+        """
+        if not text:
+            return
+        
+        # Check for leading whitespace
+        indent_format = QTextCharFormat()
+        indent_format.setForeground(QColor('#404040'))  # Dark gray
+        
+        # Count leading spaces
+        indent_count = len(text) - len(text.lstrip())
+        if indent_count > 0:
+            self.setFormat(0, indent_count, indent_format)
+
+
+# =============================================================================
 # Graphics Items for Canvas
 # =============================================================================
 
 class PortItem(QGraphicsRectItem):
     """A port on a component for connections"""
+    
+    Z_PORT = 15  # Above component
     
     def __init__(self, port_def: PortDefinition, is_input: bool, parent=None):
         super().__init__(parent)
@@ -71,6 +288,9 @@ class PortItem(QGraphicsRectItem):
         self.setRect(-6, -6, 12, 12)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, False)
+        
+        # Set z-value to be above component
+        self.setZValue(self.Z_PORT)
     
     def set_connected(self, connected: bool):
         """Update appearance based on connection status"""
@@ -83,6 +303,15 @@ class PortItem(QGraphicsRectItem):
 
 class ComponentGraphicsItem(QGraphicsRectItem):
     """A component instance on the canvas"""
+    
+    # Z-values for proper layering
+    Z_COMPONENT = 10
+    Z_PORT = 15
+    Z_CONNECTION = 5
+    Z_SELECTION = 20
+    
+    # Custom signal for position changes
+    position_changed = pyqtSignal(object)  # Emits self
     
     def __init__(self, component: ComponentInstance, definition: ComponentDefinition, parent=None):
         super().__init__(parent)
@@ -105,6 +334,9 @@ class ComponentGraphicsItem(QGraphicsRectItem):
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable, True)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges, True)
         
+        # Set z-value for proper layering (above connections, below selection)
+        self.setZValue(self.Z_COMPONENT)
+        
         # Create label
         self.label_item = QGraphicsTextItem(self)
         label_text = component.label or definition.name
@@ -112,6 +344,7 @@ class ComponentGraphicsItem(QGraphicsRectItem):
         self.label_item.setFont(QFont("Arial", 10, QFont.Weight.Bold))
         self.label_item.setDefaultTextColor(QColor(255, 255, 255))
         self.label_item.setPos(10, 5)
+        self.label_item.setZValue(self.Z_COMPONENT + 1)  # Above component body
         
         # Create ports
         self.input_ports: List[PortItem] = []
@@ -136,9 +369,16 @@ class ComponentGraphicsItem(QGraphicsRectItem):
     def itemChange(self, change, value):
         """Handle item changes"""
         if change == QGraphicsItem.GraphicsItemChange.ItemPositionHasChanged:
-            # Update component position
-            self.component.x = self.pos().x()
-            self.component.y = self.pos().y()
+            # Update component position in the data model
+            new_pos = value
+            self.component.x = new_pos.x()
+            self.component.y = new_pos.y()
+            
+            # Update connected port positions if width changed
+            self.update_port_positions()
+            
+            # Emit signal to notify listeners (canvas will update connections)
+            self.position_changed.emit(self)
         
         return super().itemChange(change, value)
     
@@ -167,6 +407,8 @@ class ComponentGraphicsItem(QGraphicsRectItem):
 class ConnectionGraphicsItem(QGraphicsLineItem):
     """A connection line between components"""
     
+    Z_CONNECTION = 5  # Below components
+    
     def __init__(self, connection: Connection, source_item: ComponentGraphicsItem, 
                  target_item: ComponentGraphicsItem, parent=None):
         super().__init__(parent)
@@ -176,6 +418,9 @@ class ConnectionGraphicsItem(QGraphicsLineItem):
         
         self.setPen(QPen(QColor(80, 80, 80), 2))
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+        
+        # Set z-value to be below components
+        self.setZValue(self.Z_CONNECTION)
         
         self._update_line()
     
@@ -224,12 +469,22 @@ class DraggableListWidget(QListWidget):
                 mime_data = QMimeData()
                 mime_data.setText(def_id)
                 
+                # Get the item's visual rect for proper hot spot
+                rect = self.visualItemRect(item)
+                # Center the hot spot on the item
+                hot_spot = QPoint(rect.width() // 2, rect.height() // 2)
+                
                 # Create drag object
                 drag = QDrag(self)
                 drag.setMimeData(mime_data)
-                drag.setHotSpot(QPoint(0, 0))
+                drag.setHotSpot(hot_spot)
                 
-                # Start drag
+                # Create a visual representation (pixmap)
+                pixmap = self.viewport().grab(rect)
+                drag.setPixmap(pixmap)
+                drag.setPixmapHotSpot(hot_spot)
+                
+                # Start drag - use MoveAction for dragging within app, CopyAction for cross-app
                 drag.exec(Qt.DropAction.CopyAction)
                 return
         
@@ -570,6 +825,14 @@ class WorkflowCanvas(QGraphicsView):
         # Connect signals
         self.scene.selectionChanged.connect(self._on_selection_changed)
     
+    def _on_item_position_changed(self, item, change, value):
+        """Handle item position changes - update connected lines"""
+        if isinstance(item, ComponentGraphicsItem):
+            # Update all connections connected to this component
+            for conn_item in self.connection_items:
+                if (conn_item.source_item == item or conn_item.target_item == item):
+                    conn_item.update_positions()
+    
     def _draw_grid(self):
         """Draw background grid"""
         if not self.show_grid:
@@ -586,7 +849,17 @@ class WorkflowCanvas(QGraphicsView):
         self.scene.addItem(item)
         self.component_items[component.id] = item
         
+        # Connect position change signal to update connections
+        item.position_changed.connect(self._on_component_position_changed)
+        
         return item
+    
+    def _on_component_position_changed(self, item: ComponentGraphicsItem):
+        """Handle component position change - update connected lines"""
+        # Update all connections connected to this component
+        for conn_item in self.connection_items:
+            if (conn_item.source_item == item or conn_item.target_item == item):
+                conn_item.update_positions()
     
     def remove_component(self, component_id: str):
         """Remove a component from the canvas"""
@@ -678,8 +951,13 @@ class WorkflowCanvas(QGraphicsView):
         if selected and isinstance(selected[0], ComponentGraphicsItem):
             item = selected[0]
             self.current_selection = item
+            # Bring selected item to front
+            item.setZValue(self.Z_SELECTION)
             self.component_selected.emit(item.component)
         else:
+            # Reset z-values for previously selected items
+            for item in self.component_items.values():
+                item.setZValue(self.Z_COMPONENT)
             self.current_selection = None
             self.component_selected.emit(None)
     
@@ -800,21 +1078,42 @@ class WorkflowCanvas(QGraphicsView):
         """Handle drag enter"""
         if event.mimeData().hasText():
             event.acceptProposedAction()
+            # Set drop indicator
+            self.setCursor(QCursor(Qt.CursorShape.CrossCursor))
     
     def dragMoveEvent(self, event):
         """Handle drag move"""
         if event.mimeData().hasText():
             event.acceptProposedAction()
     
+    def dragLeaveEvent(self, event):
+        """Handle drag leave - restore cursor"""
+        self.unsetCursor()
+    
     def dropEvent(self, event):
-        """Handle drop"""
+        """Handle drop - add component to canvas"""
+        self.unsetCursor()
+        
         if event.mimeData().hasText():
             def_id = event.mimeData().text()
-            pos = self.mapToScene(event.pos())
+            
+            # Get drop position in scene coordinates
+            # Use mapToScene for proper coordinate transformation (handles zoom/pan)
+            drop_pos = self.mapToScene(event.position().toPoint())
+            
+            # Log debug info
+            logger.debug(f"Drop event: def_id={def_id}, widget_pos={event.position()}, scene_pos={drop_pos}")
+            
+            # Apply snapping to grid if enabled (optional)
+            grid_size = 10
+            snapped_x = round(drop_pos.x() / grid_size) * grid_size
+            snapped_y = round(drop_pos.y() / grid_size) * grid_size
             
             # Emit signal to add component
-            self.component_dropped.emit(def_id, pos.x(), pos.y())
+            self.component_dropped.emit(def_id, snapped_x, snapped_y)
             event.acceptProposedAction()
+        else:
+            super().dropEvent(event)
     
     def wheelEvent(self, event):
         """Handle zoom with mouse wheel"""
@@ -824,6 +1123,33 @@ class WorkflowCanvas(QGraphicsView):
             self.scale(zoom_factor, zoom_factor)
         else:
             self.scale(1/zoom_factor, 1/zoom_factor)
+    
+    # ============================================================================
+    # Debugging Methods
+    # ============================================================================
+    
+    def debug_print_state(self):
+        """Print debug information about the canvas state"""
+        logger.debug(f"=== WorkflowCanvas Debug State ===")
+        logger.debug(f"Components: {len(self.component_items)}")
+        logger.debug(f"Connections: {len(self.connection_items)}")
+        logger.debug(f"Zoom: {self.transform().m11():.2f}")
+        logger.debug(f"Scene rect: {self.scene.sceneRect()}")
+        
+        for comp_id, item in self.component_items.items():
+            logger.debug(f"  Component {comp_id}: pos=({item.x():.1f}, {item.y():.1f}), z={item.zValue()}")
+    
+    def debug_validate_drop_target(self, pos: QPointF) -> dict:
+        """Validate and debug drop target position"""
+        widget_pos = self.mapFromScene(pos)
+        scene_pos = self.mapToScene(self.mapFromScene(pos))
+        
+        return {
+            'scene_pos': (pos.x(), pos.y()),
+            'widget_pos': (widget_pos.x(), widget_pos.y()),
+            'mapped_scene_pos': (scene_pos.x(), scene_pos.y()),
+            'transform': f"{self.transform().m11():.2f}"
+        }
 
 
 # =============================================================================
@@ -858,6 +1184,12 @@ class CodePreviewPanel(QWidget):
         self.save_button.clicked.connect(self._save_to_file)
         toolbar.addWidget(self.save_button)
         
+        # Add syntax highlighting toggle
+        self.highlight_checkbox = QCheckBox("Syntax Highlighting")
+        self.highlight_checkbox.setChecked(True)
+        self.highlight_checkbox.toggled.connect(self._toggle_highlighting)
+        toolbar.addWidget(self.highlight_checkbox)
+        
         toolbar.addStretch()
         layout.addLayout(toolbar)
         
@@ -873,6 +1205,19 @@ class CodePreviewPanel(QWidget):
             }
         """)
         layout.addWidget(self.code_edit)
+        
+        # Create Python syntax highlighter
+        self.python_highlighter = PythonSyntaxHighlighter(self.code_edit.document())
+    
+    def _toggle_highlighting(self, enabled: bool):
+        """Toggle syntax highlighting"""
+        if enabled:
+            # Re-apply the highlighter
+            document = self.code_edit.document()
+            self.python_highlighter.setDocument(document)
+        else:
+            # Clear highlighting by setting a null document
+            self.python_highlighter.setDocument(None)
     
     def set_code(self, code: str):
         """Set the code to display"""

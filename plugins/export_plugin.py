@@ -62,28 +62,10 @@ class ExportPlugin(PluginInterface):
         logger.info("Export Plugin: Application startup detected")
 
     def on_menu_bar_created(self, menu_bar):
-        """Called when menu bar is created - add our export menu items"""
-        logger.info("Export Plugin: Adding export menu items")
-
-        # Find the Tools menu
-        tools_menu = None
-        for action in menu_bar.actions():
-            if action.text() == "&Tools":
-                tools_menu = action.menu()
-                break
-
-        if tools_menu:
-            # Add separator and our export actions
-            tools_menu.addSeparator()
-
-            # Export SSL submenu
-            export_menu = tools_menu.addMenu("Export")
-
-            self.menu_action_ssl = export_menu.addAction("Export .ssl Script")
-            self.menu_action_ssl.triggered.connect(self.export_ssl)
-
-            self.menu_action_msg = export_menu.addAction("Export .msg Messages")
-            self.menu_action_msg.triggered.connect(self.export_msg)
+        """Called when menu bar is created - disabled export (now in File menu)"""
+        # Export functionality is now centralized in File → Export in main_window
+        # This plugin's export menu items have been removed to avoid duplication
+        logger.info("Export Plugin: Export functionality moved to File → Export menu")
 
     def on_dialogue_loaded(self, dialogue):
         """Called when a dialogue is loaded"""

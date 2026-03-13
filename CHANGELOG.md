@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-03-13
+
+### Added
+- **Update Checker Module**: New [`core/update_checker.py`](core/update_checker.py) module for automatic update detection
+  - Checks GitHub releases for new versions
+  - Configurable update checking with skip option
+  - Downloads and installs updates with progress tracking
+  - Background thread for non-blocking checks
+- **Update Checker Settings**: Added to [`core/settings.py`](core/settings.py)
+  - `last_update_check` timestamp tracking
+  - `skipped_version` for user-skipped versions
+  - Helper methods: `get_last_update_check()`, `set_last_update_check()`, `get_skipped_version()`, `set_skipped_version()`, `should_check_updates()`
+- **File → Export Menu**: Centralized export functionality in main window
+  - Export SSL Script
+  - Export MSG Messages
+  - Export SSL + MSG (combined)
+  - Configure SSL/MSG Export
+- **Test Plugin Example**: Added [`plugins/timbor_s_test_plugin.py`](plugins/timbor_s_test_plugin.py) as a reference plugin implementation
+
+### Fixed
+- **QPoint Import**: Fixed import in [`ui/plugin_designer.py`](ui/plugin_designer.py) - added `QPoint` to PyQt6.QtCore imports
+- **Export Menu Duplication**: Removed duplicate export menu items from plugins
+  - Export functionality now centralized in File menu
+  - Plugins retain only configuration options
+
+### Changed
+- **Enhanced UI Theme**: Improved [`ui/fallout_theme.py`](ui/fallout_theme.py) with:
+  - Better button gradients with 3D outset/inset border effects
+  - Improved focus states with distinct color borders
+  - Enhanced line edit and text edit styling with inset borders
+  - Better group box appearance with gradient backgrounds
+  - Improved dialog styling
+- **Plugin Export Behavior**: Updated export plugins
+  - [`plugins/export_plugin.py`](plugins/export_plugin.py): Removed export menu items (now in File → Export)
+  - [`plugins/ssl_msg_export_plugin.py`](plugins/ssl_msg_export_plugin.py): Export moved to File → Export, retained only configuration
+- **README**: Fixed year (2024 → 2026) and added comprehensive HTML README
+
 ## [2.1.1] - 2026-03-13
 
 ### Added

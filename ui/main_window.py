@@ -9,9 +9,9 @@ from PyQt6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTextEdit, QListWidget, QListWidgetItem,
     QTabWidget, QStatusBar, QMenuBar, QMenu, QMessageBox, QFileDialog,
     QProgressDialog, QFrame, QLabel, QDialog, QApplication, QCheckBox,
-    QSpinBox, QGroupBox
+    QSpinBox, QGroupBox, QPushButton, QInputDialog
 )
-from PyQt6.QtCore import Qt, pyqtSlot
+from PyQt6.QtCore import Qt, pyqtSlot, QPoint
 from PyQt6.QtGui import QAction, QKeySequence, QFont
 
 from core.dialog_manager import DialogManager
@@ -119,13 +119,55 @@ class MainWindow(QMainWindow):
         self.nodes_tree.customContextMenuRequested.connect(self.on_node_context_menu)
         self.tab_widget.addTab(self.nodes_tree, "Nodes")
 
-        # Float nodes tab
+        # Float nodes tab - create wrapper with controls
+        float_widget = QWidget()
+        float_layout = QVBoxLayout(float_widget)
+        float_layout.setContentsMargins(0, 0, 0, 0)
+        
         self.float_list = QListWidget()
-        self.tab_widget.addTab(self.float_list, "Float Messages")
+        self.float_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.float_list.customContextMenuRequested.connect(self.on_float_context_menu)
+        float_layout.addWidget(self.float_list)
+        
+        # Float controls
+        float_controls = QHBoxLayout()
+        add_float_btn = QPushButton("Add")
+        add_float_btn.clicked.connect(self.on_add_float_node)
+        float_controls.addWidget(add_float_btn)
+        
+        delete_float_btn = QPushButton("Delete")
+        delete_float_btn.clicked.connect(self.on_delete_float_node)
+        float_controls.addWidget(delete_float_btn)
+        
+        float_controls.addStretch()
+        float_layout.addLayout(float_controls)
+        
+        self.tab_widget.addTab(float_widget, "Float Messages")
 
-        # Skill checks tab
+        # Skill checks tab - create wrapper with controls
+        skill_widget = QWidget()
+        skill_layout = QVBoxLayout(skill_widget)
+        skill_layout.setContentsMargins(0, 0, 0, 0)
+        
         self.skill_list = QListWidget()
-        self.tab_widget.addTab(self.skill_list, "Skill Checks")
+        self.skill_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.skill_list.customContextMenuRequested.connect(self.on_skill_context_menu)
+        skill_layout.addWidget(self.skill_list)
+        
+        # Skill controls
+        skill_controls = QHBoxLayout()
+        add_skill_btn = QPushButton("Add")
+        add_skill_btn.clicked.connect(self.on_add_skill_check)
+        skill_controls.addWidget(add_skill_btn)
+        
+        delete_skill_btn = QPushButton("Delete")
+        delete_skill_btn.clicked.connect(self.on_delete_skill_check)
+        skill_controls.addWidget(delete_skill_btn)
+        
+        skill_controls.addStretch()
+        skill_layout.addLayout(skill_controls)
+        
+        self.tab_widget.addTab(skill_widget, "Skill Checks")
 
         # Scripts tab
         self.scripts_list = QListWidget()
@@ -141,7 +183,6 @@ class MainWindow(QMainWindow):
         # Node controls
         controls_layout = QHBoxLayout()
 
-        from PyQt6.QtWidgets import QPushButton
         add_node_btn = QPushButton("Add Node")
         add_node_btn.clicked.connect(self.on_add_node)
         controls_layout.addWidget(add_node_btn)
@@ -878,7 +919,9 @@ class MainWindow(QMainWindow):
             # Show node name and message count
             message_count = len(float_node.messages)
             item_text = f"{float_node.nodename} ({message_count} messages)"
-            self.float_list.addItem(item_text)
+            item = QListWidgetItem(item_text)
+            item.setData(Qt.ItemDataRole.UserRole, dialogue.floatnodes.index(float_node))
+            self.float_list.addItem(item)
 
     def populate_skill_list(self):
         """Populate the skill checks list"""
@@ -894,7 +937,191 @@ class MainWindow(QMainWindow):
                 # Show node name and skill info
                 skill_name = skill_check.get_skill_name()
                 item_text = f"{node.nodename}: {skill_name} (DC {skill_check.required_value})"
-                self.skill_list.addItem(item_text)
+                item = QListWidgetItem(item_text)
+                # Store node index and skill check index
+                item.setData(Qt.ItemDataRole.UserRole, 
+                    (dialogue.nodes.index(node), node.skillchecks.index(skill_check)))
+                self.skill_list.addItem(item)
+
+    # Float node handlers
+    @pyqtSlot()
+    def on_add_float_node(self):
+        """Add a new float node"""
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue:
+            QMessageBox.warning(self, "No Dialogue", "Please open or create a dialogue first.")
+            return
+        
+        # Ask for the node name
+        from PyQt6.QtWidgets import QInputDialog
+        node_name, ok = QInputDialog.getText(self, "Add Float Node", "Enter node name:")
+        if not ok or not node_name.strip():
+            return
+        
+        # Check for duplicate
+        if dialogue.get_float_node_index(node_name) >= 0:
+            QMessageBox.warning(self, "Duplicate Name", "A float node with this name already exists.")
+            return
+        
+        # Create new float node
+        from models.dialogue import FloatNode
+        new_node = FloatNode(nodename=node_name.strip())
+        dialogue.floatnodes.append(new_node)
+        dialogue.floatnodecount = len(dialogue.floatnodes)
+        
+        self.dialog_manager.mark_modified()
+        self.populate_float_list()
+        self.status_bar.showMessage(f"Added float node: {node_name}")
+
+    @pyqtSlot()
+    def on_delete_float_node(self):
+        """Delete the selected float node"""
+        current_item = self.float_list.currentItem()
+        if not current_item:
+            QMessageBox.warning(self, "No Selection", "Please select a float node to delete.")
+            return
+        
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue:
+            return
+        
+        float_index = current_item.data(Qt.ItemDataRole.UserRole)
+        if float_index < 0 or float_index >= len(dialogue.floatnodes):
+            return
+        
+        node_name = dialogue.floatnodes[float_index].nodename
+        reply = QMessageBox.question(self, "Confirm Delete", 
+            f"Are you sure you want to delete float node '{node_name}'?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if reply == QMessageBox.StandardButton.Yes:
+            del dialogue.floatnodes[float_index]
+            dialogue.floatnodecount = len(dialogue.floatnodes)
+            self.dialog_manager.mark_modified()
+            self.populate_float_list()
+            self.status_bar.showMessage(f"Deleted float node: {node_name}")
+
+    @pyqtSlot(QPoint)
+    def on_float_context_menu(self, pos):
+        """Show context menu for float nodes"""
+        item = self.float_list.itemAt(pos)
+        if not item:
+            return
+        
+        menu = QMenu(self)
+        add_action = menu.addAction("Add Float Node")
+        add_action.triggered.connect(self.on_add_float_node)
+        
+        delete_action = menu.addAction("Delete Float Node")
+        delete_action.triggered.connect(self.on_delete_float_node)
+        
+        menu.exec(self.float_list.mapToGlobal(pos))
+
+    # Skill check handlers
+    @pyqtSlot()
+    def on_add_skill_check(self):
+        """Add a new skill check to a dialogue node"""
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue:
+            QMessageBox.warning(self, "No Dialogue", "Please open or create a dialogue first.")
+            return
+        
+        if not dialogue.nodes:
+            QMessageBox.warning(self, "No Nodes", "Please add a dialogue node first.")
+            return
+        
+        # First, ask which node to add the skill check to
+        from PyQt6.QtWidgets import QInputDialog
+        node_names = [node.nodename for node in dialogue.nodes]
+        selected_node, ok = QInputDialog.getItem(self, "Select Node", 
+            "Select dialogue node for skill check:", node_names, 0, False)
+        if not ok or not selected_node:
+            return
+        
+        node_index = node_names.index(selected_node)
+        
+        # Ask for skill type
+        from models.dialogue import Skill
+        skill_names = [Skill.get_name(s.value) for s in Skill]
+        selected_skill, ok = QInputDialog.getItem(self, "Select Skill", 
+            "Select skill to check:", skill_names, 0, False)
+        if not ok or not selected_skill:
+            return
+        
+        # Ask for difficulty class (required value)
+        dc_value, ok = QInputDialog.getInt(self, "Difficulty Class", 
+            "Enter required skill value (DC):", 50, 0, 100)
+        if not ok:
+            return
+        
+        # Create new skill check
+        from models.dialogue import SkillCheck
+        new_skill = SkillCheck(
+            check_what=Skill[skill_names.index(selected_skill)],
+            required_value=dc_value
+        )
+        
+        dialogue.nodes[node_index].skillchecks.append(new_skill)
+        dialogue.nodes[node_index].skillcheckcnt = len(dialogue.nodes[node_index].skillchecks)
+        
+        self.dialog_manager.mark_modified()
+        self.populate_skill_list()
+        self.status_bar.showMessage(f"Added skill check to node: {selected_node}")
+
+    @pyqtSlot()
+    def on_delete_skill_check(self):
+        """Delete the selected skill check"""
+        current_item = self.skill_list.currentItem()
+        if not current_item:
+            QMessageBox.warning(self, "No Selection", "Please select a skill check to delete.")
+            return
+        
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue:
+            return
+        
+        indices = current_item.data(Qt.ItemDataRole.UserRole)
+        if not indices or len(indices) != 2:
+            return
+        
+        node_index, skill_index = indices
+        
+        if node_index >= len(dialogue.nodes):
+            return
+        
+        node = dialogue.nodes[node_index]
+        if skill_index >= len(node.skillchecks):
+            return
+        
+        skill_name = node.skillchecks[skill_index].get_skill_name()
+        node_name = node.nodename
+        
+        reply = QMessageBox.question(self, "Confirm Delete", 
+            f"Are you sure you want to delete the {skill_name} skill check from node '{node_name}'?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if reply == QMessageBox.StandardButton.Yes:
+            del node.skillchecks[skill_index]
+            node.skillcheckcnt = len(node.skillchecks)
+            self.dialog_manager.mark_modified()
+            self.populate_skill_list()
+            self.status_bar.showMessage(f"Deleted skill check from node: {node_name}")
+
+    @pyqtSlot(QPoint)
+    def on_skill_context_menu(self, pos):
+        """Show context menu for skill checks"""
+        item = self.skill_list.itemAt(pos)
+        if not item:
+            return
+        
+        menu = QMenu(self)
+        add_action = menu.addAction("Add Skill Check")
+        add_action.triggered.connect(self.on_add_skill_check)
+        
+        delete_action = menu.addAction("Delete Skill Check")
+        delete_action.triggered.connect(self.on_delete_skill_check)
+        
+        menu.exec(self.skill_list.mapToGlobal(pos))
 
     def populate_scripts_list(self):
         """Populate the scripts list"""
@@ -1917,13 +2144,166 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
 
     @pyqtSlot()
     def on_about(self):
-        """Show about dialog"""
-        QMessageBox.about(
-            self, "About Fallout Dialogue Creator",
-            "Fallout Dialogue Creator 2.0\n\n"
-            "Modern cross-platform rewrite of the Fallout dialogue editor.\n\n"
+        """Show detailed about dialog with application info"""
+        import sys
+        import platform
+        import datetime
+        from PyQt6.QtWidgets import (
+            QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+            QGroupBox, QFormLayout, QTextEdit, QApplication
+        )
+        from PyQt6.QtCore import Qt
+        from PyQt6.QtGui import QFont
+        from ui.fallout_theme import FalloutColors
+        
+        colors = FalloutColors()
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle("About Fallout Dialogue Creator")
+        dialog.setMinimumSize(500, 450)
+        dialog.setModal(True)
+        
+        # Apply dialog styling
+        dialog.setStyleSheet(f"""
+            QDialog {{
+                background-color: #2a2a28;
+                border: 3px outset #5c5c5c;
+            }}
+            QLabel {{
+                color: #c4b998;
+            }}
+            QGroupBox {{
+                color: #ffcc00;
+                font-weight: bold;
+                border: 2px outset #5c5c5c;
+                border-radius: 4px;
+                margin-top: 8px;
+                padding-top: 8px;
+            }}
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px;
+            }}
+            QTextEdit {{
+                background-color: #1a1a1a;
+                color: #c4b998;
+                border: 2px inset #3a3a3a;
+                border-radius: 3px;
+            }}
+            QPushButton {{
+                background-color: qlineargradient(
+                    x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #556b2f,
+                    stop: 0.5 #4a5d23,
+                    stop: 1 #3d4f2a
+                );
+                color: #c4b998;
+                border: 2px outset #6b8e23;
+                border-radius: 4px;
+                padding: 6px 20px;
+                min-width: 80px;
+            }}
+            QPushButton:hover {{
+                background-color: qlineargradient(
+                    x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #6b8e23,
+                    stop: 0.5 #556b2f,
+                    stop: 1 #4a5d23
+                );
+                color: #ffcc00;
+            }}
+            QPushButton:pressed {{
+                background-color: qlineargradient(
+                    x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #3d4f2a,
+                    stop: 0.5 #4a5d23,
+                    stop: 1 #556b2f
+                );
+                border: 2px inset #3d4f2a;
+            }}
+        """)
+        
+        main_layout = QVBoxLayout(dialog)
+        
+        # Application title and logo area
+        title_label = QLabel("<h2>Fallout Dialogue Creator</h2>")
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setStyleSheet("color: #ffcc00; margin-bottom: 10px;")
+        main_layout.addWidget(title_label)
+        
+        # Version info
+        version_group = QGroupBox("Application Information")
+        version_layout = QFormLayout()
+        
+        # Get version from application
+        app_version = QApplication.instance().applicationVersion() if QApplication.instance() else "2.1.1"
+        version_layout.addRow("Version:", QLabel(app_version))
+        version_layout.addRow("Build:", QLabel("Release"))
+        version_layout.addRow("Build Date:", QLabel(datetime.datetime.now().strftime("%B %d, %Y")))
+        version_group.setLayout(version_layout)
+        main_layout.addWidget(version_group)
+        
+        # System info
+        system_group = QGroupBox("System Information")
+        system_layout = QFormLayout()
+        
+        # OS Information
+        os_info = f"{platform.system()} {platform.release()}"
+        system_layout.addRow("Operating System:", QLabel(os_info))
+        system_layout.addRow("OS Version:", QLabel(platform.version()))
+        system_layout.addRow("Architecture:", QLabel(platform.machine()))
+        
+        # Python Information
+        system_layout.addRow("Python Version:", QLabel(platform.python_version()))
+        system_layout.addRow("Python Implementation:", QLabel(platform.python_implementation()))
+        
+        # Qt Information
+        from PyQt6.QtCore import qVersion, PYQT_VERSION_STR
+        system_layout.addRow("Qt Version:", QLabel(qVersion()))
+        system_layout.addRow("PyQt Version:", QLabel(PYQT_VERSION_STR))
+        
+        system_group.setLayout(system_layout)
+        main_layout.addWidget(system_group)
+        
+        # Copyright
+        copyright_label = QLabel(
+            "<h4 style='color: #8b8b7a;'>Copyright © 2008-2026 FMF Tools</h4>"
+        )
+        copyright_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        main_layout.addWidget(copyright_label)
+        
+        # Description
+        desc_label = QLabel(
+            "Modern cross-platform rewrite of the Fallout dialogue editor.\n"
             "Built with PyQt6 and Python."
         )
+        desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        desc_label.setStyleSheet("color: #8b8b7a; margin-top: 5px;")
+        main_layout.addWidget(desc_label)
+        
+        # Credits
+        credits_label = QLabel(
+            "Based on the original Fallout 2 dialogue format.\n"
+            "All trademarks are property of their respective owners."
+        )
+        credits_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        credits_label.setStyleSheet("color: #6b6b5a; font-size: 9pt; margin-top: 10px;")
+        main_layout.addWidget(credits_label)
+        
+        # Close button
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        
+        close_button = QPushButton("Close")
+        close_button.clicked.connect(dialog.accept)
+        close_button.setDefault(True)
+        button_layout.addWidget(close_button)
+        
+        button_layout.addStretch()
+        main_layout.addLayout(button_layout)
+        
+        dialog.exec()
 
     @pyqtSlot()
     def on_test_dialogue(self):
@@ -2047,7 +2427,13 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             QMessageBox.warning(self, "No Dialogue", "No dialogue is currently loaded.")
             return
         
-        default_name = dialogue.name + ".ssl" if dialogue.name else "dialogue.ssl"
+        # Use npcname to generate safe filename, fallback to "dialogue"
+        if dialogue.npcname:
+            name = dialogue.npcname.lower().replace(' ', '_').replace('-', '_')
+            name = ''.join(c for c in name if c.isalnum() or c == '_')
+            default_name = f"{name}.ssl"
+        else:
+            default_name = "dialogue.ssl"
         file_path, _ = QFileDialog.getSaveFileName(
             self, "Export to SSL", str(self.settings.get_dialogue_path() / default_name),
             "SSL Files (*.ssl);;All Files (*)"
@@ -2078,7 +2464,13 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             QMessageBox.warning(self, "No Dialogue", "No dialogue is currently loaded.")
             return
         
-        default_name = dialogue.name + ".msg" if dialogue.name else "dialogue.msg"
+        # Use npcname to generate safe filename, fallback to "dialogue"
+        if dialogue.npcname:
+            name = dialogue.npcname.lower().replace(' ', '_').replace('-', '_')
+            name = ''.join(c for c in name if c.isalnum() or c == '_')
+            default_name = f"{name}.msg"
+        else:
+            default_name = "dialogue.msg"
         file_path, _ = QFileDialog.getSaveFileName(
             self, "Export to MSG", str(self.settings.get_dialogue_path() / default_name),
             "MSG Files (*.msg);;All Files (*)"
@@ -2109,7 +2501,13 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             QMessageBox.warning(self, "No Dialogue", "No dialogue is currently loaded.")
             return
         
-        default_name = dialogue.name + ".ddf" if dialogue.name else "dialogue.ddf"
+        # Use npcname to generate safe filename, fallback to "dialogue"
+        if dialogue.npcname:
+            name = dialogue.npcname.lower().replace(' ', '_').replace('-', '_')
+            name = ''.join(c for c in name if c.isalnum() or c == '_')
+            default_name = f"{name}.ddf"
+        else:
+            default_name = "dialogue.ddf"
         file_path, _ = QFileDialog.getSaveFileName(
             self, "Export to DDF", str(self.settings.get_dialogue_path() / default_name),
             "DDF Files (*.ddf);;All Files (*)"
@@ -2739,11 +3137,226 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         dialog.exec()
 
     def on_check_updates(self):
-        """Handle check for updates action"""
-        QMessageBox.information(self, "Check for Updates", 
-            "You are running Fallout Dialogue Creator 2.0.\n"
-            "No automatic update check is configured.\n\n"
-            "Visit the project repository for the latest version.")
+        """Handle check for updates action - starts update check in background"""
+        try:
+            from core.update_checker import UpdateManager
+            from datetime import datetime
+            
+            logger.info("Starting update check...")
+            
+            # Initialize update manager
+            self._update_manager = UpdateManager(self.settings)
+            
+            # Connect signals with error handling - use Qt.QueuedConnection for thread safety
+            from PyQt6.QtCore import Qt
+            self._update_manager.signals.check_started.connect(
+                self._on_update_check_started, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            self._update_manager.signals.update_available.connect(
+                self._on_update_available, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            self._update_manager.signals.update_not_available.connect(
+                self._on_update_not_available, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            self._update_manager.signals.check_completed.connect(
+                self._on_update_check_completed, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            self._update_manager.signals.download_progress.connect(
+                self._on_download_progress, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            self._update_manager.signals.download_completed.connect(
+                self._on_download_completed, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            self._update_manager.signals.download_failed.connect(
+                self._on_download_failed, 
+                type=Qt.ConnectionType.QueuedConnection
+            )
+            
+            # Start check in background and store worker reference to prevent garbage collection
+            self._update_worker = self._update_manager.check_for_updates()
+            
+            # Clean up worker when done
+            self._update_worker.finished.connect(self._on_update_worker_finished)
+            
+            logger.info("Update check worker started")
+            
+        except Exception as e:
+            logger.exception(f"Error initializing update check: {e}")
+            QMessageBox.critical(self, "Update Error", 
+                f"Failed to check for updates: {str(e)}")
+    
+    def _on_update_worker_finished(self):
+        """Called when the update check worker finishes"""
+        logger.info("Update check worker finished")
+        if hasattr(self, '_update_worker'):
+            self._update_worker.deleteLater()
+            self._update_worker = None
+    
+    def _on_update_check_started(self):
+        """Update check has started"""
+        self.status_bar.showMessage("Checking for updates...")
+    
+    def _on_update_check_completed(self, success: bool, message: str):
+        """Update check finished"""
+        self.status_bar.showMessage("Update check complete")
+        if not success:
+            QMessageBox.warning(self, "Update Check Failed", message)
+    
+    def _on_update_not_available(self, message: str):
+        """No update available"""
+        self.status_bar.showMessage(message)
+        # Save timestamp
+        from datetime import datetime
+        self.settings.set_last_update_check(datetime.now().isoformat())
+        QMessageBox.information(self, "No Updates Available", message)
+    
+    def _on_update_available(self, update_info):
+        """Update is available - show notification dialog"""
+        from datetime import datetime
+        self.settings.set_last_update_check(datetime.now().isoformat())
+        
+        # Show update dialog
+        self._show_update_dialog(update_info)
+    
+    def _show_update_dialog(self, update_info):
+        """Show dialog with update information"""
+        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QTextBrowser, QPushButton, QProgressBar
+        from PyQt6.QtCore import Qt
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Update Available")
+        dialog.setMinimumWidth(500)
+        dialog.setMinimumHeight(400)
+        
+        layout = QVBoxLayout()
+        
+        # Version info
+        version_label = QLabel(f"<h3>Version {update_info.latest_version} is available!</h3>")
+        version_label.setStyleSheet("color: #ffcc00;")
+        layout.addWidget(version_label)
+        
+        current_label = QLabel(f"You are currently running version {update_info.current_version}")
+        layout.addWidget(current_label)
+        
+        # Release notes
+        notes_label = QLabel("Release Notes:")
+        notes_label.setStyleSheet("font-weight: bold; color: #d4c4a8;")
+        layout.addWidget(notes_label)
+        
+        notes_browser = QTextBrowser()
+        notes_browser.setPlainText(update_info.release_notes)
+        notes_browser.setMaximumHeight(150)
+        layout.addWidget(notes_browser)
+        
+        # Download progress (hidden initially)
+        self._download_progress = QProgressBar()
+        self._download_progress.setVisible(False)
+        layout.addWidget(self._download_progress)
+        
+        # Buttons
+        button_layout = QHBoxLayout()
+        
+        download_btn = QPushButton("Download Update")
+        download_btn.clicked.connect(lambda: self._start_download(update_info, dialog))
+        button_layout.addWidget(download_btn)
+        
+        later_btn = QPushButton("Remind Me Later")
+        later_btn.clicked.connect(dialog.reject)
+        button_layout.addWidget(later_btn)
+        
+        skip_btn = QPushButton("Skip This Version")
+        skip_btn.clicked.connect(lambda: self._skip_version(update_info.latest_version, dialog))
+        button_layout.addWidget(skip_btn)
+        
+        layout.addLayout(button_layout)
+        dialog.setLayout(layout)
+        
+        # Store update info for later
+        dialog._update_info = update_info
+        self._current_update_dialog = dialog
+        
+        dialog.exec()
+    
+    def _start_download(self, update_info, parent_dialog):
+        """Start downloading the update"""
+        from pathlib import Path
+        
+        # Show progress
+        self._download_progress.setVisible(True)
+        self._download_progress.setValue(0)
+        
+        # Get download path
+        download_path = Path.home() / ".fallout_dialogue_creator" / "updates"
+        
+        # Start download
+        self._update_manager.download_update(update_info, download_path)
+    
+    def _on_download_progress(self, progress: int):
+        """Update download progress"""
+        if hasattr(self, '_download_progress'):
+            self._download_progress.setValue(progress)
+            self.status_bar.showMessage(f"Downloading update... {progress}%")
+    
+    def _on_download_completed(self, file_path: str):
+        """Download completed"""
+        from pathlib import Path
+        
+        self.status_bar.showMessage("Download complete!")
+        
+        # Ask user what to do
+        reply = QMessageBox.question(
+            self, "Download Complete",
+            "The update has been downloaded. What would you like to do?",
+            QMessageBox.StandardButton.InstallNow | QMessageBox.StandardButton.Later
+        )
+        
+        if reply == QMessageBox.StandardButton.InstallNow:
+            self._install_update(Path(file_path))
+        else:
+            # Save the file path for later
+            self.settings.set('pending_update', file_path)
+            QMessageBox.information(
+                self, "Update Ready",
+                "The update has been saved and will be installed when you restart the application."
+            )
+    
+    def _on_download_failed(self, error: str):
+        """Download failed"""
+        self._download_progress.setVisible(False)
+        self.status_bar.showMessage("Download failed")
+        QMessageBox.critical(self, "Download Failed", error)
+    
+    def _install_update(self, download_file):
+        """Install the downloaded update"""
+        from pathlib import Path
+        
+        success, message = self._update_manager.install_update(download_file)
+        
+        if success:
+            reply = QMessageBox.question(
+                self, "Update Installed",
+                message + "\n\nWould you like to restart now?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+            
+            if reply == QMessageBox.StandardButton.Yes:
+                # Restart the application
+                import sys
+                import os
+                os.execv(sys.executable, [sys.executable] + sys.argv)
+        else:
+            QMessageBox.critical(self, "Installation Failed", message)
+    
+    def _skip_version(self, version: str, dialog):
+        """Skip this version"""
+        self.settings.set_skipped_version(version)
+        dialog.reject()
 
     def closeEvent(self, event):
         """Handle application close"""

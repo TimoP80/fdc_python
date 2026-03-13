@@ -231,13 +231,19 @@ class FalloutStylesheet:
         QPushButton {
             background-color: qlineargradient(
                 x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #556b2f,
-                stop: 0.5 #4a5d23,
-                stop: 1 #3d4f2a
+                stop: 0 #5a7a2a,
+                stop: 0.1 #4a6a1a,
+                stop: 0.4 #4a5d23,
+                stop: 0.6 #3d4f2a,
+                stop: 1 #2d3f1a
             );
-            color: #c4b998;
-            border: 2px solid #5c5c5c;
-            border-radius: 3px;
+            color: #d4c4a8;
+            border: 2px outset #6b8e23;
+            border-top-color: #8fa863;
+            border-left-color: #8fa863;
+            border-right-color: #3d4f2a;
+            border-bottom-color: #3d4f2a;
+            border-radius: 4px;
             padding: 6px 16px;
             font-family: Consolas;
             font-size: 10pt;
@@ -249,22 +255,34 @@ class FalloutStylesheet:
             background-color: qlineargradient(
                 x1: 0, y1: 0, x2: 0, y2: 1,
                 stop: 0 #6b8e23,
-                stop: 0.5 #556b2f,
-                stop: 1 #4a5d23
+                stop: 0.1 #5a7a2a,
+                stop: 0.4 #556b2f,
+                stop: 0.6 #4a5d23,
+                stop: 1 #3d4f2a
             );
             color: #ffcc00;
-            border: 2px solid #b7410e;
+            border: 2px outset #8fa863;
+            border-top-color: #a8c878;
+            border-left-color: #a8c878;
+            border-right-color: #556b2f;
+            border-bottom-color: #556b2f;
         }
         
         QPushButton:pressed {
             background-color: qlineargradient(
                 x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #3d4f2a,
-                stop: 0.5 #4a5d23,
+                stop: 0 #2d3f1a,
+                stop: 0.1 #3d4f2a,
+                stop: 0.4 #4a5d23,
+                stop: 0.6 #4a5d23,
                 stop: 1 #556b2f
             );
             color: #ffffff;
-            border: 2px solid #8b3a0e;
+            border: 2px inset #3d4f2a;
+            border-top-color: #2d3f1a;
+            border-left-color: #2d3f1a;
+            border-right-color: #6b8e23;
+            border-bottom-color: #6b8e23;
         }
         
         QPushButton:disabled {
@@ -275,6 +293,10 @@ class FalloutStylesheet:
         
         QPushButton:focus {
             border: 2px solid #ffcc00;
+            border-top-color: #ffdd44;
+            border-left-color: #ffdd44;
+            border-right-color: #cc9900;
+            border-bottom-color: #cc9900;
         }
         
         /* --- Rust/Metal Button Style --- */
@@ -316,40 +338,57 @@ class FalloutStylesheet:
         
         /* --- Line Edit --- */
         QLineEdit {
-            background-color: #2d2d2d;
+            background-color: #1a1a1a;
             color: #c4b998;
-            border: 2px solid #5c5c5c;
-            border-radius: 2px;
+            border: 2px inset #3a3a3a;
+            border-top-color: #0d0d0d;
+            border-left-color: #0d0d0d;
+            border-right-color: #4a4a4a;
+            border-bottom-color: #4a4a4a;
+            border-radius: 3px;
             padding: 4px 8px;
             font-family: Consolas;
             font-size: 10pt;
         }
         
         QLineEdit:focus {
-            border: 2px solid #ffcc00;
-            background-color: #3a3a3a;
+            border: 2px inset #6b8e23;
+            border-top-color: #8fa863;
+            border-left-color: #8fa863;
+            border-right-color: #4a5d23;
+            border-bottom-color: #4a5d23;
+            background-color: #222222;
         }
         
         QLineEdit:disabled {
-            background-color: #3a3a3a;
+            background-color: #2a2a2a;
             color: #5c5c5c;
+            border: 2px inset #3a3a3a;
         }
         
         /* --- Text Edit --- */
         QTextEdit, QPlainTextEdit {
-            background-color: #2d2d2d;
+            background-color: #1a1a1a;
             color: #c4b998;
-            border: 2px solid #5c5c5c;
-            border-radius: 2px;
+            border: 2px inset #3a3a3a;
+            border-top-color: #0d0d0d;
+            border-left-color: #0d0d0d;
+            border-right-color: #4a4a4a;
+            border-bottom-color: #4a4a4a;
+            border-radius: 3px;
             padding: 4px;
             font-family: Courier New;
             font-size: 10pt;
-            selection-background-color: #556b2f;
+            selection-background-color: #6b8e23;
             selection-color: #ffcc00;
         }
         
         QTextEdit:focus, QPlainTextEdit:focus {
-            border: 2px solid #ffcc00;
+            border: 2px inset #6b8e23;
+            border-top-color: #8fa863;
+            border-left-color: #8fa863;
+            border-right-color: #4a5d23;
+            border-bottom-color: #4a5d23;
         }
         
         /* --- Terminal Style Text Edit --- */
@@ -634,29 +673,43 @@ class FalloutStylesheet:
         
         /* --- Group Box --- */
         QGroupBox {
-            background-color: #2a2a28;
-            border: 2px solid #5c5c5c;
+            background-color: qlineargradient(
+                x1: 0, y1: 0, x2: 0, y2: 1,
+                stop: 0 #3a3a38,
+                stop: 1 #2a2a28
+            );
+            border: 2px outset #5c5c5c;
+            border-top-color: #6a6a6a;
+            border-left-color: #6a6a6a;
+            border-right-color: #4a4a4a;
+            border-bottom-color: #4a4a4a;
             border-radius: 4px;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 14px;
+            padding-top: 14px;
             font-family: Consolas;
             font-weight: bold;
-            color: #c4b998;
+            color: #d4c4a8;
         }
         
         QGroupBox::title {
             subcontrol-origin: margin;
             subcontrol-position: top left;
-            left: 10px;
-            padding: 2px 8px;
+            left: 12px;
+            padding: 2px 10px;
             color: #ffcc00;
-            background-color: #2a2a28;
+            background-color: #3a3a38;
+            border: 1px solid #5c5c5c;
+            border-radius: 2px;
         }
         
         /* --- Dialog --- */
         QDialog {
-            background-color: #1a1a1a;
-            border: 3px solid #5c5c5c;
+            background-color: #2a2a28;
+            border: 3px outset #5c5c5c;
+            border-top-color: #6a6a6a;
+            border-left-color: #6a6a6a;
+            border-right-color: #3a3a3a;
+            border-bottom-color: #3a3a3a;
         }
         
         /* --- Check Box --- */
@@ -1132,7 +1185,6 @@ class FalloutUIHelpers:
         return """
             border: 3px outset #8b4513;
             border-radius: 4px;
-            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
         """
     
     @staticmethod
