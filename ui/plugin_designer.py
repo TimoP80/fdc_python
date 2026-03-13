@@ -23,7 +23,7 @@ from PyQt6.QtWidgets import (
     QPushButton, QToolButton, QTabWidget, QGridLayout, QFormLayout,
     QSplitterHandle, QSizePolicy, QApplication
 )
-from PyQt6.QtCore import Qt, QPointF, QRectF, pyqtSignal, QMimeData, QTimer, QSize
+from PyQt6.QtCore import Qt, QPointF, QPoint, QRectF, pyqtSignal, QMimeData, QTimer, QSize
 from PyQt6.QtGui import (
     QPen, QBrush, QColor, QFont, QPainter, QPainterPath, QCursor,
     QDrag, QKeyEvent, QMouseEvent, QFocusEvent, QDragEnterEvent, QDragMoveEvent, QDropEvent
