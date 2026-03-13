@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fallout Dialogue Creator 2.0</title>
+    <style>
+        /* ============================================
+           FALLOUT 2 TERMINAL THEME CSS
+           ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Terminal Green Palette */
+            --terminal-green: #33ff33;
+            --terminal-dim: #1a8c1a;
+            --terminal-bright: #66ff66;
+            --terminal-glow: rgba(51, 255, 51, 0.3);
+            
+            /* Fallout Yellow/Orange */
+            --fallout-yellow: #ffcc00;
+            --fallout-amber: #ffbb00;
+            --fallout-orange: #cc6633;
+            
+            /* Background Colors */
+            --bg-dark: #0d1a0d;
+            --bg-panel: #1a2a1a;
+            --bg-light: #2a3a2a;
+            
+            /* Text Colors */
+            --text-primary: #c4b998;
+            --text-bright: #e8dca8;
+            --text-dim: #6a7a6a;
+            
+            /* Border Colors */
+            --border-color: #3a5a3a;
+            --border-bright: #4a7a4a;
+        }
+        
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-dark);
+            color: var(--terminal-green);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* CRT Screen Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* Screen Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            pointer-events: none;
+            z-index: 999;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border: 2px solid var(--terminal-green);
+            background: var(--bg-panel);
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px var(--terminal-glow),
+                        inset 0 0 30px rgba(51, 255, 51, 0.05);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--terminal-green);
+            margin-bottom: 10px;
+        }
+        
+        .version {
+            color: var(--fallout-yellow);
+            font-size: 1.2em;
+            text-shadow: 0 0 8px var(--fallout-amber);
+        }
+        
+        .tagline {
+            color: var(--text-dim);
+            font-style: italic;
+            margin-top: 15px;
+        }
+        
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+        }
+        
+        nav a {
+            color: var(--terminal-green);
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid var(--terminal-dim);
+            transition: all 0.3s;
+        }
+        
+        nav a:hover {
+            background: var(--terminal-dim);
+            color: var(--terminal-bright);
+            box-shadow: 0 0 10px var(--terminal-glow);
+        }
+        
+        /* Sections */
+        section {
+            border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: var(--terminal-green);
+            border-bottom: 1px solid var(--terminal-dim);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h3 {
+            color: var(--fallout-yellow);
+            margin: 20px 0 10px 0;
+            font-size: 1.1em;
+        }
+        
+        p {
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        
+        /* Lists */
+        ul, ol {
+            color: var(--text-primary);
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        /* Code Blocks */
+        code {
+            background: var(--bg-dark);
+            color: var(--terminal-bright);
+            padding: 2px 8px;
+            border: 1px solid var(--terminal-dim);
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        
+        pre {
+            background: var(--bg-dark);
+            border: 1px solid var(--terminal-dim);
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            color: var(--terminal-green);
+        }
+        
+        pre code {
+            padding: 0;
+            border: none;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background: var(--bg-light);
+            color: var(--terminal-green);
+        }
+        
+        td {
+            color: var(--text-primary);
+        }
+        
+        /* Buttons/Links */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--terminal-dim);
+            color: var(--terminal-green);
+            text-decoration: none;
+            border: 1px solid var(--terminal-green);
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: var(--terminal-green);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--terminal-glow);
+        }
+        
+        .btn-primary {
+            background: var(--fallout-orange);
+            border-color: var(--fallout-yellow);
+            color: var(--bg-dark);
+        }
+        
+        .btn-primary:hover {
+            background: var(--fallout-yellow);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+        }
+        
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            border: 1px solid var(--border-color);
+            background: var(--bg-light);
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--terminal-green);
+            box-shadow: 0 0 15px var(--terminal-glow);
+        }
+        
+        .feature-card h3 {
+            color: var(--terminal-green);
+            margin-top: 0;
+        }
+        
+        .feature-card p {
+            color: var(--text-dim);
+            font-size: 0.9em;
+        }
+        
+        /* Warning/Note Boxes */
+        .note {
+            border: 1px solid var(--fallout-yellow);
+            background: rgba(255, 187, 0, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+            color: var(--fallout-yellow);
+        }
+        
+        .warning {
+            border: 1px solid #cc3333;
+            background: rgba(204, 51, 51, 0.1);
+            padding: 15px;
+            margin: 15px 0;
+            color: #ff6666;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-panel);
+            margin-top: 30px;
+            color: var(--text-dim);
+        }
+        
+        footer a {
+            color: var(--terminal-green);
+        }
+        
+        /* Animations */
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--terminal-glow);
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+            z-index: 1001;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .container { padding: 10px; }
+            section { padding: 15px; }
+            nav { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>Fallout Dialogue Creator</h1>
+            <div class="version">Version 2.1.1</div>
+            <div class="tagline">Create and edit Fallout 1 & 2 dialogue with style</div>
+        </header>
+        
+        <!-- NAVIGATION -->
+        <nav>
+            <a href="#overview">Overview</a>
+            <a href="#features">Features</a>
+            <a href="#installation">Installation</a>
+            <a href="#usage">Usage</a>
+            <a href="#configuration">Configuration</a>
+            <a href="#credits">Credits</a>
+        </nav>
+        
+        <!-- OVERVIEW -->
+        <section id="overview">
+            <h2>// PROJECT OVERVIEW</h2>
+            <p>
+                <span class="blink">></span> Welcome to Fallout Dialogue Creator 2.0, a modern tool for creating and editing 
+                dialogue files for Fallout 1 and Fallout 2. Originally based on the classic FMF (Fan Made Fallout) format, 
+                this application has evolved into a full-featured dialogue editor with a distinctive Fallout 2 aesthetic.
+            </p>
+            <p>
+                The application is built using Python 3 and PyQt6, providing a cross-platform solution for modders 
+                and game developers who want to create authentic Fallout dialogue.
+            </p>
+            
+            <div class="note">
+                <strong>Note:</strong> This application is not affiliated with, nor endorsed by, Bethesda Softworks 
+                or Interplay Entertainment. Fallout is a trademark of Bethesda.
+            </div>
+        </section>
+        
+        <!-- FEATURES -->
+        <section id="features">
+            <h2>// KEY FEATURES</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>FMF File Encoding Detection</h3>
+                    <p>Automatically detects file encoding (UTF-8, UTF-16, Windows-1252, DOS code pages) for maximum compatibility with legacy dialogue files.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Fallout 2 Themed UI</h3>
+                    <p>Authentic post-apocalyptic aesthetic with olive drab greens, rust oranges, and signature yellow highlighting. CRT-style visual effects included.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Plugin Designer</h3>
+                    <p>Built-in visual plugin designer allows you to create custom plugins without writing code. Extend the application's functionality with your own additions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Script Compiler Integration</h3>
+                    <p>Configure and use the SSL (Fallout Scripting Language) compiler to compile dialogue scripts directly from the application.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>MSG/DDF Export</h3>
+                    <p>Export dialogues to multiple formats including SSL scripts, MSG message files, and DDF format for maximum compatibility.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Enhanced Diagram Widget</h3>
+                    <p>Visual dialogue editor with color-coded nodes, curved arrows, gradients, and smooth zooming for intuitive dialogue flow design.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Complete Menu System</h3>
+                    <p>Full menu bar with File, Edit, View, Dialogue, Tools, and Help menus. Comprehensive keyboard shortcuts for efficient workflow.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Plugin System</h3>
+                    <p>Extensible architecture with hot-reloadable plugins. Add new export formats, parsers, and UI extensions.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- INSTALLATION -->
+        <section id="installation">
+            <h2>// INSTALLATION</h2>
+            
+            <h3>Requirements</h3>
+            <ul>
+                <li><strong>Python 3.9+</strong> - Required runtime</li>
+                <li><strong>PyQt6</strong> - GUI framework</li>
+                <li><strong>pyyaml</strong> - Configuration file handling</li>
+            </ul>
+            
+            <h3>Dependencies Installation</h3>
+            <pre><code>pip install PyQt6 pyyaml</code></pre>
+            
+            <h3>Running from Source</h3>
+            <pre><code># Clone the repository
+git clone https://github.com/TimoP80/fdc_python.git
+cd fdc_python
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python main.py</code></pre>
+            
+            <h3>Running the Executable</h3>
+            <p>
+                If you have a pre-built executable (Windows), simply run:
+            </p>
+            <pre><code>FalloutDialogueCreator.exe</code></pre>
+            
+            <div class="note">
+                <strong>Tip:</strong> On first run, the application will create a configuration directory at 
+                <code>%APPDATA%/FMFDLG</code> for storing settings and user data.
+            </div>
+        </section>
+        
+        <!-- USAGE -->
+        <section id="usage">
+            <h2>// USAGE GUIDE</h2>
+            
+            <h3>Getting Started</h3>
+            <ol>
+                <li><strong>Launch the application</strong> - Either run <code>python main.py</code> or double-click the executable</li>
+                <li><strong>Create or open a dialogue</strong> - Use File → New or File → Open</li>
+                <li><strong>Add nodes</strong> - Right-click in the dialogue tree or use the toolbar</li>
+                <li><strong>Edit NPC text</strong> - Select a node and type in the NPC text field</li>
+                <li><strong>Add player options</strong> - Use the options section to add response choices</li>
+                <li><strong>Link nodes</strong> - Set the "Link to" field to connect options to other nodes</li>
+                <li><strong>Save your work</strong> - File → Save</li>
+            </ol>
+            
+            <h3>Visual Diagram Editor</h3>
+            <p>
+                The diagram widget provides a visual representation of your dialogue flow:
+            </p>
+            <ul>
+                <li><strong>Green nodes</strong> - Starting nodes (WTG - "What to say")</li>
+                <li><strong>Blue nodes</strong> - Regular dialogue nodes</li>
+                <li><strong>Gray nodes</strong> - Hidden nodes</li>
+                <li><strong>Orange nodes</strong> - Nodes with skill checks</li>
+                <li><strong>Gold highlight</strong> - Selected node</li>
+                <li><strong>Arrows</strong> - Green (good), Red (bad), Gray (neutral) reactions</li>
+            </ul>
+            
+            <h3>Keyboard Shortcuts</h3>
+            <table>
+                <tr><th>Shortcut</th><th>Action</th></tr>
+                <tr><td>Ctrl+N</td><td>New dialogue</td></tr>
+                <tr><td>Ctrl+O</td><td>Open dialogue</td></tr>
+                <tr><td>Ctrl+S</td><td>Save dialogue</td></tr>
+                <tr><td>Ctrl+Shift+S</td><td>Save as</td></tr>
+                <tr><td>Ctrl+Z</td><td>Undo</td></tr>
+                <tr><td>Ctrl+Y</td><td>Redo</td></tr>
+                <tr><td>Ctrl+F</td><td>Find text</td></tr>
+                <tr><td>Ctrl+G</td><td>Go to node</td></tr>
+                <tr><td>Ctrl+T</td><td>Test dialogue</td></tr>
+                <tr><td>F11</td><td>Toggle fullscreen</td></tr>
+            </table>
+            
+            <h3>Exporting Dialogue</h3>
+            <p>To export your dialogue:</p>
+            <ol>
+                <li>Go to File → Export</li>
+                <li>Choose format: SSL, MSG, or DDF</li>
+                <li>Select destination and filename</li>
+                <li>Click Export</li>
+            </ol>
+        </section>
+        
+        <!-- CONFIGURATION -->
+        <section id="configuration">
+            <h2>// CONFIGURATION</h2>
+            
+            <h3>Settings Location</h3>
+            <p>Configuration is stored in:</p>
+            <ul>
+                <li><strong>Windows:</strong> <code>%APPDATA%/FMFDLG</code></li>
+                <li><strong>Linux/Mac:</strong> <code>~/.config/FMFDLG</code></li>
+            </ul>
+            
+            <h3>Configuration Options</h3>
+            <table>
+                <tr><th>Setting</th><th>Description</th><th>Default</th></tr>
+                <tr><td>font_size</td><td>UI font size</td><td>10</td></tr>
+                <tr><td>font_family</td><td>UI font family</td><td>Segoe UI</td></tr>
+                <tr><td>theme</td><td>Color theme (system/light/dark)</td><td>system</td></tr>
+                <tr><td>auto_save</td><td>Enable auto-save</td><td>false</td></tr>
+                <tr><td>script_compiler_path</td><td>Path to sslc.exe</td><td>(default)</td></tr>
+                <tr><td>fo2_data_path</td><td>Fallout 2 data directory</td><td>(none)</td></tr>
+            </table>
+            
+            <h3>Script Compiler Setup</h3>
+            <p>
+                To compile SSL scripts, you need the Fallout script compiler (sslc.exe):
+            </p>
+            <ol>
+                <li>Obtain sslc.exe from a Fallout 2 modding source</li>
+                <li>Go to Tools → Configure Script Compiler</li>
+                <li>Browse to select sslc.exe</li>
+                <li>Click Save</li>
+            </ol>
+            
+            <div class="warning">
+                <strong>Warning:</strong> The plugin system allows arbitrary Python code execution. 
+                Only install plugins from trusted sources.
+            </div>
+        </section>
+        
+        <!-- CREDITS -->
+        <section id="credits">
+            <h2>// CREDITS & LICENSE</h2>
+            
+            <h3>Development Team</h3>
+            <ul>
+                <li><strong>Lead Developer:</strong> Timo P</li>
+                <li><strong>Contributors:</strong> Community contributions welcome</li>
+            </ul>
+            
+            <h3>Acknowledgments</h3>
+            <ul>
+                <li>Original FMF format by the Fan Made Fallout community</li>
+                <li>Fallout is a trademark of Bethesda Softworks LLC</li>
+                <li>PyQt6 for the excellent GUI framework</li>
+            </ul>
+            
+            <h3>License</h3>
+            <p>
+                This project is open source and available under the MIT License.
+            </p>
+            <pre><code>MIT License
+
+Copyright (c) 2024 Fallout Dialogue Creator
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</code></pre>
+            
+            <h3>Links</h3>
+            <ul>
+                <li><a href="https://github.com/TimoP80/fdc_python">GitHub Repository</a></li>
+                <li><a href="plugin_development_guide.html">Plugin Development Guide</a></li>
+            </ul>
+        </section>
+        
+        <!-- FOOTER -->
+        <footer>
+            <p>
+                <span class="blink">></span> Fallout Dialogue Creator 2.1.1<br>
+                <span class="blink">></span> END OF LINE
+            </p>
+            <p style="margin-top: 20px; font-size: 0.8em;">
+                This program is not affiliated with Bethesda Softworks or Interplay Entertainment.<br>
+                Fallout and Fallout 2 are registered trademarks of Bethesda.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
