@@ -87,7 +87,7 @@
         "product_name": "Fallout Dialogue Creator",
         "file_version": "2.3.0.0",
         "product_version": "2.3.0.0",
-        "copyright": "Copyright 2024",
+        "copyright": "Copyright 2026",
         "console": false,
         "msvc": "latest"
     },
@@ -97,7 +97,7 @@
         "product_name": "Fallout Dialogue Creator",
         "file_version": "2.3.0",
         "product_version": "2.3.0",
-        "copyright": "Copyright 2024",
+        "copyright": "Copyright 2026",
         "console": false,
         "gcc_options": ["-Wall", "-Wextra"]
     },
@@ -107,7 +107,7 @@
         "product_name": "Fallout Dialogue Creator",
         "file_version": "2.3.0",
         "product_version": "2.3.0",
-        "copyright": "Copyright 2024",
+        "copyright": "Copyright 2026",
         "console": false,
         "macos_min_version": "10.15"
     },
