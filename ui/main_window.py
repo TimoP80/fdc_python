@@ -2623,18 +2623,74 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         self._populate_recent_files_menu()
 
     def on_import_ddf(self):
-        """Handle import from DDF action - NOT YET IMPLEMENTED"""
-        # DDF import requires a parser that isn't available yet
-        QMessageBox.information(self, "Import DDF", 
-            "DDF import is not yet implemented.\n\n"
-            "This feature will allow importing dialogues from DDF format.")
+        """Handle import from DDF action"""
+        from pathlib import Path
+        from core.ddf_importer import DDFImporter
+        
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Import DDF", str(self.settings.get_dialogue_path()),
+            "DDF Files (*.ddf);;All Files (*)"
+        )
+        if not file_path:
+            return
+        
+        try:
+            importer = DDFImporter()
+            dialogue, result = importer.import_file(Path(file_path))
+            
+            if result.success and dialogue:
+                dialogue.filename = file_path
+                self.dialog_manager.current_dialogue = dialogue
+                self.dialog_manager.current_file = Path(file_path)
+                self.dialog_manager.is_modified = True
+                self.dialog_manager.dialogue_loaded.emit(dialogue)
+                self.status_bar.showMessage(f"Imported from DDF: {file_path}")
+                QMessageBox.information(self, "Import Successful",
+                    f"Dialogue imported from DDF successfully!\n\nFile: {file_path}\n\nNPC: {dialogue.npcname or 'Unknown'}")
+            else:
+                error_msgs = [e.message for e in result.errors]
+                error_msg = "\n".join(error_msgs) if error_msgs else "Unknown error"
+                QMessageBox.warning(self, "Import Failed",
+                    f"Failed to import DDF file:\n\n{error_msg}")
+        except Exception as e:
+            logger.error(f"DDF import failed: {e}")
+            QMessageBox.critical(self, "Import Failed",
+                f"Failed to import DDF file:\n\n{str(e)}")
 
     def on_import_msg(self):
-        """Handle import from MSG action - NOT YET IMPLEMENTED"""
-        # MSG import requires a parser that isn't available yet
-        QMessageBox.information(self, "Import MSG", 
-            "MSG import is not yet implemented.\n\n"
-            "This feature will allow importing messages from MSG format.")
+        """Handle import from MSG action"""
+        from pathlib import Path
+        from core.msg_importer import MSGImporter
+        
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Import MSG", str(self.settings.get_dialogue_path()),
+            "MSG Files (*.msg);;All Files (*)"
+        )
+        if not file_path:
+            return
+        
+        try:
+            importer = MSGImporter()
+            dialogue, result = importer.import_file(Path(file_path))
+            
+            if result.success and dialogue:
+                dialogue.filename = file_path
+                self.dialog_manager.current_dialogue = dialogue
+                self.dialog_manager.current_file = Path(file_path)
+                self.dialog_manager.is_modified = True
+                self.dialog_manager.dialogue_loaded.emit(dialogue)
+                self.status_bar.showMessage(f"Imported from MSG: {file_path}")
+                QMessageBox.information(self, "Import Successful",
+                    f"Dialogue imported from MSG successfully!\n\nFile: {file_path}\n\nNPC: {dialogue.npcname or 'Unknown'}")
+            else:
+                error_msgs = [e.message for e in result.errors]
+                error_msg = "\n".join(error_msgs) if error_msgs else "Unknown error"
+                QMessageBox.warning(self, "Import Failed",
+                    f"Failed to import MSG file:\n\n{error_msg}")
+        except Exception as e:
+            logger.error(f"MSG import failed: {e}")
+            QMessageBox.critical(self, "Import Failed",
+                f"Failed to import MSG file:\n\n{str(e)}")
 
     def on_export_ssl(self):
         """Handle export to SSL action"""

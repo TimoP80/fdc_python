@@ -8,7 +8,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.3.0] - 2026-03-17
 
 ### Added
-- **Import Feature**: New robust import system for loading DDF and MSG files
+- **Nuitka Build System**: New Python-based build system for creating standalone executables
+  - [`build.py`](build.py): Main build script with [`NuitkaBuilder`](build.py:36) class
+    - Configurable via JSON configuration file
+    - Support for onefile and standalone builds
+    - Platform-specific options for Windows, Linux, and macOS
+    - Debug, profile, and verbose modes
+    - Automatic dependency detection and hidden imports
+  - [`build_config.json`](build_config.json): Build configuration file
+    - Application metadata (name, version, entry point)
+    - Build options (output directory, onefile, standalone)
+    - Compilation settings (optimization, LTO, Qt plugins)
+    - Platform-specific configurations
+  - [`BUILD.md`](BUILD.md): Comprehensive build documentation
+    - Quick start guide
+    - All command-line options explained
+    - Configuration file reference
+    - Build modes (onefile, standalone, torun)
+    - Platform-specific builds (Windows MSVC/MinGW, Linux GCC, macOS)
+    - Cross-compilation guide
+    - Deployment scenarios
+    - Troubleshooting section
+  - [`INSTALL.md`](INSTALL.md): Installation guide for Nuitka and dependencies
+    - Python requirements (3.8+)
+    - OS-specific setup (Windows MSVC/MinGW, Linux, macOS)
+    - Nuitka installation with PyQt6 plugin
+    - Compiler configuration
+    - Troubleshooting common issues
+- **Fallout 2 MSG Parser**: New [`core/msg_parser.py`](core/msg_parser.py) for parsing Fallout 2 MSG files
+  - [`Fallout2MsgParser`](core/msg_parser.py:81) class for three-field format `{id}{audiofile}{message}`
+  - [`Fallout2MsgEntry`](core/msg_parser.py:26) dataclass for parsed entries
+  - [`Fallout2MsgParseResult`](core/msg_parser.py:48) with error/warning tracking
+  - Strict and non-strict parsing modes
+  - Validates against four-field and alternative formats
+  - Escape sequence handling (\n, \t, \\{, \\}, \\\\)
+  - [`Fallout2FormatError`](core/msg_parser.py:73) exception for parse errors
+- **MSG Parser Tests**: New [`test_msg_parser.py`](test_msg_parser.py) with comprehensive tests
+  - Valid three-field format parsing
+  - Four-field format rejection
+  - Speaker format handling
+  - Empty audiofile field handling
+  - Comments and empty line skipping
+  - Structured output verification
+  - Strict mode exception testing
+  - Escape sequence handling
+- **Import Implementation**: Implemented DDF and MSG file import in [`ui/main_window.py`](ui/main_window.py)
+  - [`on_import_ddf()`](ui/main_window.py:2626): Imports DDF files using [`DDFImporter`](core/ddf_importer.py)
+  - [`on_import_msg()`](ui/main_window.py:2659): Imports MSG files using [`MSGImporter`](core/msg_importer.py)
+  - Both methods now display file dialogs, parse files, and load dialogues into the editor
+  - Proper error handling with user-friendly messages
   - [`core/import_base.py`](core/import_base.py): Base infrastructure with:
     - [`ImportResult`](core/import_base.py:30) class for tracking success/errors/warnings
     - [`ImportTransaction`](core/import_base.py:100) class for atomic imports with rollback

@@ -1,0 +1,127 @@
+{
+    "application": {
+        "name": "Fallout Dialogue Creator",
+        "version": "2.3.0",
+        "main_entry": "main.py",
+        "description": "Modern cross-platform rewrite of the Fallout dialogue editor"
+    },
+    "build": {
+        "output_dir": "dist",
+        "onefile": true,
+        "torun": false,
+        "standalone": true,
+        "plugin_enabled": true,
+        "plugin_name": "pyqt6"
+    },
+    "compilation": {
+        "optimization_level": 3,
+        "language_standard": "c11",
+        "show_progress": true,
+        "verbose": false,
+        "assume_yes_for_questions": true,
+        "remove_output": true,
+        "lto": "auto",
+        "follow_imports": true,
+        "include_qt_plugins": ["sqldrivers", "imageformats", "platforms"]
+    },
+    "hidden_imports": [
+        "PyQt6",
+        "PyQt6.QtCore",
+        "PyQt6.QtGui",
+        "PyQt6.QtWidgets",
+        "PyQt6.QtNetwork",
+        "sqlite3",
+        "encodings",
+        "encodings.utf_8",
+        "encodings.ascii",
+        "encodings.latin_1",
+        "logging",
+        "logging.handlers",
+        "xml.etree.ElementTree",
+        "xml.dom.minidom",
+        "json",
+        "csv",
+        "traceback",
+        "copy",
+        "functools",
+        "collections",
+        "itertools",
+        "re",
+        "os.path",
+        "pathlib",
+        "configparser",
+        "urllib.parse",
+        "plugins.example_plugin",
+        "plugins.export_plugin",
+        "plugins.ssl_msg_export_plugin",
+        "plugins.timbor_s_test_plugin"
+    ],
+    "data_files": {
+        "include": [
+            {
+                "source": "HEADERS",
+                "destination": "HEADERS"
+            },
+            {
+                "source": "plugins",
+                "destination": "plugins",
+                "files": [
+                    "example_plugin.py",
+                    "export_plugin.py",
+                    "ssl_msg_export_plugin.py",
+                    "timbor_s_test_plugin.py"
+                ]
+            }
+        ],
+        "exclude_patterns": [
+            "*.pyc",
+            "__pycache__",
+            "*.log",
+            "test_*.*",
+            ".git*"
+        ]
+    },
+    "windows": {
+        "icon": "assets/icon.ico",
+        "company_name": "Fallout Dialogue Creator",
+        "product_name": "Fallout Dialogue Creator",
+        "file_version": "2.3.0.0",
+        "product_version": "2.3.0.0",
+        "copyright": "Copyright 2024",
+        "console": false,
+        "msvc": "latest"
+    },
+    "linux": {
+        "icon": "assets/icon.png",
+        "company_name": "Fallout Dialogue Creator",
+        "product_name": "Fallout Dialogue Creator",
+        "file_version": "2.3.0",
+        "product_version": "2.3.0",
+        "copyright": "Copyright 2024",
+        "console": false,
+        "gcc_options": ["-Wall", "-Wextra"]
+    },
+    "macos": {
+        "icon": "assets/icon.icns",
+        "company_name": "Fallout Dialogue Creator",
+        "product_name": "Fallout Dialogue Creator",
+        "file_version": "2.3.0",
+        "product_version": "2.3.0",
+        "copyright": "Copyright 2024",
+        "console": false,
+        "macos_min_version": "10.15"
+    },
+    "debug": {
+        "generate_debug_symbols": false,
+        "debug_profile": false,
+        "profile": false,
+        "trace_execution": false
+    },
+    "paths": {
+        "python_include": null,
+        "python_library": null,
+        "cmake_path": null,
+        "msvc_version": null,
+        "mingw64_dir": null
+    }
+}
