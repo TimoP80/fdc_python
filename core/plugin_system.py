@@ -190,6 +190,9 @@ class PluginManager(QObject):
         self.active_plugins: Dict[str, PluginInstance] = {}
         self.hooks: Dict[str, List[Callable]] = {}
         
+        # Track trusted plugins (plugin_name -> bool)
+        self._trusted_plugins: Dict[str, bool] = {}
+        
         logger.info(f"PluginManager initialized. Base path: {app_base_path}")
         logger.info(f"Plugin directories: {self.plugin_dirs}")
 
@@ -380,6 +383,31 @@ class PluginManager(QObject):
     def get_plugin_info(self) -> List[PluginInfo]:
         """Get information about all loaded plugins"""
         return [plugin.info for plugin in self.plugins.values()]
+    
+    def is_plugin_trusted(self, plugin_name: str) -> bool:
+        """Check if a plugin is marked as trusted"""
+        return self._trusted_plugins.get(plugin_name, False)
+    
+    def set_plugin_trusted(self, plugin_name: str, trusted: bool) -> None:
+        """Mark a plugin as trusted or untrusted"""
+        self._trusted_plugins[plugin_name] = trusted
+        logger.debug(f"Plugin {plugin_name} marked as {'trusted' if trusted else 'untrusted'}")
+    
+    def should_warn_about_plugin(self, plugin_name: str) -> bool:
+        """Check if we should warn about loading a plugin (not trusted and not previously loaded)"""
+        return not self.is_plugin_trusted(plugin_name) and plugin_name not in self.plugins
+    
+    def get_security_warning_message(self, plugin_info: PluginInfo) -> str:
+        """Generate a security warning message for a plugin"""
+        return (
+            f"Security Warning: Loading plugin '{plugin_info.name}' v{plugin_info.version}\n"
+            f"Author: {plugin_info.author}\n\n"
+            f"This plugin has full access to your system and can:\n"
+            f"- Read/write files\n"
+            f"- Execute commands\n"
+            f"- Access system resources\n\n"
+            f"Only load plugins from trusted sources. Continue?"
+        )
 
 # Hook constants - predefined hook points in the application
 class PluginHooks:

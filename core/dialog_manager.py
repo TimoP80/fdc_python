@@ -47,6 +47,7 @@ class DialogManager(QObject):
         self.testing_engine = DialogueTestingEngine()
         self.scripting_engine = ScriptingEngine()
         self.plugin_manager = PluginManager()
+        self._selected_node_index: int = -1  # Track selected node index
 
     def new_dialogue(self) -> Dialogue:
         """Create a new empty dialogue"""
@@ -89,7 +90,9 @@ class DialogManager(QObject):
         # Notify plugins
         self.plugin_manager.call_hook(PluginHooks.DIALOGUE_LOADED, dialogue)
 
-        # Clean up worker
+        # Clean up worker - wait for thread to finish first
+        if self.parse_worker and self.parse_worker.isRunning():
+            self.parse_worker.wait(5000)  # Wait up to 5 seconds
         self.parse_worker.deleteLater()
         self.parse_worker = None
 
@@ -99,8 +102,10 @@ class DialogManager(QObject):
         """Handle parsing error"""
         self.parsing_error.emit(error_msg)
 
-        # Clean up worker
+        # Clean up worker - wait for thread to finish first
         if hasattr(self, 'parse_worker') and self.parse_worker:
+            if self.parse_worker.isRunning():
+                self.parse_worker.wait(5000)  # Wait up to 5 seconds
             self.parse_worker.deleteLater()
             self.parse_worker = None
 
@@ -133,12 +138,25 @@ class DialogManager(QObject):
     def get_current_node(self) -> Optional[DialogueNode]:
         """Get currently selected node.
         
-        Note: This requires integration with the UI's node selection tracking.
-        The main_window.py tracks selection in nodes_tree QTreeWidget.
+        Returns the node at the currently selected index, or None if no node is selected.
+        Use set_selected_node() to update the selected node.
         """
-        # TODO: Implement node selection tracking - requires UI integration
-        # The selected node is tracked in main_window.nodes_tree
-        return None
+        if not self.current_dialogue:
+            return None
+        if self._selected_node_index < 0 or self._selected_node_index >= len(self.current_dialogue.nodes):
+            return None
+        return self.current_dialogue.nodes[self._selected_node_index]
+    
+    def set_selected_node(self, index: int) -> None:
+        """Set the currently selected node index.
+        
+        Args:
+            index: The index of the node to select, or -1 to deselect
+        """
+        self._selected_node_index = index
+        if index >= 0:
+            self.node_selected.emit(index)
+        logger.debug(f"Node selected: {index}")
 
     def add_node(self, node: DialogueNode):
         """Add a new node to the dialogue"""

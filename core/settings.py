@@ -9,6 +9,9 @@ from typing import Optional, Tuple
 class Settings:
     """Application settings manager"""
 
+    # Sentinel value to distinguish between 'no default' and 'default is None'
+    _DEFAULT_SENTINEL = object()
+
     def __init__(self):
         self.settings = QSettings("FMF Tools", "Fallout Dialogue Creator")
 
@@ -40,10 +43,10 @@ class Settings:
             'cloned_node_format': 'Copy_of_{}',
         }
 
-    def get(self, key: str, default=None):
+    def get(self, key: str, default=_DEFAULT_SENTINEL):
         """Get setting value"""
-        if default is None:
-            default = self.defaults.get(key)
+        if default is Settings._DEFAULT_SENTINEL:
+            default = self.defaults.get(key, None)
         return self.settings.value(key, default)
 
     def set(self, key: str, value):

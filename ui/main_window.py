@@ -127,6 +127,7 @@ class MainWindow(QMainWindow):
         self.float_list = QListWidget()
         self.float_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.float_list.customContextMenuRequested.connect(self.on_float_context_menu)
+        self.float_list.itemDoubleClicked.connect(self.on_float_node_double_clicked)
         float_layout.addWidget(self.float_list)
         
         # Float controls
@@ -152,6 +153,7 @@ class MainWindow(QMainWindow):
         self.skill_list = QListWidget()
         self.skill_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.skill_list.customContextMenuRequested.connect(self.on_skill_context_menu)
+        self.skill_list.itemDoubleClicked.connect(self.on_skill_check_double_clicked)
         skill_layout.addWidget(self.skill_list)
         
         # Skill controls
@@ -1001,6 +1003,103 @@ class MainWindow(QMainWindow):
             self.populate_float_list()
             self.status_bar.showMessage(f"Deleted float node: {node_name}")
 
+    @pyqtSlot(QListWidgetItem)
+    def on_float_node_double_clicked(self, item):
+        """Edit float node messages when double-clicked"""
+        float_index = item.data(Qt.ItemDataRole.UserRole)
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue or float_index < 0 or float_index >= len(dialogue.floatnodes):
+            return
+        
+        float_node = dialogue.floatnodes[float_index]
+        
+        # Show dialog to edit float messages
+        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QPushButton, QLabel, QTextEdit, QListWidget, QAbstractItemView
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f"Edit Float Node: {float_node.nodename}")
+        dialog.setMinimumSize(550, 500)
+        
+        layout = QVBoxLayout(dialog)
+        
+        # Node name
+        name_layout = QHBoxLayout()
+        name_layout.addWidget(QLabel("Node Name:"))
+        name_edit = QLineEdit(float_node.nodename)
+        name_layout.addWidget(name_edit)
+        layout.addLayout(name_layout)
+        
+        # Messages section with Add button
+        messages_label = QLabel("Messages:")
+        layout.addWidget(messages_label)
+        
+        # List widget for messages
+        messages_list = QListWidget()
+        messages_list.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        for msg in float_node.messages:
+            messages_list.addItem(msg)
+        layout.addWidget(messages_list)
+        
+        # Message buttons
+        msg_button_layout = QHBoxLayout()
+        add_msg_btn = QPushButton("Add Message")
+        delete_msg_btn = QPushButton("Delete Message")
+        msg_button_layout.addWidget(add_msg_btn)
+        msg_button_layout.addWidget(delete_msg_btn)
+        layout.addLayout(msg_button_layout)
+        
+        # Notes
+        notes_label = QLabel("Notes:")
+        layout.addWidget(notes_label)
+        notes_edit = QLineEdit(float_node.notes)
+        layout.addWidget(notes_edit)
+        
+        # Buttons
+        button_layout = QHBoxLayout()
+        save_btn = QPushButton("Save")
+        cancel_btn = QPushButton("Cancel")
+        button_layout.addWidget(save_btn)
+        button_layout.addWidget(cancel_btn)
+        layout.addLayout(button_layout)
+        
+        # Button handlers
+        def add_message():
+            """Add a new message to the list"""
+            from PyQt6.QtWidgets import QInputDialog
+            text, ok = QInputDialog.getText(dialog, "Add Message", "Enter message text:")
+            if ok and text.strip():
+                messages_list.addItem(text.strip())
+        
+        def delete_message():
+            """Delete the selected message"""
+            current_row = messages_list.currentRow()
+            if current_row >= 0:
+                messages_list.takeItem(current_row)
+        
+        add_msg_btn.clicked.connect(add_message)
+        delete_msg_btn.clicked.connect(delete_message)
+        
+        def save_changes():
+            float_node.nodename = name_edit.text()
+            # Get messages from list
+            messages = []
+            for i in range(messages_list.count()):
+                msg = messages_list.item(i).text().strip()
+                if msg:
+                    messages.append(msg)
+            float_node.messages = messages
+            float_node.messagecnt = len(float_node.messages)
+            float_node.notes = notes_edit.text()
+            self.dialog_manager.mark_modified()
+            self.populate_float_list()
+            dialog.accept()
+            self.status_bar.showMessage(f"Edited float node: {float_node.nodename}")
+        
+        save_btn.clicked.connect(save_changes)
+        cancel_btn.clicked.connect(dialog.reject)
+        
+        dialog.exec()
+
     @pyqtSlot(QPoint)
     def on_float_context_menu(self, pos):
         """Show context menu for float nodes"""
@@ -1057,7 +1156,7 @@ class MainWindow(QMainWindow):
         # Create new skill check
         from models.dialogue import SkillCheck
         new_skill = SkillCheck(
-            check_what=Skill[skill_names.index(selected_skill)],
+            check_what=Skill(skill_names.index(selected_skill)),
             required_value=dc_value
         )
         
@@ -1106,6 +1205,123 @@ class MainWindow(QMainWindow):
             self.dialog_manager.mark_modified()
             self.populate_skill_list()
             self.status_bar.showMessage(f"Deleted skill check from node: {node_name}")
+
+    @pyqtSlot(QListWidgetItem)
+    def on_skill_check_double_clicked(self, item):
+        """Edit skill check when double-clicked"""
+        indices = item.data(Qt.ItemDataRole.UserRole)
+        if not indices or len(indices) != 2:
+            return
+        
+        node_index, skill_index = indices
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue or node_index >= len(dialogue.nodes):
+            return
+        
+        node = dialogue.nodes[node_index]
+        if skill_index >= len(node.skillchecks):
+            return
+        
+        skill_check = node.skillchecks[skill_index]
+        
+        # Show dialog to edit skill check
+        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QPushButton, QLabel, QComboBox, QSpinBox, QCheckBox
+        from models.dialogue import Skill
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f"Edit Skill Check: {node.nodename}")
+        dialog.setMinimumSize(450, 350)
+        
+        layout = QVBoxLayout(dialog)
+        
+        # Skill selection
+        skill_layout = QHBoxLayout()
+        skill_layout.addWidget(QLabel("Skill:"))
+        skill_combo = QComboBox()
+        skill_names = [Skill.get_name(s.value) for s in Skill]
+        skill_combo.addItems(skill_names)
+        current_skill_idx = next((i for i, s in enumerate(Skill) if s.value == skill_check.check_what.value), 0)
+        skill_combo.setCurrentIndex(current_skill_idx)
+        skill_layout.addWidget(skill_combo)
+        layout.addLayout(skill_layout)
+        
+        # Required value (DC)
+        dc_layout = QHBoxLayout()
+        dc_layout.addWidget(QLabel("Required Value (DC):"))
+        dc_spin = QSpinBox()
+        dc_spin.setRange(0, 300)
+        dc_spin.setValue(skill_check.required_value)
+        dc_layout.addWidget(dc_spin)
+        layout.addLayout(dc_layout)
+        
+        # Is percentage
+        percent_check = QCheckBox("Percentage-based check")
+        percent_check.setChecked(skill_check.is_percentage)
+        layout.addWidget(percent_check)
+        
+        # Modifier
+        mod_layout = QHBoxLayout()
+        mod_layout.addWidget(QLabel("Modifier:"))
+        mod_spin = QSpinBox()
+        mod_spin.setRange(-100, 100)
+        mod_spin.setValue(skill_check.modifier)
+        mod_layout.addWidget(mod_spin)
+        layout.addLayout(mod_layout)
+        
+        # Success node
+        success_layout = QHBoxLayout()
+        success_layout.addWidget(QLabel("Success Node:"))
+        success_edit = QLineEdit(skill_check.successnode)
+        success_layout.addWidget(success_edit)
+        layout.addLayout(success_layout)
+        
+        # Failure node
+        failure_layout = QHBoxLayout()
+        failure_layout.addWidget(QLabel("Failure Node:"))
+        failure_edit = QLineEdit(skill_check.failurenode)
+        failure_layout.addWidget(failure_edit)
+        layout.addLayout(failure_layout)
+        
+        # Procedure name
+        proc_layout = QHBoxLayout()
+        proc_layout.addWidget(QLabel("Procedure Name:"))
+        proc_edit = QLineEdit(skill_check.check_proc_name)
+        proc_layout.addWidget(proc_edit)
+        layout.addLayout(proc_layout)
+        
+        # Notes
+        notes_layout = QHBoxLayout()
+        notes_layout.addWidget(QLabel("Notes:"))
+        notes_edit = QLineEdit(skill_check.notes)
+        notes_layout.addWidget(notes_edit)
+        layout.addLayout(notes_layout)
+        
+        # Buttons
+        button_layout = QHBoxLayout()
+        save_btn = QPushButton("Save")
+        cancel_btn = QPushButton("Cancel")
+        button_layout.addWidget(save_btn)
+        button_layout.addWidget(cancel_btn)
+        layout.addLayout(button_layout)
+        
+        def save_changes():
+            skill_check.check_what = Skill(skill_combo.currentIndex())
+            skill_check.required_value = dc_spin.value()
+            skill_check.is_percentage = percent_check.isChecked()
+            skill_check.modifier = mod_spin.value()
+            skill_check.successnode = success_edit.text()
+            skill_check.failurenode = failure_edit.text()
+            skill_check.check_proc_name = proc_edit.text()
+            skill_check.notes = notes_edit.text()
+            self.dialog_manager.mark_modified()
+            self.populate_skill_list()
+            dialog.accept()
+            self.status_bar.showMessage(f"Edited skill check in node: {node.nodename}")
+        
+        save_btn.clicked.connect(save_changes)
+        cancel_btn.clicked.connect(dialog.reject)
+        
+        dialog.exec()
 
     @pyqtSlot(QPoint)
     def on_skill_context_menu(self, pos):
@@ -2876,13 +3092,87 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
     # ==============================================
 
     def on_compile_script(self):
-        """Handle compile script action - NOT YET IMPLEMENTED"""
-        # Script compilation uses the core/script_compiler.py module but
-        # requires the external sslc.exe compiler to be available
-        QMessageBox.information(self, "Compile Script", 
-            "Script compilation requires the SSL compiler (sslc.exe)\n"
-            "to be configured in Settings.\n\n"
-            "Use 'Test Dialogue' to validate dialogue structure.")
+        """Handle compile script action"""
+        from core.script_compiler import ScriptCompiler, CompileStatus
+        from core.ssl_exporter import export_ssl
+        import tempfile
+        import os
+        from pathlib import Path
+        
+        # Check if script compiler is configured and available
+        compiler_path = self.settings.get_script_compiler_path()
+        if not compiler_path:
+            QMessageBox.warning(self, "Compile Script", 
+                "The script compiler is not configured.\n\n"
+                "Please configure the path to sslc.exe in Settings → Paths tab, "
+                "or ensure sslc.exe exists in the default location.")
+            return
+        
+        # Check if we have a dialogue to compile
+        current_dialogue = self.dialog_manager.get_current_dialogue()
+        if not current_dialogue:
+            QMessageBox.warning(self, "Compile Script", 
+                "No dialogue is currently open.\n\n"
+                "Please open a dialogue file first before compiling.")
+            return
+        
+        # Generate SSL content from the dialogue
+        try:
+            success, ssl_content, errors, warnings = export_ssl(current_dialogue)
+        except Exception as e:
+            QMessageBox.critical(self, "Compile Script", 
+                f"Failed to generate SSL content:\n{str(e)}")
+            return
+        
+        if not success:
+            error_msg = "SSL validation failed:\n" + "\n".join(errors)
+            if warnings:
+                error_msg += "\n\nWarnings:\n" + "\n".join(warnings)
+            QMessageBox.warning(self, "Compile Script", error_msg)
+            return
+        
+        if not ssl_content or not ssl_content.strip():
+            QMessageBox.warning(self, "Compile Script", 
+                "No SSL content generated from the current dialogue.")
+            return
+        
+        # Create a temporary SSL file to compile
+        # Use cp1252 encoding to match Fallout 2 SSL format
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ssl', delete=False, encoding='cp1252') as tmp:
+            tmp.write(ssl_content)
+            tmp_path = tmp.name
+        
+        try:
+            # Try to compile the script
+            compiler = ScriptCompiler(compiler_path)
+            
+            if not compiler.is_available():
+                QMessageBox.warning(self, "Compile Script", 
+                    f"Script compiler not found at:\n{compiler_path}\n\n"
+                    "Please verify the compiler path in Settings.")
+                return
+            
+            # Compile the script
+            result = compiler.compile(Path(tmp_path), show_warnings=True)
+            
+            if result.status == CompileStatus.SUCCESS:
+                QMessageBox.information(self, "Compile Script", 
+                    f"Script compiled successfully!\n\n"
+                    f"Output: {result.output_file}\n\n"
+                    f"You can find the compiled .int file in the output directory.")
+            else:
+                error_details = "\n".join(result.errors[:5])  # Show first 5 errors
+                QMessageBox.warning(self, "Compile Script", 
+                    f"Script compilation failed:\n\n{error_details}")
+        except Exception as e:
+            QMessageBox.critical(self, "Compile Script", 
+                f"Error during compilation:\n{str(e)}")
+        finally:
+            # Clean up temp file
+            try:
+                os.unlink(tmp_path)
+            except OSError as e:
+                logger.debug(f"Failed to clean up temp file {tmp_path}: {e}")
 
     def on_settings(self):
         """Handle settings action"""

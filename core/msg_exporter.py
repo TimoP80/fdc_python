@@ -16,6 +16,7 @@ The MSG file format:
 """
 
 import logging
+import re
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple, Any
 from dataclasses import dataclass
@@ -358,8 +359,6 @@ class MSGParser:
     
     def parse_content(self, content: str) -> List[MsgEntry]:
         """Parse MSG content string"""
-        
-        import re
         
         entries = []
         

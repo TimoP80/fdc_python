@@ -418,9 +418,9 @@ class SSLExporter:
 #define NAME                    SCRIPT_{self.config.script_number}
 
 /* Helper Variables */
-variable Evil_Critter:=0;
-variable Slavery_Tolerant:=SLAVE_TOLERANT;
-variable Karma_Perception:=KARMA_PERCEPTION1;
+variable Evil_Critter;
+variable Slavery_Tolerant;
+variable Karma_Perception;
 variable temp;
 """
         

@@ -1,0 +1,50 @@
+Index: GLOBAL.H
+===================================================================
+--- GLOBAL.H	(revision 54)
++++ GLOBAL.H	(working copy)
+@@ -58,7 +58,36 @@
+ #define GVAR_HOLODISK_CAPTAINSLOG           (220)
+ #define GVAR_QUEST_FIX_JUKE                 (700)
+ 
++// These gvars are all related to the fisherman's family feud quest -dju
++#define GVAR_GREATEST_HAUL                  (701)
++#define GVAR_SABOTAGE_IKE                   (702)
++#define GVAR_KILL_IKE                       (703)
++#define GVAR_IKE_DEAD                       (704)
++#define GVAR_PHIL_DEAD                      (705)
++// How many days Ike has been on his "greatest haul" expedition
++#define GVAR_IKE_EXPEDITION_DAYS_PASSED           (706)
++// Has Ike left yet?
++#define GVAR_IKE_OUT_OF_TOWN                      (707)
++#define GVAR_ROYCE_DEAD                     (708)
++#define GVAR_COMPANY_IKE_IN_CHARGE                (709)
++#define GVAR_COMPANY_PHIL_IN_CHARGE               (710)
++#define GVAR_COMPANY_JOINT_OWNERSHIP              (711)
++#define GVAR_PHIL_AGREED_SHARE_COMPANY            (712)
++#define GVAR_PHIL_SALESMAN_OF_THE_YEAR            (713)
++#define GVAR_SABOTAGE_PHIL                        (714)
++#define GVAR_KILL_PHIL                            (715)
++#define GVAR_COMPANY_PC_BOUGHT                    (716)
+ 
++// Sabotage Ike quest states
++#define ike_sabotage_active (1)
++#define ike_sabotage_performed (2)
++#define ike_sabotage_complete (3)
++
++// Kill Ike quest states
++#define ike_kill_active (1)
++#define ike_kill_performed (2)
++#define ike_kill_complete (3)
++
+ // Reputation Information
+ 
+ #define GVAR_PLAYER_REPUTATION               (0)
+@@ -1527,4 +1556,7 @@
+ #define kaga_met   (global_var(GVAR_RND_KAGA_STATE) bwand KAGA_MET)
+ 
+ 
++
++
++
+ #endif // _GLOBAL_H_DEFINED2 O0)  (1O9 )_ _ LI ( DW1O  (
+\ No newline at end of file

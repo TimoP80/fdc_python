@@ -30,6 +30,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Single file and batch import
     - Directory scanning for bulk imports
     - Convenience functions: [`import_dialogue_file()`](core/import_manager.py:215), [`import_dialogue_files()`](core/import_manager.py:232), [`import_from_directory()`](core/import_manager.py:247)
+- **Script Compilation**: Full script compilation functionality in [`ui/main_window.py`](ui/main_window.py:3094)
+  - Generates SSL from dialogue and compiles with sslc.exe
+  - Validates SSL before compilation
+  - Proper error handling with detailed messages
+  - Uses cp1252 encoding for Fallout 2 compatibility
+- **Script Header Configuration**: New [`ScriptHeaderConfig`](core/ssl_exporter.py:42) class for header file management
+  - Configurable header search paths with fallback support
+  - Automatic header validation
+  - Integration with application settings
+- **Double-Click Editing**: Added double-click handlers for quick editing
+  - Float nodes: [`on_float_node_double_clicked()`](ui/main_window.py:1006)
+  - Skill checks: [`on_skill_check_double_clicked()`](ui/main_window.py:1209)
+- **Fallout Header Files**: Added [`HEADERS/`](HEADERS/) directory with Fallout 2 header files
+  - Complete set of .h files (define.h, command.h, scripts.h, etc.)
+  - For SSL validation and compilation
 - **Unit Tests**: Comprehensive test suite in [`test_import.py`](test_import.py) covering:
   - ImportResult and ImportTransaction functionality
   - DDF import (valid, empty, malformed, comments, multiple nodes, variables)
@@ -39,6 +54,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Progress reporting
 
 ### Fixed
+- **Parse Worker Memory Leak** ([`core/dialog_manager.py`](core/dialog_manager.py:93)): Fixed memory leak by adding `wait()` call before `deleteLater()` to ensure worker thread finishes before cleanup
+- **Node Selection Tracking** ([`core/dialog_manager.py`](core/dialog_manager.py:50,138)): Fixed `get_current_node()` returning None - added `_selected_node_index` attribute and `set_selected_node()` method for proper node selection
+- **Plugin Security Warnings** ([`core/plugin_system.py`](core/plugin_system.py:193)): Added plugin trust tracking with `_trusted_plugins` dictionary and methods: `is_plugin_trusted()`, `set_plugin_trusted()`, `should_warn_about_plugin()`, `get_security_warning_message()`
+- **Settings Default Value Handling** ([`core/settings.py`](core/settings.py:12)): Added `_DEFAULT_SENTINEL` to distinguish between "no default" and "default is None"
+- **Import Before Definition** ([`ui/fallout_widgets.py`](ui/fallout_widgets.py:25)): Moved `from ui.fallout_theme import FalloutColors` to module level before class definitions
+- **CRT Animation Timer** ([`ui/fallout_widgets.py`](ui/fallout_widgets.py:393)): Fixed CRT scanline timer always running - now starts in `showEvent()` and stops in `hideEvent()` for better performance
+- **Division by Zero** ([`ui/fallout_widgets.py`](ui/fallout_widgets.py:260)): Added validation in `SpecialStatBar` to prevent division by zero when `max_value` is 0
+- **Unused Import** ([`core/msg_exporter.py`](core/msg_exporter.py:19)): Moved `import re` from inside method to module level
 - **DDF Importer**: Fixed Condition class initialization - added required arguments for dataclass fields
 - **MSG Importer**: Fixed empty file handling - now returns dialogue with defaults instead of None
 

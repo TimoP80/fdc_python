@@ -482,7 +482,6 @@ class DraggableListWidget(QListWidget):
                 # Create a visual representation (pixmap)
                 pixmap = self.viewport().grab(rect)
                 drag.setPixmap(pixmap)
-                drag.setPixmapHotSpot(hot_spot)
                 
                 # Start drag - use MoveAction for dragging within app, CopyAction for cross-app
                 drag.exec(Qt.DropAction.CopyAction)

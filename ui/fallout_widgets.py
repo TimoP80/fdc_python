@@ -25,9 +25,8 @@ from PyQt6.QtGui import (
 import random
 import math
 
-
-# =============================================================================
-# FALLOUT BUTTONS
+# Import colors from theme module - must be before class definitions
+from ui.fallout_theme import FalloutColors
 # =============================================================================
 
 class FalloutButton(QPushButton):
@@ -258,6 +257,8 @@ class SpecialStatBar(QFrame):
         self.stat_name = stat_name
         self._current_value = current_value
         self._max_value = max_value
+        if self._max_value == 0:
+            self._max_value = 1  # Prevent division by zero
         self.setMinimumHeight(24)
         self.setMinimumWidth(160)
         
@@ -379,15 +380,27 @@ class CRTScanlineOverlay(QFrame):
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setStyleSheet("background: transparent;")
         
-        # Scanline animation timer
+        # Scanline animation timer - will be started in showEvent
         self._scanline_offset = 0
         self._animation_timer = QTimer(self)
         self._animation_timer.timeout.connect(self._update_scanline)
-        self._animation_timer.start(50)  # Update every 50ms
+        self._animation_timer.setSingleShot(False)
         
         # Flicker settings
         self._flicker_enabled = True
         self._opacity = 1.0
+    
+    def showEvent(self, event):
+        """Start animation when widget becomes visible"""
+        super().showEvent(event)
+        if not self._animation_timer.isActive():
+            self._animation_timer.start(50)  # Update every 50ms
+    
+    def hideEvent(self, event):
+        """Stop animation when widget becomes hidden"""
+        super().hideEvent(event)
+        if self._animation_timer.isActive():
+            self._animation_timer.stop()
     
     def _update_scanline(self):
         self._scanline_offset = (self._scanline_offset + 1) % 4

@@ -1,0 +1,15 @@
+Index: SCRIPTS.H
+===================================================================
+--- SCRIPTS.H	(revision 54)
++++ SCRIPTS.H	(working copy)
+@@ -26,4 +26,8 @@
+ #define SCRIPT_SUN              (7)     //Sun.int          ; Sun script. Doesn't actually exist but we need this define for the .msg file.
+ #define SCRIPT_IMARKET          (8)     //IMARKET.INT      ; IMarket Map script
+ #define SCRIPT_GENERIC          (9)     //GENERIC.INT       ; Generic Script
+-#endif // SCRIPTS_H
++#define SCRIPT_ICPHIL           (10)  // icphil.int      ; Phil (City On The Coast)
++#define SCRIPT_ICIKE            (11)  // icike.int       ; Ike Hogg (City On The Coast)
++#define SCRIPT_ICPETE           (12)  // icpete.int      ; Pete Hogg (City On The Coast)
++#define SCRIPT_ICMARIE          (13)  // icmarie.int     ; Marie Hogg (City On The Coast)
++#endif // SCRIPTS_H
+\ No newline at end of file
