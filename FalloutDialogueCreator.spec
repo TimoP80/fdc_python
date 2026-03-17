@@ -52,6 +52,10 @@ additional_hiddenimports = [
     'core.script_compiler',
     'core.settings',
     'core.plugin_system',
+    'core.ddf_importer',
+    'core.msg_importer',
+    'core.import_manager',
+    'core.import_base',
     'models.dialogue',
     # Plugin modules - ensure these are included in the bundle
     'plugins.example_plugin',

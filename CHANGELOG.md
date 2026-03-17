@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-03-17
+
+### Added
+- **Import Feature**: New robust import system for loading DDF and MSG files
+  - [`core/import_base.py`](core/import_base.py): Base infrastructure with:
+    - [`ImportResult`](core/import_base.py:30) class for tracking success/errors/warnings
+    - [`ImportTransaction`](core/import_base.py:100) class for atomic imports with rollback
+    - [`ImportProgressReporter`](core/import_base.py:185) for thread-safe progress reporting
+    - [`ImportValidator`](core/import_base.py:225) base class for validation
+  - [`core/ddf_importer.py`](core/ddf_importer.py): DDF file parser with:
+    - Full parsing of DDF sections (metadata, description proc, nodes, variables)
+    - Player options with conditions and skill checks
+    - Validation with duplicate detection and link verification
+    - Batch import with progress reporting
+  - [`core/msg_importer.py`](core/msg_importer.py): MSG file parser with:
+    - Fallout 1/2 MSG format support (`{ID}{Speaker}{Message}`)
+    - Male/female text variants
+    - Speaker type detection (NPC, Player, System, Description)
+    - Escaped character handling
+    - Fallout 2 extended format support via [`Fallout2MSGImporter`](core/msg_importer.py:380)
+  - [`core/import_manager.py`](core/import_manager.py): Unified import API with:
+    - Auto-format detection based on file extension and content
+    - Single file and batch import
+    - Directory scanning for bulk imports
+    - Convenience functions: [`import_dialogue_file()`](core/import_manager.py:215), [`import_dialogue_files()`](core/import_manager.py:232), [`import_from_directory()`](core/import_manager.py:247)
+- **Unit Tests**: Comprehensive test suite in [`test_import.py`](test_import.py) covering:
+  - ImportResult and ImportTransaction functionality
+  - DDF import (valid, empty, malformed, comments, multiple nodes, variables)
+  - MSG import (valid, empty, malformed, escaped chars, speaker types, duplicates)
+  - Import manager (format detection, batch import, directory import)
+  - Edge cases (unicode, long messages, special characters, mixed encoding)
+  - Progress reporting
+
+### Fixed
+- **DDF Importer**: Fixed Condition class initialization - added required arguments for dataclass fields
+- **MSG Importer**: Fixed empty file handling - now returns dialogue with defaults instead of None
+
+### Changed
+- **PyInstaller Spec**: Added new import modules to hidden imports:
+  - `core.ddf_importer`
+  - `core.msg_importer`
+  - `core.import_manager`
+  - `core.import_base`
+
 ## [2.2.0] - 2026-03-13
 
 ### Added
