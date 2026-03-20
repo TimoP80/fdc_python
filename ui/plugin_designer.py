@@ -24,6 +24,9 @@ from PyQt6.QtWidgets import (
     QPushButton, QToolButton, QTabWidget, QGridLayout, QFormLayout,
     QSplitterHandle, QSizePolicy, QApplication
 )
+
+# Import fade animation widgets
+from ui.fallout_widgets import FadeLineEdit, FadeTextEdit, FadeLabel, FadeButton
 from PyQt6.QtCore import Qt, QPointF, QPoint, QRectF, pyqtSignal, QMimeData, QTimer, QSize
 from PyQt6.QtGui import (
     QPen, QBrush, QColor, QFont, QPainter, QPainterPath, QCursor,
@@ -510,7 +513,7 @@ class ComponentPalette(QWidget):
         layout.addWidget(title)
         
         # Search box
-        self.search_box = QLineEdit()
+        self.search_box = FadeLineEdit()
         self.search_box.setPlaceholderText("Search components...")
         self.search_box.textChanged.connect(self._on_search_changed)
         layout.addWidget(self.search_box)
@@ -698,7 +701,7 @@ class PropertyEditor(QWidget):
             self.property_widgets[prop_name] = widget
         
         # Add component name/label field
-        label_edit = QLineEdit(component.label)
+        label_edit = FadeLineEdit(component.label)
         label_edit.textChanged.connect(lambda t: self._on_property_changed("label", t))
         self.properties_layout.addRow("Label:", label_edit)
         self.property_widgets["_label"] = label_edit
@@ -739,20 +742,20 @@ class PropertyEditor(QWidget):
             
             # Regular string - check if multi-line
             if schema.get("multiline", False):
-                widget = QTextEdit()
+                widget = FadeTextEdit()
                 widget.setPlainText(str(value))
                 widget.textChanged.connect(lambda: self._on_property_changed(prop_name, widget.toPlainText()))
                 widget.setMaximumHeight(100)
                 return widget
             
-            widget = QLineEdit()
+            widget = FadeLineEdit()
             widget.setText(str(value))
             widget.textChanged.connect(lambda t: self._on_property_changed(prop_name, t))
             return widget
         
         else:
             # Default to line edit
-            widget = QLineEdit()
+            widget = FadeLineEdit()
             widget.setText(str(value))
             widget.textChanged.connect(lambda t: self._on_property_changed(prop_name, t))
             return widget
@@ -1193,7 +1196,7 @@ class CodePreviewPanel(QWidget):
         layout.addLayout(toolbar)
         
         # Code text edit
-        self.code_edit = QTextEdit()
+        self.code_edit = FadeTextEdit()
         self.code_edit.setReadOnly(True)
         self.code_edit.setFont(QFont("Courier New", 9))
         self.code_edit.setStyleSheet("""

@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 # Application version - should match main.py
-APP_VERSION = "2.1.1"
+APP_VERSION = "2.3.0"
 GITHUB_REPO = "TimoP80/fdc_python"
 GITHUB_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases"
 

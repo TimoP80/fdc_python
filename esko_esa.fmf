@@ -1,0 +1,28 @@
+/*
+
+    Fan Made Fallout Dialogue Tool
+         dialogue script file
+
+ -- hand editing this file is not recommended
+
+ Created with version 2.0.0-dev
+
+*/
+
+NPCName ""
+Location ""
+Description ""
+Unknown_Desc ""
+Known_Desc ""
+Detailed_Desc ""
+
+Node "Node1"
+notes ""
+is_wtg = false
+{
+NPCText "New node text"
+      options {
+          int=4 Reaction=REACTION_NEUTRAL playertext "I am a hardcore Fallout Killah." linkto "Node1"  notes "This is a test option."
+              }
+}
+

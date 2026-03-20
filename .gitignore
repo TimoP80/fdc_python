@@ -34,3 +34,12 @@ Thumbs.db
 
 # Windows
 *.pyc
+
+# Temp files
+*.tmp
+temp_*
+
+# Test dialogue files (local testing)
+benji.ddf
+benji.msg
+benji.ssl

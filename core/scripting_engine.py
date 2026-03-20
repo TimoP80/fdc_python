@@ -389,8 +389,17 @@ class ScriptingEngine:
                 return self._compare_values(player.dude_caps, condition.check_eval, condition.check_value)
 
             elif condition.check_type == CheckType.GLOBAL_VAR:
-                # Check global variables (simplified)
-                return True  # Placeholder
+                # Check global variables (GVAR)
+                try:
+                    gvar_id = condition.check_field
+                    # Try to get global variables from player, default to empty dict
+                    global_vars = getattr(player, 'global_vars', {})
+                    # Get the GVAR value, default to 0 if not found
+                    gvar_value = global_vars.get(gvar_id, 0) if isinstance(global_vars, dict) else 0
+                    return self._compare_values(gvar_value, condition.check_eval, condition.check_value)
+                except Exception as e:
+                    logger.warning(f"Error evaluating GLOBAL_VAR check: {e}")
+                    return False
 
             elif condition.check_type == CheckType.LOCAL_VAR:
                 # Check local variables (simplified)
@@ -452,4 +461,3 @@ class ScriptingEngine:
                 return actual_str != expected_value
 
         return False
-        return info

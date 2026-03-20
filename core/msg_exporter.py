@@ -41,7 +41,7 @@ class SpeakerType(Enum):
 class MsgEntry:
     """Represents a single MSG entry"""
     message_id: int
-    speaker: int = 0  # Default to NPC
+    speaker: str = ""  # Default to empty (users can edit manually)
     male_text: str = ""
     female_text: str = ""
     
@@ -156,7 +156,7 @@ class MSGExporter:
         male_look = dialogue.unknowndesc or f"You see {dialogue.npcname}."
         self.entries.append(MsgEntry(
             message_id=100,
-            speaker=SpeakerType.DESCRIPTION.value,
+            speaker=str(SpeakerType.DESCRIPTION.value),
             male_text=male_look,
             female_text=male_look
         ))
@@ -164,7 +164,7 @@ class MSGExporter:
         # Look at female (101)
         self.entries.append(MsgEntry(
             message_id=101,
-            speaker=SpeakerType.DESCRIPTION.value,
+            speaker=str(SpeakerType.DESCRIPTION.value),
             male_text=male_look,
             female_text=male_look
         ))
@@ -173,7 +173,7 @@ class MSGExporter:
         male_desc = dialogue.detaileddesc or f"You see {dialogue.npcname}."
         self.entries.append(MsgEntry(
             message_id=102,
-            speaker=SpeakerType.DESCRIPTION.value,
+            speaker=str(SpeakerType.DESCRIPTION.value),
             male_text=male_desc,
             female_text=male_desc
         ))
@@ -181,7 +181,7 @@ class MSGExporter:
         # Description female (103)
         self.entries.append(MsgEntry(
             message_id=103,
-            speaker=SpeakerType.DESCRIPTION.value,
+            speaker=str(SpeakerType.DESCRIPTION.value),
             male_text=male_desc,
             female_text=male_desc
         ))
@@ -198,7 +198,7 @@ class MSGExporter:
             if node_text:  # Only add entries with text
                 self.entries.append(MsgEntry(
                     message_id=msg_id,
-                    speaker=SpeakerType.NPC.value,
+                    speaker=str(SpeakerType.NPC.value),
                     male_text=node_text,
                     female_text=node_text_female
                 ))
@@ -220,7 +220,7 @@ class MSGExporter:
                 if message:
                     self.entries.append(MsgEntry(
                         message_id=msg_id,
-                        speaker=SpeakerType.SYSTEM.value,
+                        speaker=str(SpeakerType.SYSTEM.value),
                         male_text=message,
                         female_text=message
                     ))
@@ -364,7 +364,7 @@ class MSGParser:
         
         for match in re.finditer(self.ENTRY_PATTERN, content, re.DOTALL):
             msg_id = int(match.group(1))
-            speaker = int(match.group(2))
+            speaker = str(match.group(2))  # Keep as string for flexibility
             male_text = match.group(3)
             female_text = match.group(4) if match.group(4) else male_text
             

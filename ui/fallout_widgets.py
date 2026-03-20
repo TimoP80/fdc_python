@@ -11,16 +11,17 @@ Advanced UI widgets with authentic Fallout 2 styling including:
 from PyQt6.QtWidgets import (
     QWidget, QPushButton, QLabel, QLineEdit, QTextEdit, 
     QListWidget, QTreeWidget, QProgressBar, QFrame,
-    QGraphicsDropShadowEffect, QGraphicsOpacityEffect
+    QGraphicsDropShadowEffect, QGraphicsOpacityEffect,
+    QVBoxLayout, QHBoxLayout
 )
 from PyQt6.QtCore import (
     Qt, QSize, QTimer, QPropertyAnimation, QEasingCurve,
     pyqtSignal, QRect, QPoint, QMimeData
 )
 from PyQt6.QtGui import (
-    QPainter, QColor, QBrush, QPen, QLinearGradient, 
+    QPainter, QColor, QBrush, QPen, QLinearGradient,
     QConicalGradient, QFont, QCursor, QEnterEvent,
-    QPaintEvent, QResizeEvent, QShowEvent
+    QPaintEvent, QResizeEvent, QShowEvent, QPixmap
 )
 import random
 import math
@@ -777,11 +778,416 @@ class TypewriterLabel(QLabel):
 
 
 # =============================================================================
+# FADE ANIMATION SUPPORT
+# =============================================================================
+
+class FadeAnimationMixin:
+    """
+    Mixin class that provides smooth fade-in and fade-out transitions
+    for form elements. Supports 300ms duration with ease-in-out timing
+    and respects reduced motion accessibility preferences.
+    """
+    
+    # Animation constants
+    FADE_DURATION = 300  # milliseconds
+    FADE_EASING = QEasingCurve.Type.InOutQuad
+    
+    def __init__(self):
+        self._fade_opacity_effect: QGraphicsOpacityEffect = None
+        self._fade_animation: QPropertyAnimation = None
+        self._is_fading = False
+        self._setup_fade_effects()
+    
+    def _setup_fade_effects(self):
+        """Initialize the opacity effect for fade animations"""
+        # Check for reduced motion preference
+        self._reduced_motion = self._check_reduced_motion()
+        
+        # Create opacity effect
+        self._fade_opacity_effect = QGraphicsOpacityEffect(self)
+        self._fade_opacity_effect.setOpacity(1.0)
+        self.setGraphicsEffect(self._fade_opacity_effect)
+        
+        # Create animation object
+        self._fade_animation = QPropertyAnimation(
+            self._fade_opacity_effect, b"opacity", self
+        )
+        self._fade_animation.setDuration(self.FADE_DURATION)
+        self._fade_animation.setEasingCurve(self.FADE_EASING)
+    
+    @staticmethod
+    def _check_reduced_motion() -> bool:
+        """Check if user prefers reduced motion (accessibility)"""
+        try:
+            from PyQt6.QtCore import QSettings
+            settings = QSettings("Qt", "PAFE")  # Qt Application Framework Environment
+            # Check Qt's accessibility settings
+            if settings.contains("Accessibility/ReduceMotion"):
+                return settings.value("Accessibility/ReduceMotion", type=bool)
+            # Also check system-level animation preference
+            from PyQt6.QtGui import QGuiApplication
+            return QGuiApplication.testAttribute(Qt.ApplicationAttribute.AA_DisableWindowActivation)
+        except Exception:
+            return False
+    
+    def fade_in(self, duration: int = None):
+        """
+        Fade in the widget (opacity: 0 -> 1)
+        
+        Args:
+            duration: Optional custom duration in milliseconds. 
+                     Uses default 300ms if not specified.
+        """
+        if self._reduced_motion:
+            # Skip animation for reduced motion preference
+            self._fade_opacity_effect.setOpacity(1.0)
+            return
+        
+        if self._is_fading:
+            self._fade_animation.stop()
+        
+        self._is_fading = True
+        
+        if duration is not None:
+            self._fade_animation.setDuration(duration)
+        else:
+            self._fade_animation.setDuration(self.FADE_DURATION)
+        
+        self._fade_animation.setStartValue(0.0)
+        self._fade_animation.setEndValue(1.0)
+        
+        self._fade_animation.finished.connect(lambda: setattr(self, '_is_fading', False))
+        self._fade_animation.start()
+    
+    def fade_out(self, duration: int = None):
+        """
+        Fade out the widget (opacity: 1 -> 0)
+        
+        Args:
+            duration: Optional custom duration in milliseconds.
+                     Uses default 300ms if not specified.
+        """
+        if self._reduced_motion:
+            # Skip animation for reduced motion preference
+            self._fade_opacity_effect.setOpacity(0.0)
+            return
+        
+        if self._is_fading:
+            self._fade_animation.stop()
+        
+        self._is_fading = True
+        
+        if duration is not None:
+            self._fade_animation.setDuration(duration)
+        else:
+            self._fade_animation.setDuration(self.FADE_DURATION)
+        
+        self._fade_animation.setStartValue(1.0)
+        self._fade_animation.setEndValue(0.0)
+        
+        self._fade_animation.finished.connect(lambda: setattr(self, '_is_fading', False))
+        self._fade_animation.start()
+    
+    def set_opacity(self, opacity: float):
+        """Set the opacity directly without animation"""
+        self._fade_opacity_effect.setOpacity(max(0.0, min(1.0, opacity)))
+    
+    def get_opacity(self) -> float:
+        """Get the current opacity value"""
+        return self._fade_opacity_effect.opacity()
+
+
+class FadeLineEdit(QLineEdit, FadeAnimationMixin):
+    """
+    Line edit widget with fade-in/fade-out transitions.
+    Fade-in triggers on focus, fade-out on blur.
+    """
+    
+    def __init__(self, text: str = "", parent=None):
+        QLineEdit.__init__(self, text, parent)
+        FadeAnimationMixin.__init__(self)
+        self.setText(text)
+        self._setup_fade_connections()
+    
+    def _setup_fade_connections(self):
+        """Connect focus events to fade animations"""
+        # Note: We use timer to ensure widget is fully shown before fading in
+        self.focusInEvent = self._on_focus_in
+        self.focusOutEvent = self._on_focus_out
+    
+    def _on_focus_in(self, event):
+        """Handle focus in - fade in"""
+        QLineEdit.focusInEvent(self, event)
+        # Fade in on focus
+        self.fade_in()
+    
+    def _on_focus_out(self, event):
+        """Handle focus out - fade out"""
+        QLineEdit.focusOutEvent(self, event)
+        # Fade out on blur
+        self.fade_out()
+    
+    def showEvent(self, event):
+        """Fade in when widget is first shown"""
+        QLineEdit.showEvent(self, event)
+        self.fade_in()
+
+
+class FadeTextEdit(QTextEdit, FadeAnimationMixin):
+    """
+    Text edit widget with fade-in/fade-out transitions.
+    Fade-in triggers on focus, fade-out on blur.
+    """
+    
+    def __init__(self, text: str = "", parent=None):
+        QTextEdit.__init__(self, text, parent)
+        FadeAnimationMixin.__init__(self)
+        self.setPlainText(text)
+        self._setup_fade_connections()
+    
+    def _setup_fade_connections(self):
+        """Connect focus events to fade animations"""
+        self.focusInEvent = self._on_focus_in
+        self.focusOutEvent = self._on_focus_out
+    
+    def _on_focus_in(self, event):
+        """Handle focus in - fade in"""
+        QTextEdit.focusInEvent(self, event)
+        self.fade_in()
+    
+    def _on_focus_out(self, event):
+        """Handle focus out - fade out"""
+        QTextEdit.focusOutEvent(self, event)
+        self.fade_out()
+    
+    def showEvent(self, event):
+        """Fade in when widget is first shown"""
+        QTextEdit.showEvent(self, event)
+        self.fade_in()
+
+
+class FadeLabel(QLabel, FadeAnimationMixin):
+    """
+    Label widget with fade-in/fade-out transitions.
+    Useful for validation messages and status indicators.
+    """
+    
+    def __init__(self, text: str = "", parent=None):
+        QLabel.__init__(self, text, parent)
+        FadeAnimationMixin.__init__(self)
+        self.setText(text)
+    
+    def showEvent(self, event):
+        """Fade in when label is shown (e.g., validation message appears)"""
+        QLabel.showEvent(self, event)
+        self.fade_in()
+    
+    def hideEvent(self, event):
+        """Fade out when label is hidden"""
+        self.fade_out()
+        # Call parent hide after fade starts
+        QLabel.hideEvent(self, event)
+
+
+class FadeButton(FalloutButton, FadeAnimationMixin):
+    """
+    Button widget with fade-in/fade-out transitions.
+    Fade effects trigger on hover/press and on show/hide.
+    """
+    
+    def __init__(self, text: str = "", button_type: str = "standard", parent=None):
+        FalloutButton.__init__(self, text, button_type, parent)
+        FadeAnimationMixin.__init__(self)
+    
+    def showEvent(self, event):
+        """Fade in when button is shown"""
+        FalloutButton.showEvent(self, event)
+        self.fade_in()
+    
+    def hideEvent(self, event):
+        """Fade out when button is hidden"""
+        self.fade_out()
+        FalloutButton.hideEvent(self, event)
+
+
+class FadeValidationMessage(QFrame, FadeAnimationMixin):
+    """
+    Validation/error message widget with fade transitions.
+    Shows error or success messages with appropriate styling.
+    """
+    
+    # Message types
+    ERROR = "error"
+    SUCCESS = "success"
+    WARNING = "warning"
+    INFO = "info"
+    
+    def __init__(self, message: str = "", message_type: str = "info", parent=None):
+        QFrame.__init__(self, parent)
+        FadeAnimationMixin.__init__(self)
+        
+        self._message_type = message_type
+        self._message_label = QLabel(message, self)
+        
+        # Setup layout
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(8, 6, 8, 6)
+        layout.addWidget(self._message_label)
+        
+        # Apply styling based on message type
+        self._apply_message_style()
+        
+        # Initially hidden
+        self.hide()
+    
+    def _apply_message_style(self):
+        """Apply styling based on message type"""
+        colors = FalloutColors()
+        
+        if self._message_type == self.ERROR:
+            bg_color = "#3d2020"
+            border_color = colors.STATUS_RED
+            text_color = "#ff6666"
+        elif self._message_type == self.SUCCESS:
+            bg_color = "#203d20"
+            border_color = "#33cc33"
+            text_color = "#66ff66"
+        elif self._message_type == self.WARNING:
+            bg_color = "#3d3d20"
+            border_color = colors.STATUS_YELLOW
+            text_color = "#ffff66"
+        else:  # INFO
+            bg_color = "#20303d"
+            border_color = "#3366cc"
+            text_color = "#6699ff"
+        
+        self.setStyleSheet(f"""
+            QFrame {{
+                background-color: {bg_color};
+                border: 2px solid {border_color};
+                border-radius: 4px;
+            }}
+            QLabel {{
+                color: {text_color};
+                font-family: Consolas;
+                font-size: 9pt;
+            }}
+        """)
+    
+    def set_message(self, text: str, message_type: str = None):
+        """Set the message text and optionally change message type"""
+        if message_type is not None and message_type != self._message_type:
+            self._message_type = message_type
+            self._apply_message_style()
+        
+        self._message_label.setText(text)
+    
+    def show_message(self, text: str = None, message_type: str = None):
+        """Show the message with fade-in animation"""
+        if text is not None:
+            self.set_message(text, message_type)
+        self.show()
+        self.fade_in()
+    
+    def hide_message(self):
+        """Hide the message with fade-out animation"""
+        self.fade_out()
+        # Actually hide after animation completes
+        QTimer.singleShot(self.FADE_DURATION, self.hide)
+
+
+# =============================================================================
 # ANIMATION EFFECTS
 # =============================================================================
 
 class FalloutAnimationHelper:
     """Helper class for Fallout-style animations"""
+    
+    # Animation constants for consistency
+    FADE_DURATION = 300  # milliseconds
+    FADE_EASING = QEasingCurve.Type.InOutQuad
+    
+    @staticmethod
+    def create_fade_in_animation(target: QWidget, duration: int = None) -> QPropertyAnimation:
+        """
+        Create a fade-in animation (opacity: 0 -> 1)
+        
+        Args:
+            target: The widget to animate
+            duration: Animation duration in milliseconds (default: 300ms)
+            
+        Returns:
+            QPropertyAnimation configured for fade-in
+        """
+        if duration is None:
+            duration = FalloutAnimationHelper.FADE_DURATION
+        
+        # Check reduced motion preference
+        if FalloutAnimationHelper._check_reduced_motion():
+            opacity_effect = QGraphicsOpacityEffect(target)
+            opacity_effect.setOpacity(1.0)
+            target.setGraphicsEffect(opacity_effect)
+            return None
+        
+        opacity_effect = QGraphicsOpacityEffect(target)
+        target.setGraphicsEffect(opacity_effect)
+        
+        animation = QPropertyAnimation(opacity_effect, b"opacity", target)
+        animation.setDuration(duration)
+        animation.setStartValue(0.0)
+        animation.setEndValue(1.0)
+        animation.setEasingCurve(FalloutAnimationHelper.FADE_EASING)
+        
+        return animation
+    
+    @staticmethod
+    def create_fade_out_animation(target: QWidget, duration: int = None) -> QPropertyAnimation:
+        """
+        Create a fade-out animation (opacity: 1 -> 0)
+        
+        Args:
+            target: The widget to animate
+            duration: Animation duration in milliseconds (default: 300ms)
+            
+        Returns:
+            QPropertyAnimation configured for fade-out
+        """
+        if duration is None:
+            duration = FalloutAnimationHelper.FADE_DURATION
+        
+        # Check reduced motion preference
+        if FalloutAnimationHelper._check_reduced_motion():
+            opacity_effect = QGraphicsOpacityEffect(target)
+            opacity_effect.setOpacity(0.0)
+            target.setGraphicsEffect(opacity_effect)
+            return None
+        
+        opacity_effect = QGraphicsOpacityEffect(target)
+        target.setGraphicsEffect(opacity_effect)
+        
+        animation = QPropertyAnimation(opacity_effect, b"opacity", target)
+        animation.setDuration(duration)
+        animation.setStartValue(1.0)
+        animation.setEndValue(0.0)
+        animation.setEasingCurve(FalloutAnimationHelper.FADE_EASING)
+        
+        return animation
+    
+    @staticmethod
+    def _check_reduced_motion() -> bool:
+        """Check if user prefers reduced motion (accessibility)"""
+        try:
+            # Check Qt accessibility settings
+            from PyQt6.QtCore import QSettings
+            settings = QSettings("Qt", "PAFE")
+            if settings.contains("Accessibility/ReduceMotion"):
+                return settings.value("Accessibility/ReduceMotion", type=bool)
+            
+            # Also check system accessibility
+            from PyQt6.QtGui import QGuiApplication
+            return QGuiApplication.testAttribute(Qt.ApplicationAttribute.AA_DisableWindowActivation)
+        except Exception:
+            return False
     
     @staticmethod
     def create_flicker_animation(target: QWidget, duration: int = 5000) -> QPropertyAnimation:
@@ -829,6 +1235,484 @@ class FalloutAnimationHelper:
 
 
 # =============================================================================
+# TEXTURE-ENABLED WIDGETS
+# =============================================================================
+
+from ui.texture_system import (
+    TextureGenerator, TextureStyle, TexturePainter, TextureCache
+)
+
+
+class TexturedFalloutButton(QPushButton):
+    """
+    Custom button with realistic texture materials and bump mapping.
+    
+    Supports multiple texture types:
+    - wood: Oak, pine, or walnut wood grain
+    - metal: Steel, copper, brass with scratches
+    - rust: Worn, rusted metal surface
+    - leather: Brown, tan, or dark leather
+    - concrete: Gray concrete with cracks
+    """
+    
+    def __init__(self, text: str = "", texture_type: str = "metal",
+                 parent=None):
+        super().__init__(text, parent)
+        self._texture_type = texture_type
+        self._texture_cache = {}
+        self._normal_map_cache = {}
+        self._is_pressed = False
+        self._is_hovered = False
+        
+        # Get texture style
+        self._style = self._get_style_for_type(texture_type)
+        
+        self._setup_button()
+    
+    def _get_style_for_type(self, tex_type: str) -> dict:
+        """Get texture style configuration for button type"""
+        styles = {
+            "wood": TextureStyle.BUTTON_STANDARD,
+            "metal": TextureStyle.BUTTON_METAL,
+            "rust": TextureStyle.BUTTON_RUST,
+            "leather": TextureStyle.BUTTON_LEATHER,
+            "steel": {**TextureStyle.BUTTON_METAL, "metal_type": "steel"},
+            "copper": {**TextureStyle.BUTTON_METAL, "metal_type": "copper"},
+            "brass": {**TextureStyle.BUTTON_METAL, "metal_type": "brass"},
+            "oak": {**TextureStyle.BUTTON_STANDARD, "wood_type": "oak"},
+            "pine": {**TextureStyle.BUTTON_STANDARD, "wood_type": "pine"},
+            "walnut": {**TextureStyle.BUTTON_STANDARD, "wood_type": "walnut"},
+            "brown_leather": {**TextureStyle.BUTTON_LEATHER, "leather_type": "brown"},
+            "tan_leather": {**TextureStyle.BUTTON_LEATHER, "leather_type": "tan"},
+        }
+        return styles.get(tex_type, TextureStyle.BUTTON_METAL)
+    
+    def _setup_button(self):
+        """Setup button appearance"""
+        self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.setMinimumHeight(36)
+        
+        # Enable mouse tracking for hover effects
+        self.setMouseTracking(True)
+        
+        # Set base stylesheet (colors, fonts, etc.)
+        self._apply_base_stylesheet()
+        
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(6)
+        shadow.setOffset(2, 2)
+        shadow.setColor(QColor(0, 0, 0, 120))
+        self.setGraphicsEffect(shadow)
+    
+    def _apply_base_stylesheet(self):
+        """Apply base QSS stylesheet for colors and fonts"""
+        colors = FalloutColors()
+        self.setStyleSheet(f"""
+            QPushButton {{
+                color: #d4c4a8;
+                border: 3px outset #5c5c5c;
+                border-radius: 4px;
+                padding: 8px 20px;
+                font-family: Consolas;
+                font-weight: bold;
+                font-size: 10pt;
+            }}
+            QPushButton:hover {{
+                color: #ffcc00;
+                border: 3px outset #8fa863;
+            }}
+            QPushButton:pressed {{
+                color: #ffffff;
+                border: 3px inset #3d4f2a;
+            }}
+            QPushButton:disabled {{
+                background-color: #3a3a3a;
+                color: #5c5c5c;
+                border: 2px solid #3a3a3a;
+            }}
+        """)
+    
+    def _generate_texture(self, width: int, height: int, 
+                          variant: str = "normal") -> QPixmap:
+        """Generate texture with caching"""
+        cache_key = f"{self._texture_type}_{width}x{height}_{variant}"
+        
+        if cache_key not in self._texture_cache:
+            # Generate texture based on type and variant
+            tex_type = self._style.get("type", "metal")
+            
+            if tex_type == "wood":
+                self._texture_cache[cache_key] = TextureGenerator.generate_wood_texture(
+                    width, height,
+                    wood_type=self._style.get("wood_type", "oak"),
+                    scale=self._style.get("scale", 10.0),
+                    seed=self._style.get("seed", 42) + (100 if variant == "hover" else 0)
+                )
+            elif tex_type == "metal":
+                self._texture_cache[cache_key] = TextureGenerator.generate_metal_texture(
+                    width, height,
+                    metal_type=self._style.get("metal_type", "steel"),
+                    scratches=self._style.get("scratches", True),
+                    seed=self._style.get("seed", 42) + (100 if variant == "hover" else 0)
+                )
+            elif tex_type == "rust":
+                intensity = self._style.get("intensity", 0.7)
+                if variant == "hover":
+                    intensity = min(1.0, intensity + 0.15)
+                self._texture_cache[cache_key] = TextureGenerator.generate_rust_texture(
+                    width, height,
+                    intensity=intensity,
+                    seed=self._style.get("seed", 42)
+                )
+            elif tex_type == "leather":
+                self._texture_cache[cache_key] = TextureGenerator.generate_leather_texture(
+                    width, height,
+                    leather_type=self._style.get("leather_type", "brown"),
+                    worn=self._style.get("worn", True),
+                    seed=self._style.get("seed", 42) + (100 if variant == "hover" else 0)
+                )
+            elif tex_type == "concrete":
+                self._texture_cache[cache_key] = TextureGenerator.generate_concrete_texture(
+                    width, height,
+                    dirty=self._style.get("dirty", True),
+                    seed=self._style.get("seed", 42)
+                )
+            else:
+                # Default metal
+                self._texture_cache[cache_key] = TextureGenerator.generate_metal_texture(
+                    width, height, metal_type="steel", scratches=True
+                )
+        
+        return self._texture_cache[cache_key]
+    
+    def _get_normal_map(self, texture: QPixmap) -> QPixmap:
+        """Get or generate normal map for bump effect"""
+        cache_key = id(texture)
+        
+        if cache_key not in self._normal_map_cache:
+            strength = self._style.get("bump_strength", 1.0)
+            self._normal_map_cache[cache_key] = TextureGenerator.generate_normal_map(
+                texture, strength
+            )
+        
+        return self._normal_map_cache[cache_key]
+    
+    def enterEvent(self, event):
+        """Handle mouse enter - show hover texture"""
+        self._is_hovered = True
+        self.update()
+        super().enterEvent(event)
+    
+    def leaveEvent(self, event):
+        """Handle mouse leave"""
+        self._is_hovered = False
+        self.update()
+        super().leaveEvent(event)
+    
+    def mousePressEvent(self, event):
+        """Handle mouse press"""
+        self._is_pressed = True
+        self.update()
+        super().mousePressEvent(event)
+    
+    def mouseReleaseEvent(self, event):
+        """Handle mouse release"""
+        self._is_pressed = False
+        self.update()
+        super().mouseReleaseEvent(event)
+    
+    def paintEvent(self, event: QPaintEvent):
+        """Custom paint event with texture rendering"""
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        
+        rect = self.rect()
+        
+        # Determine texture variant based on state
+        if not self.isEnabled():
+            # Disabled - use dimmed version
+            variant = "disabled"
+        elif self._is_pressed:
+            variant = "pressed"
+        elif self._is_hovered:
+            variant = "hover"
+        else:
+            variant = "normal"
+        
+        # Generate texture
+        texture = self._generate_texture(rect.width(), rect.height(), variant)
+        
+        if not texture.isNull():
+            # Get normal map for bump effect
+            normal_map = self._get_normal_map(texture)
+            
+            # Light position based on button state
+            if self._is_pressed:
+                light_pos = (rect.width() // 2, rect.height() // 2 + 20)
+            elif self._is_hovered:
+                light_pos = (rect.width() // 2, rect.height() // 3)
+            else:
+                light_pos = (rect.width() // 2, rect.height() // 4)
+            
+            # Paint with bump mapping
+            TexturePainter.paint_bumpmapped(
+                painter, rect, texture, normal_map, light_pos
+            )
+        else:
+            # Fallback to solid color
+            painter.fillRect(rect, QColor(80, 80, 80))
+        
+        # Draw border
+        self._paint_border(painter, rect)
+        
+        # Draw text
+        self._paint_text(painter, rect)
+        
+        painter.end()
+    
+    def _paint_border(self, painter: QPainter, rect: QRect):
+        """Paint 3D border effect"""
+        colors = FalloutColors()
+        
+        if self._is_pressed:
+            # Pressed border (inset)
+            border_color = QColor(colors.DARK_METAL)
+            highlight_color = QColor(colors.PANEL_SHADOW)
+            shadow_color = QColor(colors.OLIVE_DRAB)
+        elif self._is_hovered:
+            # Hover border
+            border_color = QColor(colors.FALLOUT_YELLOW)
+            highlight_color = QColor(colors.BRIGHT_YELLOW)
+            shadow_color = QColor(colors.GOLD_YELLOW)
+        else:
+            # Normal border
+            border_color = QColor(colors.PANEL_BORDER)
+            highlight_color = QColor(colors.PANEL_HIGHLIGHT)
+            shadow_color = QColor(colors.PANEL_SHADOW)
+        
+        # Draw border with 3D effect
+        painter.setPen(border_color)
+        painter.drawRect(rect.adjusted(1, 1, -2, -2))
+        
+        # Highlight (top and left)
+        pen = QPen(highlight_color)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        
+        if not self._is_pressed:
+            # Top edge
+            painter.drawLine(rect.left() + 2, rect.top() + 2,
+                           rect.right() - 2, rect.top() + 2)
+            # Left edge
+            painter.drawLine(rect.left() + 2, rect.top() + 2,
+                           rect.left() + 2, rect.bottom() - 2)
+        
+        # Shadow (bottom and right)
+        pen = QPen(shadow_color)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        
+        if not self._is_pressed:
+            # Bottom edge
+            painter.drawLine(rect.left() + 2, rect.bottom() - 2,
+                           rect.right() - 2, rect.bottom() - 2)
+            # Right edge
+            painter.drawLine(rect.right() - 2, rect.top() + 2,
+                           rect.right() - 2, rect.bottom() - 2)
+    
+    def _paint_text(self, painter: QPainter, rect: QRect):
+        """Paint button text"""
+        colors = FalloutColors()
+        
+        if not self.isEnabled():
+            text_color = QColor(colors.TEXT_DIM)
+        elif self._is_pressed:
+            text_color = QColor(255, 255, 255)
+        elif self._is_hovered:
+            text_color = QColor(colors.FALLOUT_YELLOW)
+        else:
+            text_color = QColor(colors.TEXT_NORMAL)
+        
+        # Draw text centered
+        painter.setPen(text_color)
+        font = QFont("Consolas", 10, QFont.Weight.Bold)
+        painter.setFont(font)
+        
+        text_rect = rect.adjusted(0, 0, 0, 0)
+        painter.drawText(text_rect, Qt.AlignmentFlag.AlignCenter, self.text())
+    
+    def setTextureType(self, texture_type: str):
+        """Change the texture type dynamically"""
+        self._texture_type = texture_type
+        self._style = self._get_style_for_type(texture_type)
+        self._texture_cache.clear()
+        self._normal_map_cache.clear()
+        self.update()
+
+
+class TexturedFalloutPanel(QFrame):
+    """
+    Panel with realistic texture materials and bump mapping.
+    
+    Supports multiple texture types similar to TexturedFalloutButton.
+    """
+    
+    def __init__(self, texture_type: str = "metal", 
+                 parent=None):
+        super().__init__(parent)
+        self._texture_type = texture_type
+        self._texture_cache = {}
+        self._normal_map_cache = {}
+        
+        # Get texture style
+        self._style = self._get_style_for_type(texture_type)
+        
+        self._setup_panel()
+    
+    def _get_style_for_type(self, tex_type: str) -> dict:
+        """Get texture style configuration for panel type"""
+        styles = {
+            "metal": TextureStyle.PANEL_STANDARD,
+            "rust": TextureStyle.PANEL_RUST,
+            "wood": TextureStyle.PANEL_WOOD,
+            "concrete": {**TextureStyle.PANEL_WORN, "type": "concrete"},
+            "steel": {**TextureStyle.PANEL_STANDARD, "metal_type": "steel"},
+            "copper": {**TextureStyle.PANEL_STANDARD, "metal_type": "copper"},
+            "brass": {**TextureStyle.PANEL_STANDARD, "metal_type": "brass"},
+            "worn_metal": {**TextureStyle.PANEL_STANDARD, "scratches": True},
+        }
+        return styles.get(tex_type, TextureStyle.PANEL_STANDARD)
+    
+    def _setup_panel(self):
+        """Setup panel appearance"""
+        # Add shadow effect
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(10)
+        shadow.setOffset(3, 3)
+        shadow.setColor(QColor(0, 0, 0, 140))
+        self.setGraphicsEffect(shadow)
+    
+    def _generate_texture(self, width: int, height: int) -> QPixmap:
+        """Generate texture with caching"""
+        cache_key = f"{self._texture_type}_{width}x{height}"
+        
+        if cache_key not in self._texture_cache:
+            tex_type = self._style.get("type", "metal")
+            
+            if tex_type == "wood":
+                self._texture_cache[cache_key] = TextureGenerator.generate_wood_texture(
+                    width, height,
+                    wood_type=self._style.get("wood_type", "pine"),
+                    scale=self._style.get("scale", 10.0),
+                    seed=self._style.get("seed", 42)
+                )
+            elif tex_type == "metal":
+                self._texture_cache[cache_key] = TextureGenerator.generate_metal_texture(
+                    width, height,
+                    metal_type=self._style.get("metal_type", "steel"),
+                    scratches=self._style.get("scratches", False),
+                    seed=self._style.get("seed", 42)
+                )
+            elif tex_type == "rust":
+                self._texture_cache[cache_key] = TextureGenerator.generate_rust_texture(
+                    width, height,
+                    intensity=self._style.get("intensity", 0.6),
+                    seed=self._style.get("seed", 42)
+                )
+            elif tex_type == "concrete":
+                self._texture_cache[cache_key] = TextureGenerator.generate_concrete_texture(
+                    width, height,
+                    dirty=self._style.get("dirty", True),
+                    seed=self._style.get("seed", 42)
+                )
+            else:
+                self._texture_cache[cache_key] = TextureGenerator.generate_metal_texture(
+                    width, height, metal_type="steel", scratches=False
+                )
+        
+        return self._texture_cache[cache_key]
+    
+    def _get_normal_map(self, texture: QPixmap) -> QPixmap:
+        """Get or generate normal map"""
+        cache_key = id(texture)
+        
+        if cache_key not in self._normal_map_cache:
+            strength = self._style.get("bump_strength", 0.6)
+            self._normal_map_cache[cache_key] = TextureGenerator.generate_normal_map(
+                texture, strength
+            )
+        
+        return self._normal_map_cache[cache_key]
+    
+    def paintEvent(self, event: QPaintEvent):
+        """Custom paint event with texture rendering"""
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        
+        rect = self.rect()
+        
+        # Generate texture
+        texture = self._generate_texture(rect.width(), rect.height())
+        
+        if not texture.isNull():
+            normal_map = self._get_normal_map(texture)
+            
+            # Light from top
+            light_pos = (rect.width() // 2, rect.height() // 6)
+            
+            TexturePainter.paint_bumpmapped(
+                painter, rect, texture, normal_map, light_pos
+            )
+        else:
+            painter.fillRect(rect, QColor(45, 45, 45))
+        
+        # Draw border
+        self._paint_border(painter, rect)
+        
+        painter.end()
+    
+    def _paint_border(self, painter: QPainter, rect: QRect):
+        """Paint 3D border effect"""
+        colors = FalloutColors()
+        
+        # Outer border
+        border_color = QColor(colors.PANEL_BORDER)
+        painter.setPen(border_color)
+        painter.drawRect(rect.adjusted(1, 1, -2, -2))
+        
+        # Highlight (top and left)
+        highlight_color = QColor(colors.PANEL_HIGHLIGHT)
+        pen = QPen(highlight_color)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        
+        painter.drawLine(rect.left() + 2, rect.top() + 2,
+                        rect.right() - 2, rect.top() + 2)
+        painter.drawLine(rect.left() + 2, rect.top() + 2,
+                        rect.left() + 2, rect.bottom() - 2)
+        
+        # Shadow (bottom and right)
+        shadow_color = QColor(colors.PANEL_SHADOW)
+        pen = QPen(shadow_color)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        
+        painter.drawLine(rect.left() + 2, rect.bottom() - 2,
+                        rect.right() - 2, rect.bottom() - 2)
+        painter.drawLine(rect.right() - 2, rect.top() + 2,
+                        rect.right() - 2, rect.bottom() - 2)
+    
+    def setTextureType(self, texture_type: str):
+        """Change the texture type dynamically"""
+        self._texture_type = texture_type
+        self._style = self._get_style_for_type(texture_type)
+        self._texture_cache.clear()
+        self._normal_map_cache.clear()
+        self.update()
+
+
+# =============================================================================
 # EXPORT
 # =============================================================================
 
@@ -849,4 +1733,14 @@ __all__ = [
     'FalloutDialogFrame',
     'TypewriterLabel',
     'FalloutAnimationHelper',
+    # Fade animation classes
+    'FadeAnimationMixin',
+    'FadeLineEdit',
+    'FadeTextEdit',
+    'FadeLabel',
+    'FadeButton',
+    'FadeValidationMessage',
+    # Texture-enabled classes
+    'TexturedFalloutButton',
+    'TexturedFalloutPanel',
 ]

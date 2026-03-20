@@ -23,7 +23,9 @@ from ui.fallout_theme import FalloutUIHelpers, FalloutColors
 from ui.fallout_widgets import (
     FalloutButton, SpecialStatBar, FalloutPanel, 
     CRTScanlineOverlay, TerminalTextEdit, FalloutTreeWidget,
-    FalloutListWidget, WornMetalPanel
+    FalloutListWidget, WornMetalPanel,
+    FadeLineEdit, FadeTextEdit, FadeLabel, FadeButton, FadeValidationMessage,
+    TexturedFalloutButton, TexturedFalloutPanel
 )
 
 logger = logging.getLogger(__name__)
@@ -219,7 +221,7 @@ class MainWindow(QMainWindow):
         """)
         right_layout.addWidget(node_info_label)
 
-        self.node_info_edit = QTextEdit()
+        self.node_info_edit = FadeTextEdit()
         self.node_info_edit.setPlaceholderText("Enter NPC dialogue text here...")
         self.node_info_edit.setMaximumHeight(100)
         self.node_info_edit.textChanged.connect(self.on_node_text_changed)
@@ -247,11 +249,11 @@ class MainWindow(QMainWindow):
         # Option controls
         option_controls_layout = QHBoxLayout()
 
-        add_option_btn = FalloutButton("Add Option", "rust")
+        add_option_btn = TexturedFalloutButton("Add Option", "rust")
         add_option_btn.clicked.connect(self.on_add_option)
         option_controls_layout.addWidget(add_option_btn)
 
-        delete_option_btn = FalloutButton("Delete Option", "danger")
+        delete_option_btn = TexturedFalloutButton("Delete Option", "rust")
         delete_option_btn.clicked.connect(self.on_delete_option)
         option_controls_layout.addWidget(delete_option_btn)
 
@@ -271,7 +273,7 @@ class MainWindow(QMainWindow):
         """)
         right_layout.addWidget(notes_label)
 
-        self.notes_edit = QTextEdit()
+        self.notes_edit = FadeTextEdit()
         self.notes_edit.setPlaceholderText("Add designer notes here...")
         self.notes_edit.setMaximumHeight(150)
         self.notes_edit.textChanged.connect(self.on_node_notes_changed)
@@ -1031,7 +1033,7 @@ class MainWindow(QMainWindow):
         # Node name
         name_layout = QHBoxLayout()
         name_layout.addWidget(QLabel("Node Name:"))
-        name_edit = QLineEdit(float_node.nodename)
+        name_edit = FadeLineEdit(float_node.nodename)
         name_layout.addWidget(name_edit)
         layout.addLayout(name_layout)
         
@@ -1057,7 +1059,7 @@ class MainWindow(QMainWindow):
         # Notes
         notes_label = QLabel("Notes:")
         layout.addWidget(notes_label)
-        notes_edit = QLineEdit(float_node.notes)
+        notes_edit = FadeLineEdit(float_node.notes)
         layout.addWidget(notes_edit)
         
         # Buttons
@@ -1277,28 +1279,28 @@ class MainWindow(QMainWindow):
         # Success node
         success_layout = QHBoxLayout()
         success_layout.addWidget(QLabel("Success Node:"))
-        success_edit = QLineEdit(skill_check.successnode)
+        success_edit = FadeLineEdit(skill_check.successnode)
         success_layout.addWidget(success_edit)
         layout.addLayout(success_layout)
         
         # Failure node
         failure_layout = QHBoxLayout()
         failure_layout.addWidget(QLabel("Failure Node:"))
-        failure_edit = QLineEdit(skill_check.failurenode)
+        failure_edit = FadeLineEdit(skill_check.failurenode)
         failure_layout.addWidget(failure_edit)
         layout.addLayout(failure_layout)
         
         # Procedure name
         proc_layout = QHBoxLayout()
         proc_layout.addWidget(QLabel("Procedure Name:"))
-        proc_edit = QLineEdit(skill_check.check_proc_name)
+        proc_edit = FadeLineEdit(skill_check.check_proc_name)
         proc_layout.addWidget(proc_edit)
         layout.addLayout(proc_layout)
         
         # Notes
         notes_layout = QHBoxLayout()
         notes_layout.addWidget(QLabel("Notes:"))
-        notes_edit = QLineEdit(skill_check.notes)
+        notes_edit = FadeLineEdit(skill_check.notes)
         notes_layout.addWidget(notes_edit)
         layout.addLayout(notes_layout)
         
@@ -1511,7 +1513,7 @@ class MainWindow(QMainWindow):
         text_label = QLabel("Option Text:")
         text_label.setStyleSheet(f"color: {colors.FALLOUT_YELLOW};")
         text_layout.addWidget(text_label)
-        self.option_text_edit = QLineEdit(option.optiontext)
+        self.option_text_edit = FadeLineEdit(option.optiontext)
         text_layout.addWidget(self.option_text_edit)
         layout.addLayout(text_layout)
 
@@ -1623,13 +1625,13 @@ class MainWindow(QMainWindow):
         # Success/Failure response text
         success_text_row = QHBoxLayout()
         success_text_row.addWidget(QLabel("Success Response:"))
-        self.success_response_edit = QLineEdit(option.success_response if has_skill_check else "")
+        self.success_response_edit = FadeLineEdit(option.success_response if has_skill_check else "")
         success_text_row.addWidget(self.success_response_edit)
         skill_details_layout.addLayout(success_text_row)
         
         failure_text_row = QHBoxLayout()
         failure_text_row.addWidget(QLabel("Failure Response:"))
-        self.failure_response_edit = QLineEdit(option.failure_response if has_skill_check else "")
+        self.failure_response_edit = FadeLineEdit(option.failure_response if has_skill_check else "")
         failure_text_row.addWidget(self.failure_response_edit)
         skill_details_layout.addLayout(failure_text_row)
         
@@ -1688,7 +1690,7 @@ class MainWindow(QMainWindow):
             self._add_condition_row(self.conditions_container, cond)
         
         # Add condition button
-        add_condition_btn = FalloutButton("Add Condition", "standard")
+        add_condition_btn = TexturedFalloutButton("Add Condition", "metal")
         add_condition_btn.setMaximumWidth(150)
         add_condition_btn.clicked.connect(lambda: self._add_condition_row(self.conditions_container))
         conditions_details_layout.addWidget(add_condition_btn)
@@ -1709,16 +1711,16 @@ class MainWindow(QMainWindow):
         notes_label = QLabel("Notes:")
         notes_label.setStyleSheet(f"color: {colors.FALLOUT_YELLOW};")
         notes_layout.addWidget(notes_label)
-        self.option_notes_edit = QTextEdit(option.notes)
+        self.option_notes_edit = FadeTextEdit(option.notes)
         self.option_notes_edit.setMaximumHeight(80)
         notes_layout.addWidget(self.option_notes_edit)
         layout.addLayout(notes_layout)
 
         # Buttons
         button_layout = QHBoxLayout()
-        save_button = FalloutButton("Save", "rust")
+        save_button = TexturedFalloutButton("Save", "rust")
         save_button.clicked.connect(lambda: self.save_option(dialog, node_index, option_index))
-        cancel_button = FalloutButton("Cancel", "standard")
+        cancel_button = TexturedFalloutButton("Cancel", "metal")
         cancel_button.clicked.connect(dialog.reject)
         button_layout.addStretch()
         button_layout.addWidget(save_button)
@@ -1774,7 +1776,7 @@ class MainWindow(QMainWindow):
         link_combo.addItems(link_types)
         
         # Remove button
-        remove_btn = FalloutButton("X", "rust")
+        remove_btn = TexturedFalloutButton("X", "rust")
         remove_btn.setMaximumWidth(30)
         
         # Add to layout
@@ -2384,7 +2386,7 @@ class MainWindow(QMainWindow):
         path_layout.addWidget(current_path_label)
         
         path_hbox = QHBoxLayout()
-        self.compiler_path_edit = QLineEdit()
+        self.compiler_path_edit = FadeLineEdit()
         self.compiler_path_edit.setPlaceholderText("Select a compiler executable...")
         
         # Load current value
@@ -3215,7 +3217,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         label = QLabel("Search for:")
         layout.addWidget(label)
         
-        search_edit = QLineEdit()
+        search_edit = FadeLineEdit()
         search_edit.setPlaceholderText("Enter text to search...")
         layout.addWidget(search_edit)
         
@@ -3593,7 +3595,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         
         compiler_path_layout = QHBoxLayout()
         compiler_path_layout.addWidget(QLabel("Compiler Path:"))
-        compiler_path_edit = QLineEdit(self.settings.get('script_compiler_path', ''))
+        compiler_path_edit = FadeLineEdit(self.settings.get('script_compiler_path', ''))
         compiler_path_edit.setPlaceholderText("Leave empty for default")
         compiler_path_layout.addWidget(compiler_path_edit)
         

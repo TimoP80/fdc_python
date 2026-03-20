@@ -566,12 +566,12 @@ procedure talk_p_proc begin
         if node.customcode:
             lines.append(node.customcode)
         
-        # Generate gsay_reply with NPC text
-        if npc_text_female and npc_text_female != npc_text:
-            # Both male and female text defined
-            lines.append(f'gsay_reply({msg_id}, "{self._escape_string(npc_text)}", "{self._escape_string(npc_text_female)}");')
-        else:
-            lines.append(f'gsay_reply({msg_id}, "{self._escape_string(npc_text)}");')
+        # Add debug comment with the text
+        if npc_text:
+            lines.append(f"//  [{msg_id}] \"{self._escape_string(npc_text)}\"")
+        
+        # Generate Reply with mstr for MSG text reference
+        lines.append(f"Reply(mstr({msg_id}));")
         
         # Generate player options
         option_conditions = ConditionGenerator.generate_option_conditions(node.options)
@@ -581,20 +581,31 @@ procedure talk_p_proc begin
                 # Determine the target node
                 target_node = option.nodelink or "Node999"
                 
+                # Get the numeric reaction value
+                reaction_value = self._get_reaction_numeric(option.reaction)
+                
+                # Add debug comment for option text
+                option_msg_id = msg_id + 100 + j  # Offset for option MSG IDs
+                lines.append(f"//  [{option_msg_id}] \"{self._escape_string(option.optiontext)}\"")
+                
+                # Determine option type based on reaction
+                option_type = self._get_option_type(option.reaction)
+                
                 # Check if there's a skill check
                 if option.link_to_skillcheck:
                     # Use skill check procedure
                     skill_check = self._find_skill_check_for_option(node, j)
                     if skill_check:
-                        lines.append(f'giq_option({option.intcheck}, 0, "{self._escape_string(option.optiontext)}", {skill_check.check_proc_name}, {self._get_reaction_code(option.reaction)});')
+                        lines.append(f'{option_type}({option_msg_id}, {skill_check.check_proc_name}, {reaction_value});')
                     else:
-                        lines.append(f'giq_option({option.intcheck}, 0, "{self._escape_string(option.optiontext)}", {target_node}, {self._get_reaction_code(option.reaction)});')
+                        lines.append(f'{option_type}({option_msg_id}, {target_node}, {reaction_value});')
                 else:
                     # Direct node link
-                    lines.append(f'giq_option({option.intcheck}, 0, "{self._escape_string(option.optiontext)}", {target_node}, {self._get_reaction_code(option.reaction)});')
+                    lines.append(f'{option_type}({option_msg_id}, {target_node}, {reaction_value});')
         
         # Add default end option
-        lines.append('giq_option(-3, 0, "", Node999, NEUTRAL_REACTION);')
+        lines.append(f"//  [0] \"\"")
+        lines.append("NOption(0, Node999, -3);")
         
         proc_code = "\n   ".join(lines)
         
@@ -618,6 +629,24 @@ end"""
             Reaction.NEUTRAL: "NEUTRAL_REACTION"
         }
         return reaction_map.get(reaction, "NEUTRAL_REACTION")
+    
+    def _get_reaction_numeric(self, reaction: Reaction) -> int:
+        """Get numeric reaction value for NOption/GOption/BOption"""
+        reaction_map = {
+            Reaction.GOOD: 4,
+            Reaction.BAD: -4, 
+            Reaction.NEUTRAL: 0
+        }
+        return reaction_map.get(reaction, 0)
+    
+    def _get_option_type(self, reaction: Reaction) -> str:
+        """Get the option type based on reaction (NOption/GOption/BOption)"""
+        option_map = {
+            Reaction.GOOD: "GOption",
+            Reaction.BAD: "BOption", 
+            Reaction.NEUTRAL: "NOption"
+        }
+        return option_map.get(reaction, "NOption")
     
     def _generate_skill_check_procedures(self, dialogue: Dialogue) -> str:
         """Generate skill check procedures"""

@@ -54,7 +54,6 @@ else:
 
 sys.path.insert(0, str(base_path))
 
-from ui.main_window import MainWindow
 from core.dialog_manager import DialogManager
 from core.settings import Settings
 from core.plugin_system import PluginHooks
@@ -97,7 +96,7 @@ def create_splash_pixmap():
     painter.setFont(version_font)
     painter.setPen(QColor(0xc4, 0xb9, 0x98))
     version_rect = pixmap.rect().adjusted(0, 115, 0, -130)
-    painter.drawText(version_rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, "Version 2.1.1")
+    painter.drawText(version_rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, "Version 2.3.0")
     
     # Draw decorative line
     painter.setPen(QColor(0xb7, 0x41, 0x0e))
@@ -140,10 +139,14 @@ def create_splash_pixmap():
 def main():
     """Main application entry point"""
     app = QApplication(sys.argv)
+    
+    # Import MainWindow after QApplication is created to ensure
+    # texture generation works properly (texture_system needs QApplication)
+    from ui.main_window import MainWindow
 
     # Set application properties
     app.setApplicationName("Fallout Dialogue Creator")
-    app.setApplicationVersion("2.1.1")
+    app.setApplicationVersion("2.3.0")
     app.setOrganizationName("FMF Tools")
 
     # Apply Fallout 2 theme before creating any widgets
@@ -198,7 +201,10 @@ def main():
                     plugin_file = py_file
                     break
 
-            if plugin_file:
+            # Skip template/example plugins that are intentionally not loaded
+            if plugin_info.name in ('Example Plugin',):
+                logger.info(f"[SKIPPED] Skipping template plugin: {plugin_info.name}")
+            elif plugin_file:
                 # Use normalized plugin name for loading
                 plugin_key = plugin_info.name.lower().replace(' ', '_').replace('-', '_')
                 success = plugin_manager.load_plugin(plugin_key, plugin_file)
@@ -220,10 +226,16 @@ def main():
 
     # Create main window
     window = MainWindow(dialog_manager, settings)
+    
+    # Preload textures BEFORE showing window
+    # This ensures textures are ready when the window is displayed
+    from ui.texture_system import TextureCache
+    TextureCache.preload_common_textures()
 
     # Notify plugins that main window is created
     dialog_manager.plugin_manager.call_hook(PluginHooks.UI_MAIN_WINDOW_CREATED, window)
 
+    # Show window after textures are preloaded
     window.show()
 
     # Close splash screen after main window is displayed

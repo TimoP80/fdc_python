@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.3.1] - 2026-03-20
 
 ### Added
+- **Texture System**: New procedural texture generation system for realistic UI materials
+  - [`ui/texture_system.py`](ui/texture_system.py): Complete texture generation module
+    - Perlin noise and FBM noise for natural textures
+    - Voronoi noise for cellular patterns
+    - Texture types: wood grain, metal, leather, concrete, rust
+    - Normal map generation for 3D bump mapping effects
+    - Texture caching for performance
+- **Fade Animation Widgets**: New animated UI components with fade effects
+  - [`ui/fallout_widgets.py`](ui/fallout_widgets.py): Added FadeAnimationMixin, FadeLineEdit, FadeTextEdit, FadeLabel, FadeButton, FadeValidationMessage
+  - Smooth fade-in/fade-out transitions on focus and show/hide events
+  - Accessibility-aware (respects reduced motion preferences)
+- **Textured UI Components**: Realistic material buttons and panels
+  - TexturedFalloutButton with bump mapping (metal, wood, leather, rust variants)
+  - TexturedFalloutPanel with procedural textures
+  - Dynamic texture generation with hover/pressed states
 - **Player Option Conditions**: Full support for defining conditions on player dialogue options
   - [`core/fmf_parser.py`](core/fmf_parser.py): Added [`_parse_conditions()`](core/fmf_parser.py:605) and [`_write_conditions()`](core/fmf_parser.py:800) methods
   - Supports multiple condition types: CHECK_STAT, CHECK_SKILL, CHECK_MONEY, LOCAL_VARIABLE, GLOBAL_VARIABLE, CHECK_CUSTOM_CODE
@@ -29,6 +44,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - **SVN Metadata**: Removed deprecated .svn folders from HEADERS directory
+
+### Fixed
+- **Scripting Engine**: Removed unreachable dead code in [`_compare_values()`](core/scripting_engine.py:436)
+  - Removed `return info` statement that was unreachable after `return False`
+- **SSL Exporter**: Restored proper SSL dialog syntax
+  - Added missing `gsay_start;` after `start_gdialog`
+  - Added missing `gsay_end;` and `end_dialogue;` at end of node procedures
+  - Ensures exported SSL scripts compile correctly
+- **Main Window**: Improved texture preload timing
+  - Textures now preload before window is displayed for smoother UX
 
 ## [2.3.0] - 2026-03-17
 

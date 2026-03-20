@@ -580,17 +580,179 @@ class FMFParser(QObject):
             if match:
                 notes = match.group(1)
 
+            # Extract and parse conditions
+            conditions = []
+            condition_match = re.search(r'conditions\s*\{([^}]+)\}', line)
+            if condition_match:
+                conditions_text = condition_match.group(1)
+                conditions = self._parse_conditions(conditions_text)
+                logger.debug(f"Parsed {len(conditions)} conditions for option at line {current_line}")
+
             return PlayerOption(
                 optiontext=optiontext,
                 nodelink=nodelink,
                 reaction=reaction,
                 intcheck=intcheck,
-                notes=notes
+                notes=notes,
+                conditions=conditions,
+                conditioncnt=len(conditions)
             )
 
         except Exception as e:
             logger.error(f"Error parsing option at line {current_line}: {e}")
             raise ValueError(f"Failed to parse option at line {current_line}: {e}") from e
+
+    def _parse_conditions(self, conditions_text: str) -> List[Condition]:
+        """Parse conditions from condition text block"""
+        conditions = []
+        
+        # The format is: CHECK_TYPE VAR_NAME OP VALUE [link_next AND|OR|NONE]
+        # We need to parse this more carefully
+        # Examples:
+        #   CHECK_STAT intelligence <= 5 link_next NONE
+        #   CHECK_SKILL speech >= 60 link_next AND
+        #   LOCAL_VARIABLE Seville_Had_Drugs > 0 link_next NONE
+        
+        # First, normalize: replace 'link_next' with a delimiter that we can split on
+        # But we need to be careful - each condition has an optional link_next
+        
+        # Use regex to find all condition+link pairs
+        # Pattern: (CHECK_\w+)\s+(\w+)\s*(==|>=|<=|>|<)\s*(\w+)\s*(link_next\s+(AND|OR|NONE))?
+        
+        # More robust approach: iterate through tokens
+        tokens = conditions_text.split()
+        i = 0
+        
+        while i < len(tokens):
+            # Must start with a condition type
+            if tokens[i] not in ('CHECK_STAT', 'CHECK_SKILL', 'CHECK_MONEY', 
+                                 'LOCAL_VARIABLE', 'GLOBAL_VARIABLE', 'CHECK_CUSTOM_CODE'):
+                i += 1
+                continue
+            
+            check_type_str = tokens[i]
+            i += 1
+            
+            # Determine check type enum
+            if check_type_str == 'CHECK_STAT':
+                check_type = CheckType.STAT
+            elif check_type_str == 'CHECK_SKILL':
+                check_type = CheckType.SKILL
+            elif check_type_str == 'CHECK_MONEY':
+                check_type = CheckType.MONEY
+            elif check_type_str == 'LOCAL_VARIABLE':
+                check_type = CheckType.LOCAL_VAR
+            elif check_type_str == 'GLOBAL_VARIABLE':
+                check_type = CheckType.GLOBAL_VAR
+            elif check_type_str == 'CHECK_CUSTOM_CODE':
+                check_type = CheckType.CUSTOM_CODE
+            else:
+                check_type = CheckType.STAT
+            
+            # For custom code, the rest is the code in quotes
+            if check_type == CheckType.CUSTOM_CODE:
+                # Should be a quoted string
+                if i < len(tokens) and tokens[i].startswith('"'):
+                    # Collect all tokens until we hit link_next or end
+                    code_parts = []
+                    while i < len(tokens) and tokens[i] != 'link_next':
+                        code_parts.append(tokens[i])
+                        i += 1
+                    # Join and extract from quotes
+                    code_str = ' '.join(code_parts)
+                    code_match = re.match(r'"([^"]*)"', code_str)
+                    if code_match:
+                        var_ptr = ""
+                        check_value = code_match.group(1)
+                        check_eval = CompareType.EQUAL
+                        check_field = 0
+                    else:
+                        i += 1
+                        continue
+                else:
+                    i += 1
+                    continue
+            else:
+                # Regular condition: VAR_NAME OP VALUE
+                if i >= len(tokens):
+                    break
+                    
+                var_ptr = tokens[i]
+                i += 1
+                
+                if i >= len(tokens):
+                    break
+                    
+                op_str = tokens[i]
+                i += 1
+                
+                if i >= len(tokens):
+                    break
+                    
+                check_value = tokens[i]
+                i += 1
+                
+                # Map operator to CompareType
+                if op_str == '==':
+                    check_eval = CompareType.EQUAL
+                elif op_str == '!=':
+                    check_eval = CompareType.NOT_EQUAL
+                elif op_str == '>':
+                    check_eval = CompareType.LARGER_THAN
+                elif op_str == '<':
+                    check_eval = CompareType.LESS_THAN
+                elif op_str == '>=':
+                    check_eval = CompareType.LARGER_EQUAL
+                elif op_str == '<=':
+                    check_eval = CompareType.LESS_EQUAL
+                else:
+                    check_eval = CompareType.EQUAL
+                
+                # Map stat/skill names to field numbers
+                check_field = self._get_stat_field_number(var_ptr) if check_type == CheckType.STAT else 0
+            
+            # Check for link_next
+            link = LinkType.NONE
+            if i < len(tokens) and tokens[i] == 'link_next':
+                i += 1  # skip 'link_next'
+                if i < len(tokens):
+                    link_str = tokens[i].upper()
+                    if link_str == 'AND':
+                        link = LinkType.AND
+                    elif link_str == 'OR':
+                        link = LinkType.OR
+                    else:
+                        link = LinkType.NONE
+                    i += 1
+            
+            condition = Condition(
+                check_type=check_type,
+                check_field=check_field,
+                check_eval=check_eval,
+                var_ptr=var_ptr,
+                check_value=check_value,
+                link=link
+            )
+            conditions.append(condition)
+        
+        return conditions
+
+    def _get_stat_field_number(self, stat_name: str) -> int:
+        """Get the field number for a stat name"""
+        stat_map = {
+            'strength': 0,
+            'perception': 1,
+            'endurance': 2,
+            'charisma': 3,
+            'intelligence': 4,
+            'agility': 5,
+            'luck': 6,
+            'dude_caps': 7,  # Money
+            'level': 8,
+            'cur_poison_lev': 9,
+            'cur_rad_lev': 10,
+        }
+        return stat_map.get(stat_name.lower(), 0)
 
     def get_last_detected_encoding(self) -> Optional[str]:
         """Return the last detected encoding from load_from_file"""
@@ -624,7 +786,75 @@ class FMFParser(QObject):
                 stream.write('      options {\n')
                 for option in node.options:
                     reaction_name = option.reaction.name if hasattr(option.reaction, 'name') else 'NEUTRAL'
-                    stream.write(f'          int={option.intcheck} Reaction=REACTION_{reaction_name} playertext "{option.optiontext}" linkto "{option.nodelink}"  notes "{option.notes}"\n')
+                    
+                    # Build the conditions string if conditions exist
+                    conditions_str = ''
+                    if option.conditions and len(option.conditions) > 0:
+                        conditions_str = ' conditions { ' + self._write_conditions(option.conditions) + ' }'
+                    
+                    stream.write(f'          int={option.intcheck} Reaction=REACTION_{reaction_name} playertext "{option.optiontext}" linkto "{option.nodelink}"{conditions_str} notes "{option.notes}"\n')
                 stream.write('              }\n')
 
             stream.write('}\n\n')
+
+    def _write_conditions(self, conditions: List[Condition]) -> str:
+        """Convert a list of conditions to FMF format string"""
+        result_parts = []
+        
+        for idx, cond in enumerate(conditions):
+            # Determine check type string
+            if cond.check_type == CheckType.STAT:
+                check_type_str = 'CHECK_STAT'
+            elif cond.check_type == CheckType.SKILL:
+                check_type_str = 'CHECK_SKILL'
+            elif cond.check_type == CheckType.MONEY:
+                check_type_str = 'CHECK_MONEY'
+            elif cond.check_type == CheckType.LOCAL_VAR:
+                check_type_str = 'LOCAL_VARIABLE'
+            elif cond.check_type == CheckType.GLOBAL_VAR:
+                check_type_str = 'GLOBAL_VARIABLE'
+            elif cond.check_type == CheckType.CUSTOM_CODE:
+                check_type_str = 'CHECK_CUSTOM_CODE'
+            else:
+                check_type_str = 'CHECK_STAT'
+            
+            # Determine operator string
+            if cond.check_eval == CompareType.EQUAL:
+                op_str = ' == '
+            elif cond.check_eval == CompareType.NOT_EQUAL:
+                op_str = ' != '
+            elif cond.check_eval == CompareType.LARGER_THAN:
+                op_str = ' > '
+            elif cond.check_eval == CompareType.LESS_THAN:
+                op_str = ' < '
+            elif cond.check_eval == CompareType.LARGER_EQUAL:
+                op_str = ' >= '
+            elif cond.check_eval == CompareType.LESS_EQUAL:
+                op_str = ' <= '
+            else:
+                op_str = ' == '
+            
+            # Format the condition
+            if cond.check_type == CheckType.CUSTOM_CODE:
+                # Custom code: CHECK_CUSTOM_CODE "code"
+                cond_str = f'{check_type_str} "{cond.check_value}"'
+            else:
+                # Regular condition: CHECK_TYPE VAR_NAME OP VALUE
+                cond_str = f'{check_type_str} {cond.var_ptr}{op_str}{cond.check_value}'
+            
+            result_parts.append(cond_str)
+            
+            # Add link_next if there's a next condition
+            if idx < len(conditions) - 1:
+                next_link = conditions[idx + 1].link if idx + 1 < len(conditions) else LinkType.NONE
+                if next_link == LinkType.AND:
+                    result_parts.append('link_next AND')
+                elif next_link == LinkType.OR:
+                    result_parts.append('link_next OR')
+                else:
+                    result_parts.append('link_next NONE')
+            else:
+                # Last condition
+                result_parts.append('link_next NONE')
+        
+        return ' '.join(result_parts)

@@ -52,6 +52,23 @@ class SpeakerType(Enum):
             return cls(value)
         except ValueError:
             return cls.INVALID
+    
+    @classmethod
+    def from_value_or_str(cls, value) -> 'SpeakerType':
+        """Get speaker type from int or string value"""
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, str):
+            try:
+                return cls(int(value))
+            except (ValueError, TypeError):
+                return cls.INVALID
+        if isinstance(value, int):
+            try:
+                return cls(value)
+            except ValueError:
+                return cls.INVALID
+        return cls.INVALID
 
 
 @dataclass
@@ -97,7 +114,8 @@ class MSGImportValidator(ImportValidator):
             is_valid = False
         
         # Check for valid speaker type
-        if entry.speaker == SpeakerType.INVALID:
+        speaker_type = SpeakerType.from_value_or_str(entry.speaker)
+        if speaker_type == SpeakerType.INVALID:
             self.add_validation_warning(
                 f"Message ID {entry.message_id} has invalid speaker type",
                 line_number=entry.line_number
@@ -442,16 +460,19 @@ class MSGImporter:
                     description_entries.append(entry)
                 else:
                     other_entries.append(entry)
-            elif entry.speaker == SpeakerType.NPC:
-                dialogue_entries.append(entry)
-            elif entry.speaker == SpeakerType.PLAYER:
-                player_entries.append(entry)
-            elif entry.speaker == SpeakerType.SYSTEM:
-                system_entries.append(entry)
-            elif entry.speaker == SpeakerType.DESCRIPTION:
-                description_entries.append(entry)
             else:
-                other_entries.append(entry)
+                # Use helper to handle both string and enum speaker values
+                speaker_type = SpeakerType.from_value_or_str(entry.speaker)
+                if speaker_type == SpeakerType.NPC:
+                    dialogue_entries.append(entry)
+                elif speaker_type == SpeakerType.PLAYER:
+                    player_entries.append(entry)
+                elif speaker_type == SpeakerType.SYSTEM:
+                    system_entries.append(entry)
+                elif speaker_type == SpeakerType.DESCRIPTION:
+                    description_entries.append(entry)
+                else:
+                    other_entries.append(entry)
         
         # Process description entries
         if description_entries:
