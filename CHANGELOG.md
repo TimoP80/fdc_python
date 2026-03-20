@@ -7,11 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.1] - 2026-03-20
 
+### Added
+- **Player Option Conditions**: Full support for defining conditions on player dialogue options
+  - [`core/fmf_parser.py`](core/fmf_parser.py): Added [`_parse_conditions()`](core/fmf_parser.py:605) and [`_write_conditions()`](core/fmf_parser.py:800) methods
+  - Supports multiple condition types: CHECK_STAT, CHECK_SKILL, CHECK_MONEY, LOCAL_VARIABLE, GLOBAL_VARIABLE, CHECK_CUSTOM_CODE
+  - Condition evaluation with AND/OR/NONE link operators
+  - Full parsing and saving of conditions in FMF format
+
 ### Changed
 - **About Dialog UI**: Resized to 16:9 aspect ratio with approximately 850px width
   - Changed from 520x550 to 850x479
   - Featured image increased by 50% (from 480x200 to 720x300)
   - Maintains proper aspect ratio and remains centered
+- **SSL Exporter**: Enhanced condition generation for player options
+  - [`core/ssl_exporter.py`](core/ssl_exporter.py): Added [`generate_option_conditions()`](core/ssl_exporter.py:295) in ConditionGenerator
+  - Generates condition code for each player option based on defined conditions
+- **Scripting Engine**: Improved condition evaluation for player options
+  - Enhanced condition checking for stats, skills, caps, and variables
+- **MSG Import/Export**: Updated message handling for dialogue export
+- **FMF Parser**: Full read/write support for player option conditions
+
+### Removed
+- **SVN Metadata**: Removed deprecated .svn folders from HEADERS directory
 
 ## [2.3.0] - 2026-03-17
 
