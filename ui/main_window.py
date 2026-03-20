@@ -9,15 +9,15 @@ from PyQt6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTextEdit, QListWidget, QListWidgetItem,
     QTabWidget, QStatusBar, QMenuBar, QMenu, QMessageBox, QFileDialog,
     QProgressDialog, QFrame, QLabel, QDialog, QApplication, QCheckBox,
-    QSpinBox, QGroupBox, QPushButton, QInputDialog
+    QSpinBox, QGroupBox, QPushButton, QInputDialog, QComboBox
 )
 from PyQt6.QtCore import Qt, pyqtSlot, QPoint
-from PyQt6.QtGui import QAction, QKeySequence, QFont
+from PyQt6.QtGui import QAction, QKeySequence, QFont, QPixmap
 
 from core.dialog_manager import DialogManager
 from core.plugin_system import PluginHooks
 from core.settings import Settings
-from models.dialogue import Dialogue, DialogueNode
+from models.dialogue import Dialogue, DialogueNode, Condition, CheckType, CompareType, LinkType
 from ui.diagram_widget import DiagramWidget
 from ui.fallout_theme import FalloutUIHelpers, FalloutColors
 from ui.fallout_widgets import (
@@ -900,7 +900,13 @@ class MainWindow(QMainWindow):
 
             # Add options as children
             for option in node.options:
-                option_item = QTreeWidgetItem([f"→ {option.nodelink}"])
+                # Truncate option text for display (max 40 chars + "..." if longer)
+                display_text = option.optiontext
+                if len(display_text) > 40:
+                    display_text = display_text[:40] + "..."
+                # Combine option text with link target
+                option_display = f"{display_text} → {option.nodelink}" if option.nodelink else display_text
+                option_item = QTreeWidgetItem([option_display])
                 option_item.setData(0, Qt.ItemDataRole.UserRole, node.options.index(option))
                 item.addChild(option_item)
 
@@ -1453,7 +1459,7 @@ class MainWindow(QMainWindow):
 
     def edit_option(self, node_index: int, option_index: int):
         """Open option editing dialog"""
-        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QComboBox, QTextEdit, QCheckBox, QSpinBox
+        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QComboBox, QTextEdit, QCheckBox, QSpinBox, QWidget, QGroupBox
         from ui.fallout_widgets import FalloutButton, FalloutDialogFrame
         
         colors = FalloutColors()
@@ -1627,9 +1633,6 @@ class MainWindow(QMainWindow):
         failure_text_row.addWidget(self.failure_response_edit)
         skill_details_layout.addLayout(failure_text_row)
         
-        skill_check_layout.addWidget(skill_details_widget)
-        layout.addWidget(skill_check_group)
-        
         # Enable/disable skill check details based on checkbox
         skill_details_widget = QWidget()
         skill_details_widget.setLayout(skill_details_layout)
@@ -1637,6 +1640,69 @@ class MainWindow(QMainWindow):
         
         # Connect checkbox to enable/disable
         self.skill_check_enabled.toggled.connect(skill_details_widget.setEnabled)
+        
+        skill_check_layout.addWidget(skill_details_widget)
+        layout.addWidget(skill_check_group)
+
+        # ==============================================
+        # Conditions Section
+        # ==============================================
+        # Initialize condition widgets list
+        self.condition_widgets = []
+        
+        conditions_group = QGroupBox("Conditions (Optional)")
+        conditions_layout = QVBoxLayout(conditions_group)
+        
+        # Enable conditions checkbox
+        self.conditions_enabled = QCheckBox("Enable Conditions")
+        self.conditions_enabled.setStyleSheet(f"color: {colors.FALLOUT_YELLOW};")
+        has_conditions = len(option.conditions) > 0
+        self.conditions_enabled.setChecked(has_conditions)
+        conditions_layout.addWidget(self.conditions_enabled)
+        
+        # Conditions container
+        conditions_details_layout = QVBoxLayout()
+        
+        # Header row for condition fields
+        header_row = QHBoxLayout()
+        header_row.addWidget(QLabel("Type:"))
+        header_row.addWidget(QLabel("Field:"))
+        header_row.addWidget(QLabel("Compare:"))
+        header_row.addWidget(QLabel("Value:"))
+        header_row.addWidget(QLabel("Link:"))
+        header_row.addStretch()
+        conditions_details_layout.addLayout(header_row)
+        
+        # Scroll area for conditions list
+        from PyQt6.QtWidgets import QWidget
+        
+        # Store condition widgets for each condition
+        self.condition_widgets = []
+        
+        # Container for condition rows
+        self.conditions_container = QVBoxLayout()
+        conditions_details_layout.addLayout(self.conditions_container)
+        
+        # Add existing conditions
+        for cond in option.conditions:
+            self._add_condition_row(self.conditions_container, cond)
+        
+        # Add condition button
+        add_condition_btn = FalloutButton("Add Condition", "standard")
+        add_condition_btn.setMaximumWidth(150)
+        add_condition_btn.clicked.connect(lambda: self._add_condition_row(self.conditions_container))
+        conditions_details_layout.addWidget(add_condition_btn)
+        
+        # Enable/disable conditions details based on checkbox
+        conditions_details_widget = QWidget()
+        conditions_details_widget.setLayout(conditions_details_layout)
+        conditions_details_widget.setEnabled(has_conditions)
+        
+        # Connect checkbox to enable/disable
+        self.conditions_enabled.toggled.connect(conditions_details_widget.setEnabled)
+        
+        conditions_layout.addWidget(conditions_details_widget)
+        layout.addWidget(conditions_group)
 
         # Notes
         notes_layout = QVBoxLayout()
@@ -1660,6 +1726,170 @@ class MainWindow(QMainWindow):
         layout.addLayout(button_layout)
 
         dialog.exec()
+
+    def _add_condition_row(self, parent_layout, existing_condition=None):
+        """Add a condition row to the conditions UI"""
+        from PyQt6.QtWidgets import QWidget
+        
+        colors = FalloutColors()
+        
+        # Fallout stat names
+        stat_names = ["Strength", "Perception", "Endurance", "Charisma", "Intelligence", "Agility", "Luck"]
+        
+        # Check type options
+        check_type_names = ["Money (Caps)", "Global Variable", "Stat", "Skill", "Local Variable"]
+        check_type_values = [CheckType.MONEY, CheckType.GLOBAL_VAR, CheckType.STAT, CheckType.SKILL, CheckType.LOCAL_VAR]
+        
+        # Compare operators
+        compare_ops = [">=", "<=", "==", "!="]
+        compare_values = [CompareType.LARGER_EQUAL, CompareType.LESS_EQUAL, CompareType.EQUAL, CompareType.NOT_EQUAL]
+        
+        # Link types
+        link_types = ["None", "AND", "OR"]
+        link_values = [LinkType.NONE, LinkType.AND, LinkType.OR]
+        
+        # Create row widget
+        row_widget = QWidget()
+        row_layout = QHBoxLayout(row_widget)
+        row_layout.setContentsMargins(0, 4, 0, 4)
+        
+        # Check type dropdown
+        check_type_combo = QComboBox()
+        check_type_combo.addItems(check_type_names)
+        
+        # Field selector (changes based on check type)
+        field_combo = QComboBox()
+        field_combo.setEnabled(False)  # Disabled by default for MONEY
+        
+        # Compare operator dropdown
+        compare_combo = QComboBox()
+        compare_combo.addItems(compare_ops)
+        
+        # Value input
+        value_spin = QSpinBox()
+        value_spin.setRange(0, 999999)
+        
+        # Link type dropdown
+        link_combo = QComboBox()
+        link_combo.addItems(link_types)
+        
+        # Remove button
+        remove_btn = FalloutButton("X", "rust")
+        remove_btn.setMaximumWidth(30)
+        
+        # Add to layout
+        row_layout.addWidget(check_type_combo)
+        row_layout.addWidget(field_combo)
+        row_layout.addWidget(compare_combo)
+        row_layout.addWidget(value_spin)
+        row_layout.addWidget(link_combo)
+        row_layout.addWidget(remove_btn)
+        
+        # Store references for saving
+        condition_data = {
+            'check_type_combo': check_type_combo,
+            'field_combo': field_combo,
+            'compare_combo': compare_combo,
+            'value_spin': value_spin,
+            'link_combo': link_combo,
+            'row_widget': row_widget
+        }
+        
+        # Set existing values if provided
+        if existing_condition:
+            # Find check type index
+            try:
+                idx = check_type_values.index(existing_condition.check_type)
+                check_type_combo.setCurrentIndex(idx)
+            except ValueError:
+                pass
+            
+            # Set field based on check type
+            check_type = existing_condition.check_type
+            if check_type == CheckType.STAT:
+                field_combo.setEnabled(True)
+                field_combo.addItems(stat_names)
+                field_combo.setCurrentIndex(existing_condition.check_field)
+            elif check_type == CheckType.SKILL:
+                field_combo.setEnabled(True)
+                from models.dialogue import Skill
+                skill_names = [Skill.get_name(i) for i in range(20)]
+                field_combo.addItems(skill_names)
+                field_combo.setCurrentIndex(existing_condition.check_field)
+            elif check_type == CheckType.GLOBAL_VAR:
+                field_combo.setEnabled(True)
+                field_combo.addItems(["GVAR ID"])
+                field_combo.setCurrentIndex(0)
+            elif check_type == CheckType.LOCAL_VAR:
+                field_combo.setEnabled(True)
+                field_combo.addItems(["LVAR ID"])
+                field_combo.setCurrentIndex(0)
+            
+            # Set compare type
+            try:
+                idx = compare_values.index(existing_condition.check_eval)
+                compare_combo.setCurrentIndex(idx)
+            except ValueError:
+                pass
+            
+            # Set value
+            try:
+                value_spin.setValue(int(existing_condition.check_value))
+            except (ValueError, TypeError):
+                pass
+            
+            # Set link type
+            try:
+                idx = link_values.index(existing_condition.link)
+                link_combo.setCurrentIndex(idx)
+            except ValueError:
+                pass
+        else:
+            # Default: Money check
+            check_type_combo.setCurrentIndex(0)
+        
+        # Update field dropdown when check type changes
+        def update_field_options():
+            selected_idx = check_type_combo.currentIndex()
+            check_type = check_type_values[selected_idx]
+            
+            field_combo.clear()
+            
+            if check_type == CheckType.MONEY:
+                field_combo.setEnabled(False)
+                field_combo.addItems(["(Player Caps)"])
+            elif check_type == CheckType.GLOBAL_VAR:
+                field_combo.setEnabled(True)
+                field_combo.addItems(["GVAR ID"])
+            elif check_type == CheckType.LOCAL_VAR:
+                field_combo.setEnabled(True)
+                field_combo.addItems(["LVAR ID"])
+            elif check_type == CheckType.STAT:
+                field_combo.setEnabled(True)
+                field_combo.addItems(stat_names)
+            elif check_type == CheckType.SKILL:
+                field_combo.setEnabled(True)
+                from models.dialogue import Skill
+                skill_names = [Skill.get_name(i) for i in range(20)]
+                field_combo.addItems(skill_names)
+        
+        check_type_combo.currentIndexChanged.connect(update_field_options)
+        
+        # Remove button handler
+        def remove_condition():
+            row_widget.deleteLater()
+            if condition_data in self.condition_widgets:
+                self.condition_widgets.remove(condition_data)
+        
+        remove_btn.clicked.connect(remove_condition)
+        
+        # Add to parent layout
+        parent_layout.addWidget(row_widget)
+        
+        # Store in list
+        self.condition_widgets.append(condition_data)
+        
+        return condition_data
 
     def edit_script(self, script_type: str, script_index: int):
         """Open script editing dialog"""
@@ -1944,6 +2174,58 @@ class MainWindow(QMainWindow):
         else:
             option.has_skill_check = False
             option.skill_check = None
+
+        # Save conditions data
+        from models.dialogue import Condition, CheckType, CompareType, LinkType
+        
+        # Check type mapping
+        check_type_values = [CheckType.MONEY, CheckType.GLOBAL_VAR, CheckType.STAT, CheckType.SKILL, CheckType.LOCAL_VAR]
+        compare_values = [CompareType.LARGER_EQUAL, CompareType.LESS_EQUAL, CompareType.EQUAL, CompareType.NOT_EQUAL]
+        link_values = [LinkType.NONE, LinkType.AND, LinkType.OR]
+        
+        # Clear existing conditions if not enabled
+        if not self.conditions_enabled.isChecked():
+            option.conditions = []
+            option.conditioncnt = 0
+        else:
+            # Rebuild conditions list from UI
+            option.conditions = []
+            for cond_data in self.condition_widgets:
+                try:
+                    check_type = check_type_values[cond_data['check_type_combo'].currentIndex()]
+                    compare_type = compare_values[cond_data['compare_combo'].currentIndex()]
+                    link_type = link_values[cond_data['link_combo'].currentIndex()]
+                    
+                    # Get field value based on check type
+                    check_field = 0
+                    if check_type == CheckType.STAT:
+                        check_field = cond_data['field_combo'].currentIndex()
+                    elif check_type == CheckType.SKILL:
+                        check_field = cond_data['field_combo'].currentIndex()
+                    elif check_type == CheckType.GLOBAL_VAR:
+                        check_field = cond_data['field_combo'].currentIndex()  # This could be the GVAR ID
+                    elif check_type == CheckType.LOCAL_VAR:
+                        check_field = cond_data['field_combo'].currentIndex()  # This could be the LVAR ID
+                    
+                    # Get value
+                    check_value = str(cond_data['value_spin'].value())
+                    
+                    # Create condition
+                    condition = Condition(
+                        check_type=check_type,
+                        check_field=check_field,
+                        check_eval=compare_type,
+                        var_ptr="",
+                        check_value=check_value,
+                        resolved_code="",
+                        link=link_type
+                    )
+                    option.conditions.append(condition)
+                except Exception as e:
+                    print(f"Error saving condition: {e}")
+                    continue
+            
+            option.conditioncnt = len(option.conditions)
 
         # Update options list display
         self.display_node(node_index)
@@ -2364,6 +2646,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         import sys
         import platform
         import datetime
+        from pathlib import Path
         from PyQt6.QtWidgets import (
             QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
             QGroupBox, QFormLayout, QTextEdit, QApplication
@@ -2376,7 +2659,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         
         dialog = QDialog(self)
         dialog.setWindowTitle("About Fallout Dialogue Creator")
-        dialog.setMinimumSize(500, 450)
+        dialog.setMinimumSize(850, 479)
         dialog.setModal(True)
         
         # Apply dialog styling
@@ -2442,10 +2725,34 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         
         main_layout = QVBoxLayout(dialog)
         
+        # Load splash image
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            # Running as PyInstaller bundle
+            base_path = Path(sys._MEIPASS)
+        else:
+            # Running in development
+            base_path = Path(__file__).parent.parent
+        
+        splash_path = base_path / "splash.png"
+        splash_label = None
+        if splash_path.exists():
+            pixmap = QPixmap(str(splash_path))
+            if not pixmap.isNull():
+                # Scale the image to fit nicely in the dialog
+                scaled_pixmap = pixmap.scaled(720, 300, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+                splash_label = QLabel()
+                splash_label.setPixmap(scaled_pixmap)
+                splash_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                splash_label.setStyleSheet("margin: 10px;")
+        
         # Application title and logo area
         title_label = QLabel("<h2>Fallout Dialogue Creator</h2>")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setStyleSheet("color: #ffcc00; margin-bottom: 10px;")
+        
+        # Add splash image if loaded successfully
+        if splash_label:
+            main_layout.addWidget(splash_label)
         main_layout.addWidget(title_label)
         
         # Version info
@@ -2453,7 +2760,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         version_layout = QFormLayout()
         
         # Get version from application
-        app_version = QApplication.instance().applicationVersion() if QApplication.instance() else "2.1.1"
+        app_version = QApplication.instance().applicationVersion() if QApplication.instance() else "2.3.0"
         version_layout.addRow("Version:", QLabel(app_version))
         version_layout.addRow("Build:", QLabel("Release"))
         version_layout.addRow("Build Date:", QLabel(datetime.datetime.now().strftime("%B %d, %Y")))

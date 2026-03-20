@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-03-20
+
+### Changed
+- **About Dialog UI**: Resized to 16:9 aspect ratio with approximately 850px width
+  - Changed from 520x550 to 850x479
+  - Featured image increased by 50% (from 480x200 to 720x300)
+  - Maintains proper aspect ratio and remains centered
+
 ## [2.3.0] - 2026-03-17
 
 ### Added
