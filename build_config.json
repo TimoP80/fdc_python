@@ -16,7 +16,7 @@
     "compilation": {
         "optimization_level": 3,
         "language_standard": "c11",
-        "show_progress": true,
+        "show_progress": false,
         "verbose": false,
         "assume_yes_for_questions": true,
         "remove_output": true,
@@ -54,7 +54,8 @@
         "plugins.example_plugin",
         "plugins.export_plugin",
         "plugins.ssl_msg_export_plugin",
-        "plugins.timbor_s_test_plugin"
+        "plugins.timbor_s_test_plugin",
+        "ui.texture_system"
     ],
     "data_files": {
         "include": [

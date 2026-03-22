@@ -12,8 +12,9 @@ Features:
 
 import math
 import random
+import threading
+import logging
 from typing import Dict, Tuple, Optional
-from functools import lru_cache
 
 from PyQt6.QtGui import (
     QImage, QPixmap, QColor, QPainter, QBrush, QLinearGradient,
@@ -42,6 +43,45 @@ def _grad(hash_val: int, x: float, y: float) -> float:
     u = x if h < 2 else y
     v = y if h < 2 else x
     return (u if h & 1 == 0 else -u) + (v if h & 2 == 0 else -v)
+
+
+def _seamless_noise_2d(x: float, y: float, width: float, height: float, seed: int) -> float:
+    """
+    Seamless 2D noise that wraps around at tile boundaries.
+    Uses domain warping for seamless tiling.
+    
+    Args:
+        x, y: Input coordinates
+        width, height: Tile dimensions for wrapping
+        seed: Random seed
+    
+    Returns:
+        Noise value in range [-1, 1]
+    """
+    # Scale coordinates to tile size
+    s = x / width * math.pi * 2
+    t = y / height * math.pi * 2
+    
+    # Create seamless coordinates using sine/cosine
+    nx = math.sin(s) / math.pi
+    ny = math.sin(t) / math.pi
+    
+    # Add some variation
+    nx2 = math.sin(s + math.pi) / math.pi
+    ny2 = math.sin(t + math.pi) / math.pi
+    
+    # Get noise from multiple sources and blend
+    n1 = _perlin_noise(x / width * 4, y / height * 4, seed)
+    n2 = _perlin_noise((x + width/2) / width * 4, (y + height/2) / height * 4, seed + 100)
+    n3 = _perlin_noise((x + width/4) / width * 4, (y + height*3/4) / height * 4, seed + 200)
+    
+    # Blend based on distance to edges
+    dx = abs(x / width - 0.5) * 2
+    dy = abs(y / height - 0.5) * 2
+    blend = max(dx, dy)
+    blend = blend * blend * (3 - 2 * blend)  # Smoothstep
+    
+    return (n1 * (1 - blend) + (n1 + n2 + n3) / 3 * blend)
 
 
 def _perlin_noise(x: float, y: float, seed: int = 0) -> float:
@@ -229,11 +269,15 @@ class TextureGenerator:
     _texture_cache: Dict[str, QPixmap] = {}
     _normal_map_cache: Dict[str, QPixmap] = {}
     
+    # Thread-safe locking for cache access
+    _cache_lock = threading.Lock()
+    
     @classmethod
     def clear_cache(cls):
         """Clear all cached textures"""
-        cls._texture_cache.clear()
-        cls._normal_map_cache.clear()
+        with cls._cache_lock:
+            cls._texture_cache.clear()
+            cls._normal_map_cache.clear()
     
     @classmethod
     def _generate_fallback_texture(cls, width: int, height: int, color: Tuple[int, int, int] = (128, 128, 128)) -> QPixmap:
@@ -272,8 +316,9 @@ class TextureGenerator:
         try:
             cache_key = f"wood_{wood_type}_{width}x{height}_{scale}_{seed}"
             
-            if cache_key in cls._texture_cache:
-                return cls._texture_cache[cache_key]
+            with cls._cache_lock:
+                if cache_key in cls._texture_cache:
+                    return cls._texture_cache[cache_key]
             
             palette = getattr(TextureColors, f"WOOD_{wood_type.upper()}", TextureColors.WOOD_OAK)
             
@@ -333,10 +378,16 @@ class TextureGenerator:
                     image.setPixelColor(x, y, QColor(*final_color))
             
             pixmap = QPixmap.fromImage(image)
-            cls._texture_cache[cache_key] = pixmap
+            
+            # Validate that generated pixmap is not null before caching
+            if pixmap.isNull():
+                logging.getLogger(__name__).warning(f"Generated null wood texture, not caching: {cache_key}")
+                return pixmap
+            
+            with cls._cache_lock:
+                cls._texture_cache[cache_key] = pixmap
             return pixmap
         except Exception as e:
-            import logging
             logging.getLogger(__name__).error(f"Error generating wood texture: {e}")
             # Return a simple fallback texture
             return cls._generate_fallback_texture(width, height, (139, 90, 43))
@@ -362,8 +413,9 @@ class TextureGenerator:
         try:
             cache_key = f"metal_{metal_type}_{width}x{height}_{scratches}_{seed}"
             
-            if cache_key in cls._texture_cache:
-                return cls._texture_cache[cache_key]
+            with cls._cache_lock:
+                if cache_key in cls._texture_cache:
+                    return cls._texture_cache[cache_key]
             
             palette = getattr(TextureColors, f"METAL_{metal_type.upper()}", TextureColors.METAL_STEEL)
             
@@ -417,10 +469,16 @@ class TextureGenerator:
                     image.setPixelColor(x, y, QColor(*final_color))
             
             pixmap = QPixmap.fromImage(image)
-            cls._texture_cache[cache_key] = pixmap
+            
+            # Validate that generated pixmap is not null before caching
+            if pixmap.isNull():
+                logging.getLogger(__name__).warning(f"Generated null metal texture, not caching: {cache_key}")
+                return pixmap
+            
+            with cls._cache_lock:
+                cls._texture_cache[cache_key] = pixmap
             return pixmap
         except Exception as e:
-            import logging
             logging.getLogger(__name__).error(f"Error generating metal texture: {e}")
             # Return a simple fallback texture
             return cls._generate_fallback_texture(width, height, (128, 128, 130))
@@ -438,8 +496,9 @@ class TextureGenerator:
             
         cache_key = f"rust_{width}x{height}_{intensity}_{seed}"
         
-        if cache_key in cls._texture_cache:
-            return cls._texture_cache[cache_key]
+        with cls._cache_lock:
+            if cache_key in cls._texture_cache:
+                return cls._texture_cache[cache_key]
         
         image = QImage(width, height, QImage.Format.Format_RGB32)
         
@@ -486,7 +545,14 @@ class TextureGenerator:
                 image.setPixelColor(x, y, QColor(*color))
         
         pixmap = QPixmap.fromImage(image)
-        cls._texture_cache[cache_key] = pixmap
+        
+        # Validate that generated pixmap is not null before caching
+        if pixmap.isNull():
+            logging.getLogger(__name__).warning(f"Generated null rust texture, not caching: {cache_key}")
+            return pixmap
+        
+        with cls._cache_lock:
+            cls._texture_cache[cache_key] = pixmap
         return pixmap
     
     @classmethod
@@ -1628,13 +1694,25 @@ class TexturePainter:
     Supports tiling, scaling, lighting effects, and bump mapping.
     """
     
+    # Class-level cache for seamless textures
+    _seamless_cache: Dict[str, QPixmap] = {}
+    _seamless_cache_lock = threading.Lock()
+    
+    @classmethod
+    def clear_seamless_cache(cls):
+        """Clear the seamless texture cache"""
+        with cls._seamless_cache_lock:
+            cls._seamless_cache.clear()
+    
     @staticmethod
     def paint_texture(painter: QPainter, rect: QRect, 
                       texture: QPixmap, 
                       tiled: bool = True,
-                      scaled: bool = True):
+                      scaled: bool = True,
+                      tile_count: Tuple[int, int] = None,
+                      seamless: bool = True):
         """
-        Paint a texture onto a rectangle.
+        Paint a texture onto a rectangle with proper UV mapping and seamless tiling.
         
         Args:
             painter: QPainter to draw with
@@ -1642,45 +1720,106 @@ class TexturePainter:
             texture: Texture pixmap to draw
             tiled: Whether to tile the texture
             scaled: Whether to scale to fit rect
+            tile_count: Optional (x, y) number of tiles to display. If provided, 
+                       ignores scaled parameter and calculates tile size from this.
+            seamless: Whether to make textures seamless for tiling (blends edges)
         """
         if texture.isNull():
             return
         
         if tiled:
-            # Tile the texture
+            # Tile the texture properly aligned to widget position
             painter.save()
-            painter.translate(rect.x(), rect.y())
             
-            # Calculate tiling
-            tile_width = texture.width()
-            tile_height = texture.height()
+            # Determine tile dimensions based on tiling mode
+            if tile_count is not None:
+                # Fixed number of tiles - calculate tile size from widget size
+                tile_width = max(1, rect.width() // tile_count[0])
+                tile_height = max(1, rect.height() // tile_count[1])
+            elif scaled:
+                # Scale tiles to be larger for better visual appearance
+                # Use at least 2 tiles per dimension for proper tiling
+                tile_width = max(64, rect.width() // 2)
+                tile_height = max(32, rect.height() // 2)
+            else:
+                # Use original texture dimensions
+                tile_width = texture.width()
+                tile_height = texture.height()
             
-            if scaled:
-                tile_width = rect.width() // 4  # Scale down tiles for better look
-                tile_height = rect.height() // 4
+            # Get or create seamless version of texture for tiling
+            if seamless:
+                cache_key = f"{id(texture)}_{tile_width}x{tile_height}"
+                with TexturePainter._seamless_cache_lock:
+                    if cache_key in TexturePainter._seamless_cache:
+                        scaled_texture = TexturePainter._seamless_cache[cache_key]
+                    else:
+                        # Scale first, then make seamless
+                        # Use IgnoreAspectRatio to fill the tile completely without distortion
+                        scaled_texture = texture.scaled(
+                            max(1, tile_width), 
+                            max(1, tile_height),
+                            Qt.AspectRatioMode.IgnoreAspectRatio,
+                            Qt.TransformationMode.SmoothTransformation
+                        )
+                        # Make the scaled texture seamless
+                        scaled_texture = TexturePainter.make_seamless(scaled_texture)
+                        TexturePainter._seamless_cache[cache_key] = scaled_texture
+            else:
+                # Scale texture for tiling - ignore aspect ratio to fill tile completely
+                scaled_texture = texture.scaled(
+                    max(1, tile_width), 
+                    max(1, tile_height),
+                    Qt.AspectRatioMode.IgnoreAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation
+                )
             
-            scaled_texture = texture.scaled(
-                max(1, tile_width), 
-                max(1, tile_height),
-                Qt.AspectRatioMode.IgnoreAspectRatio,
-                Qt.TransformationMode.SmoothTransformation
-            )
+            # Get actual scaled dimensions (may differ from requested due to aspect ratio)
+            actual_tile_width = scaled_texture.width()
+            actual_tile_height = scaled_texture.height()
             
-            # Draw tiled
-            pattern = QBrush(scaled_texture)
-            pattern.setTexture(scaled_texture)
-            painter.fillRect(rect, pattern)
+            # Calculate UV offset to maintain consistent tiling across widget boundaries
+            # This ensures textures align properly when widgets are resized or moved
+            if actual_tile_width > 0:
+                # Use widget position modulo tile size for proper offset
+                offset_x = -(rect.x() % actual_tile_width)
+            else:
+                offset_x = 0
+            if actual_tile_height > 0:
+                offset_y = -(rect.y() % actual_tile_height)
+            else:
+                offset_y = 0
+            
+            # Draw texture tiles with proper UV offset for seamless tiling
+            # Start from offset position and tile across the entire rect
+            start_x = offset_x - actual_tile_width
+            start_y = offset_y - actual_tile_height
+            
+            for x in range(start_x, rect.x() + rect.width() + actual_tile_width, actual_tile_width):
+                for y in range(start_y, rect.y() + rect.height() + actual_tile_height, actual_tile_height):
+                    tile_rect = QRect(x, y, actual_tile_width, actual_tile_height)
+                    # Only draw tiles that intersect with target rect for performance
+                    if tile_rect.intersects(rect):
+                        # Clip to the intersection area for clean edges
+                        intersection = tile_rect.intersected(rect)
+                        source_rect = QRect(
+                            intersection.x() - tile_rect.x(),
+                            intersection.y() - tile_rect.y(),
+                            intersection.width(),
+                            intersection.height()
+                        )
+                        painter.drawPixmap(intersection, scaled_texture, source_rect)
             
             painter.restore()
         else:
-            # Draw stretched
+            # Draw stretched - use KeepAspectRatio for less distortion
             if scaled:
                 scaled = texture.scaled(rect.size(), 
-                                        Qt.AspectRatioMode.IgnoreAspectRatio,
+                                        Qt.AspectRatioMode.KeepAspectRatio,
                                         Qt.TransformationMode.SmoothTransformation)
-                painter.drawPixmap(rect.x() + (rect.width() - scaled.width()) // 2,
-                                   rect.y() + (rect.height() - scaled.height()) // 2,
-                                   scaled)
+                # Center the texture in the rect
+                draw_x = rect.x() + (rect.width() - scaled.width()) // 2
+                draw_y = rect.y() + (rect.height() - scaled.height()) // 2
+                painter.drawPixmap(draw_x, draw_y, scaled)
             else:
                 painter.drawPixmap(rect, texture)
     
@@ -1699,11 +1838,14 @@ class TexturePainter:
             normal_map: Normal map for bump effect
             light_pos: Light source position (x, y) relative to widget
         """
+        # Check for null textures BEFORE painting
+        if normal_map.isNull() or texture.isNull():
+            # Draw fallback solid color if textures are null
+            painter.fillRect(rect, QColor(128, 128, 128))
+            return
+        
         # First draw base texture
         TexturePainter.paint_texture(painter, rect, texture, tiled=True)
-        
-        if normal_map.isNull() or texture.isNull():
-            return
         
         # Apply lighting effect based on normal map
         painter.save()
@@ -1800,6 +1942,7 @@ class TexturePainter:
     def make_seamless(texture: QPixmap) -> QPixmap:
         """
         Make a texture seamless for tiling by blending edges.
+        Uses proper wrapping to ensure smooth transitions at tile boundaries.
         
         Args:
             texture: Source texture to make seamless
@@ -1817,57 +1960,91 @@ class TexturePainter:
         # Create new image for seamless version
         seamless = QImage(width, height, QImage.Format.Format_RGB32)
         
-        # Blend width for edge smoothing
-        blend_width = width // 8
-        blend_height = height // 8
+        # Blend width for edge smoothing - use 1/8 of dimension
+        blend_w = max(1, width // 8)
+        blend_h = max(1, height // 8)
+        
+        # Pre-fetch edge colors for faster processing
+        left_edge = [image.pixelColor(0, y) for y in range(height)]
+        right_edge = [image.pixelColor(width - 1, y) for y in range(height)]
+        top_edge = [image.pixelColor(x, 0) for x in range(width)]
+        bottom_edge = [image.pixelColor(x, height - 1) for x in range(width)]
+        corner = image.pixelColor(width - 1, height - 1)
+        top_left = image.pixelColor(0, 0)
         
         for y in range(height):
             for x in range(width):
-                # Calculate blending weights for edges
-                # Horizontal wrapping
-                x_wrap = x
-                x_opposite = (x + width // 2) % width
+                # Calculate smooth blending weights using smoothstep
+                # Horizontal blend (left edge)
+                if x < blend_w:
+                    t = x / blend_w
+                    h_blend = t * t * (3 - 2 * t)  # Smoothstep
+                elif x > width - blend_w:
+                    t = (width - x) / blend_w
+                    h_blend = t * t * (3 - 2 * t)
+                else:
+                    h_blend = 1.0
                 
-                # Vertical wrapping
-                y_wrap = y
-                y_opposite = (y + height // 2) % height
+                # Vertical blend (top edge)
+                if y < blend_h:
+                    t = y / blend_h
+                    v_blend = t * t * (3 - 2 * t)
+                elif y > height - blend_h:
+                    t = (height - y) / blend_h
+                    v_blend = t * t * (3 - 2 * t)
+                else:
+                    v_blend = 1.0
                 
-                # Calculate horizontal blend factor
-                h_blend = 1.0
-                if x < blend_width:
-                    h_blend = x / blend_width
-                elif x > width - blend_width:
-                    h_blend = (width - x) / blend_width
-                
-                # Calculate vertical blend factor
-                v_blend = 1.0
-                if y < blend_height:
-                    v_blend = y / blend_height
-                elif y > height - blend_height:
-                    v_blend = (height - y) / blend_height
-                
-                # Combine blend factors
+                # Use minimum to ensure corner smoothness
                 blend = min(h_blend, v_blend)
                 
-                # Get colors from current and wrapped positions
-                color_current = image.pixelColor(x, y)
-                color_wrapped_h = image.pixelColor(x_opposite, y)
-                color_wrapped_v = image.pixelColor(x, y_opposite)
-                color_wrapped_both = image.pixelColor(x_opposite, y_opposite)
+                # Get colors for blending
+                color_curr = image.pixelColor(x, y)
                 
-                # Blend colors
-                r = int(color_current.red() * blend + 
-                       color_wrapped_h.red() * (1 - blend) * 0.3 +
-                       color_wrapped_v.red() * (1 - blend) * 0.3 +
-                       color_wrapped_both.red() * (1 - blend) * 0.4)
-                g = int(color_current.green() * blend + 
-                       color_wrapped_h.green() * (1 - blend) * 0.3 +
-                       color_wrapped_v.green() * (1 - blend) * 0.3 +
-                       color_wrapped_both.green() * (1 - blend) * 0.4)
-                b = int(color_current.blue() * blend + 
-                       color_wrapped_h.blue() * (1 - blend) * 0.3 +
-                       color_wrapped_v.blue() * (1 - blend) * 0.3 +
-                       color_wrapped_both.blue() * (1 - blend) * 0.4)
+                # Wrap horizontally (right edge to left edge, left edge to right edge)
+                if x < blend_w:
+                    color_wrap_h = right_edge[y]  # Left edge blends with right edge
+                elif x > width - blend_w:
+                    color_wrap_h = left_edge[y]   # Right edge blends with left edge
+                else:
+                    color_wrap_h = color_curr
+                
+                # Wrap vertically (bottom edge to top edge, top edge to bottom edge)
+                if y < blend_h:
+                    color_wrap_v = bottom_edge[x]  # Top edge blends with bottom edge
+                elif y > height - blend_h:
+                    color_wrap_v = top_edge[x]     # Bottom edge blends with top edge
+                else:
+                    color_wrap_v = color_curr
+                
+                # Corner wrap - blend all four corners
+                if x < blend_w and y < blend_h:
+                    color_wrap_both = bottom_edge[0]  # Top-left blends with bottom-right
+                elif x > width - blend_w and y < blend_h:
+                    color_wrap_both = bottom_edge[width - 1]  # Top-right blends with bottom-left
+                elif x < blend_w and y > height - blend_h:
+                    color_wrap_both = top_edge[0]  # Bottom-left blends with top-right
+                elif x > width - blend_w and y > height - blend_h:
+                    color_wrap_both = top_left  # Bottom-right blends with top-left
+                else:
+                    color_wrap_both = color_curr
+                
+                # 4-way blend with proper weights
+                w_curr = blend
+                w_wrap = (1 - blend) * 0.333
+                
+                r = int(color_curr.red() * w_curr + 
+                       color_wrap_h.red() * w_wrap +
+                       color_wrap_v.red() * w_wrap +
+                       color_wrap_both.red() * w_wrap)
+                g = int(color_curr.green() * w_curr + 
+                       color_wrap_h.green() * w_wrap +
+                       color_wrap_v.green() * w_wrap +
+                       color_wrap_both.green() * w_wrap)
+                b = int(color_curr.blue() * w_curr + 
+                       color_wrap_h.blue() * w_wrap +
+                       color_wrap_v.blue() * w_wrap +
+                       color_wrap_both.blue() * w_wrap)
                 
                 seamless.setPixelColor(x, y, QColor(
                     max(0, min(255, r)),
@@ -1880,31 +2057,27 @@ class TexturePainter:
     @staticmethod
     def paint_seamless(painter: QPainter, rect: QRect,
                       texture: QPixmap,
-                      tile_size: int = 64):
+                      tile_count: Tuple[int, int] = (4, 4)):
         """
-        Paint texture with seamless tiling.
+        Paint texture with seamless tiling using proper UV mapping.
         
         Args:
             painter: QPainter to draw with
             rect: Target rectangle
-            texture: Texture to tile (should be seamless)
-            tile_size: Size of each tile
+            texture: Texture to tile (will be made seamless if not already)
+            tile_count: Number of tiles in (x, y) direction
         """
         if texture.isNull():
             return
-            
-        # Scale texture to tile size
-        scaled = texture.scaled(
-            tile_size, tile_size,
-            Qt.AspectRatioMode.IgnoreAspectRatio,
-            Qt.TransformationMode.SmoothTransformation
+        
+        # Use the improved paint_texture with tile_count for seamless tiling
+        # This handles UV mapping and offset calculations properly
+        TexturePainter.paint_texture(
+            painter, rect, texture, 
+            tiled=True, 
+            scaled=False,
+            tile_count=tile_count
         )
-        
-        # Create pattern brush
-        pattern = QBrush(scaled)
-        pattern.setTexture(scaled)
-        
-        painter.fillRect(rect, pattern)
     
     @staticmethod
     def paint_with_parallax(painter: QPainter, rect: QRect,
@@ -2116,29 +2289,14 @@ def _ensure_qapplication() -> bool:
         if app is not None:
             return True
         # No application instance found
-        import logging
-        logging.getLogger(__name__).debug("No QApplication instance found for texture generation")
+        logging.getLogger(__name__).warning("No QApplication instance found for texture generation")
         return False
     except (ImportError, RuntimeError) as e:
-        import logging
-        logging.getLogger(__name__).debug(f"Error checking QApplication: {e}")
+        logging.getLogger(__name__).error(f"Error checking QApplication: {e}")
         return False
     except Exception as e:
-        import logging
-        logging.getLogger(__name__).debug(f"Unexpected error checking QApplication: {e}")
+        logging.getLogger(__name__).warning(f"Unexpected error checking QApplication: {e}")
         return False
 
 
-# Preload on module import - but only if QApplication exists
-# This prevents crashes when importing before QApplication is created
-def _try_preload():
-    """Try to preload textures, safely handle case where QApplication doesn't exist yet"""
-    if not _ensure_qapplication():
-        return  # Skip preloading if no QApplication
-    
-    try:
-        TextureCache.preload_common_textures()
-    except Exception:
-        pass  # Ignore preload errors
 
-_try_preload()

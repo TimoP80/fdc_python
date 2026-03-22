@@ -281,8 +281,57 @@ class FMFParser(QObject):
                         dialogue.detaileddesc = self._parse_quoted_string(line)
                         global_props_found = True
                         logger.debug(f"FMF parsing: Found Detailed_Desc: {dialogue.detaileddesc}")
+                    elif line.startswith('StartTimeEvent'):
+                        # Parse start time event
+                        match = re.search(r'StartTimeEvent\s+(\d+)', line)
+                        if match:
+                            dialogue.start_time_event = int(match.group(1))
+                            logger.debug(f"FMF parsing: Found StartTimeEvent: {dialogue.start_time_event}")
+                    elif line.startswith('StartCondition'):
+                        # Parse starting condition
+                        start_cond = self._parse_start_condition(line)
+                        if start_cond:
+                            dialogue.startconditions.append(start_cond)
+                            dialogue.startconditioncnt += 1
+                            logger.debug(f"FMF parsing: Found StartCondition with {len(start_cond.conditions)} conditions")
+                    elif line.startswith('CustomProc'):
+                        # Parse custom procedure
+                        proc, new_i = self._parse_custom_proc(lines, i)
+                        if proc:
+                            dialogue.customprocs.append(proc)
+                            dialogue.customproccnt += 1
+                            logger.debug(f"FMF parsing: Found CustomProc: {proc.name}")
+                        if new_i > i:
+                            i = new_i
+                    elif line.startswith('TimedEvent'):
+                        # Parse timed event
+                        timed_event, new_i = self._parse_timed_event(lines, i)
+                        if timed_event:
+                            dialogue.timedevents.append(timed_event)
+                            dialogue.timedeventcnt += 1
+                            logger.debug(f"FMF parsing: Found TimedEvent: {timed_event.fixedparamname}")
+                        if new_i > i:
+                            i = new_i
+                    elif line.startswith('Variable'):
+                        # Parse variable
+                        var = self._parse_variable(line)
+                        if var:
+                            dialogue.variables.append(var)
+                            dialogue.varcnt += 1
+                            logger.debug(f"FMF parsing: Found Variable: {var.name}")
+                    elif line.startswith('FloatNode '):
+                        # Parse float node
+                        float_node, new_i = self._parse_float_node(lines, i)
+                        if float_node:
+                            dialogue.floatnodes.append(float_node)
+                            dialogue.floatnodecount += 1
+                            logger.debug(f"FMF parsing: Found FloatNode: {float_node.nodename}")
+                            i = new_i
+                        else:
+                            i += 1
+                        continue
                     elif line.startswith('Node '):
-                        # Start parsing nodes
+                        # Start parsing nodes (don't increment i - let node parser handle it)
                         logger.debug(f"FMF parsing: Found first node at line {current_line}, stopping global properties parsing")
                         break
                     else:
@@ -770,9 +819,84 @@ class FMFParser(QObject):
         stream.write(f'Unknown_Desc "{dialogue.unknowndesc}"\n')
         stream.write(f'Known_Desc "{dialogue.knowndesc}"\n')
         stream.write(f'Detailed_Desc "{dialogue.detaileddesc}"\n')
+        
+        # Write NPC timing properties
+        if dialogue.start_time_event > 0:
+            stream.write(f'\n/* Timing */\n')
+            stream.write(f'StartTimeEvent {dialogue.start_time_event}\n')
+        
+        # Write starting conditions
+        if dialogue.startconditions and len(dialogue.startconditions) > 0:
+            stream.write('\n/* Dialogue starting conditions */\n')
+            for start_cond in dialogue.startconditions:
+                if start_cond.conditions and len(start_cond.conditions) > 0:
+                    conditions_str = self._write_conditions(start_cond.conditions)
+                    stream.write(f'StartCondition "{start_cond.goto_node}" conditions {{ {conditions_str} }}\n')
+        
+        # Write custom procedures
+        if dialogue.customprocs and len(dialogue.customprocs) > 0:
+            stream.write('\n/* Custom procedures */\n')
+            for proc in dialogue.customprocs:
+                proc_associate = proc.associatewithnode if proc.associatewithnode > 0 else 0
+                stream.write(f'CustomProc "{proc.name}" associate {proc_associate}\n')
+                if proc.lines:
+                    stream.write(f'{{\n{proc.lines}\n}}\n')
+        
+        # Write timed events
+        if dialogue.timedevents and len(dialogue.timedevents) > 0:
+            stream.write('\n/* Timed events */\n')
+            for event in dialogue.timedevents:
+                interval_str = f"{event.mininterval},{event.maxinterval}" if event.israndom else str(event.interval)
+                random_str = " random" if event.israndom else ""
+                stream.write(f'TimedEvent "{event.fixedparamname}" interval={interval_str}{random_str}\n')
+                if event.actionlines and len(event.actionlines) > 0:
+                    stream.write('{\n')
+                    for action in event.actionlines:
+                        if action.linedata:
+                            stream.write(f'  {action.linedata}\n')
+                    stream.write('}\n')
+        
+        # Write variables
+        if dialogue.variables and len(dialogue.variables) > 0:
+            stream.write('\n/* Variables */\n')
+            for var in dialogue.variables:
+                var_flags = ''
+                if var.flags == 1:
+                    var_flags = 'import '
+                elif var.flags == 2:
+                    var_flags = 'export '
+                elif var.flags == 3:
+                    var_flags = 'local '
+                elif var.flags == 4:
+                    var_flags = 'global '
+                
+                var_type_str = ''
+                if var.vartype == 0:
+                    var_type_str = ' string'
+                elif var.vartype == 1:
+                    var_type_str = ' int'
+                elif var.vartype == 2:
+                    var_type_str = ' float'
+                
+                notes_str = f' // {var.notes}' if var.notes else ''
+                stream.write(f'Variable{var_flags}"{var.name}"{var_type_str} = {var.value}{notes_str}\n')
+        
         stream.write('\n')
 
-        # Write nodes
+        # Write float message nodes
+        if dialogue.floatnodes and len(dialogue.floatnodes) > 0:
+            stream.write('/* Float nodes */\n')
+            for float_node in dialogue.floatnodes:
+                stream.write(f'FloatNode "{float_node.nodename}"\n')
+                stream.write(f'notes "{float_node.notes}"\n')
+                stream.write('{\n')
+                if float_node.messages and len(float_node.messages) > 0:
+                    for msg in float_node.messages:
+                        stream.write(f'  message "{msg}"\n')
+                stream.write('}\n\n')
+
+        # Write regular dialogue nodes
+        stream.write('/* Regular nodes */\n')
         for node in dialogue.nodes:
             stream.write(f'Node "{node.nodename}"\n')
             stream.write(f'notes "{node.notes}"\n')
@@ -858,3 +982,216 @@ class FMFParser(QObject):
                 result_parts.append('link_next NONE')
         
         return ' '.join(result_parts)
+
+    def _parse_start_condition(self, line: str) -> Optional['StartingCondition']:
+        """Parse a starting condition from the FMF format"""
+        try:
+            # Format: StartCondition "goto_node" conditions { conditions_text }
+            match = re.search(r'StartCondition\s+"([^"]+)"', line)
+            if not match:
+                return None
+            
+            start_cond = StartingCondition()
+            start_cond.goto_node = match.group(1)
+            
+            # Parse conditions if present
+            condition_match = re.search(r'conditions\s*\{([^}]+)\}', line)
+            if condition_match:
+                conditions_text = condition_match.group(1)
+                start_cond.conditions = self._parse_conditions(conditions_text)
+                start_cond.condcnt = len(start_cond.conditions)
+            
+            return start_cond
+        except Exception as e:
+            logger.warning(f"Error parsing start condition: {e}")
+            return None
+
+    def _parse_custom_proc(self, lines: List[str], start_idx: int) -> tuple:
+        """Parse a custom procedure from the FMF format"""
+        try:
+            line = lines[start_idx].strip()
+            # Format: CustomProc "name" associate N
+            match = re.search(r'CustomProc\s+"([^"]+)"\s+associate\s+(\d+)', line)
+            if not match:
+                return None, start_idx
+            
+            proc = CustomProcedure()
+            proc.name = match.group(1)
+            proc.associatewithnode = int(match.group(2))
+            
+            # Check for procedure body
+            i = start_idx + 1
+            while i < len(lines):
+                line_content = lines[i].strip()
+                if line_content == '{':
+                    # Parse body until closing brace
+                    i += 1
+                    body_lines = []
+                    while i < len(lines):
+                        body_line = lines[i].strip()
+                        if body_line == '}':
+                            break
+                        body_lines.append(body_line)
+                        i += 1
+                    proc.lines = '\n'.join(body_lines)
+                    break
+                elif line_content.startswith('Node ') or line_content.startswith('FloatNode') or line_content.startswith('CustomProc'):
+                    break
+                i += 1
+            
+            return proc, i
+        except Exception as e:
+            logger.warning(f"Error parsing custom procedure: {e}")
+            return None, start_idx
+
+    def _parse_timed_event(self, lines: List[str], start_idx: int) -> tuple:
+        """Parse a timed event from the FMF format"""
+        try:
+            line = lines[start_idx].strip()
+            # Format: TimedEvent "name" interval=N or interval=N,M random
+            match = re.search(r'TimedEvent\s+"([^"]+)"\s+interval=([\d,]+)(?:\s+random)?', line)
+            if not match:
+                return None, start_idx
+            
+            event = TimeEvent()
+            event.fixedparamname = match.group(1)
+            
+            interval_str = match.group(2)
+            if ',' in interval_str:
+                parts = interval_str.split(',')
+                event.israndom = True
+                event.mininterval = int(parts[0])
+                event.maxinterval = int(parts[1])
+            else:
+                event.interval = int(interval_str)
+            
+            # Check for action body
+            i = start_idx + 1
+            while i < len(lines):
+                line_content = lines[i].strip()
+                if line_content == '{':
+                    # Parse actions
+                    i += 1
+                    while i < len(lines):
+                        action_line = lines[i].strip()
+                        if action_line == '}':
+                            break
+                        if action_line:
+                            action = Action()
+                            action.linedata = action_line
+                            event.actionlines.append(action)
+                            event.actioncnt += 1
+                        i += 1
+                elif line_content.startswith('Node ') or line_content.startswith('FloatNode'):
+                    break
+                i += 1
+            
+            return event, i
+        except Exception as e:
+            logger.warning(f"Error parsing timed event: {e}")
+            return None, start_idx
+
+    def _parse_variable(self, line: str) -> Optional['Variable']:
+        """Parse a variable from the FMF format"""
+        try:
+            # Format: Variable[flags]"name"[type] = value // notes
+            # Flags: import, export, local, global
+            # Type: string, int, float
+            
+            flags = 0
+            if 'import' in line:
+                flags = 1
+            elif 'export' in line:
+                flags = 2
+            elif 'local' in line:
+                flags = 3
+            elif 'global' in line:
+                flags = 4
+            
+            vartype = 1  # default int
+            if 'string' in line:
+                vartype = 0
+            elif 'float' in line:
+                vartype = 2
+            
+            name_match = re.search(r'"([^"]+)"', line)
+            if not name_match:
+                return None
+            
+            var = Variable()
+            var.name = name_match.group(1)
+            var.flags = flags
+            var.vartype = vartype
+            
+            # Parse value
+            value_match = re.search(r'=\s*(.+?)(?://|$)', line)
+            if value_match:
+                value_str = value_match.group(1).strip()
+                # Remove trailing semicolon if present
+                value_str = value_str.rstrip(';')
+                if vartype == 2:  # float
+                    try:
+                        var.value = float(value_str)
+                    except ValueError:
+                        var.value = 0.0
+                elif vartype == 1:  # int
+                    try:
+                        var.value = int(value_str)
+                    except ValueError:
+                        var.value = 0
+                else:  # string
+                    var.value = value_str.strip('"')
+            
+            # Parse notes (comment)
+            notes_match = re.search(r'//\s*(.+)$', line)
+            if notes_match:
+                var.notes = notes_match.group(1).strip()
+            
+            return var
+        except Exception as e:
+            logger.warning(f"Error parsing variable: {e}")
+            return None
+
+    def _parse_float_node(self, lines: List[str], start_idx: int) -> tuple:
+        """Parse a float node from the FMF format"""
+        try:
+            line = lines[start_idx].strip()
+            # Format: FloatNode "nodename"
+            match = re.search(r'FloatNode\s+"([^"]+)"', line)
+            if not match:
+                return None, start_idx
+            
+            float_node = FloatNode()
+            float_node.nodename = match.group(1)
+            
+            # Parse notes and body
+            i = start_idx + 1
+            while i < len(lines):
+                line_content = lines[i].strip()
+                
+                if line_content.startswith('notes'):
+                    float_node.notes = self._parse_quoted_string(line_content)
+                elif line_content == '{':
+                    # Parse messages
+                    i += 1
+                    while i < len(lines):
+                        msg_line = lines[i].strip()
+                        if msg_line == '}':
+                            # Move past the closing brace
+                            i += 1
+                            break
+                        if msg_line.startswith('message'):
+                            msg = self._parse_quoted_string(msg_line)
+                            if msg:
+                                float_node.messages.append(msg)
+                                float_node.messagecnt += 1
+                        i += 1
+                elif line_content.startswith('Node ') or line_content.startswith('FloatNode'):
+                    # Don't increment - return this index so it can be processed
+                    return float_node, i
+                i += 1
+            
+            return float_node, i
+        except Exception as e:
+            logger.warning(f"Error parsing float node: {e}")
+            return None, start_idx

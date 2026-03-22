@@ -17,6 +17,7 @@ from PyQt6.QtGui import QAction, QKeySequence, QFont, QPixmap
 from core.dialog_manager import DialogManager
 from core.plugin_system import PluginHooks
 from core.settings import Settings
+from core.theme_manager import get_theme_manager
 from models.dialogue import Dialogue, DialogueNode, Condition, CheckType, CompareType, LinkType
 from ui.diagram_widget import DiagramWidget
 from ui.fallout_theme import FalloutUIHelpers, FalloutColors
@@ -24,8 +25,7 @@ from ui.fallout_widgets import (
     FalloutButton, SpecialStatBar, FalloutPanel, 
     CRTScanlineOverlay, TerminalTextEdit, FalloutTreeWidget,
     FalloutListWidget, WornMetalPanel,
-    FadeLineEdit, FadeTextEdit, FadeLabel, FadeButton, FadeValidationMessage,
-    TexturedFalloutButton, TexturedFalloutPanel
+    FadeLineEdit, FadeTextEdit, FadeLabel, FadeButton, FadeValidationMessage
 )
 
 logger = logging.getLogger(__name__)
@@ -40,6 +40,9 @@ class MainWindow(QMainWindow):
 
         # Apply Fallout theme
         self._apply_fallout_theme()
+        
+        # Initialize theme manager and apply saved theme
+        self._init_theme_manager()
         
         self.setup_ui()
         self.setup_menus()
@@ -67,6 +70,34 @@ class MainWindow(QMainWindow):
                 border: 2px solid {FalloutColors.PANEL_BORDER};
             }}
         """)
+
+    def _init_theme_manager(self):
+        """Initialize the theme manager and apply saved theme"""
+        from core.theme_manager import get_theme_manager
+        
+        # Get theme manager instance
+        theme_manager = get_theme_manager(self.settings)
+        
+        # Apply the saved theme
+        active_theme_id = theme_manager.get_active_theme_id()
+        if active_theme_id:
+            theme_manager.set_active_theme(active_theme_id)
+            
+        # Connect theme change signal to refresh UI
+        theme_manager.theme_changed.connect(self._on_theme_changed)
+
+    def _on_theme_changed(self, theme_id: str):
+        """Handle theme change - refresh the UI"""
+        # Note: The ThemeManager already applies the theme stylesheet in set_active_theme()
+        # We should NOT call _apply_fallout_theme() here as it would override the user's
+        # selected theme with the hardcoded Fallout theme.
+        # 
+        # The ThemeManager._apply_fallout_style() method already handles applying the
+        # selected theme's colors and stylesheet properly.
+        
+        # Only force a UI repaint to ensure the theme change is visible
+        self.update()
+        self.repaint()
 
     def setup_ui(self):
         """Setup the main UI components"""
@@ -137,6 +168,10 @@ class MainWindow(QMainWindow):
         add_float_btn = QPushButton("Add")
         add_float_btn.clicked.connect(self.on_add_float_node)
         float_controls.addWidget(add_float_btn)
+        
+        add_msg_btn = QPushButton("Add Msg")
+        add_msg_btn.clicked.connect(self.on_add_float_message)
+        float_controls.addWidget(add_msg_btn)
         
         delete_float_btn = QPushButton("Delete")
         delete_float_btn.clicked.connect(self.on_delete_float_node)
@@ -249,11 +284,11 @@ class MainWindow(QMainWindow):
         # Option controls
         option_controls_layout = QHBoxLayout()
 
-        add_option_btn = TexturedFalloutButton("Add Option", "rust")
+        add_option_btn = FalloutButton("Add Option")
         add_option_btn.clicked.connect(self.on_add_option)
         option_controls_layout.addWidget(add_option_btn)
 
-        delete_option_btn = TexturedFalloutButton("Delete Option", "rust")
+        delete_option_btn = FalloutButton("Delete Option")
         delete_option_btn.clicked.connect(self.on_delete_option)
         option_controls_layout.addWidget(delete_option_btn)
 
@@ -714,6 +749,14 @@ class MainWindow(QMainWindow):
 
         tools_menu.addSeparator()
 
+        # NPC Editor
+        npc_editor_action = QAction("&NPC Editor", self)
+        npc_editor_action.setStatusTip("Edit NPC properties and attributes")
+        npc_editor_action.triggered.connect(self.on_npc_editor)
+        tools_menu.addAction(npc_editor_action)
+
+        tools_menu.addSeparator()
+
         # Script Compiler configuration
         script_compiler_action = QAction("Configure Script &Compiler", self)
         script_compiler_action.setToolTip("Configure the path to the SSL script compiler (sslc.exe)")
@@ -745,6 +788,14 @@ class MainWindow(QMainWindow):
         settings_action.setStatusTip("Configure application settings")
         settings_action.triggered.connect(self.on_settings)
         tools_menu.addAction(settings_action)
+
+        tools_menu.addSeparator()
+
+        # Theme Manager
+        theme_manager_action = QAction("&Theme Manager...", self)
+        theme_manager_action.setStatusTip("Browse, preview, and activate themes")
+        theme_manager_action.triggered.connect(self.on_theme_manager)
+        tools_menu.addAction(theme_manager_action)
 
         # ==========================================
         # HELP MENU
@@ -1011,6 +1062,30 @@ class MainWindow(QMainWindow):
             self.populate_float_list()
             self.status_bar.showMessage(f"Deleted float node: {node_name}")
 
+    @pyqtSlot()
+    def on_add_float_message(self):
+        """Add a message to the selected float node"""
+        current_item = self.float_list.currentItem()
+        if not current_item:
+            QMessageBox.warning(self, "No Selection", "Please select a float node to add a message to.")
+            return
+        
+        float_index = current_item.data(Qt.ItemDataRole.UserRole)
+        dialogue = self.dialog_manager.get_current_dialogue()
+        if not dialogue or float_index < 0 or float_index >= len(dialogue.floatnodes):
+            return
+        
+        float_node = dialogue.floatnodes[float_index]
+        
+        # Ask for message text
+        text, ok = QInputDialog.getText(self, "Add Message", "Enter message text:")
+        if ok and text.strip():
+            float_node.messages.append(text.strip())
+            float_node.messagecnt = len(float_node.messages)
+            self.dialog_manager.mark_modified()
+            self.populate_float_list()
+            self.status_bar.showMessage(f"Added message to float node: {float_node.nodename}")
+
     @pyqtSlot(QListWidgetItem)
     def on_float_node_double_clicked(self, item):
         """Edit float node messages when double-clicked"""
@@ -1051,8 +1126,10 @@ class MainWindow(QMainWindow):
         # Message buttons
         msg_button_layout = QHBoxLayout()
         add_msg_btn = QPushButton("Add Message")
+        add_from_list_btn = QPushButton("Add from List")
         delete_msg_btn = QPushButton("Delete Message")
         msg_button_layout.addWidget(add_msg_btn)
+        msg_button_layout.addWidget(add_from_list_btn)
         msg_button_layout.addWidget(delete_msg_btn)
         layout.addLayout(msg_button_layout)
         
@@ -1084,7 +1161,79 @@ class MainWindow(QMainWindow):
             if current_row >= 0:
                 messages_list.takeItem(current_row)
         
+        def add_from_list():
+            """Add a message from the list of available messages in the dialogue"""
+            # Collect all available messages from the dialogue
+            available_messages = []
+            message_sources = []
+            
+            # Get messages from dialogue nodes (NPC text)
+            for node in dialogue.nodes:
+                if node.npctext:
+                    available_messages.append(node.npctext)
+                    message_sources.append(f"Node: {node.nodename}")
+                if node.npctext_female:
+                    available_messages.append(node.npctext_female)
+                    message_sources.append(f"Node: {node.nodename} (Female)")
+            
+            # Get player options
+            for node in dialogue.nodes:
+                for option in node.options:
+                    if option.optiontext:
+                        available_messages.append(option.optiontext)
+                        message_sources.append(f"Option in: {node.nodename}")
+            
+            # Get messages from other float nodes
+            for fnode in dialogue.floatnodes:
+                if fnode != float_node:  # Exclude current node
+                    for msg in fnode.messages:
+                        available_messages.append(msg)
+                        message_sources.append(f"Float: {fnode.nodename}")
+            
+            if not available_messages:
+                QMessageBox.information(dialog, "No Messages", 
+                    "No messages available to add. Import a dialogue or add messages to other nodes first.")
+                return
+            
+            # Show selection dialog
+            select_dialog = QDialog(dialog)
+            select_dialog.setWindowTitle("Select Message")
+            select_dialog.setMinimumSize(500, 400)
+            select_layout = QVBoxLayout(select_dialog)
+            
+            select_layout.addWidget(QLabel("Select a message to add:"))
+            
+            # Create list widget with messages and sources
+            select_list = QListWidget()
+            select_list.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+            for i, msg in enumerate(available_messages):
+                display_text = f"{msg[:50]}... [{message_sources[i]}]" if len(msg) > 50 else f"{msg} [{message_sources[i]}]"
+                select_list.addItem(display_text)
+                select_list.item(i).setData(Qt.ItemDataRole.UserRole, msg)
+            select_layout.addWidget(select_list)
+            
+            # Buttons
+            select_button_layout = QHBoxLayout()
+            select_btn = QPushButton("Add Selected")
+            select_cancel_btn = QPushButton("Cancel")
+            select_button_layout.addWidget(select_btn)
+            select_button_layout.addWidget(select_cancel_btn)
+            select_layout.addLayout(select_button_layout)
+            
+            def on_select():
+                current_row = select_list.currentRow()
+                if current_row >= 0:
+                    selected_msg = select_list.item(current_row).data(Qt.ItemDataRole.UserRole)
+                    messages_list.addItem(selected_msg)
+                    select_dialog.accept()
+            
+            select_btn.clicked.connect(on_select)
+            select_cancel_btn.clicked.connect(select_dialog.reject)
+            
+            select_dialog.exec()
+        
         add_msg_btn.clicked.connect(add_message)
+        add_from_list_btn.clicked.connect(add_from_list)
         delete_msg_btn.clicked.connect(delete_message)
         
         def save_changes():
@@ -1690,7 +1839,7 @@ class MainWindow(QMainWindow):
             self._add_condition_row(self.conditions_container, cond)
         
         # Add condition button
-        add_condition_btn = TexturedFalloutButton("Add Condition", "metal")
+        add_condition_btn = FalloutButton("Add Condition")
         add_condition_btn.setMaximumWidth(150)
         add_condition_btn.clicked.connect(lambda: self._add_condition_row(self.conditions_container))
         conditions_details_layout.addWidget(add_condition_btn)
@@ -1718,9 +1867,9 @@ class MainWindow(QMainWindow):
 
         # Buttons
         button_layout = QHBoxLayout()
-        save_button = TexturedFalloutButton("Save", "rust")
+        save_button = FalloutButton("Save")
         save_button.clicked.connect(lambda: self.save_option(dialog, node_index, option_index))
-        cancel_button = TexturedFalloutButton("Cancel", "metal")
+        cancel_button = FalloutButton("Cancel")
         cancel_button.clicked.connect(dialog.reject)
         button_layout.addStretch()
         button_layout.addWidget(save_button)
@@ -1776,7 +1925,7 @@ class MainWindow(QMainWindow):
         link_combo.addItems(link_types)
         
         # Remove button
-        remove_btn = TexturedFalloutButton("X", "rust")
+        remove_btn = FalloutButton("X")
         remove_btn.setMaximumWidth(30)
         
         # Add to layout
@@ -2341,6 +2490,18 @@ class MainWindow(QMainWindow):
     def on_plugin_designer(self):
         """Show plugin designer window"""
         self.show_plugin_designer()
+
+    @pyqtSlot()
+    def on_npc_editor(self):
+        """Show NPC editor dialog"""
+        self.show_npc_editor()
+
+    def show_npc_editor(self):
+        """Display the NPC editor dialog"""
+        from ui.npc_editor import NpcEditorDialog
+        
+        editor = NpcEditorDialog(parent=self)
+        editor.exec()
 
     def show_plugin_designer(self):
         """Display the plugin designer window"""
@@ -3542,6 +3703,18 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
     def on_settings(self):
         """Handle settings action"""
         self.show_settings_dialog()
+
+    def on_theme_manager(self):
+        """Handle theme manager action"""
+        self.show_theme_manager_dialog()
+
+    def show_theme_manager_dialog(self):
+        """Show the theme manager dialog"""
+        from ui.theme_manager_dialog import show_theme_manager
+        from core.theme_manager import get_theme_manager
+        
+        theme_manager = get_theme_manager(self.settings)
+        show_theme_manager(theme_manager, self)
 
     def show_settings_dialog(self):
         """Show settings configuration dialog"""

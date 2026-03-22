@@ -227,15 +227,14 @@ def main():
     # Create main window
     window = MainWindow(dialog_manager, settings)
     
-    # Preload textures BEFORE showing window
-    # This ensures textures are ready when the window is displayed
-    from ui.texture_system import TextureCache
-    TextureCache.preload_common_textures()
+    # Texture system disabled for flat minimalist UI
+    # All textures replaced with solid colors in fallout_theme.py
+    logger.info("Using flat minimalist UI theme (textures disabled)")
 
     # Notify plugins that main window is created
     dialog_manager.plugin_manager.call_hook(PluginHooks.UI_MAIN_WINDOW_CREATED, window)
 
-    # Show window after textures are preloaded
+    # Show window
     window.show()
 
     # Close splash screen after main window is displayed

@@ -229,18 +229,11 @@ class FalloutStylesheet:
         
         /* --- Push Buttons --- */
         QPushButton {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #5a7a2a,
-                stop: 0.1 #4a6a1a,
-                stop: 0.4 #4a5d23,
-                stop: 0.6 #3d4f2a,
-                stop: 1 #2d3f1a
-            );
+            background-color: #4a5d23;
             color: #d4c4a8;
             border: 2px outset #6b8e23;
-            border-top-color: #8fa863;
-            border-left-color: #8fa863;
+            border-top-color: #6b8e23;
+            border-left-color: #6b8e23;
             border-right-color: #3d4f2a;
             border-bottom-color: #3d4f2a;
             border-radius: 4px;
@@ -252,31 +245,17 @@ class FalloutStylesheet:
         }
         
         QPushButton:hover {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #6b8e23,
-                stop: 0.1 #5a7a2a,
-                stop: 0.4 #556b2f,
-                stop: 0.6 #4a5d23,
-                stop: 1 #3d4f2a
-            );
+            background-color: #556b2f;
             color: #ffcc00;
             border: 2px outset #8fa863;
-            border-top-color: #a8c878;
-            border-left-color: #a8c878;
+            border-top-color: #8fa863;
+            border-left-color: #8fa863;
             border-right-color: #556b2f;
             border-bottom-color: #556b2f;
         }
         
         QPushButton:pressed {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #2d3f1a,
-                stop: 0.1 #3d4f2a,
-                stop: 0.4 #4a5d23,
-                stop: 0.6 #4a5d23,
-                stop: 1 #556b2f
-            );
+            background-color: #3d4f2a;
             color: #ffffff;
             border: 2px inset #3d4f2a;
             border-top-color: #2d3f1a;
@@ -301,23 +280,13 @@ class FalloutStylesheet:
         
         /* --- Rust/Metal Button Style --- */
         QPushButton#rustButton {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #8b4513,
-                stop: 0.5 #7c4a1c,
-                stop: 1 #5d4a3a
-            );
+            background-color: #7c4a1c;
             border: 2px outset #b7410e;
             border-radius: 4px;
         }
         
         QPushButton#rustButton:hover {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #b7410e,
-                stop: 0.5 #8b4513,
-                stop: 1 #7c4a1c
-            );
+            background-color: #8b4513;
             border: 2px solid #ffcc00;
         }
         
@@ -639,12 +608,7 @@ class FalloutStylesheet:
         }
         
         QProgressBar::chunk {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 1, y2: 0,
-                stop: 0 #556b2f,
-                stop: 0.5 #6b8e23,
-                stop: 1 #556b2f
-            );
+            background-color: #6b8e23;
             border-radius: 2px;
         }
         
@@ -673,11 +637,7 @@ class FalloutStylesheet:
         
         /* --- Group Box --- */
         QGroupBox {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #3a3a38,
-                stop: 1 #2a2a28
-            );
+            background-color: #2a2a28;
             border: 2px outset #5c5c5c;
             border-top-color: #6a6a6a;
             border-left-color: #6a6a6a;
@@ -840,26 +800,14 @@ class FalloutStylesheet:
         
         /* Worn Metal Panel */
         .fallout-panel-metal {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 1, y2: 1,
-                stop: 0 #3a3a3a,
-                stop: 0.3 #4a4a48,
-                stop: 0.7 #3a3a3a,
-                stop: 1 #2d2d2d
-            );
+            background-color: #3a3a3a;
             border: 3px outset #6a6a6a;
             border-radius: 4px;
         }
         
         /* Rusty Panel */
         .fallout-panel-rust {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #5d4a3a,
-                stop: 0.3 #7c4a1c,
-                stop: 0.6 #8b4513,
-                stop: 1 #5d4a3a
-            );
+            background-color: #5d4a3a;
             border: 3px solid #8b3a0e;
             border-radius: 4px;
         }
@@ -887,12 +835,7 @@ class FalloutStylesheet:
         
         /* Main Action Button */
         .btn-main {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #6b8e23,
-                stop: 0.5 #556b2f,
-                stop: 1 #4a5d23
-            );
+            background-color: #556b2f;
             color: #ffcc00;
             border: 3px outset #6b8e23;
             border-radius: 4px;
@@ -903,33 +846,18 @@ class FalloutStylesheet:
         }
         
         .btn-main:hover {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #7a9e33,
-                stop: 0.5 #6b8e23,
-                stop: 1 #556b2f
-            );
+            background-color: #6b8e23;
             border: 3px solid #ffcc00;
         }
         
         .btn-main:pressed {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #4a5d23,
-                stop: 0.5 #556b2f,
-                stop: 1 #6b8e23
-            );
+            background-color: #4a5d23;
             border: 3px inset #4a5d23;
         }
         
         /* Danger/Delete Button */
         .btn-danger {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #8b3a0e,
-                stop: 0.5 #7c3010,
-                stop: 1 #5d2a0e
-            );
+            background-color: #7c3010;
             color: #ffcc00;
             border: 2px outset #b7410e;
             border-radius: 4px;
@@ -937,12 +865,7 @@ class FalloutStylesheet:
         }
         
         .btn-danger:hover {
-            background-color: qlineargradient(
-                x1: 0, y1: 0, x2: 0, y2: 1,
-                stop: 0 #b7410e,
-                stop: 0.5 #8b3a0e,
-                stop: 1 #7c3010
-            );
+            background-color: #8b3a0e;
             border: 2px solid #ffcc00;
         }
         

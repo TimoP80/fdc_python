@@ -314,7 +314,7 @@ class ComponentGraphicsItem(QGraphicsRectItem):
     Z_SELECTION = 20
     
     # Custom signal for position changes
-    position_changed = pyqtSignal(object)  # Emits self
+    position_changed = pyqtSignal(str)  # Emits component ID
     
     def __init__(self, component: ComponentInstance, definition: ComponentDefinition, parent=None):
         super().__init__(parent)
@@ -381,7 +381,7 @@ class ComponentGraphicsItem(QGraphicsRectItem):
             self.update_port_positions()
             
             # Emit signal to notify listeners (canvas will update connections)
-            self.position_changed.emit(self)
+            self.position_changed.emit(self.component.id)
         
         return super().itemChange(change, value)
     
@@ -856,8 +856,13 @@ class WorkflowCanvas(QGraphicsView):
         
         return item
     
-    def _on_component_position_changed(self, item: ComponentGraphicsItem):
+    def _on_component_position_changed(self, component_id: str):
         """Handle component position change - update connected lines"""
+        # Look up the component item
+        if component_id not in self.component_items:
+            return
+        item = self.component_items[component_id]
+        
         # Update all connections connected to this component
         for conn_item in self.connection_items:
             if (conn_item.source_item == item or conn_item.target_item == item):

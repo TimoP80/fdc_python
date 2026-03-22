@@ -163,9 +163,12 @@ class NuitkaBuilder:
         if args.standalone or build_config.get("standalone", True):
             nuitka_args.append("--standalone")
         
-        # Show progress bar
-        if compilation_config.get("show_progress", True):
+        # Show progress bar (disabled by default due to Nuitka bug in 4.0.x)
+        show_progress = compilation_config.get("show_progress", False)
+        if show_progress:
             nuitka_args.append("--progress-bar=auto")
+        else:
+            nuitka_args.append("--progress-bar=none")
         
         # Verbose
         if args.verbose or compilation_config.get("verbose", False):
@@ -259,7 +262,10 @@ class NuitkaBuilder:
                 nuitka_args.append("--windows-console-mode=force")
             else:
                 nuitka_args.append("--windows-console-mode=disable")
-            
+
+            # Note: --windows-force-internal-dependency-loader and --windows-arch removed
+            # as they are not supported in Nuitka 4.0.x
+
             # File version info (deprecated in newer Nuitka, using product-info instead)
             product_name = platform_config.get("product_name", "")
             if product_name:
@@ -353,6 +359,12 @@ class NuitkaBuilder:
                 print("\n" + "=" * 60)
                 print("[BUILD SUCCESS] Executable created successfully!")
                 print("=" * 60)
+                if self.target_platform == "Windows":
+                    print("\n[NOTE] If Windows Defender flags the executable as a false positive:")
+                    print("  1. Go to Windows Security > Virus & threat protection")
+                    print("  2. Click 'Manage settings' under 'Virus & threat protection settings'")
+                    print("  3. Add the 'dist' folder to 'Exclusions'")
+                    print("  4. Or submit the .exe to Microsoft: https://aka.ms/wdsi-submit")
                 return True
             else:
                 raise BuildError("Build verification failed")

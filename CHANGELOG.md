@@ -5,6 +5,74 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-03-22
+
+### Added
+- **NPC Editor**: Complete NPC creation and editing system
+  - [`ui/npc_editor.py`](ui/npc_editor.py): Full-featured NPC editor dialog
+    - BasicInfoWidget: Name, description, AI packet configuration
+    - AppearanceWidget: Body art, portrait, color configuration
+    - AttributesWidget: SPECIAL stats and derived statistics
+    - SkillsWidget: Skill point allocation and bonuses
+    - InventoryWidget: NPC inventory management with item dialog
+    - BehaviorWidget: NPC behavior patterns and scheduling
+    - AiSettingsWidget: Advanced AI behavior settings
+    - RelationshipWidget: NPC relationships with player and factions
+    - DialogueLinkWidget: Dialogue association configuration
+  - [`models/npc.py`](models/npc.py): Complete NPC data models
+    - NpcClass, AiPackage, NpcStat, RelationshipType, ReputationType enums
+    - Appearance, NpcAttribute, SkillValue, InventoryItem dataclasses
+    - BehaviorPattern, AiSettings, Relationship, NpcDialogue dataclasses
+    - Npc dataclass with full NPC configuration
+
+- **Theme Manager**: Centralized theme management system
+  - [`core/theme_manager.py`](core/theme_manager.py): Theme management framework
+    - ThemeCategory for theme filtering
+    - Theme, ThemeCategory, ThemeError classes
+    - ThemeManager for loading, applying, and switching themes
+    - get_theme_manager singleton accessor
+  - [`ui/theme_manager_dialog.py`](ui/theme_manager_dialog.py): Theme selection dialog
+
+- **Skeuomorphic Theme System**: Realistic material-based UI themes
+  - [`ui/skeuomorphic_theme.py`](ui/skeuomorphic_theme.py): Skeuomorphic theme base and presets
+    - SkeuomorphicTheme base class with realistic material rendering
+    - Five preset themes: MahoganyBrass, BrushedSteelBlue, IvoryLeatherGold, CarbonFiberOrange, VintageCreamCopper
+    - SkeuomorphicThemeManager for theme application
+  - [`ui/skeuomorphic_widgets.py`](ui/skeuomorphic_widgets.py): Skeuomorphic styled widgets
+  - [`ui/skeuomorphic_window.py`](ui/skeuomorphic_window.py): Skeuomorphic window frame
+  - [`ui/skeuomorphic_demo.py`](ui/skeuomorphic_demo.py): Interactive theme demo
+
+- **GUI Texture System**: Enhanced procedural texture generation
+  - [`ui/texture_system.py`](ui/texture_system.py): Extended texture system
+    - TextureColors: Color definitions for texture types
+    - TextureGenerator: Enhanced with additional noise algorithms
+    - TextureStyle: Predefined texture styles for UI elements
+    - ResolutionVariant: Resolution variants for display densities
+    - TexturePainter: Advanced texture painting utilities
+    - TextureCache: Performance caching for generated textures
+  - [`ui/gui_texture_applicator.py`](ui/gui_texture_applicator.py): Texture application utility
+  - [`generate_gui_textures.py`](generate_gui_textures.py): Standalone texture generation script
+
+- **UI Assets**: New asset library for textured UI elements
+  - [`assets/backgrounds/`](assets/backgrounds/): Dark mode, gradient, holographic, tech backgrounds
+  - [`assets/borders/`](assets/borders/): Metal, rust, wood border textures
+  - [`assets/buttons/`](assets/buttons/): Leather, metal, neumorphic, plastic, rust, wood buttons
+  - [`assets/panels/`](assets/panels/): Carbon fiber, concrete, glass, leather, metal, rust, wood panels
+
+- **FMF Parser Enhancement**: Extended player option condition support
+  - [`core/fmf_parser.py`](core/fmf_parser.py): Additional condition parsing capabilities
+
+### Changed
+- **Main Window**: Enhanced with NPC editor integration and theme management
+  - [`ui/main_window.py`](ui/main_window.py): Added menu items for NPC editor and theme selection
+- **Fallout Theme**: Updated for compatibility with new texture system
+  - [`ui/fallout_theme.py`](ui/fallout_theme.py): Texture system integration updates
+- **UI Module**: Expanded module exports
+  - [`ui/__init__.py`](ui/__init__.py): Added new widget exports
+
+### Removed
+- **Test Files**: Removed esko_esa.fmf test file
+
 ## [2.3.1] - 2026-03-20
 
 ### Added
