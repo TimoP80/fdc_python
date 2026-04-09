@@ -70,9 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **UI Module**: Expanded module exports
   - [`ui/__init__.py`](ui/__init__.py): Added new widget exports
 
-### Removed
-- **Test Files**: Removed esko_esa.fmf test file
-
 ## [2.3.1] - 2026-03-20
 
 ### Added
