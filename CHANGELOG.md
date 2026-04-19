@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2026-04-19
+
+### Fixed
+- **AI Assistant**: Now generates real responses using Ollama API
+  - Fixed async/sync thread conflicts
+  - Provider now created in background thread
+  - Background processing with proper event loop
+- **Duplicate Responses**: Removed fallback that caused duplicate AI responses
+- **Dialogue Creation**: Fixed Dialogue model field names
+- **NLU Provider**: Keeps built-in NLU for entity extraction (async provider doesn't have it)
+- **Frozen Build**: Fixed encoding issues with sys.stdout in PyInstaller builds
+
+### Added
+- **Dialogue Creation Commands** in AI Assistant:
+  - "create dialogue [topic]" - Creates new dialogue file
+  - "add node [NPC text]" - Adds NPC dialogue node
+  - "add option [option text]" - Adds player option to current node
+
+- **Build Script**: Added build_nuitka.bat using PyInstaller
+
 ## [2.5.0] - 2026-04-19
 
 ### Added
