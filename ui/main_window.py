@@ -4138,7 +4138,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             if self.dialog_manager:
                 self.dialog_manager.current_dialogue = new_dialogue
                 self.dialog_manager.save_dialogue()
-                self._refresh_editor()
+                self.populate_nodes_tree()
                 self.status_bar.showMessage(f"Created dialogue: {topic}", 3000)
                 logger.info(f"AI created dialogue: {topic}")
         except Exception as e:
@@ -4160,7 +4160,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                     options=[PlayerOption(text="[Continue]", targetnode="")]
                 )
                 self.dialog_manager.add_node(new_node)
-                self._refresh_editor()
+                self.populate_nodes_tree()
                 self.status_bar.showMessage(f"Added node: {npc_text[:30]}", 3000)
 
             elif action == "add_option" and option_text:
@@ -4172,7 +4172,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                     current.options.append(new_option)
                     current.optioncnt = len(current.options)
                     self.dialog_manager.mark_modified()
-                    self._refresh_editor()
+                    self.populate_nodes_tree()
                     self.status_bar.showMessage(f"Added option: {option_text[:30]}", 3000)
                 else:
                     QMessageBox.information(self, "No Node", "Select a node first")
