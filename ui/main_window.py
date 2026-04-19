@@ -4116,7 +4116,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
 
         try:
             # Create new dialogue
-            from models.dialogue import Dialogue, DialogueNode, DialogueHeader
+            from models.dialogue import Dialogue, DialogueNode
 
             new_dialogue = Dialogue(filename=f"ai_{topic.lower().replace(' ', '_')}.fdlg")
             new_dialogue.nodecount = 1
