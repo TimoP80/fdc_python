@@ -4143,8 +4143,8 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                 nodename="START",
                 npctext=f"Hello there! I heard you wanted to talk about {topic}?",
                 options=[
-                    PlayerOption(text="Yes, tell me more.", nodelink="NODE1"),
-                    PlayerOption(text="Not right now.", nodelink="END")
+                    PlayerOption(optiontext="Yes, tell me more.", nodelink="NODE1"),
+                    PlayerOption(optiontext="Not right now.", nodelink="END")
                 ],
                 optioncnt=2
             )
@@ -4154,7 +4154,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                 nodename="NODE1",
                 npctext=f"Well, about {topic}... it's quite interesting. Many settlers have asked about it.",
                 options=[
-                    PlayerOption(text="Thanks for explaining!", nodelink="END")
+                    PlayerOption(optiontext="Thanks for explaining!", nodelink="END")
                 ],
                 optioncnt=1
             )
@@ -4194,7 +4194,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                 new_node = DialogueNode(
                     nodename=f"AI_{npc_text[:15]}",
                     npctext=npc_text,
-                    options=[PlayerOption(text="[Continue]", targetnode="")]
+                    options=[PlayerOption(optiontext="[Continue]", nodelink="")]
                 )
                 self.dialog_manager.add_node(new_node)
                 self.populate_nodes_tree()
@@ -4205,7 +4205,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                 current = self.dialog_manager.get_current_node()
                 if current:
                     from models.dialogue import PlayerOption
-                    new_option = PlayerOption(text=option_text)
+                    new_option = PlayerOption(optiontext=option_text)
                     current.options.append(new_option)
                     current.optioncnt = len(current.options)
                     self.dialog_manager.mark_modified()
