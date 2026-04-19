@@ -1459,8 +1459,52 @@ class AIDialogueSystem:
         persona: Optional[Persona] = None,
         language: str = "en"
     ) -> GeneratedResponse:
-        """Async entry point - calls sync method directly"""
-        # Just call the sync method - the provider will be set if async is possible
+        """Async entry point - properly uses async provider"""
+        import asyncio
+        import inspect
+        import logging
+
+        logger = logging.getLogger(__name__)
+
+        try:
+            # Check if provider is async
+            if hasattr(self.language_model, 'generate_response'):
+                if inspect.iscoroutinefunction(self.language_model.generate_response):
+                    logger.info("Using async provider")
+
+                    # Get conversation context
+                    context = self._get_or_create_conversation(conversation_id)
+
+                    # Convert config/persona to dicts
+                    config_dict = config.to_dict() if config and hasattr(config, 'to_dict') else {}
+                    persona_dict = persona.to_dict() if persona and hasattr(persona, 'to_dict') else {}
+
+                    # Call async generate_response
+                    result = await self.language_model.generate_response(
+                        message,
+                        context,
+                        config_dict,
+                        persona_dict
+                    )
+
+                    logger.info(f"Got async result: {type(result)}")
+
+                    # Handle dict response
+                    if isinstance(result, dict):
+                        return GeneratedResponse(
+                            text=result.get("text", ""),
+                            confidence=result.get("confidence", 0.0),
+                            reasoning=result.get("reasoning", ""),
+                            sentiment=result.get("sentiment", SentimentType.NEUTRAL),
+                            metadata=result.get("metadata", {})
+                        )
+                    return result
+                else:
+                    logger.info("Provider is sync, using fallback")
+        except Exception as e:
+            logger.error(f"Async process error: {e}")
+
+        # Fallback to sync
         return self.process_message(message, conversation_id, config, persona, language)
 
     async def analyze_sentiment_async(self, text: str):
@@ -1749,10 +1793,9 @@ def configure_ai_system_from_settings(ai_system: AIDialogueSystem, settings) -> 
 
     def set_provider_on_system(provider):
         """Helper to set provider on the AI system"""
-        # Don't set the provider - asyncio event loop conflicts prevent using it
-        # Log that it's available for development
+        # Don't set here - provider will be created in background thread
         if provider and provider.is_available:
-            logger.info(f"Async provider available (not used due to asyncio issues): {type(provider).__name__}")
+            logger.info(f"Async provider ready: {type(provider).__name__}")
 
     def run_async():
         loop = asyncio.new_event_loop()

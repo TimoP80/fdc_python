@@ -159,13 +159,19 @@ class AIQueueProcessor(QObject):
     def stop(self):
         """Stop the processor"""
         self._is_running = False
-        if self._thread:
+        # Wait for background thread to finish
+        import time
+        start = time.time()
+        while self._thread and self._thread.is_alive() and time.time() - start < 3:
             self.request_queue.put(None)  # Signal to exit
-            self._thread.join(timeout=2)
+            time.sleep(0.1)
+        if self._thread and self._thread.is_alive():
+            logger.warning("Thread still running after 3s")
         logger.info("AI processor thread stopped")
 
     def add_request(self, request: AIRequest):
         """Add a request to the queue"""
+        logger.debug(f"AIQueueProcessor.add_request: {request.request_id}, queue_size={self.request_queue.qsize()}")
         self.request_queue.put(request)
 
     def _run_loop(self):
@@ -176,22 +182,47 @@ class AIQueueProcessor(QObject):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
+        # Create provider in this thread
+        async_provider = None
+        try:
+            from core.ollama_provider import OllamaCloudProvider, OllamaCloudConfig
+            from core.settings import Settings
+
+            settings = self.ai_system.settings
+            api_key = settings.get_ollama_cloud_api_key() if hasattr(settings, 'get_ollama_cloud_api_key') else ''
+
+            if api_key:
+                config = OllamaCloudConfig(api_key=api_key)
+                async_provider = OllamaCloudProvider(config)
+                loop.run_until_complete(async_provider.initialize())
+
+                if async_provider.is_available:
+                    self.ai_system.set_language_model(async_provider)
+                    logger.info(f"Provider created in background: {type(async_provider).__name__}")
+        except Exception as e:
+            logger.warning(f"Could not create provider in background: {e}")
+
         while self._is_running:
             try:
                 request = self.request_queue.get(timeout=0.5)
             except queue.Empty:
                 continue
 
-            logger.debug(f"Got request: {request.request_id}")
+            # Check for stop signal FIRST
             if request is None:
+                logger.debug("Got None, exiting")
                 break
+
+            logger.debug(f"Got request: {request.request_id}")
 
             try:
                 logger.debug("Running async process...")
                 response = loop.run_until_complete(
                     self._process_one(request))
                 logger.debug(f"Got response: {response.response_text[:50] if response.success else 'error'}")
+                logger.debug(f"Emitting signal for {response.request_id}")
                 self.request_completed.emit(response)
+                logger.debug(f"Signal emitted for {response.request_id}")
             except Exception as e:
                 logger.error(f"Queue error: {e}")
                 self.request_completed.emit(AIResponse(
