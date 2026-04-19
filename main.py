@@ -16,31 +16,32 @@ from PyQt6.QtCore import Qt, QSettings
 from PyQt6.QtGui import QPixmap, QPainter, QColor, QFont
 
 # Configure logging
+import sys
+import logging
+
+# Configure file handler first (always works)
+file_handler = logging.FileHandler('debug.log', encoding='utf-8')
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+
+# Configure console handler safely - check if stdout exists and is writable
+console_handler = None
+if sys.stdout and hasattr(sys.stdout, 'write'):
+    try:
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    except Exception:
+        pass
+
+# Set up root logger
+handlers = [file_handler]
+if console_handler:
+    handlers.append(console_handler)
+
 logging.basicConfig(
     level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('debug.log', encoding='utf-8'),
-        logging.StreamHandler(sys.stdout)
-    ]
+    handlers=handlers
 )
 
-# Fix StreamHandler encoding for Windows console
-for handler in logging.root.handlers:
-    if isinstance(handler, logging.StreamHandler):
-        try:
-            handler.stream.reconfigure(encoding='utf-8')
-        except (AttributeError, io.UnsupportedOperation):
-            # Fallback: use a wrapper that handles encoding errors
-            original_write = handler.stream.write
-            def safe_write(text):
-                try:
-                    original_write(text)
-                except UnicodeEncodeError:
-                    # Replace problematic characters with ASCII alternatives
-                    safe_text = text.encode('ascii', 'replace').decode('ascii')
-                    original_write(safe_text)
-            handler.stream.write = safe_write
 logger = logging.getLogger(__name__)
 
 # Add the current directory to Python path for imports
