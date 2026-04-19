@@ -4108,7 +4108,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         self.ai_manager.generate_response(prompt)
         self.status_bar.showMessage("Getting AI suggestions...", 2000)
 
-def _on_ai_create_dialogue(self, data: dict):
+    def _on_ai_create_dialogue(self, data: dict):
         """Handle create dialogue request from AI panel"""
         topic = data.get("topic", "")
         if not topic:
