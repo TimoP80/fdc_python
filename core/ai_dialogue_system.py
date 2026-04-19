@@ -1709,11 +1709,11 @@ def configure_ai_system_from_settings(ai_system: AIDialogueSystem, settings) -> 
     def set_provider_on_system(provider):
         """Helper to set provider on the AI system"""
         if provider and provider.is_available:
+            # Only set as language model - keep built-in NLU for entity extraction
             ai_system.set_language_model(provider)
-            ai_system.set_nlu_provider(provider)
             ai_system._providers_available["language_model"] = True
-            ai_system._providers_available["nlu"] = True
-            logger.info(f"Set async provider: {type(provider).__name__}")
+            # NLU still uses the built-in RuleBasedNLU for extract_entities
+            logger.info(f"Set async provider for responses: {type(provider).__name__}")
     
     try:
         loop = asyncio.get_event_loop()
