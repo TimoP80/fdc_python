@@ -4120,9 +4120,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
 
             new_dialogue = Dialogue(filename=f"ai_{topic.lower().replace(' ', '_')}.fdlg")
             new_dialogue.nodecount = 1
-
-            # Set header info
-            new_dialogue.description = f"AI-generated dialogue about: {topic}"
+            new_dialogue.npcname = topic.capitalize()
 
             # Add starter node
             start_node = DialogueNode(
@@ -4138,7 +4136,12 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             if self.dialog_manager:
                 self.dialog_manager.current_dialogue = new_dialogue
                 self.dialog_manager.save_dialogue()
+                # Reload the dialogue to ensure it's in memory
+                filename = new_dialogue.filename
+                self.dialog_manager.load_dialogue(filename)
+                # Force refresh
                 self.populate_nodes_tree()
+                self.on_node_selected(0)  # Select first node
                 self.status_bar.showMessage(f"Created dialogue: {topic}", 3000)
                 logger.info(f"AI created dialogue: {topic}")
         except Exception as e:
