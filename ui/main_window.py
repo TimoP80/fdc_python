@@ -4115,10 +4115,11 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             return
 
         try:
-            # Create new dialogue
+            # Create new dialogue with unique filename
             from models.dialogue import Dialogue, DialogueNode
 
-            new_dialogue = Dialogue(filename=f"ai_{topic.lower().replace(' ', '_')}.fdlg")
+            filename = f"ai_{topic.lower().replace(' ', '_')}_{len(list(self.dialog_manager.dialogues_dir.glob('ai_*.fdlg')))}.fdlg"
+            new_dialogue = Dialogue(filename=filename)
             new_dialogue.nodecount = 1
             new_dialogue.npcname = topic.capitalize()
 
@@ -4135,13 +4136,16 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             # Add to dialog manager and create file
             if self.dialog_manager:
                 self.dialog_manager.current_dialogue = new_dialogue
-                self.dialog_manager.save_dialogue()
-                # Reload the dialogue to ensure it's in memory
-                filename = new_dialogue.filename
-                self.dialog_manager.load_dialogue(filename)
-                # Force refresh
-                self.populate_nodes_tree()
-                self.on_node_selected(0)  # Select first node
+
+                # Save with explicit path
+                save_path = self.dialog_manager.dialogues_dir / filename
+                self.dialog_manager.save_dialogue(save_path)
+
+                # Reload the dialogue
+                self.dialog_manager.load_dialogue(save_path)
+
+                # Force refresh after delay (waiting for async parse)
+                QTimer.singleShot(500, self.populate_nodes_tree)
                 self.status_bar.showMessage(f"Created dialogue: {topic}", 3000)
                 logger.info(f"AI created dialogue: {topic}")
         except Exception as e:
