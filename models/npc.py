@@ -364,6 +364,13 @@ class Relationship:
 
 
 @dataclass
+class ReactionNode:
+    """NPC reaction condition and its target node"""
+    condition: str = ""
+    node: str = ""
+
+
+@dataclass
 class NpcDialogue:
     """NPC dialogue association"""
     # Link to dialogue file
@@ -380,7 +387,7 @@ class NpcDialogue:
     knocked_out_node: str = ""
     
     # Reactions
-    reaction_table: Dict[int, str] = field(default_factory=dict)
+    reactions: List[ReactionNode] = field(default_factory=list)
 
 
 @dataclass
@@ -576,6 +583,10 @@ class Npc:
                 "trade_node": self.dialogue.trade_node,
                 "death_node": self.dialogue.death_node,
                 "knocked_out_node": self.dialogue.knocked_out_node,
+                "reactions": [
+                    {"condition": r.condition, "node": r.node}
+                    for r in self.dialogue.reactions
+                ],
             },
         }
     
@@ -724,5 +735,14 @@ class Npc:
             npc.dialogue.trade_node = dlg.get("trade_node", "")
             npc.dialogue.death_node = dlg.get("death_node", "")
             npc.dialogue.knocked_out_node = dlg.get("knocked_out_node", "")
+            
+            # Reactions
+            if "reactions" in dlg:
+                for r_data in dlg["reactions"]:
+                    reaction = ReactionNode(
+                        condition=r_data.get("condition", ""),
+                        node=r_data.get("node", "")
+                    )
+                    npc.dialogue.reactions.append(reaction)
         
         return npc

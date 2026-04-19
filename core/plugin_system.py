@@ -448,6 +448,13 @@ class PluginHooks:
     # Parser events
     PARSER_FILE_LOADED = "parser_file_loaded"
     PARSER_FILE_SAVED = "parser_file_saved"
+    
+    # AI events (NEW)
+    AI_INITIALIZED = "ai_initialized"
+    AI_REQUEST_STARTED = "ai_request_started"
+    AI_REQUEST_COMPLETED = "ai_request_completed"
+    AI_SUGGESTION_GENERATED = "ai_suggestion_generated"
+    AI_ERROR = "ai_error"
 
 # Example plugin template
 PLUGIN_TEMPLATE = '''

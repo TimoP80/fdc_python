@@ -791,6 +791,8 @@ class FadeAnimationMixin:
     # Animation constants
     FADE_DURATION = 300  # milliseconds
     FADE_EASING = QEasingCurve.Type.InOutQuad
+    DEFAULT_OPACITY = 1.0
+    MIN_OPACITY = 0.0
     
     def __init__(self):
         self._fade_opacity_effect: QGraphicsOpacityEffect = None
@@ -853,8 +855,8 @@ class FadeAnimationMixin:
         else:
             self._fade_animation.setDuration(self.FADE_DURATION)
         
-        self._fade_animation.setStartValue(0.0)
-        self._fade_animation.setEndValue(1.0)
+        self._fade_animation.setStartValue(self.get_opacity())
+        self._fade_animation.setEndValue(self.DEFAULT_OPACITY)
         
         self._fade_animation.finished.connect(lambda: setattr(self, '_is_fading', False))
         self._fade_animation.start()
@@ -882,8 +884,8 @@ class FadeAnimationMixin:
         else:
             self._fade_animation.setDuration(self.FADE_DURATION)
         
-        self._fade_animation.setStartValue(1.0)
-        self._fade_animation.setEndValue(0.0)
+        self._fade_animation.setStartValue(self.get_opacity())
+        self._fade_animation.setEndValue(self.MIN_OPACITY)
         
         self._fade_animation.finished.connect(lambda: setattr(self, '_is_fading', False))
         self._fade_animation.start()
@@ -897,17 +899,36 @@ class FadeAnimationMixin:
         return self._fade_opacity_effect.opacity()
 
 
+
 class FadeLineEdit(QLineEdit, FadeAnimationMixin):
-    """
-    Line edit widget with fade-in/fade-out transitions.
-    Fade-in triggers on focus, fade-out on blur.
-    """
+    DEFAULT_OPACITY = 1.0
+    MIN_OPACITY = 0.8  # Keep visible when unfocused
     
     def __init__(self, text: str = "", parent=None):
         QLineEdit.__init__(self, text, parent)
         FadeAnimationMixin.__init__(self)
         self.setText(text)
+        self._apply_base_style()
         self._setup_fade_connections()
+
+    def _apply_base_style(self):
+        """Apply base styling for the line edit"""
+        colors = FalloutColors()
+        self.setStyleSheet(f"""
+            QLineEdit {{
+                background-color: {colors.DARK_SLATE};
+                color: {colors.TEXT_NORMAL};
+                border: 2px inset {colors.DARK_METAL};
+                border-radius: 3px;
+                padding: 4px 8px;
+                font-family: Consolas;
+                font-size: 10pt;
+            }}
+            QLineEdit:focus {{
+                border: 2px inset {colors.FALLOUT_YELLOW};
+                background-color: {colors.CHARCOAL};
+            }}
+        """)
     
     def _setup_fade_connections(self):
         """Connect focus events to fade animations"""
@@ -933,17 +954,37 @@ class FadeLineEdit(QLineEdit, FadeAnimationMixin):
         self.fade_in()
 
 
+
 class FadeTextEdit(QTextEdit, FadeAnimationMixin):
-    """
-    Text edit widget with fade-in/fade-out transitions.
-    Fade-in triggers on focus, fade-out on blur.
-    """
+    DEFAULT_OPACITY = 1.0
+    MIN_OPACITY = 0.7  # Keep visible when unfocused
     
     def __init__(self, text: str = "", parent=None):
         QTextEdit.__init__(self, text, parent)
         FadeAnimationMixin.__init__(self)
         self.setPlainText(text)
+        self._apply_base_style()
         self._setup_fade_connections()
+
+    def _apply_base_style(self):
+        """Apply base styling for the text edit"""
+        colors = FalloutColors()
+        self.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {colors.DARK_SLATE};
+                color: {colors.TEXT_NORMAL};
+                border: 2px inset {colors.DARK_METAL};
+                border-radius: 3px;
+                padding: 6px;
+                font-family: 'Courier New', Consolas;
+                font-size: 10pt;
+            }}
+            QTextEdit:focus {{
+                border: 2px inset {colors.FALLOUT_YELLOW};
+                background-color: {colors.CHARCOAL};
+                color: {colors.TEXT_BRIGHT};
+            }}
+        """)
     
     def _setup_fade_connections(self):
         """Connect focus events to fade animations"""

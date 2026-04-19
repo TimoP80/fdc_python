@@ -77,7 +77,7 @@ class TimborsTestPlugin(PluginInterface):
         """Handler for APP_STARTUP"""
         pass
 
-    def on_ui_menu_bar_created(self, *args, **kwargs):
+    def on_ui_menu_bar_created(self, menu_bar, *args, **kwargs):
         """Handler for UI_MENU_BAR_CREATED"""
         for action in menu_bar.actions():
             if action.text() == "&Tools":

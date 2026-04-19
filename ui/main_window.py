@@ -3,13 +3,14 @@ Main application window for Fallout Dialogue Creator
 """
 
 import logging
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QSplitter,
     QTreeWidget, QTreeWidgetItem, QTextEdit, QListWidget, QListWidgetItem,
     QTabWidget, QStatusBar, QMenuBar, QMenu, QMessageBox, QFileDialog,
     QProgressDialog, QFrame, QLabel, QDialog, QApplication, QCheckBox,
-    QSpinBox, QGroupBox, QPushButton, QInputDialog, QComboBox
+    QSpinBox, QGroupBox, QPushButton, QInputDialog, QComboBox, QDockWidget
 )
 from PyQt6.QtCore import Qt, pyqtSlot, QPoint
 from PyQt6.QtGui import QAction, QKeySequence, QFont, QPixmap
@@ -18,6 +19,10 @@ from core.dialog_manager import DialogManager
 from core.plugin_system import PluginHooks
 from core.settings import Settings
 from core.theme_manager import get_theme_manager
+
+if TYPE_CHECKING:
+    from core.ai_dialogue_manager import AIDialogueManager
+
 from models.dialogue import Dialogue, DialogueNode, Condition, CheckType, CompareType, LinkType
 from ui.diagram_widget import DiagramWidget
 from ui.fallout_theme import FalloutUIHelpers, FalloutColors
@@ -43,6 +48,9 @@ class MainWindow(QMainWindow):
         
         # Initialize theme manager and apply saved theme
         self._init_theme_manager()
+        
+        # Initialize AI Manager (Phase 1)
+        self._init_ai_manager()
         
         self.setup_ui()
         self.setup_menus()
@@ -98,6 +106,57 @@ class MainWindow(QMainWindow):
         # Only force a UI repaint to ensure the theme change is visible
         self.update()
         self.repaint()
+
+    def _init_ai_manager(self):
+        """Initialize the AI Dialogue Manager (Phase 1)"""
+        self.ai_manager: Optional["AIDialogueManager"] = None
+        self.ai_panel = None
+        self.ai_config_dialog = None
+        
+        # Check if AI is enabled in settings
+        ai_enabled = self.settings.get("ai_enabled", "false").lower() == "true"
+        if ai_enabled:
+            try:
+                from core.ai_dialogue_manager import AIDialogueManager
+                
+                # Create AI manager - it handles system creation internally
+                self.ai_manager = AIDialogueManager(self.settings, self.dialog_manager)
+                
+                # Start the manager so the worker thread runs and status becomes ready
+                self.ai_manager.start()
+                
+                # Connect AI manager signals
+                self.ai_manager.response_ready.connect(self._on_ai_response_ready)
+                self.ai_manager.suggestion_ready.connect(self._on_ai_suggestion_ready)
+                self.ai_manager.error_occurred.connect(self._on_ai_error)
+                self.ai_manager.status_changed.connect(self._on_ai_status_changed)
+                
+                logger.info("AI Manager initialized successfully")
+            except Exception as e:
+                logger.warning(f"Failed to initialize AI Manager: {e}")
+                self.ai_manager = None
+
+    def _on_ai_response_ready(self, response: str):
+        """Handle AI response ready signal"""
+        if self.ai_panel:
+            self.ai_panel._add_message("AI", response, is_user=False)
+
+    def _on_ai_suggestion_ready(self, suggestions: list):
+        """Handle AI suggestion ready signal"""
+        if self.ai_panel:
+            self.ai_panel.suggestion_list.clear()
+            for suggestion in suggestions:
+                self.ai_panel.suggestion_list.addItem(suggestion)
+
+    def _on_ai_error(self, error: str):
+        """Handle AI error signal"""
+        logger.error(f"AI Error: {error}")
+        self.status_bar.showMessage(f"AI Error: {error}", 5000)
+
+    def _on_ai_status_changed(self, status: str):
+        """Handle AI status changed signal"""
+        if hasattr(self, 'ai_status_label'):
+            self.ai_status_label.setText(status)
 
     def setup_ui(self):
         """Setup the main UI components"""
@@ -236,54 +295,66 @@ class MainWindow(QMainWindow):
         splitter.addWidget(left_widget)
         splitter.setSizes([400, 1000])
 
+    def _create_section_label(self, text):
+        """Helper to create a styled section label"""
+        label = QLabel(text)
+        label.setStyleSheet(f"""
+            QLabel {{
+                color: {FalloutColors.FALLOUT_YELLOW};
+                font-family: Consolas;
+                font-weight: bold;
+                font-size: 9pt;
+                padding-bottom: 2px;
+                margin-top: 6px;
+                border-bottom: 1px solid {FalloutColors.PANEL_BORDER};
+            }}
+        """)
+        return label
+
     def setup_right_panel(self, splitter):
         """Setup the right panel with node editor"""
         right_widget = FalloutPanel("metal")
         right_layout = QVBoxLayout(right_widget)
-        right_layout.setContentsMargins(6, 6, 6, 6)
-        right_layout.setSpacing(4)
+        right_layout.setContentsMargins(10, 10, 10, 10)
+        right_layout.setSpacing(6)
 
-        # Node info section
-        node_info_label = QLabel("NPC TEXT:")
-        node_info_label.setStyleSheet(f"""
+        # Node ID / Title (New addition for clarity)
+        self.node_title_label = QLabel("NO NODE SELECTED")
+        self.node_title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.node_title_label.setStyleSheet(f"""
             QLabel {{
-                color: {FalloutColors.FALLOUT_YELLOW};
+                color: {FalloutColors.TERMINAL_GREEN};
                 font-family: Consolas;
                 font-weight: bold;
-                font-size: 10pt;
+                font-size: 12pt;
+                background-color: {FalloutColors.PIPBOY_SCREEN};
+                border: 1px solid {FalloutColors.TERMINAL_GREEN};
                 padding: 4px;
+                margin-bottom: 4px;
             }}
         """)
-        right_layout.addWidget(node_info_label)
+        right_layout.addWidget(self.node_title_label)
 
+        # Main Dialogue Section
+        right_layout.addWidget(self._create_section_label("DIALOGUE TEXT"))
         self.node_info_edit = FadeTextEdit()
         self.node_info_edit.setPlaceholderText("Enter NPC dialogue text here...")
-        self.node_info_edit.setMaximumHeight(100)
+        self.node_info_edit.setMinimumHeight(100)
+        self.node_info_edit.setMaximumHeight(180)
         self.node_info_edit.textChanged.connect(self.on_node_text_changed)
         right_layout.addWidget(self.node_info_edit)
 
-        # Player options list
-        options_label = QLabel("PLAYER OPTIONS:")
-        options_label.setStyleSheet(f"""
-            QLabel {{
-                color: {FalloutColors.FALLOUT_YELLOW};
-                font-family: Consolas;
-                font-weight: bold;
-                font-size: 10pt;
-                padding: 4px;
-            }}
-        """)
-        right_layout.addWidget(options_label)
-
+        # Player Options Section
+        right_layout.addWidget(self._create_section_label("PLAYER RESPONSES"))
         self.options_list = FalloutListWidget()
         self.options_list.itemDoubleClicked.connect(self.on_option_double_clicked)
         self.options_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.options_list.customContextMenuRequested.connect(self.on_option_context_menu)
+        self.options_list.setMaximumHeight(250)
         right_layout.addWidget(self.options_list)
 
         # Option controls
         option_controls_layout = QHBoxLayout()
-
         add_option_btn = FalloutButton("Add Option")
         add_option_btn.clicked.connect(self.on_add_option)
         option_controls_layout.addWidget(add_option_btn)
@@ -295,25 +366,16 @@ class MainWindow(QMainWindow):
         option_controls_layout.addStretch()
         right_layout.addLayout(option_controls_layout)
 
-        # Node notes
-        notes_label = QLabel("DESIGNER NOTES:")
-        notes_label.setStyleSheet(f"""
-            QLabel {{
-                color: {FalloutColors.FALLOUT_YELLOW};
-                font-family: Consolas;
-                font-weight: bold;
-                font-size: 10pt;
-                padding: 4px;
-            }}
-        """)
-        right_layout.addWidget(notes_label)
-
+        # Metadata / Notes Section
+        right_layout.addWidget(self._create_section_label("NOTES & LOGIC"))
         self.notes_edit = FadeTextEdit()
-        self.notes_edit.setPlaceholderText("Add designer notes here...")
-        self.notes_edit.setMaximumHeight(150)
+        self.notes_edit.setPlaceholderText("Add designer notes, conditions, or logic here...")
+        self.notes_edit.setMinimumHeight(60)
+        self.notes_edit.setMaximumHeight(120)
         self.notes_edit.textChanged.connect(self.on_node_notes_changed)
         right_layout.addWidget(self.notes_edit)
 
+        right_layout.addStretch()
         splitter.addWidget(right_widget)
 
     def setup_toolbar(self):
@@ -798,6 +860,56 @@ class MainWindow(QMainWindow):
         tools_menu.addAction(theme_manager_action)
 
         # ==========================================
+        # AI MENU (Phase 2)
+        # ==========================================
+        ai_menu = menubar.addMenu("&AI")
+        
+        # Show/Hide AI Panel
+        self.toggle_ai_panel_action = QAction("Show AI &Panel", self)
+        self.toggle_ai_panel_action.setCheckable(True)
+        self.toggle_ai_panel_action.setChecked(False)
+        self.toggle_ai_panel_action.setStatusTip("Toggle the AI Assistant panel")
+        self.toggle_ai_panel_action.triggered.connect(self.on_toggle_ai_panel)
+        ai_menu.addAction(self.toggle_ai_panel_action)
+        
+        ai_menu.addSeparator()
+        
+        # Get AI Suggestions
+        ai_suggest_action = QAction("&Get Suggestions...", self)
+        ai_suggest_action.setStatusTip("Get AI suggestions for current node")
+        ai_suggest_action.setShortcut("Ctrl+Shift+A")
+        ai_suggest_action.triggered.connect(self.on_ai_suggestions)
+        ai_menu.addAction(ai_suggest_action)
+        
+        # Analyze Sentiment
+        sentiment_action = QAction("&Analyze Sentiment", self)
+        sentiment_action.setStatusTip("Analyze sentiment of current dialogue")
+        sentiment_action.triggered.connect(self.on_ai_sentiment)
+        ai_menu.addAction(sentiment_action)
+        
+        # Improve Text
+        improve_action = QAction("&Improve Text", self)
+        improve_action.setStatusTip("Get AI suggestions to improve selected text")
+        improve_action.triggered.connect(self.on_ai_improve_text)
+        ai_menu.addAction(improve_action)
+        
+        ai_menu.addSeparator()
+        
+        # AI Configuration
+        ai_config_action = QAction("&Configuration...", self)
+        ai_config_action.setStatusTip("Configure AI provider and settings")
+        ai_config_action.triggered.connect(self.on_ai_configuration)
+        ai_menu.addAction(ai_config_action)
+        
+        # Enable/Disable AI
+        self.enable_ai_action = QAction("&Enable AI", self)
+        self.enable_ai_action.setCheckable(True)
+        self.enable_ai_action.setChecked(self.settings.get("ai_enabled", "false").lower() == "true")
+        self.enable_ai_action.setStatusTip("Enable or disable AI features")
+        self.enable_ai_action.triggered.connect(self.on_enable_ai)
+        ai_menu.addAction(self.enable_ai_action)
+
+        # ==========================================
         # HELP MENU
         # ==========================================
         help_menu = menubar.addMenu("&Help")
@@ -947,12 +1059,12 @@ class MainWindow(QMainWindow):
         if not dialogue:
             return
 
-        for node in dialogue.nodes:
+        for i, node in enumerate(dialogue.nodes):
             item = QTreeWidgetItem([node.nodename])
-            item.setData(0, Qt.ItemDataRole.UserRole, dialogue.nodes.index(node))
+            item.setData(0, Qt.ItemDataRole.UserRole, i)
 
             # Add options as children
-            for option in node.options:
+            for j, option in enumerate(node.options):
                 # Truncate option text for display (max 40 chars + "..." if longer)
                 display_text = option.optiontext
                 if len(display_text) > 40:
@@ -960,7 +1072,7 @@ class MainWindow(QMainWindow):
                 # Combine option text with link target
                 option_display = f"{display_text} → {option.nodelink}" if option.nodelink else display_text
                 option_item = QTreeWidgetItem([option_display])
-                option_item.setData(0, Qt.ItemDataRole.UserRole, node.options.index(option))
+                option_item.setData(0, Qt.ItemDataRole.UserRole, j)
                 item.addChild(option_item)
 
             self.nodes_tree.addTopLevelItem(item)
@@ -1524,6 +1636,11 @@ class MainWindow(QMainWindow):
         if not current_item:
             return
 
+        # If an option is selected (it has a parent node), don't trigger node re-display
+        # to prevent switching away if the option index matches a node index
+        if current_item.parent():
+            return
+
         # Get node index from item data
         node_index = current_item.data(0, Qt.ItemDataRole.UserRole)
         if isinstance(node_index, int):
@@ -1542,9 +1659,9 @@ class MainWindow(QMainWindow):
 
         # Update options list
         self.options_list.clear()
-        for option in node.options:
+        for i, option in enumerate(node.options):
             item = QListWidgetItem(option.optiontext)
-            item.setData(Qt.ItemDataRole.UserRole, node.options.index(option))
+            item.setData(Qt.ItemDataRole.UserRole, i)
             self.options_list.addItem(item)
 
         # Update notes
@@ -2237,7 +2354,13 @@ class MainWindow(QMainWindow):
         if not current_item:
             return
 
-        node_index = current_item.data(0, Qt.ItemDataRole.UserRole)
+        # If an option is selected, use its parent node
+        if current_item.parent():
+            node_item = current_item.parent()
+        else:
+            node_item = current_item
+
+        node_index = node_item.data(0, Qt.ItemDataRole.UserRole)
         if not isinstance(node_index, int):
             return
 
@@ -2255,6 +2378,13 @@ class MainWindow(QMainWindow):
         dialogue.nodes[node_index].optioncnt += 1
         self.dialog_manager.mark_modified()
         self.display_node(node_index)
+        self.populate_nodes_tree()  # Sync the left panel tree as well
+        
+        # Re-select the node to allow adding more options immediately
+        if node_index < self.nodes_tree.topLevelItemCount():
+            node_item = self.nodes_tree.topLevelItem(node_index)
+            self.nodes_tree.setCurrentItem(node_item)
+            node_item.setExpanded(True)
 
     @pyqtSlot()
     def on_delete_option(self):
@@ -2263,7 +2393,13 @@ class MainWindow(QMainWindow):
         if not current_item:
             return
 
-        node_index = current_item.data(0, Qt.ItemDataRole.UserRole)
+        # If an option is selected in the tree, use its parent node
+        if current_item.parent():
+            node_item = current_item.parent()
+        else:
+            node_item = current_item
+
+        node_index = node_item.data(0, Qt.ItemDataRole.UserRole)
         if not isinstance(node_index, int):
             return
 
@@ -2281,6 +2417,13 @@ class MainWindow(QMainWindow):
                     node.optioncnt -= 1
                     self.dialog_manager.mark_modified()
                     self.display_node(node_index)
+                    self.populate_nodes_tree()  # Sync the left panel tree as well
+                    
+                    # Re-select the node
+                    if node_index < self.nodes_tree.topLevelItemCount():
+                        node_item = self.nodes_tree.topLevelItem(node_index)
+                        self.nodes_tree.setCurrentItem(node_item)
+                        node_item.setExpanded(True)
 
     def save_option(self, dialog, node_index: int, option_index: int):
         """Save option changes"""
@@ -3718,12 +3861,13 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
 
     def show_settings_dialog(self):
         """Show settings configuration dialog"""
-        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget, QLabel, QLineEdit, QPushButton, QHBoxLayout, QGroupBox, QComboBox
+        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget, QLabel, QLineEdit, QPushButton, QHBoxLayout, QGroupBox, QComboBox, QFormLayout, QTextEdit, QCheckBox
+        from PyQt6.QtCore import Qt
         
         dialog = QDialog(self)
         dialog.setWindowTitle("Settings")
         dialog.setModal(True)
-        dialog.resize(500, 400)
+        dialog.resize(550, 500)
         
         layout = QVBoxLayout(dialog)
         
@@ -3781,6 +3925,68 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         
         tabs.addTab(paths_tab, "Paths")
         
+        # AI Provider tab
+        ai_tab = QWidget()
+        ai_layout = QVBoxLayout(ai_tab)
+        
+        # Provider selection
+        provider_group = QGroupBox("AI Provider")
+        provider_form = QFormLayout(provider_group)
+        
+        ai_provider_combo = QComboBox()
+        ai_provider_combo.addItems(["Gemini", "OllamaCloud", "Local"])
+        current_provider = self.settings.get('ai_provider', 'gemini')
+        ai_provider_combo.setCurrentText(current_provider.capitalize())
+        provider_form.addRow("Provider:", ai_provider_combo)
+        
+        ai_layout.addWidget(provider_group)
+        
+        # Gemini settings
+        gemini_group = QGroupBox("Gemini Settings")
+        gemini_layout = QFormLayout(gemini_group)
+        
+        gemini_api_key_edit = QLineEdit()
+        gemini_api_key_edit.setPlaceholderText("Enter your Gemini API key")
+        gemini_api_key_edit.setText(self.settings.get('gemini_api_key', ''))
+        gemini_api_key_edit.setEchoMode(QLineEdit.EchoMode.Password)
+        gemini_layout.addRow("API Key:", gemini_api_key_edit)
+        
+        gemini_model_combo = QComboBox()
+        gemini_model_combo.addItems(["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash", "gemini-1.5-flash-8b"])
+        current_gemini_model = self.settings.get('gemini_model', 'gemini-2.0-flash')
+        gemini_model_combo.setCurrentText(current_gemini_model)
+        gemini_layout.addRow("Model:", gemini_model_combo)
+        
+        ai_layout.addWidget(gemini_group)
+        
+        # OllamaCloud settings
+        ollama_group = QGroupBox("OllamaCloud Settings")
+        ollama_layout = QFormLayout(ollama_group)
+        
+        ollama_api_key_edit = QLineEdit()
+        ollama_api_key_edit.setPlaceholderText("Enter your OllamaCloud API key")
+        ollama_api_key_edit.setText(self.settings.get('ollama_cloud_api_key', ''))
+        ollama_api_key_edit.setEchoMode(QLineEdit.EchoMode.Password)
+        ollama_layout.addRow("API Key:", ollama_api_key_edit)
+        
+        ollama_model_combo = QComboBox()
+        ollama_model_combo.addItems(["llama3.2:1b", "llama3.2:3b", "llama3.1:8b", "mistral:7b", "phi3.5:3.8b", "gemma2:2b", "qwen2.5:3b"])
+        current_ollama_model = self.settings.get('ollama_cloud_model', 'llama3.2:1b')
+        ollama_model_combo.setCurrentText(current_ollama_model)
+        ollama_layout.addRow("Model:", ollama_model_combo)
+        
+        ollama_timeout_layout = QHBoxLayout()
+        ollama_timeout_spin = QLineEdit()
+        ollama_timeout_spin.setText(str(self.settings.get('ollama_cloud_timeout', 60)))
+        ollama_timeout_layout.addWidget(ollama_timeout_spin)
+        ollama_timeout_layout.addWidget(QLabel("seconds"))
+        ollama_layout.addRow("Timeout:", ollama_timeout_layout)
+        
+        ai_layout.addWidget(ollama_group)
+        ai_layout.addStretch()
+        
+        tabs.addTab(ai_tab, "AI Providers")
+        
         layout.addWidget(tabs)
         
         # Buttons
@@ -3802,6 +4008,21 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             self.settings.set('font_size', int(font_size_combo.currentText()))
             self.settings.set('script_compiler_path', compiler_path_edit.text())
             
+            # Save AI provider settings
+            provider_map = {"gemini": "gemini", "ollamacloud": "ollama_cloud", "local": "local"}
+            self.settings.set('ai_provider', provider_map.get(ai_provider_combo.currentText().lower(), 'gemini'))
+            self.settings.set('gemini_api_key', gemini_api_key_edit.text())
+            self.settings.set('gemini_model', gemini_model_combo.currentText())
+            self.settings.set('ollama_cloud_api_key', ollama_api_key_edit.text())
+            self.settings.set('ollama_cloud_model', ollama_model_combo.currentText())
+            
+            try:
+                timeout = int(ollama_timeout_spin.text())
+                if 10 <= timeout <= 300:
+                    self.settings.set('ollama_cloud_timeout', timeout)
+            except ValueError:
+                pass
+            
             # Apply settings
             self.apply_settings()
             
@@ -3812,6 +4033,183 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         cancel_btn.clicked.connect(dialog.reject)
         
         dialog.exec()
+
+    # ==============================================
+    # AI MENU HANDLERS (Phase 2)
+    # ==============================================
+
+    def on_toggle_ai_panel(self):
+        """Toggle the AI Assistant panel visibility"""
+        if self.toggle_ai_panel_action.isChecked():
+            self._show_ai_panel()
+        else:
+            self._hide_ai_panel()
+
+    def _show_ai_panel(self):
+        """Show the AI panel"""
+        if not self.ai_panel and self.ai_manager:
+            try:
+                from ui.ai_assistant_panel import AIAssistantPanel
+                
+                # Create the AI panel as a QDockWidget for dockable/movable behavior
+                self.ai_dock = QDockWidget("AI Assistant", self)
+                self.ai_dock.setAllowedAreas(
+                    Qt.DockWidgetArea.LeftDockWidgetArea |
+                    Qt.DockWidgetArea.RightDockWidgetArea |
+                    Qt.DockWidgetArea.TopDockWidgetArea |
+                    Qt.DockWidgetArea.BottomDockWidgetArea
+                )
+                
+                # Create the actual panel widget
+                self.ai_panel = AIAssistantPanel(self)
+                self.ai_panel.set_ai_manager(self.ai_manager)
+                
+                # Set the widget in the dock
+                self.ai_dock.setWidget(self.ai_panel)
+                
+                # Add dock widget to main window
+                self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.ai_dock)
+                
+                self.status_bar.showMessage("AI Panel shown", 2000)
+            except Exception as e:
+                logger.error(f"Failed to create AI panel: {e}")
+                QMessageBox.warning(self, "AI Panel Error", 
+                    f"Failed to create AI panel: {e}")
+        elif self.ai_panel and hasattr(self, 'ai_dock'):
+            self.ai_dock.show()
+
+    def _hide_ai_panel(self):
+        """Hide the AI panel"""
+        if self.ai_panel and hasattr(self, 'ai_dock'):
+            self.ai_dock.hide()
+        elif self.ai_panel:
+            self.ai_panel.hide()
+
+    def on_ai_suggestions(self):
+        """Get AI suggestions for the current node"""
+        if not self.ai_manager:
+            QMessageBox.information(self, "AI Not Available",
+                "AI features are not enabled. Please enable AI in Settings.")
+            return
+        
+        # Get current selected node
+        current_node = self.dialog_manager.get_current_node()
+        if not current_node:
+            QMessageBox.information(self, "No Node Selected",
+                "Please select a dialogue node first.")
+            return
+        
+        # Request suggestions from AI
+        prompt = f"Generate dialogue options for: {current_node.text}"
+        self.ai_manager.generate_response(prompt)
+        self.status_bar.showMessage("Getting AI suggestions...", 2000)
+
+    def on_ai_sentiment(self):
+        """Analyze sentiment of the current dialogue"""
+        if not self.ai_manager:
+            QMessageBox.information(self, "AI Not Available",
+                "AI features are not enabled. Please enable AI in Settings.")
+            return
+        
+        dialogue = self.dialog_manager.get_dialogue()
+        if not dialogue:
+            QMessageBox.information(self, "No Dialogue",
+                "Please load or create a dialogue first.")
+            return
+        
+        # Analyze sentiment
+        self.ai_manager.analyze_sentiment(str(dialogue))
+        self.status_bar.showMessage("Analyzing dialogue sentiment...", 2000)
+
+    def on_ai_improve_text(self):
+        """Improve selected text using AI"""
+        if not self.ai_manager:
+            QMessageBox.information(self, "AI Not Available",
+                "AI features are not enabled. Please enable AI in Settings.")
+            return
+        
+        # Get selected text from the node editor
+        selected_text = ""
+        if hasattr(self, 'node_text_edit') and self.node_text_edit:
+            selected_text = self.node_text_edit.textCursor().selectedText()
+        
+        if not selected_text:
+            QMessageBox.information(self, "No Selection",
+                "Please select some text to improve.")
+            return
+        
+        prompt = f"Improve this dialogue text: {selected_text}"
+        self.ai_manager.improve_text(selected_text)
+        self.status_bar.showMessage("Improving text...", 2000)
+
+    def on_ai_configuration(self):
+        """Open AI configuration dialog"""
+        if not hasattr(self, 'ai_config_dialog') or not self.ai_config_dialog:
+            try:
+                from ui.ai_config_dialog import AIConfigurationDialog
+                self.ai_config_dialog = AIConfigurationDialog(self.ai_manager, self.settings, self)
+                self.ai_config_dialog.settings_applied.connect(self._on_ai_settings_changed)
+            except Exception as e:
+                logger.error(f"Failed to create AI config dialog: {e}")
+                QMessageBox.warning(self, "Configuration Error",
+                    f"Failed to open AI configuration: {e}")
+                return
+        
+        self.ai_config_dialog.show()
+        self.ai_config_dialog.raise_()
+        self.ai_config_dialog.activateWindow()
+
+    def _on_ai_settings_changed(self, settings: dict):
+        """Handle AI settings changes"""
+        logger.info(f"AI settings changed: {settings}")
+        
+        # Save settings to persistent storage
+        provider = settings.get('provider', 'ollama')
+        # Normalize provider name
+        if provider == 'ollama':
+            provider = 'ollama_cloud'
+        elif provider in ('local', 'ollama_local'):
+            provider = 'local'
+        
+        model = settings.get('model', 'llama3.2:3b')
+        endpoint = settings.get('endpoint', 'http://localhost:11434')
+        api_key = settings.get('api_key', '')
+        
+        self.settings.set_ai_provider(provider)
+        self.settings.set('ai_model', model)
+        self.settings.set('ai_endpoint', endpoint)
+        
+        # Save API key to settings
+        if provider in ('ollama_cloud', 'ollama'):
+            self.settings.set_ollama_cloud_api_key(api_key)
+        elif provider == 'gemini':
+            self.settings.set_gemini_api_key(api_key)
+        
+        # Save other AI settings
+        self.settings.set('ai_creativity', settings.get('creativity', 'BALANCED'))
+        self.settings.set('ai_response_length', settings.get('length', 'NORMAL'))
+        self.settings.set('ai_formality', settings.get('formality', 'NEUTRAL'))
+        
+        self.status_bar.showMessage("AI settings saved", 2000)
+        
+        # Reinitialize AI manager with new settings if needed
+        if not self.ai_manager and settings.get("enabled"):
+            self._init_ai_manager()
+        elif self.ai_manager:
+            self.ai_manager.reload_provider()
+
+    def on_enable_ai(self):
+        """Enable or disable AI features"""
+        enabled = self.enable_ai_action.isChecked()
+        self.settings.set("ai_enabled", enabled)
+        
+        if enabled:
+            if not self.ai_manager:
+                self._init_ai_manager()
+            self.status_bar.showMessage("AI features enabled", 2000)
+        else:
+            self._hide_ai_panel()
+            self.status_bar.showMessage("AI features disabled", 2000)
 
     # ==============================================
     # HELP MENU HANDLERS

@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-04-19
+
+### Added
+- **AI Dialogue System**: LLM-powered dialogue generation using Ollama and Gemini
+  - [`core/ai_dialogue_system.py`](core/ai_dialogue_system.py): AI dialogue manager
+    - AIDialogueManager: Generates dialogue using local/remote LLMs
+    - AIDialogueConfig: Configuration for AI providers
+  - [`core/ai_dialogue_manager.py`](core/ai_dialogue_manager.py): AI dialogue orchestrator
+  - [`core/ollama_provider.py`](core/ollama_provider.py): Ollama API provider
+    - OllamaProvider: Local LLM provider using Ollama API
+    - OllamaModel: Model configuration and capabilities
+  - [`core/gemini_provider.py`](core/gemini_provider.py): Google Gemini provider
+    - GeminiProvider: Google's Gemini API integration
+    - GeminiModel: Model configuration and pricing
+
+- **AI Assistant Panel**: In-app AI dialogue assistant
+  - [`ui/ai_assistant_panel.py`](ui/ai_assistant_panel.py): AI assistant widget
+    - AIAssistantPanel: Chat interface for AI-generated dialogue
+    - AIConversationManager: Conversation history management
+  - [`ui/ai_config_dialog.py`](ui/ai_config_dialog.py): AI configuration dialog
+    - AIConfigDialog: Provider selection and API key management
+
+- **Requirements**: Updated dependencies
+  - [`requirements.txt`](requirements.txt): Added google-generativeai for Gemini integration
+
+### Changed
+- **Dialog Manager**: Integration with AI dialogue system
+  - [`core/dialog_manager.py`](core/dialog_manager.py): AI-powered dialogue support
+- **NPC Editor**: AI dialogue integration
+  - [`ui/npc_editor.py`](ui/npc_editor.py): AI assistant panel integration
+- **Main Window**: AI assistant menu
+  - [`ui/main_window.py`](ui/main_window.py): Added AI assistant menu items
+- **Fallout Widgets**: AI panel support
+  - [`ui/fallout_widgets.py`](ui/fallout_widgets.py): AI panel widget support
+- **Settings**: AI configuration storage
+  - [`core/settings.py`](core/settings.py): AI provider settings persistence
+- **Plugin System**: AI plugin support
+  - [`core/plugin_system.py`](core/plugin_system.py): AI plugin capabilities
+
+### Removed
+- **Test Files**: Removed esko_esa.fmf test file
+
 ## [2.4.0] - 2026-03-22
 
 ### Added

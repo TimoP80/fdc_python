@@ -1772,6 +1772,8 @@ class DialogueLinkWidget(QWidget):
         self._trade_node_edit.textChanged.connect(self._on_data_changed)
         self._death_node_edit.textChanged.connect(self._on_data_changed)
         self._knockout_node_edit.textChanged.connect(self._on_data_changed)
+        self._add_reaction_btn.clicked.connect(self._on_add_reaction)
+        self._remove_reaction_btn.clicked.connect(self._on_remove_reaction)
     
     def _browse_dialogue(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -1793,6 +1795,12 @@ class DialogueLinkWidget(QWidget):
         self._trade_node_edit.setText(dlg.trade_node)
         self._death_node_edit.setText(dlg.death_node)
         self._knockout_node_edit.setText(dlg.knocked_out_node)
+        
+        # Load reactions
+        self._reaction_tree.clear()
+        for reaction in dlg.reactions:
+            item = QTreeWidgetItem([reaction.condition, reaction.node])
+            self._reaction_tree.addTopLevelItem(item)
     
     def _save_to_npc(self):
         dlg = self._npc.dialogue
@@ -1803,6 +1811,53 @@ class DialogueLinkWidget(QWidget):
         dlg.trade_node = self._trade_node_edit.text()
         dlg.death_node = self._death_node_edit.text()
         dlg.knocked_out_node = self._knockout_node_edit.text()
+        
+        # Save reactions from tree
+        from models.npc import ReactionNode
+        dlg.reactions = []
+        for i in range(self._reaction_tree.topLevelItemCount()):
+            item = self._reaction_tree.topLevelItem(i)
+            dlg.reactions.append(ReactionNode(
+                condition=item.text(0),
+                node=item.text(1)
+            ))
+
+    def _on_add_reaction(self):
+        """Add a new reaction to the reaction tree"""
+        from PyQt6.QtWidgets import QInputDialog
+        condition, ok1 = QInputDialog.getText(self, "Add Reaction", "Enter condition (e.g., GVAR_PLAYER_REPUTATION > 50):")
+        if not ok1 or not condition.strip():
+            return
+            
+        node, ok2 = QInputDialog.getText(self, "Add Reaction", "Enter target node name:")
+        if not ok2 or not node.strip():
+            return
+            
+        # Add to tree
+        item = QTreeWidgetItem([condition.strip(), node.strip()])
+        self._reaction_tree.addTopLevelItem(item)
+        
+        # Save to NPC data
+        from models.npc import ReactionNode
+        # Check if npc.dialogue has reactions list (it should based on ReactionNode usage)
+        if not hasattr(self._npc.dialogue, 'reactions'):
+            self._npc.dialogue.reactions = []
+            
+        self._npc.dialogue.reactions.append(ReactionNode(condition=condition.strip(), node=node.strip()))
+        self.data_changed.emit()
+
+    def _on_remove_reaction(self):
+        """Remove selected reaction from the tree"""
+        current_item = self._reaction_tree.currentItem()
+        if not current_item:
+            return
+            
+        index = self._reaction_tree.indexOfTopLevelItem(current_item)
+        if index >= 0:
+            self._reaction_tree.takeTopLevelItem(index)
+            if hasattr(self._npc.dialogue, 'reactions') and index < len(self._npc.dialogue.reactions):
+                self._npc.dialogue.reactions.pop(index)
+            self.data_changed.emit()
     
     def get_npc(self) -> Npc:
         self._save_to_npc()

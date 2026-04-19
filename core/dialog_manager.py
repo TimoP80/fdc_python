@@ -11,7 +11,7 @@ This module provides the DialogManager class which handles:
 The DialogManager serves as the main interface between the UI and core dialogue functionality.
 """
 
-from typing import Optional, List
+from typing import Optional, List, Dict, TYPE_CHECKING
 from pathlib import Path
 import logging
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -24,7 +24,12 @@ from .dialogue_testing_engine import DialogueTestingEngine, TestReport
 from .scripting_engine import ScriptingEngine, DialogueScriptContext, ScriptExecutionReport
 from .plugin_system import PluginManager, PluginHooks
 
+# Import for type checking only (avoids circular import)
+if TYPE_CHECKING:
+    from .ai_dialogue_manager import AIDialogueManager
+
 logger = logging.getLogger(__name__)
+
 
 class DialogManager(QObject):
     """Manages dialogue data and operations"""
@@ -35,6 +40,10 @@ class DialogManager(QObject):
     node_selected = pyqtSignal(int)  # node index
     parsing_progress = pyqtSignal(int, str)  # progress percentage, current operation
     parsing_error = pyqtSignal(str)  # error message
+    
+    # AI signals (NEW)
+    ai_suggestion_received = pyqtSignal(list)
+    ai_analysis_complete = pyqtSignal(dict)
 
     def __init__(self, settings: Settings):
         super().__init__()
@@ -48,6 +57,7 @@ class DialogManager(QObject):
         self.scripting_engine = ScriptingEngine()
         self.plugin_manager = PluginManager()
         self._selected_node_index: int = -1  # Track selected node index
+        self.ai_manager: Optional['AIDialogueManager'] = None  # AI manager reference
 
     def new_dialogue(self) -> Dialogue:
         """Create a new empty dialogue"""
@@ -265,3 +275,81 @@ class DialogManager(QObject):
     def get_plugin_manager(self) -> PluginManager:
         """Get the plugin manager instance"""
         return self.plugin_manager
+    
+    # =========================================================================
+    # AI Integration Methods (NEW)
+    # =========================================================================
+    
+    def set_ai_manager(self, ai_manager: 'AIDialogueManager'):
+        """
+        Set the AI dialogue manager.
+        
+        Args:
+            ai_manager: The AIDialogueManager instance
+        """
+        self.ai_manager = ai_manager
+        
+        # Connect AI signals to DialogManager signals
+        if self.ai_manager:
+            self.ai_manager.suggestion_ready.connect(self._on_ai_suggestion)
+            self.ai_manager.response_ready.connect(self._on_ai_response)
+            self.ai_manager.error_occurred.connect(self._on_ai_error)
+            
+        logger.info("AI manager connected to DialogManager")
+    
+    def get_ai_suggestions(self, node_text: str, context: Dict = None) -> None:
+        """
+        Request AI suggestions for a dialogue node.
+        
+        Args:
+            node_text: The NPC dialogue node text
+            context: Optional context dictionary
+        """
+        if self.ai_manager:
+            self.ai_manager.suggest_dialogue_options(node_text)
+    
+    def analyze_node_sentiment(self, node: DialogueNode) -> None:
+        """
+        Analyze the sentiment of a dialogue node.
+        
+        Args:
+            node: The dialogue node to analyze
+        """
+        if self.ai_manager and node:
+            self.ai_manager.analyze_sentiment(node.npcdialogue)
+    
+    def generate_ai_response(self, prompt: str, conversation_id: str = None) -> None:
+        """
+        Generate AI response for testing or assistance.
+        
+        Args:
+            prompt: The prompt to send to the AI
+            conversation_id: Optional conversation context ID
+        """
+        if self.ai_manager:
+            self.ai_manager.generate_response(prompt, conversation_id)
+    
+    def improve_node_text(self, node: DialogueNode, improvement_type: str = "grammar") -> None:
+        """
+        Improve dialogue node text using AI.
+        
+        Args:
+            node: The dialogue node to improve
+            improvement_type: Type of improvement (grammar/tonality/fluency)
+        """
+        if self.ai_manager and node:
+            self.ai_manager.improve_text(node.npcdialogue, improvement_type)
+    
+    def _on_ai_suggestion(self, suggestions: List[str]):
+        """Handle AI suggestion response"""
+        self.ai_suggestion_received.emit(suggestions)
+        logger.debug(f"Received {len(suggestions)} AI suggestions")
+    
+    def _on_ai_response(self, response: str):
+        """Handle AI response"""
+        logger.debug(f"Received AI response: {response[:50]}...")
+    
+    def _on_ai_error(self, error: str):
+        """Handle AI error"""
+        logger.error(f"AI error: {error}")
+        # Could emit a signal or show error to user

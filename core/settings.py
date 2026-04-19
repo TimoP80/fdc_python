@@ -153,3 +153,77 @@ class Settings:
     def should_check_updates(self) -> bool:
         """Check if automatic update checking is enabled"""
         return self.get('check_updates', True)
+    
+    # ========================================================================
+    # AI Provider Settings
+    # ========================================================================
+    
+    def get_ai_provider(self) -> str:
+        """Get the currently configured AI provider"""
+        return self.get('ai_provider', 'gemini')
+    
+    def set_ai_provider(self, provider: str):
+        """Set the AI provider to use"""
+        valid_providers = ['gemini', 'ollama_cloud', 'local']
+        if provider not in valid_providers:
+            raise ValueError(f"Invalid provider: {provider}. Must be one of {valid_providers}")
+        self.set('ai_provider', provider)
+    
+    def get_ollama_cloud_api_key(self) -> str:
+        """Get the OllamaCloud API key"""
+        return self.get('ollama_cloud_api_key', '')
+    
+    def set_ollama_cloud_api_key(self, api_key: str):
+        """Set the OllamaCloud API key"""
+        self.set('ollama_cloud_api_key', api_key)
+    
+    def get_ollama_cloud_model(self) -> str:
+        """Get the Ollama Cloud model to use"""
+        return self.get('ollama_cloud_model', 'gpt-oss:32b-cloud')
+    
+    def set_ollama_cloud_model(self, model: str):
+        """Set the Ollama Cloud model (https://ollama.com/search?c=cloud)"""
+        from core.ollama_provider import OllamaCloudModel
+        valid_models = [m.value for m in OllamaCloudModel]
+        if model not in valid_models:
+            raise ValueError(f"Invalid model: {model}. Must be one of {valid_models}")
+        self.set('ollama_cloud_model', model)
+    
+    def get_ollama_cloud_timeout(self) -> int:
+        """Get the OllamaCloud request timeout in seconds"""
+        return int(self.get('ollama_cloud_timeout', 60))
+    
+    def set_ollama_cloud_timeout(self, timeout: int):
+        """Set the OllamaCloud request timeout"""
+        if timeout < 10 or timeout > 300:
+            raise ValueError("Timeout must be between 10 and 300 seconds")
+        self.set('ollama_cloud_timeout', timeout)
+    
+    def get_ollama_cloud_max_retries(self) -> int:
+        """Get the maximum number of retries for OllamaCloud requests"""
+        return int(self.get('ollama_cloud_max_retries', 3))
+    
+    def set_ollama_cloud_max_retries(self, retries: int):
+        """Set the maximum number of retries"""
+        if retries < 0 or retries > 10:
+            raise ValueError("Retries must be between 0 and 10")
+        self.set('ollama_cloud_max_retries', retries)
+    
+    def get_gemini_api_key(self) -> str:
+        """Get the Gemini API key"""
+        return self.get('gemini_api_key', '')
+    
+    def set_gemini_api_key(self, api_key: str):
+        """Set the Gemini API key"""
+        self.set('gemini_api_key', api_key)
+    
+    def get_gemini_model(self) -> str:
+        """Get the Gemini model to use"""
+        return self.get('gemini_model', 'gemini-2.0-flash')
+    
+    def set_gemini_model(self, model: str):
+        """Set the Gemini model"""
+        valid_models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-1.5-flash', 'gemini-1.5-flash-8b']
+        if model not in valid_models:
+            raise ValueError(f"Invalid model: {model}. Must be one of {valid_models}")
+        self.set('gemini_model', model)
