@@ -63,7 +63,7 @@ class NuitkaBuilder:
         return {
             "application": {
                 "name": "Fallout Dialogue Creator",
-                "version": "2.3.0",
+                "version": "2.5.1",
                 "main_entry": "main.py"
             },
             "build": {

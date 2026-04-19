@@ -97,7 +97,7 @@ def create_splash_pixmap():
     painter.setFont(version_font)
     painter.setPen(QColor(0xc4, 0xb9, 0x98))
     version_rect = pixmap.rect().adjusted(0, 115, 0, -130)
-    painter.drawText(version_rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, "Version 2.3.0")
+    painter.drawText(version_rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, "Version 2.5.1")
     
     # Draw decorative line
     painter.setPen(QColor(0xb7, 0x41, 0x0e))
