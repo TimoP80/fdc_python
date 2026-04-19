@@ -235,6 +235,14 @@ class TranslationResult:
 
 
 @dataclass
+class SentimentResult:
+    """Sentiment analysis result"""
+    text: str
+    sentiment: SentimentType
+    confidence: float
+
+
+@dataclass
 class KnowledgeEntry:
     """Knowledge base entry"""
     id: str
@@ -1292,13 +1300,20 @@ class AIDialogueSystem:
             # Step 7: Build context for response generation
             prompt = self._build_prompt(message, context, intent, knowledge_results)
 
-            # Step 8: Generate response - use sync provider only for worker thread compatibility
-            if not self.language_model.is_available():
+            # Step 8: Generate response - use sync fallback for reliability
+            # Note: async provider can't be called from sync code due to asyncio event loop issues
+            # Keep fallback for now until a proper async pipeline is built
+            if not self.language_model.is_available:
                 response = self._get_fallback_response(Exception("Language model unavailable"))
             else:
-                response = self.language_model.generate_response(
-                    prompt, context, config, persona
-                )
+                # Try sync call first (works for SimpleLanguageModel)
+                try:
+                    response = self.language_model.generate_response(
+                        prompt, context, config, persona
+                    )
+                except Exception as e:
+                    logger.warning(f"Sync call failed: {e}, using fallback")
+                    response = self._get_fallback_response(e)
 
             # Convert dict to GeneratedResponse if needed
             if isinstance(response, dict):
@@ -1431,6 +1446,33 @@ class AIDialogueSystem:
             sentiment=SentimentType.NEUTRAL,
             metadata={"error": True}
         )
+
+    # =========================================================================
+    # Async Methods for Main Thread Processing
+    # =========================================================================
+
+    async def process_message_async(
+        self,
+        message: str,
+        conversation_id: str,
+        config: Optional[ResponseConfig] = None,
+        persona: Optional[Persona] = None,
+        language: str = "en"
+    ) -> GeneratedResponse:
+        """Async entry point - calls sync method directly"""
+        # Just call the sync method - the provider will be set if async is possible
+        return self.process_message(message, conversation_id, config, persona, language)
+
+    async def analyze_sentiment_async(self, text: str):
+        """Async sentiment analysis"""
+        sentiment, score = self.nlu.analyze_sentiment(text)
+        from dataclasses import dataclass
+        @dataclass
+        class Result:
+            text: str
+            sentiment: any
+            confidence: float
+        return Result(text=text, sentiment=sentiment, confidence=score)
     
     # =========================================================================
     # Configuration Methods
@@ -1707,15 +1749,18 @@ def configure_ai_system_from_settings(ai_system: AIDialogueSystem, settings) -> 
 
     def set_provider_on_system(provider):
         """Helper to set provider on the AI system"""
-        # Note: Due to asyncio/sync thread conflicts, we can't use async providers in the
-        # sync worker thread. For now, keep using the fallback, and async providers
-        # will need to be called from the main async event loop, not from workers.
-        # The provider is logged for development purposes.
+        # Don't set the provider - asyncio event loop conflicts prevent using it
+        # Log that it's available for development
         if provider and provider.is_available:
-            logger.info(f"Async provider available: {type(provider).__name__}")
+            logger.info(f"Async provider available (not used due to asyncio issues): {type(provider).__name__}")
 
     def run_async():
-        return asyncio.run(_create_provider_from_settings(settings))
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            return loop.run_until_complete(_create_provider_from_settings(settings))
+        finally:
+            loop.close()
 
     try:
         with concurrent.futures.ThreadPoolExecutor() as executor:

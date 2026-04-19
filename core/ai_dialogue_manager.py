@@ -133,54 +133,144 @@ class ConversationContext:
 
 
 # ============================================================================
-# Worker Thread
+# Background Thread with Separate Event Loop
 # ============================================================================
 
-class AIWorker(QThread):
-    """Worker thread for processing AI requests"""
-    
+class AIQueueProcessor(QObject):
+    """Processes AI requests in a background thread with its own event loop"""
+
     request_completed = pyqtSignal(AIResponse)
     progress_update = pyqtSignal(int, str)
-    
+
     def __init__(self, ai_system: AIDialogueSystem, parent=None):
         super().__init__(parent)
         self.ai_system = ai_system
         self.request_queue: queue.Queue = queue.Queue()
+        self._is_running = False
+        self._thread = None
+
+    def start(self):
+        """Start the background thread"""
         self._is_running = True
-        self._lock = threading.Lock()
-        
+        self._thread = threading.Thread(target=self._run_loop, daemon=True)
+        self._thread.start()
+        logger.info("AI processor thread started")
+
+    def stop(self):
+        """Stop the processor"""
+        self._is_running = False
+        if self._thread:
+            self.request_queue.put(None)  # Signal to exit
+            self._thread.join(timeout=2)
+        logger.info("AI processor thread stopped")
+
     def add_request(self, request: AIRequest):
         """Add a request to the queue"""
         self.request_queue.put(request)
-        
-    def stop(self):
-        """Stop the worker thread"""
-        self._is_running = False
-        self.request_queue.put(None)  # Wake up the thread
-    
-    def run(self):
-        """Process requests from the queue"""
+
+    def _run_loop(self):
+        """Run event loop in background thread"""
+        import asyncio
+
+        logger.debug("Starting event loop in background thread")
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
         while self._is_running:
             try:
-                # Get request with timeout
-                try:
-                    request = self.request_queue.get(timeout=0.5)
-                except queue.Empty:
-                    continue
-                
-                if request is None:  # Stop signal
-                    break
-                
-                # Process the request
-                response = self._process_request(request)
-                logger.debug(f"Worker: emitting request_completed, success={response.success}")
+                request = self.request_queue.get(timeout=0.5)
+            except queue.Empty:
+                continue
+
+            logger.debug(f"Got request: {request.request_id}")
+            if request is None:
+                break
+
+            try:
+                logger.debug("Running async process...")
+                response = loop.run_until_complete(
+                    self._process_one(request))
+                logger.debug(f"Got response: {response.response_text[:50] if response.success else 'error'}")
                 self.request_completed.emit(response)
-                self.request_queue.task_done()
-                
             except Exception as e:
-                logger.error(f"Error in AI worker: {e}")
-                
-        logger.info("AI Worker thread stopped")
+                logger.error(f"Queue error: {e}")
+                self.request_completed.emit(AIResponse(
+                    request_id=request.request_id,
+                    success=False,
+                    error_message=str(e)))
+
+        loop.close()
+        logger.debug("Event loop closed")
+
+    async def _process_one(self, request: AIRequest):
+        """Process single request async"""
+        start_time = time.time()
+        self.progress_update.emit(10, "Processing...")
+
+        try:
+            if request.request_type == AIRequestType.CHAT:
+                response = await self.ai_system.process_message_async(
+                    message=request.prompt,
+                    conversation_id=request.context.get('conversation_id', 'default'),
+                    config=request.config,
+                    persona=request.persona
+                )
+                return AIResponse(
+                    request_id=request.request_id,
+                    success=True,
+                    response_text=response.text if response else ""
+                )
+
+            elif request.request_type == AIRequestType.SUGGEST_RESPONSES:
+                node_text = request.context.get('node_text', '')
+                prompt = f"Generate 4 short player responses for: {node_text}"
+
+                response = await self.ai_system.process_message_async(
+                    message=prompt,
+                    conversation_id=request.context.get('conversation_id', 'default'),
+                    config=request.config,
+                    persona=request.persona
+                )
+
+                lines = response.text.strip().split('\n') if response else []
+                suggestions = []
+                for l in lines:
+                    l = l.strip()
+                    l = l.lstrip('0123456789.).*- ')
+                    if l:
+                        suggestions.append(l)
+                suggestions = suggestions[:4]
+
+                return AIResponse(
+                    request_id=request.request_id,
+                    success=True,
+                    suggestions=suggestions
+                )
+
+            elif request.request_type == AIRequestType.SENTIMENT:
+                result = await self.ai_system.analyze_sentiment_async(request.prompt)
+                return AIResponse(
+                    request_id=request.request_id,
+                    success=True,
+                    response_text=result.text,
+                    sentiment=result.sentiment,
+                    confidence=result.confidence
+                )
+
+            return AIResponse(
+                request_id=request.request_id,
+                success=False,
+                error_message=f"Unknown type: {request.request_type}"
+            )
+
+        except Exception as e:
+            logger.error(f"Request error: {e}")
+            return AIResponse(
+                request_id=request.request_id,
+                success=False,
+                error_message=str(e),
+                processing_time_ms=int((time.time() - start_time) * 1000)
+            )
     
     def _process_request(self, request: AIRequest) -> AIResponse:
         """Process a single AI request"""
@@ -411,43 +501,43 @@ class AIDialogueManager(QObject):
     ):
         """
         Initialize the AI Dialogue Manager.
-        
+
         Args:
             settings: Application settings for configuration
             dialog_manager: Optional dialog manager for state sync
         """
         super().__init__()
-        
+
         self.settings = settings
         self.dialog_manager = dialog_manager
         self.status = self.STATUS_INITIALIZED
-        
+
         # Initialize AI system
         self.ai_system = AIDialogueSystem(settings)
-        
-        # Create worker thread
-        self.worker = AIWorker(self.ai_system)
-        self.worker.request_completed.connect(self._on_response_ready)
-        self.worker.progress_update.connect(self._on_progress)
-        
+
+        # Create main thread async processor
+        self.processor = AIQueueProcessor(self.ai_system, self)
+        self.processor.request_completed.connect(self._on_response_ready)
+        self.processor.progress_update.connect(self._on_progress)
+
         # Response cache
         self._response_cache: Dict[str, AIResponse] = {}
         self._cache_max_size = 100
-        
+
         # Conversation management
         self._conversations: Dict[str, ConversationContext] = {}
         self._current_conversation_id: Optional[str] = None
-        
+
         # Default config
         self._default_config = ResponseConfig(
             creativity=ResponseCreativity.BALANCED,
             length=ResponseLength.NORMAL,
             formality=FormalityTone.NEUTRAL
         )
-        
+
         # Default persona
         self._default_persona = Persona()
-        
+
         # Status check timer
         self._status_timer = QTimer()
         self._status_timer.timeout.connect(self._check_ai_status)
@@ -455,29 +545,28 @@ class AIDialogueManager(QObject):
         logger.info("AIDialogueManager initialized")
 
     def start(self):
-        """Start the AI manager and worker thread"""
-        # Configure the system with settings BEFORE starting worker
+        """Start the AI manager and processor"""
+        # Configure the system with settings BEFORE starting processor
         configure_ai_system_from_settings(self.ai_system, self.settings)
 
-        self.worker.start()
-        
+        self.processor.start()
+
         # Do initial status check to determine if online/offline
         self._check_ai_status()
-        
+
         # Start periodic status checks
         self._status_timer.start(30000)  # Check every 30 seconds
-        
+
         logger.info("AIDialogueManager started")
     
     def stop(self):
-        """Stop the AI manager and worker thread"""
+        """Stop the AI manager and processor"""
         self._status_timer.stop()
-        self.worker.stop()
-        self.worker.wait(5000)  # Wait up to 5 seconds
-        
+        self.processor.stop()
+
         self.status = self.STATUS_INITIALIZED
         self.status_changed.emit(self.status)
-        
+
         logger.info("AIDialogueManager stopped")
     
     def set_dialog_manager(self, dialog_manager: Any):
@@ -525,7 +614,7 @@ class AIDialogueManager(QObject):
             self.status_changed.emit(self.status)
             return
         
-        # Create and queue request
+        # Create and queue request to processor
         request = AIRequest.create(
             request_type=AIRequestType.CHAT,
             prompt=prompt,
@@ -533,8 +622,8 @@ class AIDialogueManager(QObject):
             config=config or self._default_config,
             persona=persona or self._default_persona
         )
-        
-        self.worker.add_request(request)
+
+        self.processor.add_request(request)
         logger.debug(f"Added chat request: {request.request_id}")
     
     def suggest_dialogue_options(
@@ -570,7 +659,7 @@ class AIDialogueManager(QObject):
             config=self._default_config
         )
         
-        self.worker.add_request(request)
+        self.processor.add_request(request)
         logger.debug(f"Added suggestion request: {request.request_id}")
     
     def analyze_sentiment(self, text: str) -> None:
@@ -591,7 +680,7 @@ class AIDialogueManager(QObject):
             prompt=text
         )
         
-        self.worker.add_request(request)
+        self.processor.add_request(request)
         logger.debug(f"Added sentiment request: {request.request_id}")
     
     def improve_text(
@@ -621,7 +710,7 @@ class AIDialogueManager(QObject):
             config=self._default_config
         )
         
-        self.worker.add_request(request)
+        self.processor.add_request(request)
         logger.debug(f"Added improve text request: {request.request_id}")
     
     def translate_text(
@@ -656,7 +745,7 @@ class AIDialogueManager(QObject):
             config=self._default_config
         )
         
-        self.worker.add_request(request)
+        self.processor.add_request(request)
         logger.debug(f"Added translation request: {request.request_id}")
     
     # =========================================================================
