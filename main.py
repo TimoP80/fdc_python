@@ -4,7 +4,7 @@ Fallout Dialogue Creator - Qt Migration
 Modern cross-platform rewrite of the Fallout dialogue editor
 """
 
-__version__ = "2.3.0"
+__version__ = "2.5.1"
 
 import sys
 import logging
@@ -147,7 +147,7 @@ def main():
 
     # Set application properties
     app.setApplicationName("Fallout Dialogue Creator")
-    app.setApplicationVersion("2.3.0")
+    app.setApplicationVersion("2.5.1")
     app.setOrganizationName("FMF Tools")
 
     # Apply Fallout 2 theme before creating any widgets

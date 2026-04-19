@@ -3066,7 +3066,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         version_layout = QFormLayout()
         
         # Get version from application
-        app_version = QApplication.instance().applicationVersion() if QApplication.instance() else "2.3.0"
+        app_version = QApplication.instance().applicationVersion() if QApplication.instance() else "2.5.1"
         version_layout.addRow("Version:", QLabel(app_version))
         version_layout.addRow("Build:", QLabel("Release"))
         version_layout.addRow("Build Date:", QLabel(datetime.datetime.now().strftime("%B %d, %Y")))
