@@ -4116,14 +4116,15 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
 
         try:
             # Create new dialogue
-            from models.dialogue import Dialogue
-            new_dialogue = Dialogue(name=f"AI_{topic}", filename=f"ai_{topic.lower().replace(' ', '_')}.fdlg")
+            from models.dialogue import Dialogue, DialogueNode, DialogueHeader
+
+            new_dialogue = Dialogue(filename=f"ai_{topic.lower().replace(' ', '_')}.fdlg")
             new_dialogue.nodecount = 1
-            new_dialogue.header.author = "AI Generated"
-            new_dialogue.header.description = f"AI-generated dialogue about: {topic}"
+
+            # Set header info
+            new_dialogue.description = f"AI-generated dialogue about: {topic}"
 
             # Add starter node
-            from models.dialogue import DialogueNode
             start_node = DialogueNode(
                 is_wtg=True,
                 nodename=f"START_{topic[:10]}",
