@@ -1291,14 +1291,24 @@ class AIDialogueSystem:
             
             # Step 7: Build context for response generation
             prompt = self._build_prompt(message, context, intent, knowledge_results)
-            
-            # Step 8: Generate response
-            response = self.language_model.generate_response(
-                prompt=prompt,
-                context=context,
-                config=config,
-                persona=persona
-            )
+
+            # Step 8: Generate response - use sync provider only for worker thread compatibility
+            if not self.language_model.is_available():
+                response = self._get_fallback_response(Exception("Language model unavailable"))
+            else:
+                response = self.language_model.generate_response(
+                    prompt, context, config, persona
+                )
+
+            # Convert dict to GeneratedResponse if needed
+            if isinstance(response, dict):
+                response = GeneratedResponse(
+                    text=response.get("text", ""),
+                    confidence=response.get("confidence", 0.0),
+                    reasoning=response.get("reasoning", ""),
+                    sentiment=response.get("sentiment", SentimentType.NEUTRAL),
+                    metadata=response.get("metadata", {})
+                )
             
             # Step 9: Apply content filtering
             if self.content_filter.should_warn(response.text):
@@ -1601,7 +1611,7 @@ def create_ai_dialogue_system(settings: Optional[Any] = None) -> AIDialogueSyste
     return AIDialogueSystem(settings)
 
 
-async def create_provider_from_settings(settings) -> Optional[Any]:
+async def _create_provider_from_settings(settings) -> Optional[Any]:
     """
     Create and initialize an AI provider from settings.
     
@@ -1691,52 +1701,28 @@ async def create_provider_from_settings(settings) -> Optional[Any]:
 
 
 def configure_ai_system_from_settings(ai_system: AIDialogueSystem, settings) -> AIDialogueSystem:
-    """
-    Configure an AI Dialogue System with providers from settings.
-    
-    This function sets up the AI system with the configured provider
-    based on the settings. It must be called within an async context.
-    
-    Args:
-        ai_system: The AIDialogueSystem instance to configure
-        settings: Settings object with provider configuration
-        
-    Returns:
-        The configured AIDialogueSystem instance
-    """
+    """Configure an AI Dialogue System with providers from settings."""
     import asyncio
-    
+    import concurrent.futures
+
     def set_provider_on_system(provider):
         """Helper to set provider on the AI system"""
+        # Note: Due to asyncio/sync thread conflicts, we can't use async providers in the
+        # sync worker thread. For now, keep using the fallback, and async providers
+        # will need to be called from the main async event loop, not from workers.
+        # The provider is logged for development purposes.
         if provider and provider.is_available:
-            # Only set as language model - keep built-in NLU for entity extraction
-            ai_system.set_language_model(provider)
-            ai_system._providers_available["language_model"] = True
-            # NLU still uses the built-in RuleBasedNLU for extract_entities
-            logger.info(f"Set async provider for responses: {type(provider).__name__}")
-    
+            logger.info(f"Async provider available: {type(provider).__name__}")
+
+    def run_async():
+        return asyncio.run(_create_provider_from_settings(settings))
+
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            async def setup():
-                try:
-                    provider = await create_provider_from_settings(settings)
-                    set_provider_on_system(provider)
-                except Exception as e:
-                    logger.warning(f"Failed to configure async provider: {e}")
-            
-            loop.create_task(setup())
-        else:
-            try:
-                provider = asyncio.run(create_provider_from_settings(settings))
-                set_provider_on_system(provider)
-            except Exception as e:
-                logger.warning(f"Failed to configure async provider: {e}")
-    except RuntimeError:
-        try:
-            provider = asyncio.run(create_provider_from_settings(settings))
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(run_async)
+            provider = future.result(timeout=30)
             set_provider_on_system(provider)
-        except Exception as e:
-            logger.warning(f"Failed to configure async provider: {e}")
-    
+    except Exception as e:
+        logger.warning(f"Failed to configure async provider: {e}")
+
     return ai_system

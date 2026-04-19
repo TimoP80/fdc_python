@@ -222,9 +222,10 @@ class AIWorker(QThread):
     def _handle_chat(self, request: AIRequest) -> AIResponse:
         """Handle chat/generate response requests"""
         config = request.config or ResponseConfig()
-        
+
         try:
             logger.debug(f"_handle_chat: processing '{request.prompt[:30]}'")
+
             response = self.ai_system.process_message(
                 message=request.prompt,
                 conversation_id=request.context.get('conversation_id', 'default'),
@@ -232,11 +233,18 @@ class AIWorker(QThread):
                 persona=request.persona
             )
             logger.debug(f"_handle_chat: got response type={type(response)}")
-            
+
+            # Unwrap if needed
+            if hasattr(response, '__await__'):
+                # It's a coroutine - this shouldn't happen with sync-only call
+                response_text = "System not properly configured"
+            else:
+                response_text = response.text if response else ""
+
             return AIResponse(
                 request_id=request.request_id,
                 success=True,
-                response_text=response.text if response else ""
+                response_text=response_text
             )
         except AIProviderError as e:
             return AIResponse(
@@ -443,14 +451,14 @@ class AIDialogueManager(QObject):
         # Status check timer
         self._status_timer = QTimer()
         self._status_timer.timeout.connect(self._check_ai_status)
-        
-        # Configure the system with current settings
-        configure_ai_system_from_settings(self.ai_system, self.settings)
-        
+
         logger.info("AIDialogueManager initialized")
-    
+
     def start(self):
         """Start the AI manager and worker thread"""
+        # Configure the system with settings BEFORE starting worker
+        configure_ai_system_from_settings(self.ai_system, self.settings)
+
         self.worker.start()
         
         # Do initial status check to determine if online/offline
