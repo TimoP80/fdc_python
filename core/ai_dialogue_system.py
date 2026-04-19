@@ -1504,8 +1504,15 @@ class AIDialogueSystem:
         except Exception as e:
             logger.error(f"Async process error: {e}")
 
-        # Fallback to sync
-        return self.process_message(message, conversation_id, config, persona, language)
+        # Don't fall back - return empty to avoid duplication
+        logger.warning("Async failed, returning empty response")
+        return GeneratedResponse(
+            text="",
+            confidence=0.0,
+            reasoning="Async unavailable",
+            sentiment=SentimentType.NEUTRAL,
+            metadata={"error": True}
+        )
 
     async def analyze_sentiment_async(self, text: str):
         """Async sentiment analysis"""
