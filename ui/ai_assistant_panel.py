@@ -38,6 +38,8 @@ class AIAssistantPanel(QWidget):
     
     suggestion_clicked = pyqtSignal(str)  # Suggestion text
     config_requested = pyqtSignal()       # Request to open config
+    create_dialogue_requested = pyqtSignal(dict)  # Dict with dialogue data
+    create_node_requested = pyqtSignal(dict)    # Dict with node data
     
     def __init__(self, parent=None):
         """
@@ -223,20 +225,80 @@ class AIAssistantPanel(QWidget):
         """Handle send button click or Enter key"""
         if not self.ai_manager or not self.input_field.text():
             return
-        
+
         message = self.input_field.text().strip()
         if not message:
             return
-        
+
         # Add user message to chat
         self._add_message("You", message, is_user=True)
         self.input_field.clear()
-        
-        # Send to AI
+
+        # Check for special commands to create dialogue
+        cmd_lower = message.lower().strip()
+
+        if cmd_lower.startswith("create dialogue") or cmd_lower.startswith("new dialogue"):
+            # Extract topic
+            topic = message.replace("create dialogue", "").replace("new dialogue", "").strip()
+            if topic:
+                self._create_dialogue_topic(topic)
+                return
+
+        elif cmd_lower.startswith("add node") or cmd_lower.startswith("add npc"):
+            topic = message.replace("add node", "").replace("add npc", "").strip()
+            if topic:
+                self._create_node(topic)
+                return
+
+        elif cmd_lower.startswith("add option"):
+            option = message.replace("add option", "").strip()
+            if option:
+                self._create_player_option(option)
+                return
+
+        # Send to AI for regular chat
         self._is_processing = True
         self._update_input_state()
-        
+
         self.ai_manager.generate_response(message)
+
+    def _create_dialogue_topic(self, topic: str):
+        """Create a new dialogue about a topic"""
+        self._add_message("AI", f"Creating dialogue about '{topic}'...", is_user=False)
+        self._is_processing = False
+        self._update_input_state()
+
+        # Emit signal with topic
+        self.create_dialogue_requested.emit({
+            "action": "create_dialogue",
+            "topic": topic
+        })
+        self._add_message("System", f"Created new dialogue: {topic}", is_user=False)
+
+    def _create_node(self, npc_text: str):
+        """Create a new NPC dialogue node"""
+        self._add_message("AI", f"Adding NPC node: '{npc_text}'...", is_user=False)
+        self._is_processing = False
+        self._update_input_state()
+
+        # Emit signal
+        self.create_node_requested.emit({
+            "action": "create_node",
+            "npc_text": npc_text
+        })
+        self._add_message("System", f"Added NPC node: {npc_text}", is_user=False)
+
+    def _create_player_option(self, option_text: str):
+        """Create a player option for current node"""
+        self._add_message("AI", f"Adding option: '{option_text}'...", is_user=False)
+        self._is_processing = False
+        self._update_input_state()
+
+        self.create_node_requested.emit({
+            "action": "add_option",
+            "option_text": option_text
+        })
+        self._add_message("System", f"Added option: {option_text}", is_user=False)
         
         logger.debug(f"Sent message: {message[:50]}...")
     

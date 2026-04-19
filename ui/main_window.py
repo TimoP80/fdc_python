@@ -4063,7 +4063,11 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                 # Create the actual panel widget
                 self.ai_panel = AIAssistantPanel(self)
                 self.ai_panel.set_ai_manager(self.ai_manager)
-                
+
+                # Connect dialogue creation signals
+                self.ai_panel.create_dialogue_requested.connect(self._on_ai_create_dialogue)
+                self.ai_panel.create_node_requested.connect(self._on_ai_create_node)
+
                 # Set the widget in the dock
                 self.ai_dock.setWidget(self.ai_panel)
                 
@@ -4091,18 +4095,90 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             QMessageBox.information(self, "AI Not Available",
                 "AI features are not enabled. Please enable AI in Settings.")
             return
-        
+
         # Get current selected node
         current_node = self.dialog_manager.get_current_node()
         if not current_node:
             QMessageBox.information(self, "No Node Selected",
                 "Please select a dialogue node first.")
             return
-        
+
         # Request suggestions from AI
         prompt = f"Generate dialogue options for: {current_node.text}"
         self.ai_manager.generate_response(prompt)
         self.status_bar.showMessage("Getting AI suggestions...", 2000)
+
+    def _on_ai_create_dialogue(self, data: dict):
+        """Handle create dialogue request from AI panel"""
+        topic = data.get("topic", "")
+        if not topic:
+            return
+
+        try:
+            # Create new dialogue
+            from models.dialogue import Dialogue
+            new_dialogue = Dialogue(name=f"AI_{topic}", filename=f"ai_{topic.lower().replace(' ', '_')}.fdlg")
+            new_dialogue.nodecount = 1
+            new_dialogue.header.author = "AI Generated"
+            new_dialogue.header.description = f"AI-generated dialogue about: {topic}"
+
+            # Add starter node
+            from models.dialogue import DialogueNode
+            start_node = DialogueNode(
+                is_wtg=True,
+                nodename=f"START_{topic[:10]}",
+                npctext=f"Hello there! I heard you wanted to talk about {topic}?",
+                optioncnt=1,
+                options=[]
+            )
+            new_dialogue.nodes = [start_node]
+
+            # Add to dialog manager and create file
+            if self.dialog_manager:
+                self.dialog_manager.current_dialogue = new_dialogue
+                self.dialog_manager.save_dialogue()
+                self._refresh_editor()
+                self.status_bar.showMessage(f"Created dialogue: {topic}", 3000)
+                logger.info(f"AI created dialogue: {topic}")
+        except Exception as e:
+            logger.error(f"Failed to create dialogue: {e}")
+            QMessageBox.warning(self, "Error", f"Failed to create dialogue: {e}")
+
+    def _on_ai_create_node(self, data: dict):
+        """Handle create node request from AI panel"""
+        action = data.get("action", "")
+        npc_text = data.get("npc_text", "")
+        option_text = data.get("option_text", "")
+
+        try:
+            if action == "create_node" and npc_text:
+                from models.dialogue import DialogueNode, PlayerOption
+                new_node = DialogueNode(
+                    nodename=f"AI_{npc_text[:15]}",
+                    npctext=npc_text,
+                    options=[PlayerOption(text="[Continue]", targetnode="")]
+                )
+                self.dialog_manager.add_node(new_node)
+                self._refresh_editor()
+                self.status_bar.showMessage(f"Added node: {npc_text[:30]}", 3000)
+
+            elif action == "add_option" and option_text:
+                # Get current node and add option
+                current = self.dialog_manager.get_current_node()
+                if current:
+                    from models.dialogue import PlayerOption
+                    new_option = PlayerOption(text=option_text)
+                    current.options.append(new_option)
+                    current.optioncnt = len(current.options)
+                    self.dialog_manager.mark_modified()
+                    self._refresh_editor()
+                    self.status_bar.showMessage(f"Added option: {option_text[:30]}", 3000)
+                else:
+                    QMessageBox.information(self, "No Node", "Select a node first")
+
+        except Exception as e:
+            logger.error(f"Failed to create node: {e}")
+            QMessageBox.warning(self, "Error", f"Failed to create node: {e}")
 
     def on_ai_sentiment(self):
         """Analyze sentiment of the current dialogue"""
