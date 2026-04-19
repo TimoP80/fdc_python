@@ -4115,10 +4115,25 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             return
 
         try:
-            # Create new dialogue with unique filename
+            # Get dialogues folder from settings or use current open dialog
+            from pathlib import Path
+
+            # Try to get the dialogues directory from settings
+            settings = self.settings
+            if settings:
+                dialogues_path = Path(settings.get('dialogues_path', 'dialogues'))
+                dialogues_path.mkdir(exist_ok=True)
+            else:
+                dialogues_path = Path('dialogues')
+                dialogues_path.mkdir(exist_ok=True)
+
+            # Count existing AI dialogues
+            existing = list(dialogues_path.glob('ai_*.fdlg'))
+            filename = f"ai_{topic.lower().replace(' ', '_')}_{len(existing)}.fdlg"
+
+            # Create new dialogue
             from models.dialogue import Dialogue, DialogueNode
 
-            filename = f"ai_{topic.lower().replace(' ', '_')}_{len(list(self.dialog_manager.dialogues_dir.glob('ai_*.fdlg')))}.fdlg"
             new_dialogue = Dialogue(filename=filename)
             new_dialogue.nodecount = 1
             new_dialogue.npcname = topic.capitalize()
@@ -4138,7 +4153,7 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
                 self.dialog_manager.current_dialogue = new_dialogue
 
                 # Save with explicit path
-                save_path = self.dialog_manager.dialogues_dir / filename
+                save_path = dialogues_path / filename
                 self.dialog_manager.save_dialogue(save_path)
 
                 # Reload the dialogue
