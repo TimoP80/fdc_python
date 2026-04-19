@@ -4108,8 +4108,8 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         self.ai_manager.generate_response(prompt)
         self.status_bar.showMessage("Getting AI suggestions...", 2000)
 
-    def _on_ai_create_dialogue(self, data: dict):
-        """Handle create dialogue request from AI panel using AI to generate content"""
+def _on_ai_create_dialogue(self, data: dict):
+        """Handle create dialogue request from AI panel"""
         topic = data.get("topic", "")
         if not topic:
             return
@@ -4117,7 +4117,6 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
         try:
             from pathlib import Path
             from models.dialogue import Dialogue, DialogueNode, PlayerOption
-            import random
 
             # Get dialogues folder
             settings = self.settings
@@ -4132,112 +4131,13 @@ Error: {plugin_instance.error_message if plugin_instance.error_message else 'Non
             existing = list(dialogues_path.glob('ai_*.fdlg'))
             filename = f"ai_{topic.lower().replace(' ', '_')}_{len(existing)}.fdlg"
 
-            # Tell user we're generating
-            self._add_message("AI", f"Generating dialogue about '{topic}'...", is_user=False)
-
-            # Generate dialogue structure with AI
-            prompt = f"""Create a short Fallout-style dialogue tree about '{topic}'. 
-Respond with exactly 4 lines, each starting with a number:
-1. START: The opening line the NPC says
-2. OPTION1: A player response choice  
-3. NODE2: The NPC response to OPTION1
-4. OPTION2: Another player response choice
-5. END: The NPC ending response
-
-Keep it simple and Fallout-appropriate. Each line should be 1-2 sentences."""
-
-            # Generate with AI
-            self.ai_manager.generate_response(prompt)
-
-            # Parse the response when it comes
-            def on_ai_response(response_text: str):
-                try:
-                    lines = response_text.strip().split('\n')
-                    nodes = []
-                    start_text = "Hello there!"
-                    opt1_text = "Tell me more."
-                    node2_text = "Well, it's complicated..."
-                    opt2_text = "Got it, thanks."
-                    end_text = "Good talking to you!"
-
-                    # Try to parse AI response
-                    for line in lines:
-                        line = line.strip()
-                        if line.startswith('1.') or line.startswith('START:'):
-                            start_text = line.split(':', 1)[-1].strip() if ':' in line else line[2:].strip()
-                        elif line.startswith('2.') or line.startswith('OPTION1:'):
-                            opt1_text = line.split(':', 1)[-1].strip() if ':' in line else line[2:].strip()
-                        elif line.startswith('3.') or line.startswith('NODE2:'):
-                            node2_text = line.split(':', 1)[-1].strip() if ':' in line else line[2:].strip()
-                        elif line.startswith('4.') or line.startswith('OPTION2:'):
-                            opt2_text = line.split(':', 1)[-1].strip() if ':' in line else line[2:].strip()
-                        elif line.startswith('5.') or line.startswith('END:'):
-                            end_text = line.split(':', 1)[-1].strip() if ':' in line else line[2:].strip()
-
-                    # Create dialogue
-                    new_dialogue = Dialogue(filename=filename)
-                    new_dialogue.nodecount = 3
-                    new_dialogue.npcname = topic.capitalize()
-                    new_dialogue.description = f"AI-generated dialogue: {topic}"
-
-                    # Create the dialogue nodes
-                    # Node 0: Start
-                    node0 = DialogueNode(
-                        is_wtg=True,
-                        nodename="START",
-                        npctext=start_text,
-                        options=[
-                            PlayerOption(text=opt1_text, nodelink="NODE1"),
-                            PlayerOption(text=opt2_text, nodelink="END")
-                        ],
-                        optioncnt=2
-                    )
-
-                    # Node 1: Response to option 1
-                    node1 = DialogueNode(
-                        nodename="NODE1",
-                        npctext=node2_text,
-                        options=[
-                            PlayerOption(text="Thanks!", nodelink="END")
-                        ],
-                        optioncnt=1
-                    )
-
-                    # Node 2: End node
-                    node2 = DialogueNode(
-                        nodename="END",
-                        npctext=end_text,
-                        options=[],
-                        optioncnt=0
-                    )
-
-                    new_dialogue.nodes = [node0, node1, node2]
-
-                    # Save the dialogue
-                    if self.dialog_manager:
-                        self.dialog_manager.current_dialogue = new_dialogue
-                        save_path = dialogues_path / filename
-                        self.dialog_manager.save_dialogue(save_path)
-                        self.dialog_manager.load_dialogue(save_path)
-                        QTimer.singleShot(500, self.populate_nodes_tree)
-                        self.status_bar.showMessage(f"Created dialogue: {topic}", 3000)
-                        logger.info(f"AI created dialogue: {topic}")
-
-                    self._add_message("System", f"Created dialogue '{topic}' with 3 nodes", is_user=False)
-
-                except Exception as e:
-                    logger.error(f"Failed to parse AI response: {e}")
-                    self._add_message("System", f"Error creating dialogue: {e}", is_user=False)
-
-            # Connect to response (this won't work directly, so we'll do a simpler version)
-            # For now, just create a simple dialogue without AI parsing
-
-            # Simpler fallback - create basic dialogue
+            # Create full dialogue with 3 nodes
             new_dialogue = Dialogue(filename=filename)
             new_dialogue.nodecount = 3
             new_dialogue.npcname = topic.capitalize()
+            new_dialogue.description = f"AI-generated: {topic}"
 
-            # Create nodes
+            # Start node
             start_node = DialogueNode(
                 is_wtg=True,
                 nodename="START",
@@ -4249,6 +4149,7 @@ Keep it simple and Fallout-appropriate. Each line should be 1-2 sentences."""
                 optioncnt=2
             )
 
+            # Response node
             node1 = DialogueNode(
                 nodename="NODE1",
                 npctext=f"Well, about {topic}... it's quite interesting. Many settlers have asked about it.",
@@ -4258,6 +4159,7 @@ Keep it simple and Fallout-appropriate. Each line should be 1-2 sentences."""
                 optioncnt=1
             )
 
+            # End node
             end_node = DialogueNode(
                 nodename="END",
                 npctext="Good talking to you! Stay safe out there in the wasteland.",
@@ -4275,8 +4177,6 @@ Keep it simple and Fallout-appropriate. Each line should be 1-2 sentences."""
                 QTimer.singleShot(500, self.populate_nodes_tree)
                 self.status_bar.showMessage(f"Created dialogue: {topic}", 3000)
                 logger.info(f"AI created dialogue: {topic}")
-
-            self._add_message("System", f"Created dialogue '{topic}' with 3 nodes", is_user=False)
 
         except Exception as e:
             logger.error(f"Failed to create dialogue: {e}")
