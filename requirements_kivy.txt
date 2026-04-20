@@ -1,0 +1,5 @@
+# Kivy Edition - Fallout Dialogue Creator
+kivy>=2.1.0
+Pillow>=8.0.0
+requests>=2.25.0
+google-generativeai>=0.3.0
